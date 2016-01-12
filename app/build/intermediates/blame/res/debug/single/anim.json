@@ -1,0 +1,122 @@
+[
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\menu_bottombar_out.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\menu_bottombar_out.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\menu_bottombar_in.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\menu_bottombar_in.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\slide_in_from_top.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\slide_in_from_top.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\interpolator_cycle.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\interpolator_cycle.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\slide_out_to_bottom.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\slide_out_to_bottom.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\photo_down_progress.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\photo_down_progress.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\camera_image_chouse.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\camera_image_chouse.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\shake.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\shake.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\dialog_exit.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\dialog_exit.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\show_dis.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\show_dis.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\cycle_7.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\cycle_7.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\push_bottom_out.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\push_bottom_out.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\popshow_anim.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\popshow_anim.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\push_bottom_in.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\push_bottom_in.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\progress_bar_anim.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\progress_bar_anim.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\activity_right_out.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\activity_right_out.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\shake_y.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\shake_y.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\menu_up.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\menu_up.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\activity_right_in.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\activity_right_in.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\btn_bottom.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\btn_bottom.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\slide_out_to_top.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\slide_out_to_top.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\pophidden_anim.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\pophidden_anim.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\photo_select_of.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\photo_select_of.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\slide_in_from_bottom.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\slide_in_from_bottom.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\activity_left_in.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\activity_left_in.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\activity_left_out.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\activity_left_out.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\check.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\check.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\chouse.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\chouse.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\shake_x.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\shake_x.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\anim\\dialog_enter.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\anim\\dialog_enter.xml"
+    }
+]

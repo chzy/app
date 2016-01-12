@@ -1,0 +1,470 @@
+[
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\item_pic_edit_adapter.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\item_pic_edit_adapter.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\photo_delete_item.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\photo_delete_item.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\photo_pop_down.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\photo_pop_down.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\jd_menu_more_sort.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\jd_menu_more_sort.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\photo_load_lin_item.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\photo_load_lin_item.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notepad_main.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\notepad_main.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_other.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\activity_other.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\title_head.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\title_head.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\item_pic_adapter.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\item_pic_adapter.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\jd_menu_more_search.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\jd_menu_more_search.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\photo_delete_dialog.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\photo_delete_dialog.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_music_backup.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\activity_music_backup.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\lz_upload_item.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\lz_upload_item.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\camera_item_wang.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\camera_item_wang.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_pic.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\activity_pic.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\yf_pop3_menu.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\yf_pop3_menu.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\jd_menu_more_new_file.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\jd_menu_more_new_file.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\pop_menu.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\pop_menu.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\lz_update.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\lz_update.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\photo_show.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\photo_show.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\download_ed.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\download_ed.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\lz_upload_other_fragment.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\lz_upload_other_fragment.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\myspace_griditem.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\myspace_griditem.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\finactionfourmodule_layout.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\finactionfourmodule_layout.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\jd_pop_more.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\jd_pop_more.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\myspace.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\myspace.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\camera_griditem_v2_wang.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\camera_griditem_v2_wang.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_openspace_payforresult.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\activity_openspace_payforresult.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notepad_footer.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\notepad_footer.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\netdist_item.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\netdist_item.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_openspace.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\activity_openspace.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_music.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\activity_music.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\gesturepassword_unlock.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\gesturepassword_unlock.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\other_explorer_fragment_layout.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\other_explorer_fragment_layout.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\lz_photo_backup_choose_album.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\lz_photo_backup_choose_album.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\lz_relogin3.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\lz_relogin3.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\jd_downlond_and_upload_item.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\jd_downlond_and_upload_item.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\photo_show_image.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\photo_show_image.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\lz_activity_upload.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\lz_activity_upload.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\pull_to_refresh_header_vertical.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\pull_to_refresh_header_vertical.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\title_bar.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\title_bar.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\item_pic_info_adapter.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\item_pic_info_adapter.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\selected.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\selected.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_main.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\photo_load_menu_top.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\photo_load_menu_top.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\lz_photo_backups.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\lz_photo_backups.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\item_pic_edit_item_adapter.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\item_pic_edit_item_adapter.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\photo_load_menu_down.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\photo_load_menu_down.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\lz_album.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\lz_album.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\camera_pop2_menu.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\camera_pop2_menu.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\photo_load_dialog.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\photo_load_dialog.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\gesturepassword_guide.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\gesturepassword_guide.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_resetpwd.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\activity_resetpwd.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_freedown.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\activity_freedown.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\camera_pop3_menu.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\camera_pop3_menu.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\camera_griditem_v1_wang.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\camera_griditem_v1_wang.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\contacts_main.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\contacts_main.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\pop2_menu.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\pop2_menu.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\myspace000.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\myspace000.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_userinfo.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\activity_userinfo.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\pop_menu_other2.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\pop_menu_other2.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\camera_pop4_menu.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\camera_pop4_menu.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\photo_load_griditem.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\photo_load_griditem.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\setting_layout.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\setting_layout.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\photo_pop2_menu.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\photo_pop2_menu.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\filelist_fragment_layout.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\filelist_fragment_layout.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_init.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\activity_init.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\delete_item.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\delete_item.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\camera_main.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\camera_main.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\pull_to_refresh_header_horizontal.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\pull_to_refresh_header_horizontal.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\myspace_grid.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\myspace_grid.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\relogin_dialog.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\relogin_dialog.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_register.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\activity_register.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\pop_menu_other.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\pop_menu_other.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_music_detail.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\activity_music_detail.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\lz_relogin2.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\lz_relogin2.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notepad_check.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\notepad_check.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_contact.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\activity_contact.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notepad_long_click.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\notepad_long_click.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\item_contact_adapter.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\item_contact_adapter.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\dlg_openspace_payfor.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\dlg_openspace_payfor.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_login.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\activity_login.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\selected0.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\selected0.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\about_layout.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\about_layout.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\back_buttton.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\back_buttton.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_sms.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\activity_sms.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notepad_edit.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\notepad_edit.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\jd_menu_share.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\jd_menu_share.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\photo_load_list.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\photo_load_list.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\jd_menu_more.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\jd_menu_more.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\photo_delete.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\photo_delete.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notepad_list_item.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\notepad_list_item.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\freedown_griditem.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\freedown_griditem.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_userinfo_edit.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\activity_userinfo_edit.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\item_music_adapter.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\item_music_adapter.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\photo_load_dialog2.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\photo_load_dialog2.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_openspace_payfor.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\activity_openspace_payfor.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\other_listitem.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\other_listitem.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\netdisk_main.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\netdisk_main.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_crbt.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\activity_crbt.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\lz_find_password.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\lz_find_password.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\camera_pop_menu.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\camera_pop_menu.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\camera_griditem_v3_wang.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\camera_griditem_v3_wang.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\item_music_backup_adapter.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\item_music_backup_adapter.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\photo_load_main.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\photo_load_main.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\camera_main_empty.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\camera_main_empty.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\active_piechar.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\active_piechar.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\freedown_listitem.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\freedown_listitem.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_pic_edit.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\activity_pic_edit.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\jd_pop_move.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\jd_pop_move.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_pic_detail.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\activity_pic_detail.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\jd_pop_clear.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\jd_pop_clear.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\photo_load_dialog_other2.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\photo_load_dialog_other2.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\jd_pop_rename.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\jd_pop_rename.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\photo_pop_menu.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\photo_pop_menu.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\gesturepassword_create.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\gesturepassword_create.xml"
+    },
+    {
+        "merged": "E:\\development\\android\\XinYunPan1\\app\\build\\intermediates\\res\\merged\\debug\\layout\\jd_uped_clear.xml",
+        "source": "E:\\development\\android\\XinYunPan1\\app\\src\\main\\res\\layout\\jd_uped_clear.xml"
+    }
+]

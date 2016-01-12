@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<Button android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/ExportButton"
+		android:layout_alignParentRight="false"
+		android:layout_alignParentLeft="true" android:text="exportTo"/>
+	<EditText android:layout_height="wrap_content" android:id="@+id/ImportFile" android:text="/sdcard/backup.vcf" android:layout_width="fill_parent"></EditText>
+	<Button android:layout_height="wrap_content" android:id="@+id/ImportButton"
+		android:layout_width="wrap_content" android:layout_below="@+id/ExportButton"
+		android:layout_alignParentLeft="true" android:layout_alignParentRight="false" android:text="importFrom"/>
+	<EditText android:layout_height="wrap_content" android:id="@+id/ExportFile" android:text="/sdcard/backup.vcf" android:layout_width="fill_parent"></EditText>
+	<CheckBox android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_below="@id/ImportButton"
+		android:id="@+id/ReplaceOnImport" android:text="Replace existing contacts" />
+</TableLayout>

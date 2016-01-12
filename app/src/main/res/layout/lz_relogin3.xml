@@ -1,0 +1,54 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".LoginActivity" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="确认"
+        android:textColor="@color/normal_blue"
+        android:textSize="18sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/normal_blue" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:gravity="center_horizontal"
+        android:text="确定要关闭自动备份吗?"
+        android:textColor="@color/grey"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/settingConfirmRelogin"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" 
+        android:gravity="center"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:textColor="#770000"
+        android:background="@drawable/clear_confirm_btn"
+        android:text="确认关闭"/>
+
+    <Button
+        android:id="@+id/settingCancelRelogin"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" 
+        android:gravity="center"
+       android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/grey"
+        android:background="@drawable/dialog_cancle_btn2"
+        android:text="取消"/>
+
+</LinearLayout>

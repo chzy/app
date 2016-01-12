@@ -1,0 +1,121 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".LoginActivity" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="选择其他文件夹"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/photo_load_dialog_other_newfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/jd_pop_move_newfile"
+            android:clickable="true"
+            android:visibility="invisible"
+            android:paddingRight="10dp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line" />
+
+    <HorizontalScrollView
+        android:id="@+id/photo_load_dialog_other_move"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:scrollbars="none" >
+
+        <FrameLayout
+            android:id="@+id/photo_load_dialog_other_locationID_move"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:orientation="horizontal" >
+        </FrameLayout>
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="#55b6a56b"
+        android:gravity="center_vertical" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/prompt_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 选择的文件或者文件夹将移动到这里"
+            android:textColor="@color/waring" />
+    </LinearLayout>
+
+    
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/photo_load_dialog_other_lv"
+        android:layout_width="fill_parent"
+        android:layout_height="200dp"
+        android:cacheColorHint="#00000000"
+        android:divider="#19000000"
+        android:dividerHeight="1dp"
+        android:fadingEdge="none"
+        android:textSize="18sp"
+        android:fastScrollEnabled="false"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
+        android:layout_weight="1"
+        android:smoothScrollbar="true" />
+
+    <TextView
+        android:id="@+id/photo_load_dialog_other_textView1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line" />
+
+    <Button
+        android:id="@+id/photo_load_dialog_other_btn_move"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/jd_more_move_btn"
+        android:gravity="center"
+        android:textColor="@color/blue"
+        android:text="选定文件夹：我的云盘"
+        android:clickable="true" />
+
+    <Button
+        android:id="@+id/photo_load_dialog_other_btn_quit"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/dialog_cancle_btn2"
+        android:gravity="center"
+        android:text="取消"
+        android:textColor="@color/grey" />
+
+</LinearLayout>

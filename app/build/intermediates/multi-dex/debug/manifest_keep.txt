@@ -1,0 +1,48 @@
+-keep class com.chd.yunpan.application.UILApplication {
+    <init>();
+    void attachBaseContext(android.content.Context);
+}
+-keep class com.chd.yunpan.ui.LoginActivity { <init>(); }
+-keep class com.chd.yunpan.ui.MainFragmentActivity { <init>(); }
+-keep class com.chd.yunpan.ui.MyspaceActivity { <init>(); }
+-keep class com.chd.yunpan.ui.FreeDownActivity { <init>(); }
+-keep class com.chd.notepad.ui.activity.NotepadActivity { <init>(); }
+-keep class com.chd.notepad.ui.activity.NotepadEditActivity { <init>(); }
+-keep class com.chd.notepad.ui.activity.NotepadCheckActivity { <init>(); }
+-keep class com.chd.contacts.ui.ContactActivity { <init>(); }
+-keep class com.chd.music.ui.MusicActivity { <init>(); }
+-keep class com.chd.music.ui.MusicBackupActivity { <init>(); }
+-keep class com.chd.music.ui.MusicDetailActivity { <init>(); }
+-keep class com.chd.smsbackup.ui.SmsActivity { <init>(); }
+-keep class com.chd.contacts.ui.Contacts { <init>(); }
+-keep class com.lockscreen.pattern.UnlockGesturePasswordActivity { <init>(); }
+-keep class com.lockscreen.pattern.UnlockGesturePassword2Activity { <init>(); }
+-keep class com.lockscreen.pattern.OffUnlockPasswordActivity { <init>(); }
+-keep class com.lockscreen.pattern.CreateGesturePasswordActivity { <init>(); }
+-keep class com.lockscreen.pattern.GuideGesturePasswordActivity { <init>(); }
+-keep class com.chd.yunpan.ui.SettingActivity { <init>(); }
+-keep class com.chd.yunpan.ui.AboutActivity { <init>(); }
+-keep class com.chd.yunpan.ui.UpLoadActivity { <init>(); }
+-keep class com.chd.yunpan.ui.PhotoShowActivity { <init>(); }
+-keep class com.chd.yunpan.ui.AutoPhotoBackupsActivity { <init>(); }
+-keep class com.chd.yunpan.ui.AutoPhotoBackupChooseAlbumAvtivity { <init>(); }
+-keep class com.chd.yunpan.ui.FindPwdActivity { <init>(); }
+-keep class com.chd.yunpan.ui.DownloadED { <init>(); }
+-keep class com.chd.photo.ui.PicActivity { <init>(); }
+-keep class com.chd.photo.ui.PicEditActivity { <init>(); }
+-keep class com.chd.photo.ui.PicDetailActivity { <init>(); }
+-keep class com.chd.yunpan.ui.netdiskActivity { <init>(); }
+-keep class com.chd.userinfo.ui.UserInfoActivity { <init>(); }
+-keep class com.chd.userinfo.ui.UserInfoEditActivity { <init>(); }
+-keep class com.chd.yunpan.ui.CRBTActivity { <init>(); }
+-keep class com.chd.payfor.ui.OpenSpaceActivity { <init>(); }
+-keep class com.chd.payfor.ui.PayForActivity { <init>(); }
+-keep class com.chd.payfor.ui.PayForResultActivity { <init>(); }
+-keep class com.chd.other.ui.OtherActivity { <init>(); }
+-keep class com.chd.service.SyncFileService { <init>(); }
+-keep public class * extends android.app.backup.BackupAgent {
+    <init>();
+}
+-keep public class * extends java.lang.annotation.Annotation {
+    *;
+}
