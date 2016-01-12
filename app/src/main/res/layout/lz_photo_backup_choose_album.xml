@@ -1,0 +1,78 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".LoginActivity" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/normal_blue"
+        android:orientation="horizontal" >
+
+        <include
+            android:id="@+id/photoChooseAlbumBack"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            layout="@layout/back_buttton" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="选择要自动备份的相册"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <include
+            android:id="@+id/settingBack"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            layout="@layout/back_buttton"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+    <GridView
+        android:id="@+id/photoChooseAlbumList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:horizontalSpacing="10dp"
+        android:numColumns="2"
+        android:verticalSpacing="10dp" >
+    </GridView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:padding="10dp" >
+
+        <Button
+            android:id="@+id/photoChooseAlbumConfirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/three_state_btn"
+            android:clickable="false"
+            android:paddingBottom="15dp"
+            android:enabled="false"
+            android:paddingTop="15dp"
+            android:text="确定"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+</LinearLayout>

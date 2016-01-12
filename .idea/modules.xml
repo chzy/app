@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/XinYunPan1.iml" filepath="$PROJECT_DIR$/XinYunPan1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../chdapi/lib/src/main/java/chdapi/chdapi.iml" filepath="$PROJECT_DIR$/../chdapi/lib/src/main/java/chdapi/chdapi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/chdclnetapi/chdclnetapi.iml" filepath="$PROJECT_DIR$/chdclnetapi/chdclnetapi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/thriftlib/thriftlib.iml" filepath="$PROJECT_DIR$/thriftlib/thriftlib.iml" />
+    </modules>
+  </component>
+</project>

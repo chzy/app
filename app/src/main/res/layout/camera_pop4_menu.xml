@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="8dp"
+    android:background="@drawable/file_operate_bg"
+    android:orientation="vertical" >
+<TextView 
+    android:id="@+id/camera_pop4_tv"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="7dp"
+    android:textColor="@color/white"
+    android:textSize="12sp"
+    />
+  <Button
+      android:id="@+id/camera_pop4_bn"
+      android:enabled="false"
+      android:background="@drawable/camera_pop_bn"
+      android:layout_width="match_parent"
+      android:layout_marginLeft="10dp"
+      android:layout_marginRight="10dp"
+      android:layout_margin="10dp"
+	  android:layout_height="40dp"  
+	  android:textSize="15dp"
+      />
+  
+
+</LinearLayout>

@@ -1,0 +1,89 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#eeeeee"
+    android:orientation="vertical" >
+
+    <include layout="@layout/title_bar" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="15dp"
+        android:background="#F0F0F0" />
+
+    <LinearLayout
+        android:id="@+id/freedown_tab_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/other_tab_all"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:background="@drawable/other_tab_left_checked"
+            android:gravity="center"
+            android:text="全部"
+            android:textColor="#ffffff"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/other_tab_doc"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:background="@drawable/other_tab_center_normal"
+            android:gravity="center"
+            android:text="DOC"
+            android:textColor="#f8b82d"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/other_tab_xls"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:background="@drawable/other_tab_center_normal"
+            android:gravity="center"
+            android:text="XLS"
+            android:textColor="#f8b82d"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/other_tab_ppt"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:background="@drawable/other_tab_center_normal"
+            android:gravity="center"
+            android:text="PPT"
+            android:textColor="#f8b82d"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/other_tab_pdf"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:background="@drawable/other_tab_right_normal"
+            android:gravity="center"
+            android:text="PDF"
+            android:textColor="#f8b82d"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/other_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="10dp" >
+    </ListView>
+
+</LinearLayout>

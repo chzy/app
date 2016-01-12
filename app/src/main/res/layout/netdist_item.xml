@@ -1,0 +1,119 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="50dp"
+    android:background="@color/white"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingLeft="30dp" >
+
+    <RelativeLayout
+        android:layout_width="50dp"
+        android:layout_height="50dp" >
+
+        <ImageView
+            android:id="@+id/dist_item_image"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+             />
+
+        <ImageView
+            android:id="@+id/dist_item_image_dow"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/dist_item_image"
+            android:src="@drawable/job_status_down"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/dist_file"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="20dp"
+        android:layout_weight="1"
+        android:visibility="visible" >
+
+         <!-- 加上android:singleLine="true"  -->
+        <TextView
+            android:id="@+id/dist_item_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+           
+            android:singleLine="true"
+            android:layout_marginTop="15dp"
+            android:gravity="left" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/dist_f"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_weight="1"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/dist_item_n"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+             android:singleLine="true"
+             android:ellipsize="middle"
+            android:layout_marginTop="5dp"
+            android:gravity="left" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp" >
+
+            <TextView
+                android:id="@+id/dist_item_s"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 android:singleLine="true"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/dist_item_t"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 android:singleLine="true"
+                android:layout_marginLeft="10dp"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/dist_btn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:visibility="visible" >
+
+        <CheckBox
+            android:id="@+id/dist_item_btn_check"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/check"
+            android:button="@null"
+            android:focusable="false" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/dist_btn2"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:visibility="gone" >
+
+        <Button
+            android:id="@+id/dist_item_btn_btn"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/btn_transfer" />
+    </FrameLayout>
+
+</LinearLayout>

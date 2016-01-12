@@ -1,0 +1,190 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.chd.yunpan"
+    android:versionCode="2"
+    android:versionName="2.1内测版" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="19" >
+    </uses-sdk>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+
+    <application
+        android:name="com.chd.yunpan.application.UILApplication"
+        android:allowBackup="true"
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.chd.yunpan.ui.LoginActivity"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.chd.yunpan.ui.MainFragmentActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.chd.yunpan.ui.MyspaceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.yunpan.ui.FreeDownActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.notepad.ui.activity.NotepadActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.notepad.ui.activity.NotepadEditActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.notepad.ui.activity.NotepadCheckActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.contacts.ui.ContactActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.chd.music.ui.MusicActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.chd.music.ui.MusicBackupActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.chd.music.ui.MusicDetailActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.chd.smsbackup.ui.SmsActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.chd.contacts.ui.Contacts"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 锁屏的activity -->
+        <activity
+            android:name="com.lockscreen.pattern.UnlockGesturePasswordActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.lockscreen.pattern.UnlockGesturePassword2Activity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.lockscreen.pattern.OffUnlockPasswordActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.lockscreen.pattern.CreateGesturePasswordActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.lockscreen.pattern.GuideGesturePasswordActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.yunpan.ui.SettingActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.yunpan.ui.AboutActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.yunpan.ui.UpLoadActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.yunpan.ui.PhotoShowActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.yunpan.ui.AutoPhotoBackupsActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.yunpan.ui.AutoPhotoBackupChooseAlbumAvtivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.yunpan.ui.FindPwdActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.yunpan.ui.DownloadED"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.photo.ui.PicActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.photo.ui.PicEditActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.photo.ui.PicDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.yunpan.ui.netdiskActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.userinfo.ui.UserInfoActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.userinfo.ui.UserInfoEditActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.yunpan.ui.CRBTActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.payfor.ui.OpenSpaceActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.payfor.ui.PayForActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.payfor.ui.PayForResultActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.other.ui.OtherActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        
+        <service android:name="com.chd.service.SyncFileService" >
+        </service>
+        <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <!--<meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />-->
+    </application>
+
+</manifest>

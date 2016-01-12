@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center" >
+
+    <ImageView
+        android:id="@+id/camera_lg_imageView"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:clickable="true" />
+
+    <CheckBox
+        android:id="@+id/camera_lg_checkBox"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:background="@drawable/photo_select_of"
+        android:button="@null"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/camera_lg_downimageView"
+        android:layout_width="17dp"
+        android:layout_height="17dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="7dp"
+        android:background="@drawable/photo_downloaded"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/camera_lg_downimagefail"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="7dp"
+        android:background="@drawable/backuped_icon"
+        android:visibility="invisible" />
+
+    <RelativeLayout
+        android:id="@+id/camera_downing"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="7dp"
+            android:background="@drawable/photo_downloading" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="15dp"
+            android:layout_marginLeft="23dp"
+            android:layout_marginTop="9dp"
+            android:text="正在下载"
+            android:textColor="@color/white"
+            android:textSize="10dp" />
+        <ProgressBar 
+            android:id="@+id/photo_down_progress"
+            android:indeterminateDrawable="@drawable/photo_down_progress"
+            android:layout_width="120dp"
+            android:layout_height="8dp"
+            android:layout_marginTop="110dp"
+            android:layout_alignParentBottom="true"
+            
+            
+            />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/camera_waiting"
+        android:layout_width="fill_parent"
+        android:layout_height="15dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="7dp"
+        android:orientation="horizontal"
+        android:visibility="invisible" >
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@drawable/photo_download_waiting" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="15dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="2dp"
+            android:text="等待下载"
+            android:textColor="@color/white"
+            android:textSize="10dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/camera_downingstop"
+        android:layout_width="fill_parent"
+        android:layout_height="15dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="7dp"
+        android:orientation="horizontal"
+        android:visibility="invisible" >
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/photo_download_waiting" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="2dp"
+            android:text="暂停中"
+            android:textColor="@color/white"
+            android:textSize="10dp" />
+    </LinearLayout>
+  <ProgressBar
+            android:id="@+id/progress"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="120dp"
+            android:layout_height="5dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="30dp"
+            android:indeterminate="false"
+            android:max="100" />
+
+
+</RelativeLayout>

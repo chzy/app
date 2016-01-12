@@ -1,0 +1,110 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".LoginActivity" >
+
+    <TextView
+        android:id="@+id/photo_load_dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:gravity="center"
+        android:text="选择移动的位置"
+        android:textSize="13sp" />
+
+<!--     <LinearLayout -->
+<!--         android:id="@+id/photo_load_dialog_one" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="50dp" -->
+<!--         android:layout_marginLeft="5dp" -->
+<!--         android:layout_marginBottom="10dp" -->
+<!--         android:layout_marginRight="5dp" -->
+<!--         android:background="@drawable/dialog_cancle_btn2" -->
+<!--         android:clickable="true" -->
+<!--         android:drawable="@drawable/delog_icon" -->
+<!--         android:gravity="center" -->
+<!--         android:orientation="horizontal" > -->
+
+<!--         <ImageView -->
+<!--             android:layout_width="wrap_content" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:src="@drawable/photo_album_icon" /> -->
+
+<!--         <TextView -->
+<!--             android:layout_width="wrap_content" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:text=" 云盘相册" -->
+<!--             android:textSize="15sp" -->
+<!--             android:textColor="@color/blue" /> -->
+<!--     </LinearLayout> -->
+    <LinearLayout
+        android:id="@+id/photo_load_dialog_two"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/dialog_cancle_btn2"
+        android:clickable="true"
+        android:drawable="@drawable/delog_icon"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:src="@drawable/cloud_dir_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 我的云盘"
+            android:textSize="15sp"
+            android:textColor="@color/blue" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/photo_load_dialog_three"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/dialog_cancle_btn2"
+        android:clickable="true"
+        android:drawable="@drawable/delog_icon"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="选择其它文件夹"
+            android:textSize="15sp"
+            android:textColor="@color/blue" />
+    </LinearLayout>
+  <LinearLayout
+        android:id="@+id/photo_load_dialog_four"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/dialog_cancle_btn2"
+        android:clickable="true"
+        android:drawable="@drawable/delog_icon"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:text="取消"/>
+    </LinearLayout>
+   
+
+</LinearLayout>
