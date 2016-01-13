@@ -186,8 +186,8 @@ public class PicActivity extends Activity implements OnClickListener {
 						info = bIsUbkList ? syncTask.queryLocalInfo(idList.get(i)) : syncTask.getUnitinfo(i);    /*getUnitinfo(id)*/;
 						info.setFilePath(bIsUbkList ? info.getFilePath() : ThumUtil.getThumid(objList.get(i)));
 					}
-					int year = TimeUtils.getYearWithTimeMillis(info.getLastModified() * 1000);
-					int month = TimeUtils.getMonthWithTimeMillis(info.getLastModified() * 1000);
+					int year = TimeUtils.getYearWithTimeMillis(info.getLastModified() * 1000L);
+					int month = TimeUtils.getMonthWithTimeMillis(info.getLastModified() * 1000L);
 
 					Map<Integer, List<PicInfoBean>> tmpMonthMap = new HashMap<Integer, List<PicInfoBean>>();
 					if (tmpYearMap.get(year) != null) {
