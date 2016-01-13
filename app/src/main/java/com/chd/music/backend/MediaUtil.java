@@ -3,14 +3,16 @@ package com.chd.music.backend;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 
-import com.chd.yunpan.R;
 import com.chd.music.entity.Mp3Info;
+import com.chd.yunpan.R;
 
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
@@ -27,7 +29,7 @@ public class MediaUtil {
 
 
     //获取专辑封面的Uri
-    private static final Uri albumArtUri = Uri.parse("content://media/external/audio/albumart");
+    private static final Uri albumArtUri = Uri.parse("content://media/external/audio/albums");
 
     /**
      * 用于从数据库中查询歌曲的信息，保存在List当中
@@ -290,4 +292,85 @@ public class MediaUtil {
         }
         return candidate;
     }
+
+
+    /**
+     * 通过MP3路径得到指向当前MP3的Cursor
+     *
+     * @param filePath
+     *            MP3路径
+     *
+     * @return Cursor 返回的Cursor指向当前MP3
+     */
+    private static   Cursor getCursorfromPath(Context context,String filePath) {
+        String path = null;
+        Cursor c = context.getContentResolver().query(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null,
+                MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+        // System.out.println(c.getString(c.getColumnIndex("_data")));
+        if (c.moveToFirst()) {
+            do {
+                // 通过Cursor 获取路径，如果路径相同则break；
+                path = c.getString(c
+                        .getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+                // 查找到相同的路径则返回，此时cursorPosition 便是指向路径所指向的Cursor 便可以返回了
+                if (path.equals(filePath)) {
+                    // System.out.println("audioPath = " + path);
+                    // System.out.println("filePath = " + filePath);
+                    // cursorPosition = c.getPosition();
+                    break;
+                }
+            } while (c.moveToNext());
+        }
+        // 这两个没有什么作用，调试的时候用
+        // String audioPath = c.getString(c
+        // .getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+        //
+        // System.out.println("audioPath = " + audioPath);
+        return c;
+    }
+
+
+
+    /**
+     *
+     * 功能 通过album_id查找 album_art 如果找不到返回null
+     *
+     * @param mp3Path mp3路径
+     * @return album_art
+     */
+    public static String getAlbumArt(Context context,String mp3Path) {
+        String[] projection = new String[] { "album_art" };
+        Cursor cursor = getCursorfromPath2(context, mp3Path);
+        String album_art = null;
+        if(cursor != null && cursor.getCount() > 0){
+            int trackId=cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
+            cursor.close();;
+            cursor=null;
+            Cursor cur = context.getContentResolver().query(
+                    Uri.parse(albumArtUri + "/" + Integer.toString(trackId)),
+                    projection, null, null, null);
+
+            if (cur.getCount() > 0 && cur.getColumnCount() > 0) {
+                cur.moveToNext();
+                album_art = cur.getString(0);
+            }
+            cur.close();
+            cur = null;
+            return album_art;
+        }
+        return album_art;
+    }
+
+    private static Cursor getCursorfromPath2(Context context,String filePath) {
+        Cursor c = context.getContentResolver().query(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                null, MediaStore.Audio.Media.DATA+"=?", new String[]{filePath},
+                MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+        if (c.moveToFirst()) {
+            return c;
+        }
+        return null;
+    }
+
 }

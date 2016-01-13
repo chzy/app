@@ -1,8 +1,5 @@
 package com.chd.music.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +20,9 @@ import com.chd.music.entity.MusicBackupBean;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MusicBackupActivity extends Activity implements OnClickListener, OnItemClickListener
 {
@@ -98,7 +98,6 @@ public class MusicBackupActivity extends Activity implements OnClickListener, On
 		{
 			String name = fileLocal.fname;
 			FileInfo0 fileInfo0 = syncTask.queryLocalInfo(fileLocal.sysid);
-
 			if (fileInfo0 == null)
 			{
 				continue;
@@ -177,5 +176,8 @@ public class MusicBackupActivity extends Activity implements OnClickListener, On
 		mMusicBackupList.get(arg2).setSelect(!bSel);
 		handler.sendEmptyMessage(0);
 	}
+
+
+
 	
 }
