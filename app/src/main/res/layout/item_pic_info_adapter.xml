@@ -14,8 +14,7 @@
             android:id="@+id/iv_pic_info_photo"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:layout_centerVertical="true"
-            android:src="@drawable/pic_test1" />
+            android:layout_centerVertical="true" />
     </RelativeLayout>
 
     <TextView
