@@ -68,7 +68,6 @@ public class PicEditItemAdapter extends BaseAdapter {
 			holder = (ViewHolder) converView.getTag();
 		}
 
-		holder.iv_pic_info_photo.setImageResource(list.get(position).getPicUrl());
 		holder.iv_pic_edit_check.setVisibility(list.get(position).isEdit() ? View.VISIBLE : View.GONE);
 		holder.iv_pic_edit_check.setImageResource(list.get(position).isSelect() ? R.drawable.pic_edit_photo_checked : R.drawable.pic_edit_photo_check);
 		

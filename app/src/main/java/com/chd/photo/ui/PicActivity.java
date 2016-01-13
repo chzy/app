@@ -186,7 +186,7 @@ public class PicActivity extends Activity implements OnClickListener {
 						info = bIsUbkList ? syncTask.queryLocalInfo(idList.get(i)) : syncTask.getUnitinfo(i);    /*getUnitinfo(id)*/;
 						info.setFilePath(bIsUbkList ? info.getFilePath() : ThumUtil.getThumid(objList.get(i)));
 					}
-					//TODO 修改
+
 					int year = TimeUtils.getYearWithTimeMillis(info.getLastModified() * 1000L);
 					int month = TimeUtils.getMonthWithTimeMillis(info.getLastModified() * 1000L);
 
@@ -264,6 +264,7 @@ public class PicActivity extends Activity implements OnClickListener {
 				break;
 			case R.id.tv_pic_number:
 				bIsUbkList = true;
+				mPicList.clear();
 				onNewThreadRequest();
 				break;
 		}

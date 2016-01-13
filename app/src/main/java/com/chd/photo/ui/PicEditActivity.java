@@ -1,12 +1,5 @@
 package com.chd.photo.ui;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -29,6 +22,12 @@ import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.utils.TimeUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PicEditActivity extends ActiveProcess implements OnClickListener
 {
@@ -59,7 +58,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener
 			}
 		}
 	};
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -178,11 +177,11 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener
 				FileInfo0 info = tmpFileMap.get(idList.get(i));
 				if (info == null)
 				{
-					info = bIsUbkList ? syncTask.queryLocalInfo(idList.get(i)) : syncTask.getUnitinfo(i);    /*getUnitinfo(id)*/;
+					info = bIsUbkList ? syncTask.queryLocalInfo(idList.get(i)) : syncTask.getUnitinfo(i);
 					info.setFilePath(bIsUbkList ? info.getFilePath() : ThumUtil.getThumid(objList.get(i)));
 				}
-				int tmpYear = TimeUtils.getYearWithTimeMillis(info.getLastModified() * 1000);
-				int tmpMonth = TimeUtils.getMonthWithTimeMillis(info.getLastModified() * 1000);
+				int tmpYear = TimeUtils.getYearWithTimeMillis(info.getLastModified() * 1000L);
+				int tmpMonth = TimeUtils.getMonthWithTimeMillis(info.getLastModified() * 1000L);
 				String tmpDay = TimeUtils.getTime(info.getLastModified(), new SimpleDateFormat("MM月dd日"));
 				
 				if (tmpYear == this.year && tmpMonth == this.month)

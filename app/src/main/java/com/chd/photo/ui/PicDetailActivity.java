@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chd.base.backend.SyncTask;
+import com.chd.contacts.vcard.StringUtils;
 import com.chd.photo.entity.ThumUtil;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
@@ -19,7 +20,6 @@ import com.chd.yunpan.utils.ToastUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
@@ -60,7 +60,6 @@ public class PicDetailActivity extends Activity implements OnClickListener
 		.cacheInMemory(true)
 		.cacheOnDisk(true)
 		.considerExifParams(true)
-		.displayer(new RoundedBitmapDisplayer(20))
 		.extraForDownloader(new ShareUtils(this).getStorePathStr())  //增加保存路径
 		.build();
 		
@@ -109,6 +108,10 @@ public class PicDetailActivity extends Activity implements OnClickListener
 			fileInfo0 = bIsUbkList ? syncTask.queryLocalInfo(nPicId) : syncTask.getUnitinfo(nPicId);
 		}
 		String url = ThumUtil.getThumid(fileInfo0.getObjid());
+		String filepath = getIntent().getStringExtra("filepath");
+		if(!StringUtils.isNullOrEmpty(filepath)) {
+			url = filepath;
+		}
 		if (url != null)
 		{
 			/*if (!syncTask.haveLocalCopy(fileInfo0))
