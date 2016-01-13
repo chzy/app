@@ -165,9 +165,10 @@
 
                 <LinearLayout
                     android:id="@+id/netdisk_menu0"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1.0"
+                    android:gravity="center_horizontal"
                     android:orientation="vertical" >
 
                     <ImageView
@@ -190,9 +191,10 @@
 
                 <LinearLayout
                     android:id="@+id/netdisk_menu1"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1.0"
+                    android:gravity="center_horizontal"
                     android:orientation="vertical" >
 
                     <ImageView
@@ -215,9 +217,10 @@
 
                 <LinearLayout
                     android:id="@+id/netdisk_menu2"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1.0"
+                    android:gravity="center_horizontal"
                     android:orientation="vertical" >
 
                     <ImageView
@@ -240,9 +243,10 @@
 
                 <LinearLayout
                     android:id="@+id/netdisk_menu3"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1.0"
+                    android:gravity="center_horizontal"
                     android:orientation="vertical" >
 
                     <ImageView

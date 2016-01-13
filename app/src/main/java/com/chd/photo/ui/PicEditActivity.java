@@ -177,7 +177,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener
 				FileInfo0 info = tmpFileMap.get(idList.get(i));
 				if (info == null)
 				{
-					info = bIsUbkList ? syncTask.queryLocalInfo(idList.get(i)) : syncTask.getUnitinfo(i);    /*getUnitinfo(id)*/;
+					info = bIsUbkList ? syncTask.queryLocalInfo(idList.get(i)) : syncTask.getUnitinfo(i);
 					info.setFilePath(bIsUbkList ? info.getFilePath() : ThumUtil.getThumid(objList.get(i)));
 				}
 				int tmpYear = TimeUtils.getYearWithTimeMillis(info.getLastModified() * 1000L);
