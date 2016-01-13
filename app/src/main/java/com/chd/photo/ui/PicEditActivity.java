@@ -58,7 +58,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener
 			}
 		}
 	};
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{

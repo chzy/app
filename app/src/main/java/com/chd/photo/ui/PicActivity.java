@@ -264,6 +264,7 @@ public class PicActivity extends Activity implements OnClickListener {
 				break;
 			case R.id.tv_pic_number:
 				bIsUbkList = true;
+				mPicList.clear();
 				onNewThreadRequest();
 				break;
 		}
