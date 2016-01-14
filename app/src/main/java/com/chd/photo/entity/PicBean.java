@@ -3,7 +3,7 @@ package com.chd.photo.entity;
 import java.io.Serializable;
 import java.util.List;
 
-public class PicBean implements Serializable{
+public class PicBean implements Serializable,Comparable<PicBean>{
 	
 	private String date;
 	
@@ -31,6 +31,18 @@ public class PicBean implements Serializable{
 	public void setList(List<PicInfoBean> list) {
 		this.list = list;
 	}
-	
-	
+
+
+	@Override
+	public int compareTo(PicBean picBean) {
+		int year=Integer.parseInt(this.date);
+		int picYear=Integer.parseInt(picBean.date);
+		if(year<picYear){
+			return -1;
+		}else if(year==picYear){
+			return 0;
+		}else{
+			return 1;
+		}
+	}
 }

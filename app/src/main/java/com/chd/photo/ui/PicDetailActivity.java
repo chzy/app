@@ -57,7 +57,7 @@ public class PicDetailActivity extends Activity implements OnClickListener
 
 		options = new DisplayImageOptions.Builder()
 		.showImageOnLoading(R.drawable.pic_test1)
-		.cacheInMemory(true)
+		.cacheInMemory(false)
 		.cacheOnDisk(true)
 		.considerExifParams(true)
 		.extraForDownloader(new ShareUtils(this).getStorePathStr())  //增加保存路径

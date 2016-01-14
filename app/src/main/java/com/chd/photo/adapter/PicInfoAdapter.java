@@ -14,6 +14,7 @@ import com.chd.yunpan.share.ShareUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
@@ -36,11 +37,12 @@ public class PicInfoAdapter extends BaseAdapter {
 		this.context = context;
 		this.list = list;
 		options = new DisplayImageOptions.Builder()
-		.showImageOnLoading(R.drawable.pic_test1)
-		.cacheInMemory(true)
-		.cacheOnDisk(true)
-		.considerExifParams(true)
-		.displayer(new RoundedBitmapDisplayer(20))
+		.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+		.cacheInMemory(false)
+				.displayer(new RoundedBitmapDisplayer(20))
+				.cacheOnDisk(true)
+				.bitmapConfig(Bitmap.Config.RGB_565)
+				.considerExifParams(true)
 		.extraForDownloader(new ShareUtils(context).getStorePathStr())  //增加保存路径
 		.build();
 	}

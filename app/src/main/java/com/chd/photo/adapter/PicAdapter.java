@@ -59,7 +59,7 @@ public class PicAdapter extends BaseAdapter{
 		holder.tv_pic_date.setText(list.get(position).getDate());
 		holder.mlv_pic.setAdapter(new PicInfoAdapter(context, list
 				.get(position).getList()));
-		holder.mlv_pic.setOnItemClickListener(new OnItemClickListener() 
+		holder.mlv_pic.setOnItemClickListener(new OnItemClickListener()
 		{
 
 			@Override

@@ -26,6 +26,7 @@ import com.chd.yunpan.utils.TimeUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,7 @@ public class PicActivity extends Activity implements OnClickListener {
 
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
+			Collections.sort(mPicList);
 			mLvPic.setAdapter(new PicAdapter(PicActivity.this, mPicList, bIsUbkList));
 		}
 
@@ -115,7 +117,7 @@ public class PicActivity extends Activity implements OnClickListener {
 		FilelistEntity filelistEntity=syncTask.analyPhotoUnits(cloudUnits);
 		cloudUnits.clear();
 		cloudUnits=null;
-		List<FileLocal> fileLocals= syncTask.getLocalUnits(0, 50);
+		List<FileLocal> fileLocals= syncTask.getLocalUnits(0, 1000);
 		cloudUnits=filelistEntity.getBklist();
 		//显示的时候过滤文件类型
 		MFileFilter fileFilter=new MFileFilter();
@@ -221,6 +223,7 @@ public class PicActivity extends Activity implements OnClickListener {
 							monthInfoBeanList.add(monthInfoBean);
 						}
 						if (monthInfoBeanList.size() > 0) {
+							Collections.sort(monthInfoBeanList);
 							PicBean picBean = new PicBean(String.valueOf(entryYear.getKey()), monthInfoBeanList);
 							mPicList.add(picBean);
 						}

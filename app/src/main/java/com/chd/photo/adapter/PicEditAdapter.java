@@ -16,6 +16,8 @@ import com.chd.photo.entity.PicEditItemBean;
 import com.chd.photo.ui.PicDetailActivity;
 import com.chd.yunpan.R;
 import com.chd.yunpan.utils.MyGridView;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
 import java.util.List;
 
@@ -24,10 +26,12 @@ public class PicEditAdapter extends BaseAdapter implements OnItemClickListener, 
 
 	private Activity context;
 	private List<PicEditBean> list;
+	private ImageLoader imageLoader;
 
 	public PicEditAdapter(Activity context, List<PicEditBean> list) {
 		this.context = context;
 		this.list = list;
+		imageLoader=ImageLoader.getInstance();
 	}
 
 	@Override
@@ -60,7 +64,8 @@ public class PicEditAdapter extends BaseAdapter implements OnItemClickListener, 
 		}
 		holder.tv_pic_edit_date.setText(list.get(position).getDate());
 		holder.tv_pic_edit_group_check.setImageResource(list.get(position).isSelect() ? R.drawable.pic_edit_photo_checked : R.drawable.pic_edit_photo_group_check);
-		holder.mlv_pic_edit_gridview.setAdapter(new PicEditItemAdapter(context, list.get(position).getList()));
+		holder.mlv_pic_edit_gridview.setAdapter(new PicEditItemAdapter(context, list.get(position).getList(), imageLoader));
+		holder.mlv_pic_edit_gridview.setOnScrollListener(new PauseOnScrollListener(imageLoader,true,true));
 		holder.mlv_pic_edit_gridview.setTag(position);
 		holder.tv_pic_edit_group_check.setTag(position);
 		holder.mlv_pic_edit_gridview.setOnItemClickListener(this);

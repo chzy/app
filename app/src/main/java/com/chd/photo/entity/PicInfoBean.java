@@ -2,7 +2,7 @@ package com.chd.photo.entity;
 
 import java.io.Serializable;
 
-public class PicInfoBean implements Serializable{
+public class PicInfoBean implements Serializable,Comparable<PicInfoBean>{
 	
 	private int picUrl;
 	private int month;
@@ -57,5 +57,15 @@ public class PicInfoBean implements Serializable{
 		this.picid = picid;
 	}
 
-	
+
+	@Override
+	public int compareTo(PicInfoBean picInfoBean) {
+		if(month<picInfoBean.month){
+			return -1;
+		}else if(month==picInfoBean.month){
+			return 0;
+		}else{
+			return 1;
+		}
+	}
 }

@@ -24,6 +24,7 @@ import android.util.Log;
 import com.chd.TClient;
 import com.lockscreen.view.LockPatternUtils;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
@@ -79,6 +80,8 @@ public class UILApplication extends Application {
 		// method.
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
 				.threadPriority(Thread.NORM_PRIORITY - 2)
+				.threadPoolSize(3)
+				.memoryCache(new WeakMemoryCache())
 				.denyCacheImageMultipleSizesInMemory()
 				.diskCacheFileNameGenerator(new HashCodeFileNameGenerator())
 				.diskCacheSize(500 * 1024 * 1024) // 500 Mb
