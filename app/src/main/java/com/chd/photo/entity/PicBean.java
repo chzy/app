@@ -38,11 +38,11 @@ public class PicBean implements Serializable,Comparable<PicBean>{
 		int year=Integer.parseInt(this.date);
 		int picYear=Integer.parseInt(picBean.date);
 		if(year<picYear){
-			return -1;
+			return 1;
 		}else if(year==picYear){
 			return 0;
 		}else{
-			return 1;
+			return -1;
 		}
 	}
 }

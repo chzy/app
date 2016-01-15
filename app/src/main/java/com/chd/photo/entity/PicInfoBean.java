@@ -61,11 +61,11 @@ public class PicInfoBean implements Serializable,Comparable<PicInfoBean>{
 	@Override
 	public int compareTo(PicInfoBean picInfoBean) {
 		if(month<picInfoBean.month){
-			return -1;
+			return 1;
 		}else if(month==picInfoBean.month){
 			return 0;
 		}else{
-			return 1;
+			return -1;
 		}
 	}
 }
