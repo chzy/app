@@ -12,7 +12,7 @@ public class PopDelete {
 	public PopDelete(FileListFragment fragment) {
 		List<FileInfo0> delete = new ArrayList<FileInfo0>();
 		for (int i = 0; i < fragment.getFilesListEntity().getCount(); i++) {
-			if (fragment.getFilesListEntity().getList().get(i).isChecked()) {
+			if (fragment.getFilesListEntity().getList().get(i).isSelected()) {
 				delete.add(fragment.getFilesListEntity().getList().get(i));
 			}
 		}

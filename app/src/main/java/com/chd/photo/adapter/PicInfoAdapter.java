@@ -8,7 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.chd.photo.entity.PicInfoBean;
+import com.chd.photo.entity.PicBean;
+import com.chd.photo.entity.PicInfoBeanMonth;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -19,23 +20,26 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class PicInfoAdapter extends BaseAdapter {
 
 	private Context context;
-	private List<PicInfoBean> list;
+	private List<PicInfoBeanMonth> list;
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
 	DisplayImageOptions options;
+	private  int _month;
 
-	public PicInfoAdapter(Context context, List<PicInfoBean> list) {
+	public PicInfoAdapter(Context context,  PicBean<PicInfoBeanMonth> picbean) {
 
 		/*imageLoader.clearDiskCache();
 		imageLoader.clearMemoryCache();*/
-
+		_month=picbean.getMonth();
 		this.context = context;
-		this.list = list;
+		this.list =new ArrayList<PicInfoBeanMonth>();
+		list.add( picbean.getList());
 		options = new DisplayImageOptions.Builder()
 		.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
 		.cacheInMemory(false)
@@ -46,6 +50,8 @@ public class PicInfoAdapter extends BaseAdapter {
 		.extraForDownloader(new ShareUtils(context).getStorePathStr())  //增加保存路径
 		.build();
 	}
+
+
 
 	@Override
 	public int getCount() {
@@ -81,10 +87,10 @@ public class PicInfoAdapter extends BaseAdapter {
 		}
 
 		/*holder.iv_pic_info_photo.setImageResource(list.get(position).getPicUrl());*/
-		holder.tv_pic_info_month.setText(list.get(position).getMonth() + "月");
-		holder.tv_pic_info_number.setText("(" + list.get(position).getNumber()
+		holder.tv_pic_info_month.setText(/*list.get(position).getMonth()*/_month + "月");
+		holder.tv_pic_info_number.setText("(" + /*list.get(position).getMonth()*/list.get(position).getPicunits().size()
 				+ ")");
-		imageLoader.displayImage(list.get(position).getPicpath(), holder.iv_pic_info_photo,
+		imageLoader.displayImage(list.get(position).getUrl(), holder.iv_pic_info_photo,
 				options, new SimpleImageLoadingListener() {
 					@Override
 					public void onLoadingStarted(String imageUri, View view) {

@@ -149,7 +149,7 @@ public class PhotoDeleteDialog2 {
 				textView.setText("确定要将这" + pictures.size() + "项删除？");
 				name.setText(pictures.get(position).getFilename());
 				size.setText("");
-				sizes.setText(TimeAndSizeUtil.getSize(pictures.get(position).getsizeS()));
+				//sizes.setText(TimeAndSizeUtil.getSize(pictures.get(position).getsizeS()));
 				time.setText("");
 			} else {
 				textView.setText("确定要将这些文件删除？");

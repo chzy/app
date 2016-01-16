@@ -74,9 +74,9 @@ public class PhotoShowActivity extends Activity {
 				menuShow.setTitle(TimeUtils.getTime(f.getLastModified()  *1000),
 						(currpag + 1) + "/" + entity.getCount());
 				for (int i = 0; i < entity.getCount(); i++) {
-					entity.getList().get(i).setIsChecked(false);	/*.isChecked = false*/
+					entity.getList().get(i).setIsChecked(false);	/*.isSelected = false*/
 				} 
-				entity.getList()/*getFatherEntities()*/.get(arg0).setIsChecked(true);   /*.isChecked=true*/
+				entity.getList()/*getFatherEntities()*/.get(arg0).setIsChecked(true);   /*.isSelected=true*/
 			}
 
 			@Override

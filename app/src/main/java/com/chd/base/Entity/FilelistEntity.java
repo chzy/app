@@ -9,20 +9,20 @@ import java.util.List;
  */
 public class FilelistEntity {
    private  List<FileInfo0> bklist;
-    private List<Integer> ubklist;
+   // private List<Integer> ubklist;
     private List<FileLocal> locallist;
+    private int bakNumber=0;
 
 
 
-
-    public List<Integer> getUbklist() {
+    /*public List<Integer> getUbklist() {
         return ubklist;
     }
 
     public void setUbklist(List<Integer> ubklist) {
         this.ubklist = ubklist;
     }
-
+*/
     public List<FileInfo0> getBklist() {
         return bklist;
     }
@@ -42,5 +42,18 @@ public class FilelistEntity {
 
     public void setLocallist(List<FileLocal> locallist) {
         this.locallist = locallist;
+    }
+
+  /*  public int getbakNumber() {
+        return bakNumber;
+    }*/
+
+    public void addbakNumber() {
+        this.bakNumber++;
+    }
+
+    public int getUnbakNumber()
+    {
+        return locallist.size()-bakNumber;
     }
 }

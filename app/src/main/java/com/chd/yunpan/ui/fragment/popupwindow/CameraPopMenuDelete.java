@@ -41,7 +41,7 @@ public class CameraPopMenuDelete implements OnClickListener {
 	public void check() {
 		int j = 0;
 		for (int i = 0; i < fragment.getEntity().size(); i++) {
-			if (fragment.getEntity().get(i).isChecked()) {
+			if (fragment.getEntity().get(i).isSelected()) {
 				j++;
 			}
 		}
@@ -112,7 +112,7 @@ public class CameraPopMenuDelete implements OnClickListener {
 			if (fragment.getEntity().size() > 0) {
 				List<FileInfo0> deletePictures = new ArrayList<FileInfo0>();
 				for (int i = 0; i < fragment.getEntity().size(); i++) {
-					if (fragment.getEntity().get(i).isChecked()) {
+					if (fragment.getEntity().get(i).isSelected()) {
 						deletePictures.add(fragment.getEntity().get(i));
 					}
 				}

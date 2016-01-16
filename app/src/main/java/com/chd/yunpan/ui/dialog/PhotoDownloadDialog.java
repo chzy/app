@@ -155,7 +155,7 @@ public class PhotoDownloadDialog {
 	private void downFile() {
 		List<FileInfo0> downPictures = new ArrayList<FileInfo0>();
 		for (int i = 0; i < entities.size(); i++) {
-			if (entities.get(i).isChecked() ) {
+			if (entities.get(i).isSelected() ) {
 				FileInfo0 localFile = new FileInfo0();
 				localFile.setObjid(entities.get(i).getObjid());
 				downPictures.add(localFile);

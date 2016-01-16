@@ -1,22 +1,29 @@
 package com.chd.photo.entity;
 
 import java.io.Serializable;
-import java.util.List;
 
-public class PicBean implements Serializable,Comparable<PicBean>{
+public class PicBean  <T> implements Serializable,Comparable<PicBean>{
 	
 	private String date;
-	
-	private List<PicInfoBean> list;
+	private int _month;
+	//PicBean<PicInfoBeanMonth>
+	private T _list;
 	
 
-	public PicBean(String date, List<PicInfoBean> list) {
+	/*public PicBean(String date, List<PicInfoBean> list) {
 		super();
 		this.date = date;
-		this.list = list;
+		//this.list = list;
+	}*/
+
+	public PicBean(String date, T monthUnits) {
+		super();
+		this.date = date;
+		this._list=monthUnits;
+
 	}
 
-	public String getDate() {
+	public String getYear() {
 		return date;
 	}
 
@@ -24,12 +31,12 @@ public class PicBean implements Serializable,Comparable<PicBean>{
 		this.date = date;
 	}
 
-	public List<PicInfoBean> getList() {
-		return list;
+	public T getList() {
+		return _list;
 	}
 
-	public void setList(List<PicInfoBean> list) {
-		this.list = list;
+	public void setList( T list) {
+		this._list = list;
 	}
 
 
@@ -44,5 +51,13 @@ public class PicBean implements Serializable,Comparable<PicBean>{
 		}else{
 			return -1;
 		}
+	}
+
+	public int getMonth() {
+		return _month;
+	}
+
+	public void setMonth(int _month) {
+		this._month = _month;
 	}
 }

@@ -15,11 +15,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.chd.MediaMgr.utils.MediaFileUtil;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.ui.fragment.FileListFragment;
 import com.chd.yunpan.utils.FindType;
-import com.chd.yunpan.utils.TimeAndSizeUtil;
 import com.chd.yunpan.utils.TimeUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -46,7 +46,7 @@ public class JDDialogPopupFromBottom extends Dialog {
 //		for (int i = 0; i < fragment.getFilesListEntity().getCount(); i++)
 		for (  FileInfo0 f : fragment.getFilesListEntity().getList() )
 			{
-			if (f.isChecked()) {
+			if (f.isSelected()) {
 				items.add(f);
 			}
 		}
@@ -167,7 +167,7 @@ public class JDDialogPopupFromBottom extends Dialog {
 							animateFirstListener);
 				}
 */
-				size.setText(TimeAndSizeUtil.getSize(entity2.getsizeS()));
+				size.setText(MediaFileUtil.convertStorage(entity2.getFilesize()));
 			}
 
 			name.setText(items.get(position).getFilename());

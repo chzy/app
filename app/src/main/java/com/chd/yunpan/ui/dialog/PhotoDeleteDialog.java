@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chd.MediaMgr.utils.MediaFileUtil;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.net.DeleteRun;
@@ -88,7 +89,7 @@ public class PhotoDeleteDialog {
 		d = new Dialog(context);
 		pictures=new ArrayList<FileInfo0>();
 		for (int i = 0; i < entities.size(); i++) {
-			if (entities.get(i).isChecked()) {
+			if (entities.get(i).isSelected()) {
 				pictures.add(entities.get(i));
 			}
 		}
@@ -152,13 +153,13 @@ public class PhotoDeleteDialog {
 				textView.setText("确定要将这个文件删除？");
 				name.setText(pictures.get(position).getFilename());
 				sizes.setText("");
-				size.setText(pictures.get(position).getsizeS() + "");
+				size.setText(MediaFileUtil.convertStorage(pictures.get(position).getFilesize()));
 				time.setText(TimeUtils.getTime(pictures.get(position).getLastModified()));
 			} else if (pictures.size() < 4 && pictures.size() > 1) {
 				textView.setText("确定要将这" + pictures.size() + "项删除？");
 				name.setText(pictures.get(position).getFilename());
 				size.setText("");
-				sizes.setText(pictures.get(position).getsizeS()+"");
+				sizes.setText(MediaFileUtil.convertStorage(pictures.get(position).getFilesize()));
 				time.setText("");
 			} else {
 				textView.setText("确定要将这些文件删除？");

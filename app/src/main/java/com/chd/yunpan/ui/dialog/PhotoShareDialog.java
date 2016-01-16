@@ -64,7 +64,7 @@ public class PhotoShareDialog extends Dialog implements OnClickListener {
 		this.context = activity;
 		this.fragment = fragment;
 		for (int i = 0; i <entities.size(); i++) {
-			if(entities.get(i).isChecked()){
+			if(entities.get(i).isSelected()){
 				file  = entities.get(i);
 			}
 		}
@@ -72,7 +72,7 @@ public class PhotoShareDialog extends Dialog implements OnClickListener {
 		shareEntities = new ArrayList<FileInfo0>();
 
 		for (int i = 0; i < entities.size(); i++) {
-			if (entities.get(i).isChecked()) {
+			if (entities.get(i).isSelected()) {
 				shareEntities.add(entities.get(i));
 			}
 		}

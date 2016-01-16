@@ -152,7 +152,7 @@ public class FileListViewAdapter extends BaseAdapter {
 				fragment.checkFile(isChecked, position);
 			}
 		});
-		hoder.check.setChecked(entity.isChecked());
+		hoder.check.setChecked(entity.isSelected());
 	
 		//判定是文件夹还是文件
 	/*	if(entity instanceof FileDirDataEntity){

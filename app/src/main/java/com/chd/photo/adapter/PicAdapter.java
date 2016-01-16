@@ -10,19 +10,22 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.chd.photo.entity.PicBean;
+import com.chd.photo.entity.PicInfoBean;
+import com.chd.photo.entity.PicInfoBeanMonth;
 import com.chd.photo.ui.PicEditActivity;
 import com.chd.yunpan.R;
 
+import java.io.Serializable;
 import java.util.List;
 
 
 public class PicAdapter extends BaseAdapter{
 
 	private Context context;
-	private List<PicBean> list;
+	private List<PicBean<PicInfoBeanMonth>> list;
 	private boolean bIsUbkList;
 
-	public PicAdapter(Context context, List<PicBean> list, boolean bIsUbkList) {
+	public PicAdapter(Context context,  List<PicBean<PicInfoBeanMonth>> list, boolean bIsUbkList) {
 		this.context = context;
 		this.list = list;
 		this.bIsUbkList = bIsUbkList;
@@ -56,18 +59,20 @@ public class PicAdapter extends BaseAdapter{
 		} else {
 			holder = (ViewHolder) converView.getTag();
 		}
-		holder.tv_pic_date.setText(list.get(position).getDate());
-		holder.mlv_pic.setAdapter(new PicInfoAdapter(context, list
-				.get(position).getList()));
-		holder.mlv_pic.setOnItemClickListener(new OnItemClickListener()
+		holder.tv_pic_date.setText(list.get(position).getYear());
+		holder.mlv_pic.setAdapter(new PicInfoAdapter(context, list.get(position)
+				));
+		holder.mlv_pic.setOnItemClickListener(new OnItemClickListener() 
 		{
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) 
 			{
 				Intent intent = new Intent(context, PicEditActivity.class);
-				intent.putExtra("month", list.get(position).getList().get(arg2).getMonth());
-				intent.putExtra("year", list.get(position).getDate());
+				intent.putExtra("month", list.get(position).getMonth());
+				intent.putExtra("year", list.get(position).getYear());
+				List<PicInfoBean> mlist=list.get(position).getList().getPicunits();
+				intent.putExtra("listUnits", (Serializable) (mlist));//LIST<PicInfoBean>
 				intent.putExtra("ubklist", bIsUbkList);
 				context.startActivity(intent);
 			}

@@ -113,7 +113,8 @@ public class MusicActivity extends Activity implements OnClickListener,OnItemCli
 			int id = item.getSysid();
 			MusicBean musicBean = new MusicBean(name, path);
 			musicBean.setId(id);
-			musicBean.setFileInfo0(syncTask.GetLocalCopy(item));
+			if (syncTask.haveLocalCopy(item))
+				musicBean.setFileInfo0(item);
 			
 			mMusicList.add(musicBean);
 		}

@@ -415,11 +415,11 @@ public class FileListFragment extends BaseFragment implements OnClickListener {
 				}else {
 					/*if(entity.getFatherEntities().get(position) instanceof FileDirDataEntity){
 						//分享
-						entity.getFatherEntities().get(position).isChecked = false;
+						entity.getFatherEntities().get(position).isSelected = false;
 						adapter.notifyDataSetChanged();
 						ToastUtils.toast(getActivity(), "暂不支持文件夹分享");
 						if(getCheckedFileDataFatherEntities().size()==0){
-							isChecked = false;
+							isSelected = false;
 						}
 						return;
 					}*/
@@ -462,7 +462,7 @@ public class FileListFragment extends BaseFragment implements OnClickListener {
 			return dataEntities;
 		}
 		for (int i = 0; i < entity.getFatherEntities().size(); i++) {
-			if(entity.getFatherEntities().get(i).isChecked){
+			if(entity.getFatherEntities().get(i).isSelected){
 				dataEntities.add(entity.getFatherEntities().get(i));
 			}
 		}
@@ -478,7 +478,7 @@ public class FileListFragment extends BaseFragment implements OnClickListener {
 		/*for (int i = 0; i < entity.getFatherEntities().size(); i++)*/
 		for (FileInfo0 f:entity.getList())
 		{
-			if(f.isChecked()){
+			if(f.isSelected()){
 				dataEntities.add(f);
 			}
 		}
@@ -494,7 +494,7 @@ public class FileListFragment extends BaseFragment implements OnClickListener {
 		/*for (int i = 0; i < entity.getFatherEntities().size(); i++)*/
 		for (FileInfo0 f:entity.getList())
 		{
-			if(/*entity.getFatherEntities().get(i).isChecked*/f.isChecked()  )
+			if(/*entity.getFatherEntities().get(i).isSelected*/f.isSelected()  )
 			{
 				/*dataEntities.add(entity.getFatherEntities().get(i));*/
 				dataEntities.add(f);
@@ -578,7 +578,7 @@ public class FileListFragment extends BaseFragment implements OnClickListener {
 	
 	public void dis(){
 		/*for (int i = 0; i < entity.getFatherEntities().size(); i++) {
-			entity.getFatherEntities().get(i).isChecked = false;
+			entity.getFatherEntities().get(i).isSelected = false;
 		}*/
 		for (FileInfo0 f:entity.getList())
 		{

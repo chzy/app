@@ -14,6 +14,7 @@ import android.util.Log;
 import com.chd.MediaMgr.utils.MFileFilter;
 import com.chd.MediaMgr.utils.MediaFileUtil;
 import com.chd.base.Entity.FileLocal;
+import com.chd.base.Entity.FilelistEntity;
 import com.chd.photo.entity.PicDBitem;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
@@ -28,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class MediaMgr  {
+	
 	private SQLiteDatabase db;
 	private  final  String dbname="CloudStore";
 	private FTYPE _ftype;
@@ -164,7 +166,7 @@ public class MediaMgr  {
 	}
 
 
-	public List<FileInfo0>  anlayLocalUnits(List<FileInfo0> couldlist) {
+	public List<FileInfo0>  anlayLocalUnits(List<FileInfo0> couldlist,FilelistEntity filelistEntity) {
 		int count= getLocalUnits().size();
 		int count2=couldlist.size();
 		int max=Math.min(count, count2);
@@ -192,7 +194,8 @@ public class MediaMgr  {
 				if ( fileLocal.fname.equalsIgnoreCase( item.getObjid())) {
 					item.setSysid(fileLocal.sysid);
 					fileLocal.bakuped = true;
-					//item=null;
+					if (filelistEntity!=null)
+						filelistEntity.addbakNumber();
 					max--;
 					break;
 				}
@@ -207,6 +210,8 @@ public class MediaMgr  {
 	public void GetLocalFiles(MediaFileUtil.FileCategory fc,String[] exts,boolean include)
 	{
 		//setCustomCategory(new String[]{"doc", "pdf", "xls", "zip", "rar"}, true);
+		if (LocalUnits!=null && !LocalUnits.isEmpty())
+			return;
 		setCustomCategory(exts, include);
 		Cursor c =query(/*MediaFileUtil.FileCategory.File*/fc, MediaFileUtil.FileCategory.All, MediaFileUtil.SortMethod.date);
 
@@ -220,7 +225,7 @@ public class MediaMgr  {
 			FileLocal fileLocal =new FileLocal();
 			fileLocal.sysid=c.getInt(COLUMN_ID);
 			fileLocal.fname= MediaFileUtil.getFnameformPath(c.getString(COLUMN_PATH));
-			getLocalUnits().add(fileLocal);
+			LocalUnits.add(fileLocal);
 		}
 		c.close();
 		if (c == null) {
@@ -260,12 +265,13 @@ public class MediaMgr  {
 		return locals;
 	}
 
-	public  FileInfo0 queryLocalInfo(int sysid,FTYPE ftype)
+	public  boolean queryLocalInfo(int sysid/*,FTYPE ftype*/,FileInfo0 fileInfo0)
 	{
 
 		//MediaFileUtil.FileCategory fc0= MediaFileUtil.FileCategory.File;
+		boolean ret=false;
 		MediaFileUtil.FileCategory fc;
-		switch (ftype)
+		switch (fileInfo0 .getFtype())
 		{
 			case MUSIC:
 				fc=MediaFileUtil.FileCategory.Music;
@@ -282,11 +288,10 @@ public class MediaMgr  {
 		Uri uri = getContentUriByCategory(fc);
 		String selection = buildSelectionByCategory(MediaFileUtil.FileCategory._ID);
 		String sortOrder = null;
-		FileInfo0 fileInfo0=new FileInfo0();
-
+	
 		if (uri == null) {
 			Log.e("", "invalid uri, category:" + fc.name());
-			return null;
+			return ret;
 		}
 
 		String[] columns = new String[] {
@@ -295,16 +300,18 @@ public class MediaMgr  {
 		Cursor cursor= context.getContentResolver().query(uri, columns, selection, new String[]{""+sysid }, sortOrder);
 		while(cursor.moveToNext())
 		{
-			fileInfo0.setFilePath("file://" + cursor.getString(COLUMN_PATH));
+			fileInfo0.setFilePath( cursor.getString(COLUMN_PATH));
 			if (fileInfo0.getObjid()==null)
 				fileInfo0.setObjid(MediaFileUtil.getNameFromFilepath(cursor.getString(COLUMN_PATH)));
 			fileInfo0.setFilesize(cursor.getInt(COLUMN_SIZE));
 			fileInfo0.setLastModified(cursor.getInt(COLUMN_DATE));
 			fileInfo0.setSysid(sysid);
 
+			ret=true;
+
 		}
 		cursor.close();
-		return fileInfo0;
+		return ret;
 	}
 
 	public List<PicDBitem> getUploadUnits(){
@@ -513,6 +520,7 @@ public class MediaMgr  {
 	{
 
 		if (1==1) {
+			this.LocalUnits.clear();
 			fileScan(info0.getFilePath(),context);
 			return;
 		}

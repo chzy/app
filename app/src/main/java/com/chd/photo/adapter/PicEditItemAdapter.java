@@ -44,40 +44,40 @@ public class PicEditItemAdapter extends BaseAdapter {
         this.imageLoader=imageLoader;
     }
 
-    @Override
-    public int getCount() {
-        return list.size();
-    }
+	@Override
+	public int getCount() {
+		return list.size();
+	}
 
-    @Override
-    public Object getItem(int arg0) {
-        return null;
-    }
+	@Override
+	public Object getItem(int arg0) {
+		return null;
+	}
 
-    @Override
-    public long getItemId(int arg0) {
-        return 0;
-    }
+	@Override
+	public long getItemId(int arg0) {
+		return 0;
+	}
 
-    @Override
-    public View getView(final int position, View converView, ViewGroup parent) {
-        final ViewHolder holder;
-        if (converView == null) {
-            converView = View.inflate(context, R.layout.item_pic_edit_item_adapter, null);
-            holder = new ViewHolder();
-            holder.iv_pic_info_photo = (ImageView) converView.findViewById(R.id.iv_pic_edit_item_photo);
-            holder.iv_pic_edit_check = (ImageView) converView.findViewById(R.id.iv_pic_edit_item_photo_check);
-            converView.setTag(holder);
-        } else {
-            holder = (ViewHolder) converView.getTag();
-        }
+	@Override
+	public View getView(final int position, View converView, ViewGroup parent) {
+		final ViewHolder holder;
+		if (converView == null) {
+			converView = View.inflate(context, R.layout.item_pic_edit_item_adapter, null);
+			holder = new ViewHolder();
+			holder.iv_pic_info_photo = (ImageView) converView.findViewById(R.id.iv_pic_edit_item_photo);
+			holder.iv_pic_edit_check = (ImageView) converView.findViewById(R.id.iv_pic_edit_item_photo_check);
+			converView.setTag(holder);
+		} else {
+			holder = (ViewHolder) converView.getTag();
+		}
 
-        holder.iv_pic_edit_check.setVisibility(list.get(position).isEdit() ? View.VISIBLE : View.GONE);
-        holder.iv_pic_edit_check.setImageResource(list.get(position).isSelect() ? R.drawable.pic_edit_photo_checked : R.drawable.pic_edit_photo_check);
+		holder.iv_pic_edit_check.setVisibility(list.get(position).isEdit() ? View.VISIBLE : View.GONE);
+		holder.iv_pic_edit_check.setImageResource(list.get(position).isSelect() ? R.drawable.pic_edit_photo_checked : R.drawable.pic_edit_photo_check);
+		
 
-
-        final String url = list.get(position).getPicpath();
-        /*if (  ThumUtil.isStartWithTrpc(url))
+		final String url = list.get(position).getUrl();
+		/*if (  ThumUtil.isStartWithTrpc(url))
 		{
 			Thread thread = new Thread(new Runnable() 
 			{
@@ -102,42 +102,42 @@ public class PicEditItemAdapter extends BaseAdapter {
 			thread.start();
 		}
 		else*/
-        {
-            imageLoader.displayImage(list.get(position).getPicpath(), holder.iv_pic_info_photo,
-                    options, new SimpleImageLoadingListener() {
-                        @Override
-                        public void onLoadingStarted(String imageUri, View view) {
+		{
+			imageLoader.displayImage(url, holder.iv_pic_info_photo,
+					options, new SimpleImageLoadingListener() {
+						@Override
+						public void onLoadingStarted(String imageUri, View view) {
 							/*vh.progressBar.setProgress(0);
 							vh.progressBar.setVisibility(View.VISIBLE);*/
-                        }
+						}
 
-                        @Override
-                        public void onLoadingFailed(String imageUri, View view,
-                                                    FailReason failReason) {
+						@Override
+						public void onLoadingFailed(String imageUri, View view,
+								FailReason failReason) {
 							/*vh.progressBar.setVisibility(View.GONE);*/
-                        }
+						}
 
-                        @Override
-                        public void onLoadingComplete(String imageUri, View view,
-                                                      Bitmap loadedImage) {
+						@Override
+						public void onLoadingComplete(String imageUri, View view,
+								Bitmap loadedImage) {
 							/*vh.progressBar.setVisibility(View.GONE);*/
-                        }
-                    }, new ImageLoadingProgressListener() {
-                        @Override
-                        public void onProgressUpdate(String imageUri, View view,
-                                                     int current, int total) {
+						}
+					}, new ImageLoadingProgressListener() {
+						@Override
+						public void onProgressUpdate(String imageUri, View view,
+								int current, int total) {
 							/*vh.progressBar.setProgress(Math.round(100.0f * current
 									/ total));*/
-                        }
-                    });
-        }
+						}
+					});
+		}
+		
+		return converView;
+	}
 
-        return converView;
-    }
-
-    private class ViewHolder {
-        ImageView iv_pic_info_photo;
-        ImageView iv_pic_edit_check;
-    }
+	private class ViewHolder {
+		ImageView iv_pic_info_photo;
+		ImageView iv_pic_edit_check;
+	}
 
 }

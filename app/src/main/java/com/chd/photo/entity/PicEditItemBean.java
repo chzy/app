@@ -2,17 +2,16 @@ package com.chd.photo.entity;
 
 import java.io.Serializable;
 
-import com.chd.proto.FileInfo0;
-
 public class PicEditItemBean implements Serializable {
 
 	private int picUrl;
 	private boolean select;
 	private boolean edit;
-	private String Picpath;
+	//private String Picpath;
 	private int Picid;
 	private boolean bIsUbkList;
-	private FileInfo0 fileInfo0;
+	//private FileInfo0 fileInfo0;
+	private  String url;
 	
 	public PicEditItemBean() {
 	}
@@ -24,13 +23,7 @@ public class PicEditItemBean implements Serializable {
 		this.select = select;
 	}
 
-	public int getPicUrl() {
-		return picUrl;
-	}
 
-	public void setPicUrl(int picUrl) {
-		this.picUrl = picUrl;
-	}
 
 	public boolean isSelect() {
 		return select;
@@ -48,13 +41,6 @@ public class PicEditItemBean implements Serializable {
 		this.edit = edit;
 	}
 
-	public String getPicpath() {
-		return Picpath;
-	}
-
-	public void setPicpath(String picpath) {
-		Picpath = picpath;
-	}
 
 	public int getPicid() {
 		return Picid;
@@ -72,11 +58,14 @@ public class PicEditItemBean implements Serializable {
 		this.bIsUbkList = bIsUbkList;
 	}
 
-	public FileInfo0 getFileInfo0() {
-		return fileInfo0;
+
+
+
+	public String getUrl() {
+		return url;
 	}
 
-	public void setFileInfo0(FileInfo0 fileInfo0) {
-		this.fileInfo0 = fileInfo0;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 }

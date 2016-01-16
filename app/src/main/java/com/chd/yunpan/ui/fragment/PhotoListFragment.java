@@ -349,7 +349,7 @@ public class PhotoListFragment extends BaseFragment  implements OnClickListener{
 		if(entity!=null)
 			/*for (int i = 0; i < entity.getFatherEntities().size(); i++) {
 				FileDataEntity entity1 = (FileDataEntity) entity.getFatherEntities().get(i);
-				entity1.isChecked = flag;
+				entity1.isSelected = flag;
 		}*/
 		for (FileInfo0 f: entity.getList())
 		{
@@ -422,10 +422,10 @@ public class PhotoListFragment extends BaseFragment  implements OnClickListener{
 			for (FileInfo0 f : entity.getList())
 			{
 				/*FileDataEntity entity1 = (FileDataEntity) entity.getFatherEntities().get(i);
-				if (entity1.isChecked) {
+				if (entity1.isSelected) {
 					dataEntities.add(entity1);
 				}*/
-				if (f.isChecked())
+				if (f.isSelected())
 				{
 					dataEntities.add(f);
 				}

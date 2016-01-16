@@ -119,6 +119,7 @@ public class OtherActivity extends Activity implements OnClickListener
 		}
 
 		FilelistEntity filelistEntity=syncTask.analyUnits(cloudUnits);
+		//cloudUnits  是网存的文件
 		cloudUnits.clear();
 		cloudUnits=null;
 		List<FileLocal> fileLocals=filelistEntity.getLocallist();

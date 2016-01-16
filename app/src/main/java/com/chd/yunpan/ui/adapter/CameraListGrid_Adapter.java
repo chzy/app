@@ -312,7 +312,7 @@ public class CameraListGrid_Adapter extends BaseAdapter {
 		}else {
 			vh.checkbox.setVisibility(View.GONE);
 		}
-		if(entity.isChecked()){
+		if(entity.isSelected()){
 			vh.checkbox.setChecked(true);
 		}else {
 			vh.checkbox.setChecked(false);

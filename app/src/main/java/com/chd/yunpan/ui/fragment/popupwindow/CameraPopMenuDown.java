@@ -38,7 +38,7 @@ public class CameraPopMenuDown implements OnClickListener {
 	public void check() {
 		int j = 0;
 		for (int i = 0; i < fragment.getEntity().size(); i++) {
-			if (fragment.getEntity().get(i).isChecked()) {
+			if (fragment.getEntity().get(i).isSelected()) {
 				j++;
 			}
 		}
@@ -111,7 +111,7 @@ public class CameraPopMenuDown implements OnClickListener {
 			if (fragment.getEntity().size() > 0) {
 				List<FileInfo0> downPictures = new ArrayList<FileInfo0>();
 				for (int i = 0; i < fragment.getEntity().size(); i++) {
-					if (fragment.getEntity().get(i).isChecked()) {
+					if (fragment.getEntity().get(i).isSelected()) {
 						downPictures.add(fragment.getEntity().get(i));
 					}
 				}
@@ -145,7 +145,7 @@ public class CameraPopMenuDown implements OnClickListener {
 	private void down(){
 		List<FileInfo0> downPictures = new ArrayList<FileInfo0>();
 		for (int i = 0; i < fragment.getEntity().size(); i++) {
-			if (fragment.getEntity().get(i).isChecked()) {
+			if (fragment.getEntity().get(i).isSelected()) {
 				downPictures.add(fragment.getEntity().get(i));
 			}
 		}

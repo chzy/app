@@ -16,7 +16,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.net.DownloadRun;
@@ -116,7 +115,7 @@ public class CameraPopMenu implements OnClickListener {
 			if (fragment.getEntity().size() > 0) {
 				List<FileInfo0> downPictures = new ArrayList<FileInfo0>();
 				for (int i = 0; i < fragment.getEntity().size(); i++) {
-					if (fragment.getEntity().get(i).isChecked()) {
+					if (fragment.getEntity().get(i).isSelected()) {
 						downPictures.add(fragment.getEntity().get(i));
 					}
 				}
@@ -152,7 +151,7 @@ public class CameraPopMenu implements OnClickListener {
 	private void down(){
 		List<FileInfo0> downPictures = new ArrayList<FileInfo0>();
 		for (int i = 0; i < fragment.getEntity().size(); i++) {
-			if (fragment.getEntity().get(i).isChecked()) {
+			if (fragment.getEntity().get(i).isSelected()) {
 				downPictures.add(fragment.getEntity().get(i));
 			}
 		}
@@ -183,7 +182,7 @@ public class CameraPopMenu implements OnClickListener {
 	private void share(){
 		int j = 0;
 		for (int i = 0; i < fragment.getEntity().size(); i++) {
-			if(fragment.getEntity().get(i).isChecked()){
+			if(fragment.getEntity().get(i).isSelected()){
 				j++;
 			}
 			
