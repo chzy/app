@@ -301,6 +301,7 @@ public class SyncLocalFileBackground implements Runnable {
 					if (succed &&  filebuilder.Commit(null)) {
 						su.finishTransform(MediaMgr.DBTAB.UPed, entity);
 						succed=true;
+						Log.d(Tag,"upload finished !!");
 					}
 
 				} catch (Exception e) {
