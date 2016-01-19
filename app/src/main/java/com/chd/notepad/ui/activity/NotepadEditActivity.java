@@ -112,7 +112,7 @@ public class NotepadEditActivity extends Activity {
 					dm.insert(titleText, contentText);
 				if(state == ALERT_STATE)//修改状态
 					dm.update(Integer.parseInt(id), titleText, contentText);
-				
+				setResult(RESULT_OK);
 				dm.close();
 				
 			}catch(Exception ex){

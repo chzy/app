@@ -1,8 +1,5 @@
 package com.chd.notepad.ui.adapter;
 
-import java.util.Calendar;
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
@@ -17,6 +14,9 @@ import android.widget.TextView;
 
 import com.chd.notepad.ui.item.NoteItemtag;
 import com.chd.yunpan.R;
+
+import java.util.Calendar;
+import java.util.List;
 
 
 
@@ -158,7 +158,7 @@ public class ListViewAdapter extends BaseAdapter {
 		
 		txt_day = (TextView) convertView.findViewById(R.id.note_date_day);
 		txt_hour = (TextView) convertView.findViewById(R.id.note_date_hour);
-		txt_day.setText(cal.get(Calendar.DAY_OF_MONTH) + "日");
+		txt_day.setText((cal.get(Calendar.MONTH)+1)+"月"+cal.get(Calendar.DAY_OF_MONTH) + "日");
 		txt_hour.setText("" + cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE) + " " + (cal.get(Calendar.AM_PM) > 0 ? "PM" : "AM"));
 		//time1=TimeUtils.getTimeTxt(tag.time,"kk:mm");
 		text.setText(tag.content);
