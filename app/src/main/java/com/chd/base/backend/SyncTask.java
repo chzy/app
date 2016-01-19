@@ -52,38 +52,32 @@ public class SyncTask {
 					File file=new File(info0.getFilePath());
 				   return  (file.exists() && file.isFile());
 			}
-			FileInfo0 info01=dbManager.queryLocalInfo(info0.getSysid(),_ftype);
-			if (info01!=null) {
+			if (info0.getFtype()==null)
+				info0.setFtype(_ftype);
+			return   dbManager.queryLocalInfo(info0.getSysid(),info0);
+			/*if (info01!=null) {
 				info0.setFilePath(info01.getFilePath());
 				return true;
-			}
+			}*/
 		}
 		boolean ret=false;
 		//return true;
 		//通过上下行记录 来匹配
-		dbManager.open();
+		/*dbManager.open();
 		if (dbManager.QueryDownloadedFile(info0,false))
 			ret= true;
 
 		if (dbManager.QueryUploadedFile(info0, false))
 			ret= true;
-		dbManager.close();
+		dbManager.close();*/
 		return ret;
-		/*
-		List<FileInfo0> uploadedFiles = dbManager.getUpLoadedFiles();
-		for (FileInfo0 item : uploadedFiles) {
-			if (item.equals(info0)) {
-				info0.setFilePath(item.getFilePath());
-				info0.setSysid(item.getSysid());
-				return true;
-			}
-		}*/
+
 
 	}
 
 
 
-	public FileInfo0 GetLocalCopy(FileInfo0 info0) {
+	/*public FileInfo0 GetLocalCopy(FileInfo0 info0) {
 		if (info0.getSysid() > 0)
 		{
 			if (info0.getFilePath()!=null && info0.getFilePath().indexOf(".")>1 ) {
@@ -95,49 +89,19 @@ public class SyncTask {
 			}
 			FileInfo0 info01=dbManager.queryLocalInfo(info0.getSysid(),_ftype);
 			if (info01!=null) {
-				//info0.setFilePath(info01.getFilePath());
 				FileInfo0 item=new FileInfo0(info0);
 				item.setFilePath(info0.getFilePath());
 				item.setSysid(info0.getSysid());
-
-				//return new FileInfo0(info0);
-				/*try {
-					FileInfo0 info02=info01.getClass().newInstance();
-				} catch (InstantiationException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				}*/
 				return item;
 			}
 		}
 		boolean ret=false;
-		//return true;
-		//通过上下行记录 来匹配
-		/*dbManager.open();
-		if (dbManager.QueryDownloadedFile(info0,false))
-			ret= true;
-
-		if (dbManager.QueryUploadedFile(info0, false))
-			ret= true;
-		dbManager.close();
-		return ret;*/
 		return  null;
-		/*
-		List<FileInfo0> uploadedFiles = dbManager.getUpLoadedFiles();
-		for (FileInfo0 item : uploadedFiles) {
-			if (item.equals(info0)) {
-				info0.setFilePath(item.getFilePath());
-				info0.setSysid(item.getSysid());
-				return true;
-			}
-		}*/
-
-	}
+	}*/
 
 	public void flush() {
 		filelistEntity.getBklist().clear();
-		filelistEntity.getUbklist().clear();
+		//filelistEntity.getUbklist().clear();
 		filelistEntity = null;
 	}
 
@@ -149,6 +113,7 @@ public class SyncTask {
 			final FilesListEntity filesListEntity = TClient.getinstance().queryFileList(_ftype, begin, max);
 			flist=filesListEntity.getList();
 			Collections.sort(flist, new SortBydesc());
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 			flist=new ArrayList<FileInfo0>();
@@ -158,7 +123,12 @@ public class SyncTask {
 
 	public FileInfo0 queryLocalInfo(int sysid)
 	{
-		return dbManager.queryLocalInfo(sysid,_ftype);
+		FileInfo0 fileInfo0=new FileInfo0();
+		fileInfo0.setSysid(sysid);
+		fileInfo0.setFtype(_ftype);
+		if ( dbManager.queryLocalInfo(sysid,fileInfo0))
+			return fileInfo0;
+		return  null;
 	}
 
 
@@ -170,7 +140,7 @@ public class SyncTask {
 	public FilelistEntity analyPhotoUnits(List<FileInfo0> remotelist) {
 		filelistEntity = new FilelistEntity();
 		dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Picture, new String[]{"jpg", "png", "gif"}, true);
-		filelistEntity.setBklist(dbManager.anlayLocalUnits(remotelist));
+		filelistEntity.setBklist(dbManager.anlayLocalUnits(remotelist,filelistEntity));
 		filelistEntity.setLocallist(dbManager.getLocalUnits());
 		return filelistEntity;
 	}
@@ -178,7 +148,7 @@ public class SyncTask {
 	public FilelistEntity analyMusicUnits(List<FileInfo0> remotelist) {
 		filelistEntity = new FilelistEntity();
 		dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Music, new String[]{"mp3", "wav" }, true);
-		filelistEntity.setBklist(dbManager.anlayLocalUnits(remotelist));
+		filelistEntity.setBklist(dbManager.anlayLocalUnits(remotelist,filelistEntity));
 		filelistEntity.setLocallist(dbManager.getLocalUnits());
 		return filelistEntity;
 	}
@@ -186,7 +156,7 @@ public class SyncTask {
 	public FilelistEntity analyOtherUnits(List<FileInfo0> remotelist) {
 		filelistEntity = new FilelistEntity();
 		dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Other, new String[]{"pdf", "xls", "doc","docx"}, true);
-		filelistEntity.setBklist(dbManager.anlayLocalUnits(remotelist));
+		filelistEntity.setBklist(dbManager.anlayLocalUnits(remotelist,filelistEntity));
 		filelistEntity.setLocallist(dbManager.getLocalUnits());
 		return filelistEntity;
 	}
@@ -194,7 +164,7 @@ public class SyncTask {
 	public FilelistEntity analyUnits(List<FileInfo0> remotelist) {
 		filelistEntity = new FilelistEntity();
 		//dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Music, new String[]{"mp3", "wav" }, true);
-		filelistEntity.setBklist(dbManager.anlayLocalUnits(remotelist));
+		filelistEntity.setBklist(dbManager.anlayLocalUnits(remotelist,filelistEntity));
 		//filelistEntity.setLocallist(dbManager.getLocalUnits());
 		return filelistEntity;
 	}
