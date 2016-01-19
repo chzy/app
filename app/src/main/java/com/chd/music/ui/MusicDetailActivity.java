@@ -1,7 +1,5 @@
 package com.chd.music.ui;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -23,6 +21,8 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+
+import java.util.List;
 
 public class MusicDetailActivity extends Activity implements OnClickListener
 {
@@ -97,6 +97,7 @@ public class MusicDetailActivity extends Activity implements OnClickListener
 	private void initData(List<FileInfo0> cloudUnits) {
 		//模拟数据
 		int sysid = getIntent().getIntExtra("sysid", -1);
+		String objId = getIntent().getStringExtra("objId");
 		if (sysid < 0)
 		{
 			return;
@@ -105,7 +106,7 @@ public class MusicDetailActivity extends Activity implements OnClickListener
 		syncTask = new SyncTask(this, FTYPE.MUSIC);
 		
 		syncTask.analyMusicUnits(cloudUnits);
-		fileInfo0 = syncTask.getUnitinfo(sysid);
+		fileInfo0 = syncTask.getUnitinfo(objId);
 		if (fileInfo0 == null)
 		{
 			return;

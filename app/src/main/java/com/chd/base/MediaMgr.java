@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -166,11 +167,11 @@ public class MediaMgr  {
 	}
 
 
-	public List<FileInfo0>  anlayLocalUnits(List<FileInfo0> couldlist,FilelistEntity filelistEntity) {
+	public HashMap<String,FileInfo0> anlayLocalUnits(List<FileInfo0> couldlist,FilelistEntity filelistEntity) {
 		int count= getLocalUnits().size();
 		int count2=couldlist.size();
 		int max=Math.min(count, count2);
-		ArrayList<FileInfo0> baklist=new ArrayList(count2);
+		HashMap<String,FileInfo0> baklist=new HashMap<String, FileInfo0>(count2);
 		int idx=0;
 		for(int i=0;(i<count && (idx<count2 || max>0));i++/*,count2--*/)
 		{
@@ -183,7 +184,7 @@ public class MediaMgr  {
 				fileInfo=null;
 				//couldlist.set(j,item);
 				if (idx==j) {
-					baklist.add(item);
+					baklist.put(item.getObjid(),item);
 					//Math.max(j, idx++);
 					idx++;
 				}

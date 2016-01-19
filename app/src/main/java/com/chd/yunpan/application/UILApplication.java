@@ -49,7 +49,6 @@ public class UILApplication extends Application {
 		mInstance = this;
 		mLockPatternUtils = new LockPatternUtils(this);
 		initImageLoader(getApplicationContext());
-		//CloseableHttpClient closeableHttpClient=
 		CloseableHttpClient httpClient= HttpClients.createSystem();
 
 		try {

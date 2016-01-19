@@ -22,6 +22,7 @@ import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class ContactActivity extends ActiveProcess implements OnClickListener,OnItemClickListener {
@@ -67,9 +68,9 @@ public class ContactActivity extends ActiveProcess implements OnClickListener,On
 		}
 		FilelistEntity filelistEntity=syncTask.analyUnits(cloudUnits);
 		cloudUnits.clear();
-		cloudUnits=null;
 		List<FileLocal> fileLocals=filelistEntity.getLocallist();
-		cloudUnits=filelistEntity.getBklist();
+		Collection<FileInfo0> values = filelistEntity.getBklist().values();
+		cloudUnits.addAll(values);
 		//显示的时候过滤文件类型
 
 		for(FileInfo0 item:cloudUnits)

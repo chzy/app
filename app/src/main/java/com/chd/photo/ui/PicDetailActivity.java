@@ -30,7 +30,6 @@ public class PicDetailActivity extends Activity implements OnClickListener
 
 	private ImageView mIvLeft;
 	private TextView mTvCenter;
-	//private TextView mTvRight;
 	private ImageView mImgView;
 	private Button mBtnSaveLocal;
 	private Button mBtnCancel;
@@ -93,6 +92,7 @@ public class PicDetailActivity extends Activity implements OnClickListener
 	
 	private void initData(List<FileInfo0> cloudUnits){
 		int nPicId = getIntent().getIntExtra("picid", -1);
+		String objId = getIntent().getStringExtra("objId");
 		if (nPicId < 0)
 		{
 			return;
@@ -105,7 +105,7 @@ public class PicDetailActivity extends Activity implements OnClickListener
 		fileInfo0 = (FileInfo0) getIntent().getSerializableExtra("fileinfo0");
 		if (fileInfo0 == null)
 		{
-			fileInfo0 = bIsUbkList ? syncTask.queryLocalInfo(nPicId) : syncTask.getUnitinfo(nPicId);
+			fileInfo0 = bIsUbkList ? syncTask.queryLocalInfo(nPicId) : syncTask.getUnitinfo(objId);
 		}
 		String url = ThumUtil.getThumid(fileInfo0.getObjid());
 		String filepath = getIntent().getStringExtra("filepath");
@@ -211,14 +211,20 @@ public class PicDetailActivity extends Activity implements OnClickListener
 			break;
 		case R.id.pic_detail_savelocal:
 		{
-			if (fileInfo0 != null && fileInfo0.getFilePath() != null)
+
+			if (fileInfo0 != null )
 			{
+
+				if(fileInfo0.getFilePath()==null){
+					fileInfo0.setFilePath(new ShareUtils(this).getDownloadPath()+fileInfo0.getFilename());
+				}
 				if (syncTask != null)
 				{
 					syncTask.download(fileInfo0, null, false);
 				}
 			}
-			
+
+
 			ToastUtils.toast(this, "保存成功!");
 		}
 			break;
