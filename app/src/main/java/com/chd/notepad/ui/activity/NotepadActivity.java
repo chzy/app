@@ -160,7 +160,6 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
             if (cursor.getInt(cursor.getColumnIndex("syncstate")) == DatabaseManage.SYNC_STAT.DEL)
                 continue;
             NoteItemtag item = new NoteItemtag();
-            /*item.title=cursor.getString(cursor.getColumnIndex("title"));*/
             item.time = cursor.getLong(cursor.getColumnIndex("time"));
             cal.setTimeInMillis(item.time);
             if (month != cal.get(Calendar.MONTH)) {
@@ -173,7 +172,6 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                 items.add(head);
             }
             item.id = cursor.getInt(cursor.getColumnIndex("id"));
-			/*item.hashcode=cursor.getInt(cursor.getColumnIndex("hashcode"));*/
             item.content = cursor.getString(cursor.getColumnIndex("content"));
             item.syncstate = cursor.getInt(cursor.getColumnIndex("syncstate"));
             items.add(item);
