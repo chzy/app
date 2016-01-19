@@ -110,7 +110,7 @@ public class DBManager implements DBhandler {
 		values.put(/*"hash"*/"sysid",/*entity.getFilePath().hashCode()*/entity.getSysid());
 		values.put("objid",entity.getObjid());
 		values.put("path", entity.getFilePath());
-		values.put("size",entity.getSize());
+		//values.put("size",entity.getSize());
 		//values.put("name",entity.getFilename());
 		values.put("offset",0);
 		values.put("time", /*TimeUtils.getCurrentTimeInLong()*/entity.getLastModified());
