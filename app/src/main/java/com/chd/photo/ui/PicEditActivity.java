@@ -2,12 +2,14 @@ package com.chd.photo.ui;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.chd.MediaMgr.utils.MediaFileUtil;
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.backend.SyncTask;
 import com.chd.photo.adapter.PicEditAdapter;
@@ -41,6 +43,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener
 	private PicEditAdapter picEditAdapter;
 	private boolean bIsUbkList;
 	SyncTask syncTask;
+	private final String TAG=this.getClass().getName();
 
 	List<FileInfo0> cloudUnits;
 
@@ -152,6 +155,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener
 
 			if (tmpDayMap.size() > 0)
 			{
+				
 				for (Map.Entry<String, List<PicEditItemBean>> entryDay : tmpDayMap.entrySet())
 				{
 					PicEditBean picBean = new PicEditBean(String.valueOf(entryDay.getKey()), entryDay.getValue());
@@ -243,8 +247,25 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener
 					}
 					
 					final SyncTask syncTask =new SyncTask(this, FTYPE.PICTURE);
-					FileInfo fileInfo = syncTask.queryLocalInfo(picEditItemBean.getPicid());
-					final FileInfo0 fileInfo0 = new FileInfo0(fileInfo);
+					///FileInfo fileInfo = syncTask.queryLocalInfo(picEditItemBean.getPicid());
+					/*if (fileInfo==null) {
+						Log.e(TAG, "query localfile fail!!!!");
+						continue;
+					}*/
+					final FileInfo0 fileInfo0 = new FileInfo0();
+					int idx=picEditItemBean.getUrl().indexOf("://");
+					if (idx<0) {
+						Log.e(TAG, "error file path fail!!!!");
+						continue;
+					}
+					idx+=3;
+					String uri=picEditItemBean.getUrl().substring(idx);
+					if (picEditItemBean.isbIsUbkList()) {
+						fileInfo0.setFilePath(uri);
+						fileInfo0.setObjid(MediaFileUtil.getFnameformPath(uri));
+					}
+					else
+						fileInfo0.setObjid(uri);
 					//fileInfo0.setFilePath(ThumUtil.splitFileName(picEditItemBean.getPicpath()));
 					//fileInfo0.setFilesize(fileInfo.getFilesize());
 					Thread thread = new Thread(new Runnable() 

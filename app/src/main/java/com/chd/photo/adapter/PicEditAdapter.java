@@ -94,7 +94,7 @@ public class PicEditAdapter extends BaseAdapter implements OnItemClickListener, 
 		else
 		{
 			Intent intent = new Intent(context, PicDetailActivity.class);
-			intent.putExtra("picid", list.get(position).getList().get(arg2).getPicid());
+			//intent.putExtra("picid", list.get(position).getList().get(arg2).getPicid());
 			intent.putExtra("ubklist", list.get(position).getList().get(arg2).isbIsUbkList());
 			//intent.putExtra("filepath", list.get(position).getList().get(arg2).getPicpath());
 			//intent.putExtra("fileinfo0", list.get(position).getList().get(arg2).getFileInfo0());
