@@ -61,7 +61,7 @@ public class SyncTask {
 			}*/
 		}
 		boolean ret=false;
-		//return true;
+		////return true;
 		//通过上下行记录 来匹配
 		/*dbManager.open();
 		if (dbManager.QueryDownloadedFile(info0,false))
