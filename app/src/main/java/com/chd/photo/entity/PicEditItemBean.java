@@ -4,12 +4,11 @@ import java.io.Serializable;
 
 public class PicEditItemBean implements Serializable {
 
-	private int picUrl;
+	//private int picUrl;
 	private boolean select;
 	private boolean edit;
-	//private String Picpath;
-	private int Picid;
-	private String objId;
+	//private String path;
+	//private int Picid;
 	private boolean bIsUbkList;
 	//private FileInfo0 fileInfo0;
 	private  String url;
@@ -20,17 +19,11 @@ public class PicEditItemBean implements Serializable {
 	public PicEditItemBean(int picUrl, boolean select) 
 	{
 		super();
-		this.picUrl = picUrl;
+		//this.picUrl = picUrl;
 		this.select = select;
 	}
 
-	public String getObjId() {
-		return objId;
-	}
 
-	public void setObjId(String objId) {
-		this.objId = objId;
-	}
 
 	public boolean isSelect() {
 		return select;
@@ -49,14 +42,14 @@ public class PicEditItemBean implements Serializable {
 	}
 
 
-	public int getPicid() {
+	/*public int getPicid() {
 		return Picid;
 	}
 
 	public void setPicid(int picid) {
 		Picid = picid;
 	}
-
+*/
 	public boolean isbIsUbkList() {
 		return bIsUbkList;
 	}
@@ -69,10 +62,15 @@ public class PicEditItemBean implements Serializable {
 
 
 	public String getUrl() {
+		/*if (bIsUbkList)
+			return "trpc://"+path;
+		else
+			return "file://"+path;*/
 		return url;
 	}
 
 	public void setUrl(String url) {
 		this.url = url;
 	}
+
 }
