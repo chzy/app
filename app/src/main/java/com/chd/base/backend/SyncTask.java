@@ -40,8 +40,8 @@ public class SyncTask {
 		//dbManager.open();
 	}
 
-	public FileInfo0 getUnitinfo(String key) {
-		return filelistEntity.getBklist().get(key);
+	public FileInfo0 getUnitinfo(int id) {
+		return filelistEntity.getBklist().get(id);
 	}
 
 	//查询远程对象是否有本地副本. 根据文件名匹配
@@ -182,7 +182,7 @@ public class SyncTask {
 
 
 
-	public void upload( final FileInfo0 item, final ActiveProcess activeProcess,boolean beeque) {
+	public void upload(/*final String fileName,*/ final FileInfo0 item, final ActiveProcess activeProcess,boolean beeque) {
 
 		if (!item.isSetFtype())
 			item.setFtype(_ftype);
@@ -190,11 +190,12 @@ public class SyncTask {
 			dbManager.addUpLoadingFile(item);
 			return;
 		}
-		new SyncLocalFileBackground(context).uploadBigFile(item, activeProcess);
+		new SyncLocalFileBackground(context ).uploadBigFile(item, activeProcess);
 	}
 
-	public void download(final FileInfo0 item, final ActiveProcess activeProcess,boolean beeque) {
+	public void download(/*final String fileName, */final FileInfo0 item, final ActiveProcess activeProcess,boolean beeque) {
 
+		//ProgressBar bar = activity.getProgressBar();
 		if (!item.isSetFtype())
 			item.setFtype(_ftype);
 		if (beeque) {

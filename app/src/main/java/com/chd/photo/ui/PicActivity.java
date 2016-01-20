@@ -25,7 +25,6 @@ import com.chd.yunpan.utils.TimeUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -44,13 +43,12 @@ public class PicActivity extends Activity implements OnClickListener {
 	private boolean bIsUbkList;
 	private  List<FileInfo0> cloudUnits;
 	private SyncTask syncTask;
-	private PicAdapter adapter;
+	private final String TAG=this.getClass().getName();
 
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			Collections.sort(mPicList);
-			adapter.setbIsUbkList(bIsUbkList);
-			adapter.notifyDataSetChanged();
+			mLvPic.setAdapter(new PicAdapter(PicActivity.this, mPicList, bIsUbkList));
 		}
 
 	};
@@ -72,8 +70,6 @@ public class PicActivity extends Activity implements OnClickListener {
 		initTitle();
 		initResourceId();
 		initListener();
-		adapter=new PicAdapter(PicActivity.this, mPicList, bIsUbkList);
-		mLvPic.setAdapter(adapter);
 		onNewThreadRequest();
 		// ATTENTION: This was auto-generated to implement the App Indexing API.
 		// See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -121,11 +117,21 @@ public class PicActivity extends Activity implements OnClickListener {
 		}
 
 		PicInfoBean picInfoBean = new PicInfoBean();
-		picInfoBean.setUrl(info.getUri());
-		picInfoBean.setSysId(info.getSysid());
-		picInfoBean.setObjId(info.getObjid());
-		picInfoBean.setbIsUbkList(bIsUbkList);
+		if (info.getSysid()>0) {
+			if (!syncTask.haveLocalCopy(info)) {
+				Log.e(TAG, "unknow file sysid:" + info.getSysid());
+				return;
+			}
+		}
+		String uri=info.getUri();
+		if (uri==null)
+		{
+			Log.e(TAG, "unknow file sysid:" + info.getSysid());
+			return;
+		}
+		picInfoBean.setUrl(uri);
 		picInfoBean.setDay(TimeUtils.getTime(info.getLastModified()* 1000L, new SimpleDateFormat("MM月dd日")));
+
 		if (tmpMonthMap==null)
 			tmpMonthMap = new HashMap<Integer, List<PicInfoBean>>();
 		if (tmpMonthMap.get(month) != null) {
@@ -155,9 +161,10 @@ public class PicActivity extends Activity implements OnClickListener {
 		}
 		FilelistEntity filelistEntity=syncTask.analyPhotoUnits(cloudUnits);
 		cloudUnits.clear();
+		cloudUnits=null;
 		List<FileLocal> fileLocals=filelistEntity.getLocallist();
-		Collection<FileInfo0> values = filelistEntity.getBklist().values();
-		cloudUnits.addAll(values);
+		cloudUnits=filelistEntity.getBklist();
+
 
 		//未备份的列表  LIST<int>
 		//网盘文件列表  LIST<FileInfo>   fileinfo.getfilepath() 得到本地资源路径  如果 getfilepath为 null 则需要下载
@@ -220,7 +227,6 @@ public class PicActivity extends Activity implements OnClickListener {
 				}
 			}
 		//要有提示用户等待的画面
-
 		handler.sendEmptyMessage(0);
 	}
 

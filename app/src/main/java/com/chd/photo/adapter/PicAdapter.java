@@ -31,15 +31,6 @@ public class PicAdapter extends BaseAdapter{
 		this.bIsUbkList = bIsUbkList;
 	}
 
-
-	public boolean isbIsUbkList() {
-		return bIsUbkList;
-	}
-
-	public void setbIsUbkList(boolean bIsUbkList) {
-		this.bIsUbkList = bIsUbkList;
-	}
-
 	@Override
 	public int getCount() {
 		return list.size();
@@ -64,19 +55,18 @@ public class PicAdapter extends BaseAdapter{
 			holder.tv_pic_date = (TextView) converView
 					.findViewById(R.id.tv_pic_date);
 			holder.mlv_pic = (MyListView) converView.findViewById(R.id.mlv_pic);
-
 			converView.setTag(holder);
 		} else {
 			holder = (ViewHolder) converView.getTag();
 		}
 		holder.tv_pic_date.setText(list.get(position).getYear());
-        holder.mlv_pic.setAdapter(new PicInfoAdapter(context, list.get(position)
-        ));
-		holder.mlv_pic.setOnItemClickListener(new OnItemClickListener()
+		holder.mlv_pic.setAdapter(new PicInfoAdapter(context, list.get(position)
+				));
+		holder.mlv_pic.setOnItemClickListener(new OnItemClickListener() 
 		{
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) 
 			{
 				Intent intent = new Intent(context, PicEditActivity.class);
 				intent.putExtra("month", list.get(position).getMonth());
@@ -86,9 +76,9 @@ public class PicAdapter extends BaseAdapter{
 				intent.putExtra("ubklist", bIsUbkList);
 				context.startActivity(intent);
 			}
-
+			
 		});
-
+		
 		return converView;
 	}
 

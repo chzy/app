@@ -22,7 +22,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SyncLocalFileBackground implements Runnable {
 
@@ -194,6 +196,7 @@ public class SyncLocalFileBackground implements Runnable {
 	public boolean uploadBigFile(FileInfo0 entity,final ActiveProcess activeProcess) {
 
 		TClient tClient=null;
+		File file;
 		long size=entity.getFilesize();
 		if(!NetworkUtils.isNetworkAvailable(context)){
 			return false;
@@ -204,7 +207,7 @@ public class SyncLocalFileBackground implements Runnable {
 			Log.w("@@@",e.getLocalizedMessage());
 			return false;
 		}
-		File file = new File(entity.getFilePath());
+		file = new File(entity.getFilePath());
 		if (!file.exists() ||  !file.isFile())
 			return false;
 		if (size<1) {
@@ -243,17 +246,6 @@ public class SyncLocalFileBackground implements Runnable {
 					}
 				}
 				{
-					/*if (su.QueryDBEntity(MediaMgr.DBTAB.UPing,entity))
-					{
-						start = Math.min(entity.getOffset(), start);
-						if (  start>entity.getFilesize() ) {
-							su.close();
-							Log.e(classname, "not match obj lenth ");
-							fileInfo.setObjid(fileInfo.getObjid() + "(1)");
-
-						}
-					}*/
-					// 文件已经存在,返回消息  是否覆盖 云端文件
 				if (activeProcess!=null)
 					activeProcess.setProgress((int) (start / size * 100));
 				}
@@ -298,11 +290,15 @@ public class SyncLocalFileBackground implements Runnable {
 							break;
 						}
 					}
-					if (succed &&  filebuilder.Commit(null)) {
+				        Map<String,String> desc=new HashMap();
+						desc.put("date", String.valueOf(file.lastModified()/1000));
+					if (succed &&  filebuilder.Commit(desc)) {
 						su.finishTransform(MediaMgr.DBTAB.UPed, entity);
 						succed=true;
 						Log.d(Tag,"upload finished !!");
 					}
+					desc.clear();
+					desc=null;
 
 				} catch (Exception e) {
 					Log.w(Tag,e.getMessage());

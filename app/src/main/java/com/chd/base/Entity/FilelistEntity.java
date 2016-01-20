@@ -2,14 +2,13 @@ package com.chd.base.Entity;
 
 import com.chd.proto.FileInfo0;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by lxp1 on 2015/12/6.
  */
 public class FilelistEntity {
-   private HashMap<String,FileInfo0> bklist;
+   private  List<FileInfo0> bklist;
    // private List<Integer> ubklist;
     private List<FileLocal> locallist;
     private int bakNumber=0;
@@ -24,12 +23,11 @@ public class FilelistEntity {
         this.ubklist = ubklist;
     }
 */
-
-    public HashMap<String, FileInfo0> getBklist() {
+    public List<FileInfo0> getBklist() {
         return bklist;
     }
 
-    public void setBklist(HashMap<String, FileInfo0> bklist) {
+    public void setBklist(List<FileInfo0> bklist) {
         this.bklist = bklist;
     }
 
