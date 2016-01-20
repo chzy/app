@@ -1,8 +1,5 @@
 package com.chd.notepad.ui.activity;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-
 import android.app.ListActivity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -11,7 +8,6 @@ import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
@@ -30,6 +26,9 @@ import com.chd.notepad.ui.adapter.ListViewAdapter;
 import com.chd.notepad.ui.db.DatabaseManage;
 import com.chd.notepad.ui.item.NoteItemtag;
 import com.chd.yunpan.R;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class NotepadActivity extends ListActivity implements OnScrollListener {
@@ -209,9 +208,10 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
 
     @Override
 	protected void onDestroy() {//销毁Activity之前，所做的事
+		if(cursor!=null){
     	cursor.close();//关闭游标
+    	}
         unbindService(mConnection);
-
 		super.onDestroy();
 	}
 	

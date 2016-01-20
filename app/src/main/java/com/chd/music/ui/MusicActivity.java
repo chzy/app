@@ -25,6 +25,7 @@ import com.chd.yunpan.share.ShareUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class MusicActivity extends Activity implements OnClickListener,OnItemClickListener {
@@ -94,9 +95,9 @@ public class MusicActivity extends Activity implements OnClickListener,OnItemCli
 		}
 		FilelistEntity filelistEntity=syncTask.analyMusicUnits(cloudUnits);
 		cloudUnits.clear();
-		cloudUnits=null;
 		List<FileLocal> fileLocals=filelistEntity.getLocallist();
-		cloudUnits=filelistEntity.getBklist();
+		Collection<FileInfo0> values = filelistEntity.getBklist().values();
+		cloudUnits.addAll(values);
 		//显示的时候过滤文件类型
 		MFileFilter fileFilter=new MFileFilter();
 		fileFilter.setCustomCategory(new String[]{"mp3"},true);

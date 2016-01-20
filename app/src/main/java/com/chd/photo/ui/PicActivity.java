@@ -43,6 +43,7 @@ public class PicActivity extends Activity implements OnClickListener {
 	private boolean bIsUbkList;
 	private  List<FileInfo0> cloudUnits;
 	private SyncTask syncTask;
+	private final String TAG=this.getClass().getName();
 
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -116,7 +117,19 @@ public class PicActivity extends Activity implements OnClickListener {
 		}
 
 		PicInfoBean picInfoBean = new PicInfoBean();
-		picInfoBean.setUrl(info.getUri());
+		if (info.getSysid()>0) {
+			if (!syncTask.haveLocalCopy(info)) {
+				Log.e(TAG, "unknow file sysid:" + info.getSysid());
+				return;
+			}
+		}
+		String uri=info.getUri();
+		if (uri==null)
+		{
+			Log.e(TAG, "unknow file sysid:" + info.getSysid());
+			return;
+		}
+		picInfoBean.setUrl(uri);
 		picInfoBean.setDay(TimeUtils.getTime(info.getLastModified()* 1000L, new SimpleDateFormat("MM月dd日")));
 
 		if (tmpMonthMap==null)

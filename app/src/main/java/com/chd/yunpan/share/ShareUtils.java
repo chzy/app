@@ -57,13 +57,13 @@ public class ShareUtils {
 		if (getuseSDcard()&&sdCardExist())
 		{
 			dir= Environment.getExternalStorageDirectory().getAbsoluteFile()+File.pathSeparator+context.getPackageName();
-			//dir=context.getExternalFilesDir(null);
 		}
 		else {
 			dir = context.getFilesDir().getAbsolutePath();
 		}
 		return dir;
 	}
+
 
 
 	public File getStorePath()
@@ -116,6 +116,15 @@ public class ShareUtils {
 		return sp.getStringSet("downpath", new HashSet<String>());
 	}
 
+
+	public String getDownloadPath(){
+		String dir="";
+		if(sdCardExist()){
+			dir=Environment.getExternalStorageDirectory().getAbsolutePath()+File.pathSeparator+context.getPackageName()+"/pic";
+		}
+		return dir;
+
+	}
 
 
 

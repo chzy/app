@@ -3,14 +3,17 @@ package com.chd.photo.ui;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chd.MediaMgr.utils.MediaFileUtil;
 import com.chd.base.backend.SyncTask;
 import com.chd.contacts.vcard.StringUtils;
+import com.chd.photo.entity.PicEditItemBean;
 import com.chd.photo.entity.ThumUtil;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
@@ -30,7 +33,6 @@ public class PicDetailActivity extends Activity implements OnClickListener
 
 	private ImageView mIvLeft;
 	private TextView mTvCenter;
-	//private TextView mTvRight;
 	private ImageView mImgView;
 	private Button mBtnSaveLocal;
 	private Button mBtnCancel;
@@ -41,6 +43,7 @@ public class PicDetailActivity extends Activity implements OnClickListener
 	
 	private SyncTask syncTask;
 	private FileInfo0 fileInfo0;
+	private final String TAG=this.getClass().getName();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -92,14 +95,14 @@ public class PicDetailActivity extends Activity implements OnClickListener
 	}
 	
 	private void initData(List<FileInfo0> cloudUnits){
-		int nPicId = getIntent().getIntExtra("picid", -1);
+		/*int nPicId = getIntent().getIntExtra("picid", -1);
 		if (nPicId < 0)
 		{
 			return;
-		}
+		}*/
 		if (syncTask == null)
 			syncTask=new SyncTask(this, FTYPE.PICTURE);
-		syncTask.analyPhotoUnits(cloudUnits);
+		/*syncTask.analyPhotoUnits(cloudUnits);
 		cloudUnits.clear();
 		cloudUnits = null;
 		fileInfo0 = (FileInfo0) getIntent().getSerializableExtra("fileinfo0");
@@ -108,10 +111,27 @@ public class PicDetailActivity extends Activity implements OnClickListener
 			fileInfo0 = bIsUbkList ? syncTask.queryLocalInfo(nPicId) : syncTask.getUnitinfo(nPicId);
 		}
 		String url = ThumUtil.getThumid(fileInfo0.getObjid());
-		String filepath = getIntent().getStringExtra("filepath");
-		if(!StringUtils.isNullOrEmpty(filepath)) {
-			url = filepath;
+		String filepath = getIntent().getStringExtra("filepath");*/
+		PicEditItemBean editItemBean= (PicEditItemBean) getIntent().getSerializableExtra("bean");
+		String url =editItemBean.getUrl();
+		int idx=url.indexOf("://");
+		if (idx<0) {
+			Log.e(TAG, "error file path fail!!!!");
+			return;
+					}
+		fileInfo0=new FileInfo0();
+		idx+=3;
+		String uri=editItemBean.getUrl().substring(idx);
+		if (editItemBean.isbIsUbkList()) {
+			fileInfo0.setFilePath(uri);
+			fileInfo0.setObjid(MediaFileUtil.getFnameformPath(uri));
 		}
+		else
+			fileInfo0.setObjid(uri);
+
+		/*if(!StringUtils.isNullOrEmpty(filepath)) {
+			url = filepath;
+		}*/
 		if (url != null)
 		{
 			/*if (!syncTask.haveLocalCopy(fileInfo0))

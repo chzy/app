@@ -172,15 +172,16 @@ public class MediaMgr  {
 		int max=Math.min(count, count2);
 		ArrayList<FileInfo0> baklist=new ArrayList(count2);
 		int idx=0;
-		for(int i=0;(i<count && (idx<count2 || max>0));i++/*,count2--*/)
+		int j=0,i=0;
+		for(;(i<count && (idx<count2 || max>0));i++/*,count2--*/)
 		{
 			//for( FileInfo item:couldlist)
-			for (int j=0;j<count2;j++)
+			for (;j<count2;j++)
 			{
 				FileInfo fileInfo= couldlist.get(j);
 				FileInfo0 item=new FileInfo0(fileInfo);
-				fileInfo.clear();
-				fileInfo=null;
+				//fileInfo.clear();
+				//fileInfo=null;
 				//couldlist.set(j,item);
 				if (idx==j) {
 					baklist.add(item);
@@ -197,6 +198,13 @@ public class MediaMgr  {
 					if (filelistEntity!=null)
 						filelistEntity.addbakNumber();
 					max--;
+					j++;
+					i=-1;
+					break;
+				}
+				else {
+					if (i==count)
+						j++;
 					break;
 				}
 			}
