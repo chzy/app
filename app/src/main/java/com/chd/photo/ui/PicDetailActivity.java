@@ -128,6 +128,7 @@ public class PicDetailActivity extends Activity implements OnClickListener
 		}
 		else
 			fileInfo0.setObjid(uri);
+		fileInfo0.setFtype(FTYPE.PICTURE);
 
 		/*if(!StringUtils.isNullOrEmpty(filepath)) {
 			url = filepath;
