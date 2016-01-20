@@ -21,11 +21,13 @@ public class ShareUtils {
 	private SharedPreferences sp = null;
 	private Editor editor = null;
 	private Context context=null;
+	private final String DOWNLOAD=Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+"com.chd.yunpan";
+	private final String PHOTO=DOWNLOAD+"/"+"pic";
+	private final String MUSIC=DOWNLOAD+"/"+"music";
 	public ShareUtils(Context context) {
 		this.context=context;
-		sp = context.getSharedPreferences("data",Context.MODE_PRIVATE);
+		sp = context.getSharedPreferences("data", Context.MODE_PRIVATE);
 		editor = sp.edit();
-
 	}
 
 	public void setuseSDcard(boolean use)
@@ -117,14 +119,21 @@ public class ShareUtils {
 	}
 
 
-	public String getDownloadPath(){
-		String dir="";
-		if(sdCardExist()){
-			dir=Environment.getExternalStorageDirectory().getAbsolutePath()+File.pathSeparator+context.getPackageName()+"/pic";
+	public File getPhotoFile(){
+		File f=new File(PHOTO);
+		if(!f.exists()){
+			f.mkdirs();
 		}
-		return dir;
-
+		return f;
 	}
+	public File getMusicFile(){
+		File f=new File(MUSIC);
+		if(!f.exists()){
+			f.mkdirs();
+		}
+		return f;
+	}
+
 
 
 

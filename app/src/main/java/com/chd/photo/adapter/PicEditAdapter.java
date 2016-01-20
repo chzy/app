@@ -34,6 +34,11 @@ public class PicEditAdapter extends BaseAdapter implements OnItemClickListener, 
 		imageLoader=ImageLoader.getInstance();
 	}
 
+	public void setData(List<PicEditBean> data){
+		this.list=data;
+		this.notifyDataSetChanged();
+	}
+
 	@Override
 	public int getCount() {
 		return list.size();
@@ -97,10 +102,11 @@ public class PicEditAdapter extends BaseAdapter implements OnItemClickListener, 
 			//intent.putExtra("picid", list.get(position).getList().get(arg2).getPicid());
 			intent.putExtra("ubklist", list.get(position).getList().get(arg2).isbIsUbkList());
 			intent.putExtra("bean",list.get(position).getList().get(arg2));
+			intent.putExtra("pos",position);
+			intent.putExtra("pos2",arg2);
 			//intent.putExtra("filepath", list.get(position).getList().get(arg2).getPicpath());
 			//intent.putExtra("fileinfo0", list.get(position).getList().get(arg2).getFileInfo0());
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
-			context.startActivity(intent);
+			context.startActivityForResult(intent, 0x12);
 		}
 	}
 

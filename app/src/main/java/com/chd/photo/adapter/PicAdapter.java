@@ -1,6 +1,6 @@
 package com.chd.photo.adapter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +21,11 @@ import java.util.List;
 
 public class PicAdapter extends BaseAdapter{
 
-	private Context context;
+	private Activity context;
 	private List<PicBean<PicInfoBeanMonth>> list;
 	private boolean bIsUbkList;
 
-	public PicAdapter(Context context,  List<PicBean<PicInfoBeanMonth>> list, boolean bIsUbkList) {
+	public PicAdapter(Activity context,  List<PicBean<PicInfoBeanMonth>> list, boolean bIsUbkList) {
 		this.context = context;
 		this.list = list;
 		this.bIsUbkList = bIsUbkList;
@@ -74,7 +74,7 @@ public class PicAdapter extends BaseAdapter{
 				List<PicInfoBean> mlist=list.get(position).getList().getPicunits();
 				intent.putExtra("listUnits", (Serializable) (mlist));//LIST<PicInfoBean>
 				intent.putExtra("ubklist", bIsUbkList);
-				context.startActivity(intent);
+				context.startActivityForResult(intent,0x11);
 			}
 			
 		});

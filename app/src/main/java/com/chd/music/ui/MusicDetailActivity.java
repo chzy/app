@@ -106,7 +106,7 @@ public class MusicDetailActivity extends Activity implements OnClickListener
 		syncTask = new SyncTask(this, FTYPE.MUSIC);
 		
 		syncTask.analyMusicUnits(cloudUnits);
-		fileInfo0 = syncTask.getUnitinfo(objId);
+//		fileInfo0 = syncTask.getUnitinfo(objId);
 		if (fileInfo0 == null)
 		{
 			return;

@@ -159,12 +159,20 @@ public class MusicBackupActivity extends Activity implements OnClickListener, On
 	
 	private void goBackUpMusic()
 	{
-		SyncTask syncTask = new SyncTask(this, FTYPE.MUSIC);
-		for (MusicBackupBean musicBackupBean : mMusicBackupList)
+
+		for (final MusicBackupBean musicBackupBean : mMusicBackupList)
 		{
 			if (musicBackupBean.isSelect())
 			{
-				syncTask.upload(musicBackupBean.getFileInfo0(), null, false);
+				new Thread(new Runnable(){
+					@Override
+					public void run() {
+						SyncTask syncTask = new SyncTask(MusicBackupActivity.this, FTYPE.MUSIC);
+						syncTask.upload(musicBackupBean.getFileInfo0(), null, false);
+
+					}
+				}).start();
+
 			}
 		}
 	}

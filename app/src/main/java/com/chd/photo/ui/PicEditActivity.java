@@ -1,5 +1,6 @@
 package com.chd.photo.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -17,7 +18,6 @@ import com.chd.photo.entity.PicEditBean;
 import com.chd.photo.entity.PicEditItemBean;
 import com.chd.photo.entity.PicInfoBean;
 import com.chd.proto.FTYPE;
-import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 
@@ -51,8 +51,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener
 		public void handleMessage(android.os.Message msg) {
 			if (picEditAdapter == null)
 			{
-				picEditAdapter = new PicEditAdapter(PicEditActivity.this, mPicList);
-				mLvPic.setAdapter(picEditAdapter);
+				picEditAdapter.setData(mPicList);
 			}
 			else
 			{
@@ -79,6 +78,8 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener
 		initTitle();
 		initResourceId();
 		initListener();
+		picEditAdapter = new PicEditAdapter(PicEditActivity.this, mPicList);
+		mLvPic.setAdapter(picEditAdapter);
 		onNewThreadRequest();
 	}
 	
@@ -290,6 +291,26 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener
 			break;
 		default:
 			break;
+		}
+	}
+
+
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode==99){
+			switch (requestCode){
+				case 0x12:
+					//删除成功
+					if(data!=null){
+						int pos=data.getIntExtra("pos",-1);
+						int pos2=data.getIntExtra("pos2",-1);
+						mPicList.get(pos).getList().remove(pos2);
+						picEditAdapter.notifyDataSetChanged();
+						setResult(RESULT_OK);
+					}
+					break;
+			}
 		}
 	}
 }

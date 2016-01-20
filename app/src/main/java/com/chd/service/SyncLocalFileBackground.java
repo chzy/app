@@ -118,21 +118,19 @@ public class SyncLocalFileBackground implements Runnable {
 		int readlen=0,remain=0,total=0;
 		FileInputStream fis = null;
 		FileOutputStream os =null;
-		if (fileInfo0.getFilesize()<1) {
+		//TODO 下载注释掉了文件大小判断
+		/*if (fileInfo0.getFilesize()<1) {
 			Log.e(Tag,"invalid remote obj size 0");
 			return false;
-		}
+		}*/
 		File f=new File(fileInfo0.getFilePath());
-		if (  f.isDirectory()) { //resume download
-
-				return false;
+		if (f.isDirectory()) {
+			return false;
 		}
 		else {// download new file
 			try {
 				f.createNewFile();
-				//os =new FileOutputStream(f);
 			} catch (IOException e) {
-				e.printStackTrace();
 				return  false;
 			}
 		}

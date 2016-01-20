@@ -135,15 +135,12 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.chd.photo.ui.PicActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.chd.photo.ui.PicEditActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.chd.photo.ui.PicDetailActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.chd.yunpan.ui.netdiskActivity"

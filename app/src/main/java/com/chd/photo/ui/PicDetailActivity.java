@@ -1,6 +1,7 @@
 package com.chd.photo.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,11 +11,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.chd.MediaMgr.utils.MediaFileUtil;
 import com.chd.base.backend.SyncTask;
 import com.chd.contacts.vcard.StringUtils;
 import com.chd.photo.entity.PicEditItemBean;
-import com.chd.photo.entity.ThumUtil;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
@@ -44,6 +43,8 @@ public class PicDetailActivity extends Activity implements OnClickListener
 	private SyncTask syncTask;
 	private FileInfo0 fileInfo0;
 	private final String TAG=this.getClass().getName();
+	private int pos;
+	private int pos2;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -53,6 +54,8 @@ public class PicDetailActivity extends Activity implements OnClickListener
 		setContentView(R.layout.activity_pic_detail);
 		
 		bIsUbkList = getIntent().getBooleanExtra("ubklist", false);
+		pos=getIntent().getIntExtra("pos", -1);
+		pos2=getIntent().getIntExtra("pos2",-1);
 		if (bIsUbkList)
 		{
 			findViewById(R.id.pic_detail_btm_layout).setVisibility(View.GONE);
@@ -60,16 +63,17 @@ public class PicDetailActivity extends Activity implements OnClickListener
 
 		options = new DisplayImageOptions.Builder()
 		.showImageOnLoading(R.drawable.pic_test1)
-		.cacheInMemory(false)
-		.cacheOnDisk(true)
+		.cacheInMemory(true)
+		.cacheOnDisk(false)
 		.considerExifParams(true)
-		.extraForDownloader(new ShareUtils(this).getStorePathStr())  //增加保存路径
+		.extraForDownloader(new ShareUtils(this).getPhotoFile())  //增加保存路径
 		.build();
 		
 		initTitle();
 		initResourceId();
 		initListener();
-		onNewThreadRequest();
+		initData();
+//		onNewThreadRequest();
 	}
 	
 	private void onNewThreadRequest()
@@ -86,7 +90,7 @@ public class PicDetailActivity extends Activity implements OnClickListener
 				final List<FileInfo0> cloudUnits=syncTask.getCloudUnits(0, 1000);
 				runOnUiThread(new Runnable() {
 					public void run() {
-						initData(cloudUnits);
+//						initData(cloudUnits);
 					}
 				});
 			}
@@ -94,7 +98,7 @@ public class PicDetailActivity extends Activity implements OnClickListener
 		thread.start();
 	}
 	
-	private void initData(List<FileInfo0> cloudUnits){
+	private void initData(){
 		/*int nPicId = getIntent().getIntExtra("picid", -1);
 		if (nPicId < 0)
 		{
@@ -124,21 +128,17 @@ public class PicDetailActivity extends Activity implements OnClickListener
 		String uri=editItemBean.getUrl().substring(idx);
 		if (editItemBean.isbIsUbkList()) {
 			fileInfo0.setFilePath(uri);
-			fileInfo0.setObjid(MediaFileUtil.getFnameformPath(uri));
-		}
-		else
 			fileInfo0.setObjid(uri);
+		}
+		else{
+			fileInfo0.setObjid(uri);
+		}
 		fileInfo0.setFtype(FTYPE.PICTURE);
 
-		/*if(!StringUtils.isNullOrEmpty(filepath)) {
-			url = filepath;
-		}*/
+
 		if (url != null)
 		{
-			/*if (!syncTask.haveLocalCopy(fileInfo0))
-			{
-				//url = ThumUtil.getThumid(fileInfo0.getObjid()); //缩略图地址
-			}*/
+
 			imageLoader.displayImage(url, mImgView,
 					options, new SimpleImageLoadingListener() {
 						@Override
@@ -221,7 +221,17 @@ public class PicDetailActivity extends Activity implements OnClickListener
 							@Override
 							public void run() {
 								String strData = bSucc ? "删除成功" : "删除失败";
-								ToastUtils.toast(PicDetailActivity.this, strData);		
+								ToastUtils.toast(PicDetailActivity.this, strData);
+								if(bSucc){
+									Intent intent=new Intent();
+									intent.putExtra("pos",pos);
+									intent.putExtra("pos2",pos2);
+									setResult(99,intent);
+
+									finish();
+								}
+
+
 							}
 						});
 					}
@@ -232,18 +242,19 @@ public class PicDetailActivity extends Activity implements OnClickListener
 			break;
 		case R.id.pic_detail_savelocal:
 		{
-			if (fileInfo0 != null && fileInfo0.getFilePath() != null)
+			if (fileInfo0 != null)
 			{
+				if(StringUtils.isNullOrEmpty(fileInfo0.getFilePath())){
+					fileInfo0.setFilePath(new ShareUtils(this).getPhotoFile().getPath()+"/"+fileInfo0.getUri());
+				}
 				if (syncTask != null)
 				{
 					syncTask.download(fileInfo0, null, false);
 				}
 			}
-			
 			ToastUtils.toast(this, "保存成功!");
 		}
 			break;
-
 		default:
 			break;
 		}

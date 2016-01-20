@@ -15,8 +15,8 @@ import android.widget.TextView;
 import com.chd.MediaMgr.utils.MFileFilter;
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
-import com.chd.music.adapter.MusicAdapter;
 import com.chd.base.backend.SyncTask;
+import com.chd.music.adapter.MusicAdapter;
 import com.chd.music.entity.MusicBean;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
@@ -25,7 +25,6 @@ import com.chd.yunpan.share.ShareUtils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class MusicActivity extends Activity implements OnClickListener,OnItemClickListener {
@@ -95,9 +94,9 @@ public class MusicActivity extends Activity implements OnClickListener,OnItemCli
 		}
 		FilelistEntity filelistEntity=syncTask.analyMusicUnits(cloudUnits);
 		cloudUnits.clear();
+		cloudUnits=null;
 		List<FileLocal> fileLocals=filelistEntity.getLocallist();
-		Collection<FileInfo0> values = filelistEntity.getBklist().values();
-		cloudUnits.addAll(values);
+		cloudUnits= filelistEntity.getBklist();
 		//显示的时候过滤文件类型
 		MFileFilter fileFilter=new MFileFilter();
 		fileFilter.setCustomCategory(new String[]{"mp3"},true);

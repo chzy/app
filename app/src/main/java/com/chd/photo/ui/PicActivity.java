@@ -1,6 +1,7 @@
 package com.chd.photo.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -117,12 +118,14 @@ public class PicActivity extends Activity implements OnClickListener {
 		}
 
 		PicInfoBean picInfoBean = new PicInfoBean();
-		if (info.getSysid()>0) {
-			if (!syncTask.haveLocalCopy(info)) {
-				Log.e(TAG, "unknow file sysid:" + info.getSysid());
-				return;
-			}
-		}
+
+		//TODO 调用此方法导致本地文件替换远程文件  文件时间显示出错
+//		if (info.getSysid()>0) {
+//			if (!syncTask.haveLocalCopy(info)) {
+//				Log.e(TAG, "unknow file sysid:" + info.getSysid());
+//				return;
+//			}
+//		}
 		String uri=info.getUri();
 		if (uri==null)
 		{
@@ -266,6 +269,20 @@ public class PicActivity extends Activity implements OnClickListener {
 				onNewThreadRequest();
 				break;
 		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(RESULT_OK==resultCode){
+			switch (requestCode){
+				case 0x11:
+					onNewThreadRequest();
+					break;
+			}
+		}
+
+
+
 	}
 
 	@Override
