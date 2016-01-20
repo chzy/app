@@ -174,9 +174,9 @@ public class MediaMgr  {
 		int idx=0;
 		int j=0,i=0;
 		FileInfo0 item = null;
-		for(;(i<count && (idx<count2 || max>0));i++/*,count2--*/)
+		for(;(idx<count2 &&  max>0);i++)
 		{
-			//for( FileInfo item:couldlist)
+		
 			for (;j<count2;j++)
 			{
 				FileInfo fileInfo= couldlist.get(j);
@@ -202,8 +202,10 @@ public class MediaMgr  {
 					break;
 				}
 				else {
-					if (i==count)
+					if (i==(count-1)) {
 						j++;
+						i=-1;
+					}
 					break;
 				}
 			}
