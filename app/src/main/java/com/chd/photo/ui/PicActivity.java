@@ -118,14 +118,12 @@ public class PicActivity extends Activity implements OnClickListener {
 		}
 
 		PicInfoBean picInfoBean = new PicInfoBean();
-
-		//TODO 调用此方法导致本地文件替换远程文件  文件时间显示出错
-//		if (info.getSysid()>0) {
-//			if (!syncTask.haveLocalCopy(info)) {
-//				Log.e(TAG, "unknow file sysid:" + info.getSysid());
-//				return;
-//			}
-//		}
+		if (info.getSysid()>0 ) {
+			if (!syncTask.haveLocalCopy(info)) {
+				Log.e(TAG, "unknow file sysid:" + info.getSysid());
+				return;
+			}
+		}
 		String uri=info.getUri();
 		if (uri==null)
 		{
