@@ -2,6 +2,7 @@ package com.chd.base.Ui;
 
 import android.app.Activity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.chd.photo.ui.CustomProgressDialog;
 
@@ -31,12 +32,22 @@ public abstract class ActiveProcess extends Activity {
         runOnUiThread(updata);
     }
 
+    public void toastMain(final String msg){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(ActiveProcess.this, msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 
     public Runnable updata=new Runnable(){
 
         @Override
         public void run() {
-            Log.e("lmj", "正在上传:" + progress);
+            Log.d("lmj", "正在上传:" + progress);
             if (progress < 100 && dialog.isShowing()) {
                 dialog.setMessage("正在上传" + progress + "%");
             } else if (progress > 0 && !dialog.isShowing()) {

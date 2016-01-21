@@ -1,7 +1,13 @@
 package com.chd.music.ui;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -10,177 +16,205 @@ import android.widget.Toast;
 
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.backend.SyncTask;
+import com.chd.music.backend.MediaUtil;
 import com.chd.music.entity.MusicBean;
 import com.chd.photo.adapter.RoundImageView;
-import com.chd.photo.entity.ThumUtil;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
-public class MusicDetailActivity extends ActiveProcess implements OnClickListener
-{
-	
-	private ImageView mIvLeft;
-	private TextView mTvCenter;
-	private TextView mTvRight;
-	
-	private TextView mTvTotalTime;
-	private TextView mTvMusicName;
-	private TextView mTvMusicDestrip;
-	
-	private ImageView mBtnDownload;
-	private ImageView mBtnPlay;
-	private ImageView mBtnDelete;
-	private RoundImageView mRoundImageView;
+public class MusicDetailActivity extends ActiveProcess implements OnClickListener {
 
-	protected ImageLoader imageLoader = ImageLoader.getInstance();
-	DisplayImageOptions options;
-	
-	private SyncTask syncTask;
-	FileInfo0 fileInfo0;
-	private MusicBean bean;
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) 
-	{
-		super.onCreate(savedInstanceState);
-		
-		setContentView(R.layout.activity_music_detail);
-		
-		initTitle();
-		initResourceId();
-		initListener();
-		syncTask = new SyncTask(this, FTYPE.MUSIC);
-		options = new DisplayImageOptions.Builder()
-		.showImageOnLoading(R.drawable.pic_test1)
-		.cacheInMemory(true)
-		.cacheOnDisk(false)
-		.considerExifParams(true)
-		.displayer(new RoundedBitmapDisplayer(20))
-		.extraForDownloader(new ShareUtils(this).getMusicFile())  //增加保存路径
-		.build();
-		initData();
-		
-		// ATTENTION: This was auto-generated to implement the App Indexing API.
-		// See https://g.co/AppIndexing/AndroidStudio for more information.
-		//client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-	}
+    protected ImageLoader imageLoader = ImageLoader.getInstance();
+    DisplayImageOptions options;
+    FileInfo0 fileInfo0;
+    private ImageView mIvLeft;
+    private TextView mTvCenter;
+    private TextView mTvRight;
+    private TextView mTvTotalTime;
+    private TextView mTvMusicName;
+    private TextView mTvMusicDestrip;
+    private ImageView mBtnDownload;
+    private ImageView mBtnPlay;
+    private ImageView mBtnDelete;
+    private RoundImageView mRoundImageView;
+    private SyncTask syncTask;
+    private MusicBean bean;
+    private Handler mHandler = new Handler();
+    private MediaPlayer mediaPlayer;
 
-	private void initData() {
-		//模拟数据
-		bean = (MusicBean) getIntent().getSerializableExtra("file");
-		fileInfo0 = bean.getFileInfo0();
-		if (fileInfo0 == null)
-		{
-			return;
-		}
-		mTvMusicName.setText(fileInfo0.getFilename());
-		String url = ThumUtil.getThumid(fileInfo0.getObjid());
-		if (url != null)
-		{
-			/*if (!syncTask.haveLocalCopy(fileInfo0))
-			{
-				//url = ThumUtil.getThumid(fileInfo0.getObjid()); //缩略图地址
-			}*/
-			imageLoader.displayImage(url, mRoundImageView,
-					options, new SimpleImageLoadingListener() {
-						@Override
-						public void onLoadingStarted(String imageUri, View view) {
-							/*vh.progressBar.setProgress(0);
-							vh.progressBar.setVisibility(View.VISIBLE);*/
-						}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-						@Override
-						public void onLoadingFailed(String imageUri, View view,
-								FailReason failReason) {
-							/*vh.progressBar.setVisibility(View.GONE);*/
-						}
+        setContentView(R.layout.activity_music_detail);
 
-						@Override
-						public void onLoadingComplete(String imageUri, View view,
-								Bitmap loadedImage) {
-							/*vh.progressBar.setVisibility(View.GONE);*/
-						}
-					}, new ImageLoadingProgressListener() {
-						@Override
-						public void onProgressUpdate(String imageUri, View view,
-								int current, int total) {
-							/*vh.progressBar.setProgress(Math.round(100.0f * current
-									/ total));*/
-						}
-					});
-		}
-	}
+        initTitle();
+        initResourceId();
+        initListener();
+        mediaPlayer = new MediaPlayer();
+        syncTask = new SyncTask(this, FTYPE.MUSIC);
+        options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.pic_test1)
+                .cacheInMemory(true)
+                .cacheOnDisk(false)
+                .considerExifParams(true)
+                .displayer(new RoundedBitmapDisplayer(20))
+                .extraForDownloader(new ShareUtils(this).getMusicFile())  //增加保存路径
+                .build();
+        initData();
 
-	private void initListener() {
-		mIvLeft.setOnClickListener(this);
-		mBtnDownload.setOnClickListener(this);
-		mBtnPlay.setOnClickListener(this);
-		mBtnDelete.setOnClickListener(this);
-	}
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
 
-	private void initResourceId() {
-		mBtnDownload = (ImageView) findViewById(R.id.music_detail_download);
-		mBtnPlay = (ImageView) findViewById(R.id.music_detail_play);
-		mBtnDelete = (ImageView) findViewById(R.id.music_detail_delete);
-		
-		mTvTotalTime = (TextView) findViewById(R.id.music_detail_totaltime);
-		mTvMusicName = (TextView) findViewById(R.id.music_detail_musicname);
-		mTvMusicDestrip = (TextView) findViewById(R.id.music_detail_musicdestrip);
-		mRoundImageView = (RoundImageView) findViewById(R.id.music_detail_pic);
+    private void initData() {
+        //模拟数据
+        bean = (MusicBean) getIntent().getSerializableExtra("file");
+        fileInfo0 = bean.getFileInfo0();
+        if (fileInfo0 == null) {
+            return;
+        }
+        mTvMusicName.setText(fileInfo0.getFilename());
+        String url = fileInfo0.getFilePath();
+        String albumArt = MediaUtil.getAlbumArt(this, url);
+        if (albumArt == null) {
+//			albumImage.setBackgroundResource(R.drawable.audio_default_bg);
+        } else {
+            Bitmap bm = BitmapFactory.decodeFile(albumArt);
+            BitmapDrawable bmpDraw = new BitmapDrawable(bm);
+            mRoundImageView.setImageDrawable(bmpDraw);
+        }
 
+//		if (url != null)
+//		{
+//			/*if (!syncTask.haveLocalCopy(fileInfo0))
+//			{
+//				//url = ThumUtil.getThumid(fileInfo0.getObjid()); //缩略图地址
+//			}*/
+//			imageLoader.displayImage(albumArt, mRoundImageView,
+//					options, new SimpleImageLoadingListener() {
+//						@Override
+//						public void onLoadingStarted(String imageUri, View view) {
+//							/*vh.progressBar.setProgress(0);
+//							vh.progressBar.setVisibility(View.VISIBLE);*/
+//						}
+//
+//						@Override
+//						public void onLoadingFailed(String imageUri, View view,
+//								FailReason failReason) {
+//							/*vh.progressBar.setVisibility(View.GONE);*/
+//						}
+//
+//						@Override
+//						public void onLoadingComplete(String imageUri, View view,
+//								Bitmap loadedImage) {
+//							/*vh.progressBar.setVisibility(View.GONE);*/
+//						}
+//					}, new ImageLoadingProgressListener() {
+//						@Override
+//						public void onProgressUpdate(String imageUri, View view,
+//								int current, int total) {
+//							/*vh.progressBar.setProgress(Math.round(100.0f * current
+//									/ total));*/
+//						}
+//					});
+//		}
+    }
 
+    private void initListener() {
+        mIvLeft.setOnClickListener(this);
+        mBtnDownload.setOnClickListener(this);
+        mBtnPlay.setOnClickListener(this);
+        mBtnDelete.setOnClickListener(this);
+    }
 
-	}
+    private void initResourceId() {
+        mBtnDownload = (ImageView) findViewById(R.id.music_detail_download);
+        mBtnPlay = (ImageView) findViewById(R.id.music_detail_play);
+        mBtnDelete = (ImageView) findViewById(R.id.music_detail_delete);
 
-	private void initTitle() {
-		mIvLeft = (ImageView) findViewById(R.id.iv_left);
-		mTvCenter = (TextView) findViewById(R.id.tv_center);
-		mTvRight = (TextView) findViewById(R.id.tv_right);
-
-		mTvCenter.setText("音乐");
-		mTvRight.setText("取消");
-	}
-
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.tv_right:
-		case R.id.iv_left:
-			finish();
-			break;
-		case R.id.music_detail_download:
-			if (syncTask != null && fileInfo0 != null)
-			{
-				syncTask.download(fileInfo0, MusicDetailActivity.this, false);
-			}
-			break;
-		case R.id.music_detail_play:
+        mTvTotalTime = (TextView) findViewById(R.id.music_detail_totaltime);
+        mTvMusicName = (TextView) findViewById(R.id.music_detail_musicname);
+        mTvMusicDestrip = (TextView) findViewById(R.id.music_detail_musicdestrip);
+        mRoundImageView = (RoundImageView) findViewById(R.id.music_detail_pic);
 
 
+    }
 
-			break;
-		case R.id.music_detail_delete:
-			if (syncTask != null && fileInfo0 != null)
-			{
-				boolean delS = syncTask.DelRemoteObj(fileInfo0);
-				if(delS){
-					Toast.makeText(MusicDetailActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
-				}else{
-					Toast.makeText(MusicDetailActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
-				}
-				
-			}
-			break;
-		}
-	}
-	
-	
+    private void initTitle() {
+        mIvLeft = (ImageView) findViewById(R.id.iv_left);
+        mTvCenter = (TextView) findViewById(R.id.tv_center);
+        mTvRight = (TextView) findViewById(R.id.tv_right);
+
+        mTvCenter.setText("音乐");
+        mTvRight.setText("取消");
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_right:
+            case R.id.iv_left:
+                finish();
+                break;
+            case R.id.music_detail_download:
+                if (syncTask != null && fileInfo0 != null) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            syncTask.download(fileInfo0, MusicDetailActivity.this, false);
+                        }
+                    }).start();
+                }
+                break;
+            case R.id.music_detail_play:
+                try {
+                    Uri uri = Uri.parse(fileInfo0.getFilePath());
+                    //调用系统自带的播放器
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(uri, "video/mp4");
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Toast.makeText(MusicDetailActivity.this, "请先下载", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.music_detail_delete:
+                if (syncTask != null && fileInfo0 != null) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            boolean delS = syncTask.DelRemoteObj(fileInfo0);
+                            if (delS) {
+
+                                mHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(MusicDetailActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } else {
+                                mHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(MusicDetailActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                            }
+                        }
+                    }).start();
+
+
+                }
+                break;
+        }
+    }
+
+
 }

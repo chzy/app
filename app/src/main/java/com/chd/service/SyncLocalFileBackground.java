@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class SyncLocalFileBackground implements Runnable {
 
-    
+    public final String classname = this.getClass().getName();
     private final String Tag = "SyncLocal";
     private final int readbuflen = 1024 * 10;
     List<FileInfo0> files = new ArrayList<FileInfo0>();
@@ -153,10 +153,8 @@ public class SyncLocalFileBackground implements Runnable {
 
 
         byte[] buffer = new byte[readbuflen];
-        remain = total - offset;
         if (pb != null) {
             pb.setMaxProgress(100);
-            pb.setProgress((remain) / total * 100);
         }
         if (inputTrasnport == null)
             Log.e(classname, "open inputstrnsport fail");
@@ -166,8 +164,9 @@ public class SyncLocalFileBackground implements Runnable {
                 os.write(buffer, 0, readlen);
                 offset += readlen;
                 Log.d(classname, "read:" + offset + " bytes");
-                if (pb != null)
-                    pb.setProgress((remain - readlen) / total * 100);
+                if (pb != null){
+                    pb.updateProgress((int) ((offset / (float)total * 100)));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.e(classname, e.getMessage());

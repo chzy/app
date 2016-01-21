@@ -34,7 +34,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="33dp"
         android:gravity="center"
-        android:text="0:33"
         android:textColor="#ffffffff"
         android:textSize="18sp" />
 
@@ -45,7 +44,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="14dp"
         android:gravity="center"
-        android:text="Kate Perry"
         android:textColor="#ffffffff"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -57,7 +55,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="7dp"
         android:gravity="center"
-        android:text="Legendary Lovers.Pris"
         android:textColor="#ffffffff"
         android:textSize="13sp"
         android:textStyle="bold" />

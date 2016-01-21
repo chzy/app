@@ -23,7 +23,6 @@ import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,7 +103,7 @@ public class MusicActivity extends Activity implements OnClickListener,OnItemCli
 		for(FileInfo0 item:cloudUnits)
 		{
 			//FileInfo0 item=new FileInfo0(finfo);
-			item.setFilePath(new ShareUtils(this).getMusicFile().getPath()+ File.separator+item.getObjid());
+			item.setFilePath(new ShareUtils(this).getMusicFile().getPath()+ "/"+item.getObjid());
 			if(!fileFilter.contains(item.getObjid()))
 				continue;
 			//已备份文件
