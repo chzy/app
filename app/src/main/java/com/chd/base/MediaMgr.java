@@ -35,20 +35,17 @@ public class MediaMgr  {
 	private FTYPE _ftype;
 	private boolean mExitTasksEarly;
 	static ShareUtils shareUtils ;
-	//private HashMap<Integer,FileInfo0> PicCache;
-    //private  static List<PicDBitem> _dloadUnits ;
-    //private  static List<Integer>  _uploadUnits;
 	private   List<FileLocal> LocalUnits;
 	public final  static String sZipFileMimeType = "application/zip";
 
 	boolean contains=true;
-	//private  final String[] wheresection ;
 	private Context context;
 
 	public final int COLUMN_ID = 0;
 	public final int COLUMN_PATH = 1;
 	public final int COLUMN_SIZE = 2;
 	public final int COLUMN_DATE = 3;
+	private final String TAG=this.getClass().getName();
 
 	public static enum DBTAB
 	{
@@ -312,8 +309,10 @@ public class MediaMgr  {
 		while(cursor.moveToNext())
 		{
 			fileInfo0.setFilePath( cursor.getString(COLUMN_PATH));
-			if (fileInfo0.getObjid()==null)
-				fileInfo0.setObjid(MediaFileUtil.getNameFromFilepath(cursor.getString(COLUMN_PATH)));
+			if (fileInfo0.getObjid()!=null)
+				Log.d(TAG,"is a  remote obj");	
+		    fileInfo0.setObjid(MediaFileUtil.getNameFromFilepath(cursor.getString(COLUMN_PATH)));
+				
 			fileInfo0.setFilesize(cursor.getInt(COLUMN_SIZE));
 			fileInfo0.setLastModified(cursor.getInt(COLUMN_DATE));
 			fileInfo0.setSysid(sysid);

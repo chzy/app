@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class SyncLocalFileBackground implements Runnable {
 
-    public final String classname = this.getClass().getName();
+    
     private final String Tag = "SyncLocal";
     private final int readbuflen = 1024 * 10;
     List<FileInfo0> files = new ArrayList<FileInfo0>();
@@ -160,7 +160,8 @@ public class SyncLocalFileBackground implements Runnable {
         }
         if (inputTrasnport == null)
             Log.e(classname, "open inputstrnsport fail");
-        while ((readlen = inputTrasnport.read(buffer, offset, readbuflen)) > -1) {
+        while ((readlen = inputTrasnport.read(buffer, offset, readbuflen)) > -1) 
+		{
             try {
                 os.write(buffer, 0, readlen);
                 offset += readlen;
@@ -176,7 +177,8 @@ public class SyncLocalFileBackground implements Runnable {
         try {
             os.flush();
             os.close();
-        } catch (IOException e) {
+        } catch (IOException e) 
+		{
             Log.e(classname, e.getMessage());
             f.deleteOnExit();
             return false;
@@ -222,13 +224,17 @@ public class SyncLocalFileBackground implements Runnable {
                 activeProcess.setMaxProgress(100);
             }
             Log.e(classname, "upload file invliad");
-            return false;
-        } else {
+            return false;       
+			 } 
+			 else 
+			 {
             long oft = tClient.queryUpObjOffset(entity);
             if ((oft > 0))
                 start =/*entity.getOffset()*/oft;
-            else {
-                if (oft < 0) {
+            else 
+			{
+                if (oft < 0)
+				 {
                     su.close();
                     Log.e(classname, " query obj failed ");
                     return false;

@@ -1,6 +1,7 @@
 package com.chd.base.backend;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.chd.Entity.FilesListEntity;
 import com.chd.MediaMgr.utils.MediaFileUtil;
@@ -28,6 +29,7 @@ public class SyncTask {
 	public List<FileInfo> _CloudList;
 	private FilelistEntity filelistEntity;
 	private final FTYPE _ftype;
+	private final String TAG=this.getClass().getName();
 	//private MediaFileUtil.FileCategory;
 
 
@@ -46,6 +48,12 @@ public class SyncTask {
 
 	//查询远程对象是否有本地副本. 根据文件名匹配
 	public boolean haveLocalCopy(FileInfo0 info0) {
+		boolean ret=false;
+		if (info0.getObjid()==null)
+		{
+			Log.d(TAG, "not remote file obj");
+			return false;
+		}
 		if (info0.getSysid() > 0)
 		{
 			if (info0.getFilePath()!=null && info0.getFilePath().indexOf(".")>1 ) {
@@ -54,13 +62,15 @@ public class SyncTask {
 			}
 			if (info0.getFtype()==null)
 				info0.setFtype(_ftype);
-			return   dbManager.queryLocalInfo(info0.getSysid(),info0);
-			/*if (info01!=null) {
-				info0.setFilePath(info01.getFilePath());
-				return true;
-			}*/
+			int time=info0.getLastModified();
+			ret=   dbManager.queryLocalInfo(info0.getSysid(),info0);
+			/*
+			临时方案 恢复成远程的上传时间
+			* */
+			if (ret)
+				info0.setLastModified(time);
 		}
-		boolean ret=false;
+
 		////return true;
 		//通过上下行记录 来匹配
 		/*dbManager.open();
