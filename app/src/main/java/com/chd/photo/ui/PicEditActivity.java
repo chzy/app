@@ -276,7 +276,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener
 						{
 							if (bIsUbkList)
 							{
-								syncTask.upload(fileInfo0, null, false);	
+								syncTask.upload(fileInfo0, PicEditActivity.this, false);
 							}
 							else
 							{
