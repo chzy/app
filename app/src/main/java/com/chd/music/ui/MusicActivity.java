@@ -104,7 +104,7 @@ public class MusicActivity extends Activity implements OnClickListener,OnItemCli
 		for(FileInfo0 item:cloudUnits)
 		{
 			//FileInfo0 item=new FileInfo0(finfo);
-			item.setFilePath(new ShareUtils(this).getStorePathStr()+ File.separator+item.getObjid());
+			item.setFilePath(new ShareUtils(this).getMusicFile().getPath()+ File.separator+item.getObjid());
 			if(!fileFilter.contains(item.getObjid()))
 				continue;
 			//已备份文件
@@ -113,6 +113,7 @@ public class MusicActivity extends Activity implements OnClickListener,OnItemCli
 			int id = item.getSysid();
 			MusicBean musicBean = new MusicBean(name, path);
 			musicBean.setId(id);
+			musicBean.setFileInfo0(item);
 			if (syncTask.haveLocalCopy(item))
 				musicBean.setFileInfo0(item);
 			
@@ -168,7 +169,7 @@ public class MusicActivity extends Activity implements OnClickListener,OnItemCli
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		Intent intent = new Intent(this, MusicDetailActivity.class);
-		intent.putExtra("sysid", mMusicList.get(arg2).getId());
+		intent.putExtra("file", mMusicList.get(arg2));
 		startActivity(intent);
 	}
 }

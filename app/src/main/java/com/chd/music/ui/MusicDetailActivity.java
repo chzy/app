@@ -1,14 +1,16 @@
 package com.chd.music.ui;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.backend.SyncTask;
+import com.chd.music.entity.MusicBean;
 import com.chd.photo.adapter.RoundImageView;
 import com.chd.photo.entity.ThumUtil;
 import com.chd.proto.FTYPE;
@@ -22,9 +24,7 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
-import java.util.List;
-
-public class MusicDetailActivity extends Activity implements OnClickListener
+public class MusicDetailActivity extends ActiveProcess implements OnClickListener
 {
 	
 	private ImageView mIvLeft;
@@ -45,6 +45,7 @@ public class MusicDetailActivity extends Activity implements OnClickListener
 	
 	private SyncTask syncTask;
 	FileInfo0 fileInfo0;
+	private MusicBean bean;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -56,57 +57,26 @@ public class MusicDetailActivity extends Activity implements OnClickListener
 		initTitle();
 		initResourceId();
 		initListener();
-
+		syncTask = new SyncTask(this, FTYPE.MUSIC);
 		options = new DisplayImageOptions.Builder()
 		.showImageOnLoading(R.drawable.pic_test1)
 		.cacheInMemory(true)
-		.cacheOnDisk(true)
+		.cacheOnDisk(false)
 		.considerExifParams(true)
 		.displayer(new RoundedBitmapDisplayer(20))
-		.extraForDownloader(new ShareUtils(this).getStorePathStr())  //增加保存路径
+		.extraForDownloader(new ShareUtils(this).getMusicFile())  //增加保存路径
 		.build();
+		initData();
 		
-		onNewThreadRequest();
 		// ATTENTION: This was auto-generated to implement the App Indexing API.
 		// See https://g.co/AppIndexing/AndroidStudio for more information.
 		//client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 	}
-	
-	private void onNewThreadRequest()
-	{
 
-		Thread thread = new Thread(new Runnable() 
-		{
-			@Override
-			public void run() 
-			{
-				SyncTask syncTask =new SyncTask(MusicDetailActivity.this, FTYPE.MUSIC);
-				//未备份文件 ==  backedlist . removeAll(localist);
-
-				final List<FileInfo0> cloudUnits=syncTask.getCloudUnits(0, 1000);
-				runOnUiThread(new Runnable() {
-					public void run() {
-						initData(cloudUnits);
-					}
-				});
-			}
-		});
-		thread.start();
-	}
-
-	private void initData(List<FileInfo0> cloudUnits) {
+	private void initData() {
 		//模拟数据
-		int sysid = getIntent().getIntExtra("sysid", -1);
-		String objId = getIntent().getStringExtra("objId");
-		if (sysid < 0)
-		{
-			return;
-		}
-		
-		syncTask = new SyncTask(this, FTYPE.MUSIC);
-		
-		syncTask.analyMusicUnits(cloudUnits);
-//		fileInfo0 = syncTask.getUnitinfo(objId);
+		bean = (MusicBean) getIntent().getSerializableExtra("file");
+		fileInfo0 = bean.getFileInfo0();
 		if (fileInfo0 == null)
 		{
 			return;
@@ -165,6 +135,9 @@ public class MusicDetailActivity extends Activity implements OnClickListener
 		mTvMusicName = (TextView) findViewById(R.id.music_detail_musicname);
 		mTvMusicDestrip = (TextView) findViewById(R.id.music_detail_musicdestrip);
 		mRoundImageView = (RoundImageView) findViewById(R.id.music_detail_pic);
+
+
+
 	}
 
 	private void initTitle() {
@@ -186,15 +159,24 @@ public class MusicDetailActivity extends Activity implements OnClickListener
 		case R.id.music_detail_download:
 			if (syncTask != null && fileInfo0 != null)
 			{
-				syncTask.download(fileInfo0, null, false);
+				syncTask.download(fileInfo0, MusicDetailActivity.this, false);
 			}
 			break;
 		case R.id.music_detail_play:
+
+
+
 			break;
 		case R.id.music_detail_delete:
 			if (syncTask != null && fileInfo0 != null)
 			{
-				syncTask.DelRemoteObj(fileInfo0);
+				boolean delS = syncTask.DelRemoteObj(fileInfo0);
+				if(delS){
+					Toast.makeText(MusicDetailActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+				}else{
+					Toast.makeText(MusicDetailActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
+				}
+				
 			}
 			break;
 		}

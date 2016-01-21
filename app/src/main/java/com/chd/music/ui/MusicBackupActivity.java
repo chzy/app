@@ -1,6 +1,5 @@
 package com.chd.music.ui;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
+import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.backend.SyncTask;
 import com.chd.music.adapter.MusicBackupAdapter;
 import com.chd.music.entity.MusicBackupBean;
@@ -24,7 +24,7 @@ import com.chd.yunpan.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MusicBackupActivity extends Activity implements OnClickListener, OnItemClickListener
+public class MusicBackupActivity extends ActiveProcess implements OnClickListener, OnItemClickListener
 {
 
 	private ImageView mIvLeft;
@@ -168,7 +168,7 @@ public class MusicBackupActivity extends Activity implements OnClickListener, On
 					@Override
 					public void run() {
 						SyncTask syncTask = new SyncTask(MusicBackupActivity.this, FTYPE.MUSIC);
-						syncTask.upload(musicBackupBean.getFileInfo0(), null, false);
+						syncTask.upload(musicBackupBean.getFileInfo0(), MusicBackupActivity.this, false);
 
 					}
 				}).start();
