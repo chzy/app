@@ -25,8 +25,6 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
-import java.util.List;
-
 public class PicDetailActivity extends Activity implements OnClickListener
 {
 
@@ -73,30 +71,9 @@ public class PicDetailActivity extends Activity implements OnClickListener
 		initResourceId();
 		initListener();
 		initData();
-//		onNewThreadRequest();
 	}
 	
-	private void onNewThreadRequest()
-	{
 
-		Thread thread = new Thread(new Runnable() 
-		{
-			@Override
-			public void run() 
-			{
-				syncTask =new SyncTask(PicDetailActivity.this, FTYPE.PICTURE);
-				//未备份文件 ==  backedlist . removeAll(localist);
-
-				final List<FileInfo0> cloudUnits=syncTask.getCloudUnits(0, 1000);
-				runOnUiThread(new Runnable() {
-					public void run() {
-//						initData(cloudUnits);
-					}
-				});
-			}
-		});
-		thread.start();
-	}
 	
 	private void initData(){
 		/*int nPicId = getIntent().getIntExtra("picid", -1);

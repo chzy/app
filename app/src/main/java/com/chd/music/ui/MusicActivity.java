@@ -12,7 +12,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.chd.MediaMgr.utils.MFileFilter;
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.backend.SyncTask;
@@ -21,153 +20,161 @@ import com.chd.music.entity.MusicBean;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
-import com.chd.yunpan.share.ShareUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MusicActivity extends Activity implements OnClickListener,OnItemClickListener {
+public class MusicActivity extends Activity implements OnClickListener, OnItemClickListener {
 
-	private ImageView mIvLeft;
-	private TextView mTvCenter;
-	private TextView mTvRight;
-	private TextView mTvNumber;
-	private GridView mGvMusic;
-	private View mViewNumber;
-	
-	private List<MusicBean> mMusicList = new ArrayList<MusicBean>();
-	
-	private Handler handler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
-			mGvMusic.setAdapter(new MusicAdapter(MusicActivity.this,
-					mMusicList));
-		}
-	};
-	
+    SyncTask syncTask;
+    private ImageView mIvLeft;
+    private TextView mTvCenter;
+    private TextView mTvRight;
+    private TextView mTvNumber;
+    private GridView mGvMusic;
+    private View mViewNumber;
+    private MusicAdapter adapter;
+    private List<MusicBean> mMusicList = new ArrayList<MusicBean>();
+    private Handler handler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            adapter.notifyDataSetChanged();
+        }
+    };
+    private int pos;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_music);
+        setContentView(R.layout.activity_music);
 
-		initTitle();
-		initResourceId();
-		initListener();
+        initTitle();
+        initResourceId();
+        initListener();
+        adapter = new MusicAdapter(MusicActivity.this,
+                mMusicList);
+        mGvMusic.setAdapter(adapter);
+        syncTask = new SyncTask(MusicActivity.this, FTYPE.MUSIC);
+        onNewThreadRequest();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
 
-		onNewThreadRequest();
-		// ATTENTION: This was auto-generated to implement the App Indexing API.
-		// See https://g.co/AppIndexing/AndroidStudio for more information.
-		//client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-	}
-	
-	private void onNewThreadRequest()
-	{
+    private void onNewThreadRequest() {
 
-		Thread thread = new Thread(new Runnable() 
-		{
-			@Override
-			public void run() 
-			{
-				SyncTask syncTask =new SyncTask(MusicActivity.this, FTYPE.MUSIC);
-				//未备份文件 ==  backedlist . removeAll(localist);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-				final List<FileInfo0> cloudUnits=syncTask.getCloudUnits(0, 1000);
-				runOnUiThread(new Runnable() {
-					public void run() {
-						initData(cloudUnits);
-					}
-				});
-			}
-		});
-		thread.start();
-	}
+                //未备份文件 ==  backedlist . removeAll(localist);
 
-	private void initData(List<FileInfo0> cloudUnits) {
+                final List<FileInfo0> cloudUnits = syncTask.getCloudUnits(0, 1000);
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        initData(cloudUnits);
+                    }
+                });
+            }
+        });
+        thread.start();
+    }
 
-		SyncTask syncTask =new SyncTask(this, FTYPE.MUSIC);
+    private void initData(List<FileInfo0> cloudUnits) {
 
-		if (cloudUnits==null)
-		{
-			System.out.print("query remote failed");
-		}
-		FilelistEntity filelistEntity=syncTask.analyMusicUnits(cloudUnits);
-		cloudUnits.clear();
-		cloudUnits=null;
-		List<FileLocal> fileLocals=filelistEntity.getLocallist();
-		cloudUnits=filelistEntity.getBklist();
-		//显示的时候过滤文件类型
-	
-		for(FileInfo0 item:cloudUnits)
-		{
-			//FileInfo0 item=new FileInfo0(finfo);
-			item.setFilePath(new ShareUtils(this).getMusicFile().getPath()+ "/"+item.getObjid());
 
-			//已备份文件
-			String path = item.getFilePath();
-			String name = item.getFilename();
+        if (cloudUnits == null) {
+            System.out.print("query remote failed");
+        }
+        FilelistEntity filelistEntity = syncTask.analyMusicUnits(cloudUnits);
+        cloudUnits.clear();
+        cloudUnits = null;
+        List<FileLocal> fileLocals = filelistEntity.getLocallist();
+        cloudUnits = filelistEntity.getBklist();
+        //显示的时候过滤文件类型
 
-			MusicBean musicBean = new MusicBean(name, path);
-			musicBean.setFileInfo0(item);
-			if (syncTask.haveLocalCopy(item)) {
-				int id=musicBean.getId();
-			}
-		
-			//	syncTask.download(item, null, false);
-			mMusicList.add(musicBean);
-		}
+        for (FileInfo0 item : cloudUnits) {
+            //FileInfo0 item=new FileInfo0(finfo);
 
-		mTvNumber.setText(String.format("未备份音乐%d首", fileLocals.size()));
 
-		handler.sendEmptyMessage(0);
+            //已备份文件
+            String path = item.getFilePath();
+            String name = item.getFilename();
 
-	}
+            if (syncTask.haveLocalCopy(item)) {
 
-	private void initResourceId() {
-		mTvNumber = (TextView) findViewById(R.id.tv_music_number);
-		mGvMusic = (GridView) findViewById(R.id.gv_music);
-		mViewNumber = findViewById(R.id.iv_music_num_layout);
+            }
+            MusicBean musicBean = new MusicBean(name, path);
+            musicBean.setFileInfo0(item);
 
-		mTvNumber.setText("未备份音乐0首");
-	}
+            //	syncTask.download(item, null, false);
+            mMusicList.add(musicBean);
+        }
 
-	private void initListener() {
-		mIvLeft.setOnClickListener(this);
-		mTvRight.setOnClickListener(this);
-		mGvMusic.setOnItemClickListener(this);
-		mViewNumber.setOnClickListener(this);
-	}
+        mTvNumber.setText(String.format("未备份音乐%d首", fileLocals.size()));
 
-	private void initTitle() {
-		mIvLeft = (ImageView) findViewById(R.id.iv_left);
-		mTvCenter = (TextView) findViewById(R.id.tv_center);
-		mTvRight = (TextView) findViewById(R.id.tv_right);
+        handler.sendEmptyMessage(0);
 
-		mTvCenter.setText("音乐");
-		mTvRight.setText("编辑");
-	}
+    }
 
-	@Override
-	public void onClick(View view) {
-		switch (view.getId()) {
-		case R.id.iv_left:
-			finish();
-			break;
-		case R.id.tv_right: // 编辑
-			// TODO
-			break;
-		case R.id.iv_music_num_layout:
-			Intent intent = new Intent(this, MusicBackupActivity.class);
-			startActivity(intent);
-			break;
-		}
-	}
+    private void initResourceId() {
+        mTvNumber = (TextView) findViewById(R.id.tv_music_number);
+        mGvMusic = (GridView) findViewById(R.id.gv_music);
+        mViewNumber = findViewById(R.id.iv_music_num_layout);
 
-	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		Intent intent = new Intent(this, MusicDetailActivity.class);
-		intent.putExtra("file", mMusicList.get(arg2));
-		startActivity(intent);
-	}
+        mTvNumber.setText("未备份音乐0首");
+    }
+
+    private void initListener() {
+        mIvLeft.setOnClickListener(this);
+        mTvRight.setOnClickListener(this);
+        mGvMusic.setOnItemClickListener(this);
+        mViewNumber.setOnClickListener(this);
+    }
+
+    private void initTitle() {
+        mIvLeft = (ImageView) findViewById(R.id.iv_left);
+        mTvCenter = (TextView) findViewById(R.id.tv_center);
+        mTvRight = (TextView) findViewById(R.id.tv_right);
+
+        mTvCenter.setText("音乐");
+        mTvRight.setText("编辑");
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_left:
+                finish();
+                break;
+            case R.id.tv_right: // 编辑
+                // TODO
+                break;
+            case R.id.iv_music_num_layout:
+                Intent intent = new Intent(this, MusicBackupActivity.class);
+                startActivity(intent);
+                break;
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+        Intent intent = new Intent(this, MusicDetailActivity.class);
+        intent.putExtra("file", mMusicList.get(arg2));
+        pos = arg2;
+        startActivityForResult(intent, 0x11);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 0x11:
+                    //删除成功了
+                    mMusicList.remove(pos);
+                    adapter.notifyDataSetChanged();
+                    break;
+            }
+        }
+    }
 }

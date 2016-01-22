@@ -18,7 +18,6 @@ import org.apache.thrift.TException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -104,7 +103,7 @@ public class SyncLocalFileBackground implements Runnable {
 	private boolean upLoadFile(FileInfo0 file) {
 		Log.v(TAG, file.getObjid() + "------------------" + file.getFilePath());
 		boolean b = new BigFileOrBreakPointUploadUtil()
-				.uploadBigFile(file,null, context);
+				.uploadBigFile(file, null, context);
 		System.out.println(b);
 		System.gc();
 		return b;
@@ -139,6 +138,7 @@ public class SyncLocalFileBackground implements Runnable {
         try {
             os = new RandomAccessFile(f,"rws");
             total = inputTrasnport.getobjlength().intValue();
+
             if (total < 0) {
                 Log.e(TAG, " obj length invild");
                 return false;
@@ -146,6 +146,9 @@ public class SyncLocalFileBackground implements Runnable {
 			remain = total - offset;
 			if (remain<=0)
 			{
+                if(pb!=null){
+                    pb.toastMain("文件已存在");
+                }
 				Log.d(TAG, "file is completed abort download");
 				return true;
 			}
@@ -167,7 +170,7 @@ public class SyncLocalFileBackground implements Runnable {
 
 		if (pb!=null) {
 			pb.setMaxProgress(100);
-			pb.setProgress((offset) / remain * 100);
+			pb.setParMessage("正在下载");
 		}
 		if(inputTrasnport==null) {
 			Log.e(TAG, "open inputstrnsport fail");
@@ -180,10 +183,10 @@ public class SyncLocalFileBackground implements Runnable {
 				os.write(buffer, 0, readlen);
 				offset+=readlen;
 				//Log.d(TAG,"read:"+offset+" bytes");
-				int progress=( offset*100 / remain) ;
+				int progress= (int) (((float)offset/total)*100);
 				Log.d( TAG,"progress :"+ progress );
 				if (pb!=null)
-					pb.setProgress(progress);
+					pb.updateProgress(progress);
 			} catch (Exception e) {
 				e.printStackTrace();
 				Log.e(TAG, e.getMessage());
@@ -237,6 +240,7 @@ public class SyncLocalFileBackground implements Runnable {
 			su.open();
 			if (fileInfo!=null  ) {
 				if (activeProcess != null) {
+					activeProcess.setParMessage("正在上传");
 					activeProcess.setMaxProgress(100);
 				}
 				Log.e(TAG,"upload file invliad");

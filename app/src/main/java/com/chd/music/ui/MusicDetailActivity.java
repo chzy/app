@@ -27,6 +27,9 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
 public class MusicDetailActivity extends ActiveProcess implements OnClickListener {
 
     protected ImageLoader imageLoader = ImageLoader.getInstance();
@@ -80,6 +83,14 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
         if (fileInfo0 == null) {
             return;
         }
+        if(fileInfo0.getFilePath()==null){
+            if(fileInfo0.getSysid()>0){
+                fileInfo0 =syncTask.queryLocalInfo(fileInfo0.getSysid());
+            }else{
+                fileInfo0.setFilePath(new ShareUtils(this).getMusicFile().getPath()+ "/"+fileInfo0.getObjid());
+            }
+        }
+
         mTvMusicName.setText(fileInfo0.getFilename());
         String url = fileInfo0.getFilePath();
         String albumArt = MediaUtil.getAlbumArt(this, url);
@@ -165,16 +176,17 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
                 break;
             case R.id.music_detail_download:
                 if (syncTask != null && fileInfo0 != null) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
                             syncTask.download(fileInfo0, MusicDetailActivity.this, false);
-                        }
-                    }).start();
                 }
                 break;
             case R.id.music_detail_play:
+
+
                 try {
+                    File f=new File(fileInfo0.getFilePath());
+                    if(!f.exists()){
+                        throw new FileNotFoundException("文件未找到");
+                    }
                     Uri uri = Uri.parse(fileInfo0.getFilePath());
                     //调用系统自带的播放器
                     Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -194,8 +206,11 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
 
                                 mHandler.post(new Runnable() {
                                     @Override
+
                                     public void run() {
+                                        setResult(RESULT_OK);
                                         Toast.makeText(MusicDetailActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                                        MusicDetailActivity.this.finish();
                                     }
                                 });
                             } else {

@@ -118,7 +118,10 @@ public class ShareUtils {
 		return sp.getStringSet("downpath", new HashSet<String>());
 	}
 
-
+	/**
+	 * 图片下载地址
+	 * @return
+	 */
 	public File getPhotoFile(){
 		File f=new File(PHOTO);
 		if(!f.exists()){
@@ -126,6 +129,11 @@ public class ShareUtils {
 		}
 		return f;
 	}
+
+	/**
+	 * 音乐下载地址
+	 * @return
+	 */
 	public File getMusicFile(){
 		File f=new File(MUSIC);
 		if(!f.exists()){

@@ -26,6 +26,7 @@ public abstract class ActiveProcess extends Activity {
     }
 
     private  int progress;
+    private String msg;
     public synchronized void updateProgress( int progress)
     {
         this.progress=progress;
@@ -49,7 +50,7 @@ public abstract class ActiveProcess extends Activity {
         public void run() {
             Log.d("lmj", "正在上传:" + progress);
             if (progress < 100 && dialog.isShowing()) {
-                dialog.setMessage("正在上传" + progress + "%");
+                dialog.setMessage( msg+ progress + "%");
             } else if (progress > 0 && !dialog.isShowing()) {
                 dialog.show();
             } else {
@@ -73,6 +74,7 @@ public abstract class ActiveProcess extends Activity {
     //设置progressbar上的提示信息
     public void setParMessage(String message)
     {
+        msg=message;
         return;
     }
 
