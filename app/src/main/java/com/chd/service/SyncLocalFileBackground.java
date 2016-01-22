@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class SyncLocalFileBackground implements Runnable {
 
-    
+
     private final String TAG = "SyncLocal";
     private final int readbuflen = 1024 * 7;
     List<FileInfo0> files = new ArrayList<FileInfo0>();
@@ -35,86 +35,86 @@ public class SyncLocalFileBackground implements Runnable {
     private Context context = null;
     private FileInfo0 _item;
 
-	/**
-	 * _itme!=null：立即上传  _item==null：自动备份0
-	 * */
-	//private int upLoadType = -1;
+    /**
+     * _itme!=null：立即上传  _item==null：自动备份0
+     * */
+    //private int upLoadType = -1;
 
-	/**
-	 * 0：立即上传 1：自动备份
-	 * */
-	public SyncLocalFileBackground(Context context) {
-		this.context = context;
-		//this.upLoadType = upLoadType;
-		su = new MediaMgr(context);
-		//su.open();
-	}
+    /**
+     * 0：立即上传 1：自动备份
+     */
+    public SyncLocalFileBackground(Context context) {
+        this.context = context;
+        //this.upLoadType = upLoadType;
+        su = new MediaMgr(context);
+        //su.open();
+    }
 
 	/*public SyncLocalFileBackground(Context context,FileInfo0 fileInfo0) {
-		this.context = context;
+        this.context = context;
 		su = new MediaMgr(context);
 		//su.open();
 	}*/
 
 
-	public SyncLocalFileBackground(Context context,int upLoadType) {
-		this.context = context;
-		//this.upLoadType = upLoadType;
-		su = new MediaMgr(context);
-		//su.open();
-	}
+    public SyncLocalFileBackground(Context context, int upLoadType) {
+        this.context = context;
+        //this.upLoadType = upLoadType;
+        su = new MediaMgr(context);
+        //su.open();
+    }
 
-	public void run() {
-		upLoad();
-		//su.close();
+    public void run() {
+        upLoad();
+        //su.close();
 
-	}
+    }
 
-	// 找到所有需要上传的列表
-	private void findList2UpLoad() {
-		files = su.getUpLoadTask(100);
+    // 找到所有需要上传的列表
+    private void findList2UpLoad() {
+        files = su.getUpLoadTask(100);
 
-	}
+    }
 
-	// 递归上传所有
-	private void upLoad() {
-		su.open();
-		findList2UpLoad();
-		if(files.size()==0){
-			su.close();
-			return ;
-		}
+    // 递归上传所有
+    private void upLoad() {
+        su.open();
+        findList2UpLoad();
+        if (files.size() == 0) {
+            su.close();
+            return;
+        }
 
 
-		for(FileInfo0 item:files) {
-			if (!NetworkUtils.isNetworkAvailable(context)) {
-				break;
-			}
-			if (upLoadFile(item)) {
-				//su.deleteUpLoadingFile(item.getObjid());
-				su.addUpLoadedFile(item);
-			} else {
-				//su.deleteUpLoadingFile(item.getObjid());
-			}
-		su.close();
-		}
-	}
+        for (FileInfo0 item : files) {
+            if (!NetworkUtils.isNetworkAvailable(context)) {
+                break;
+            }
+            if (upLoadFile(item)) {
+                //su.deleteUpLoadingFile(item.getObjid());
+                su.addUpLoadedFile(item);
+            } else {
+                //su.deleteUpLoadingFile(item.getObjid());
+            }
+            su.close();
+        }
+    }
 
-	private boolean upLoadFile(FileInfo0 file) {
-		Log.v(TAG, file.getObjid() + "------------------" + file.getFilePath());
-		boolean b = new BigFileOrBreakPointUploadUtil()
-				.uploadBigFile(file, null, context);
-		System.out.println(b);
-		System.gc();
-		return b;
-	}
+    private boolean upLoadFile(FileInfo0 file) {
+        Log.v(TAG, file.getObjid() + "------------------" + file.getFilePath());
+        boolean b = new BigFileOrBreakPointUploadUtil()
+                .uploadBigFile(file, null, context);
+        System.out.println(b);
+        System.gc();
+        return b;
+    }
 
 
     public boolean downloadBigFile(FileInfo0 fileInfo0, ActiveProcess pb) {
         int offset = 0;
         int readlen = 0, remain = 0, total = 0;
         FileInputStream fis = null;
-		RandomAccessFile os = null;
+        RandomAccessFile os = null;
         //TODO 下载注释掉了文件大小判断
 		/*if (fileInfo0.getFilesize()<1) {
 			Log.e(TAG,"invalid remote obj size 0");
@@ -136,24 +136,23 @@ public class SyncLocalFileBackground implements Runnable {
         offset = (int) f.length();
         InputTrasnport inputTrasnport = new InputTrasnport(fileInfo0.getObjid(), fileInfo0.getFtype());
         try {
-            os = new RandomAccessFile(f,"rws");
+            os = new RandomAccessFile(f, "rws");
             total = inputTrasnport.getobjlength().intValue();
 
             if (total < 0) {
                 Log.e(TAG, " obj length invild");
                 return false;
             }
-			remain = total - offset;
-			if (remain<=0)
-			{
-                if(pb!=null){
+            remain = total - offset;
+            if (remain <= 0) {
+                if (pb != null) {
                     pb.toastMain("文件已存在");
                 }
-				Log.d(TAG, "file is completed abort download");
-				return true;
-			}
-			if (offset>0)
-				os.seek(offset);
+                Log.d(TAG, "file is completed abort download");
+                return true;
+            }
+            if (offset > 0)
+                os.seek(offset);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -162,110 +161,108 @@ public class SyncLocalFileBackground implements Runnable {
             e.printStackTrace();
             Log.w(TAG, " query objlenth fail ");
         } catch (IOException e) {
-			e.printStackTrace();
-			Log.e(TAG,e.getMessage());
-		}
+            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
+        }
 
-		byte[] buffer=new byte[readbuflen];
+        byte[] buffer = new byte[readbuflen];
 
-		if (pb!=null) {
-			pb.setMaxProgress(100);
-			pb.setParMessage("正在下载");
-		}
-		if(inputTrasnport==null) {
-			Log.e(TAG, "open inputstrnsport fail");
-			return false;
-		}
+        if (pb != null) {
+            pb.setMaxProgress(100);
+            pb.setParMessage("正在下载");
+        }
+        if (inputTrasnport == null) {
+            Log.e(TAG, "open inputstrnsport fail");
+            return false;
+        }
 
-		while (  (readlen=inputTrasnport.read(buffer,offset,readbuflen)) >-1)
-		{
-			try {
-				os.write(buffer, 0, readlen);
-				offset+=readlen;
-				//Log.d(TAG,"read:"+offset+" bytes");
-				int progress=( offset*100 / total) ;
-				Log.d( TAG,"progress :"+ progress );
-				if (pb!=null)
-					pb.updateProgress(progress);
-			} catch (Exception e) {
-				e.printStackTrace();
-				Log.e(TAG, e.getMessage());
-				break;
-			}
-		}
-		try {
-			//os.flush();
-			os.close();
-		}catch (IOException e)
-		{
-			Log.e(TAG, e.getMessage());
-			f.deleteOnExit();
-			return false;
-		}
-		MediaMgr.fileScan(fileInfo0.getFilePath(),context);
-		return  true;
-	}
+        while ((readlen = inputTrasnport.read(buffer, offset, readbuflen)) > -1) {
+            try {
+                os.write(buffer, 0, readlen);
+                offset += readlen;
+                //Log.d(TAG,"read:"+offset+" bytes");
+                int progress = (offset * 100 / total);
+                Log.d(TAG, "progress :" + progress);
+                if (pb != null)
+                    pb.updateProgress(progress);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e(TAG, e.getMessage());
+                break;
+            }
+        }
+        try {
+            //os.flush();
+            os.close();
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+            f.deleteOnExit();
+            return false;
+        } finally {
+            if (pb != null) {
+                pb.toastMain("下载完成");
+            }
+        }
+        MediaMgr.fileScan(fileInfo0.getFilePath(), context);
+        return true;
+    }
 
 
-	public boolean uploadBigFile(FileInfo0 entity,final ActiveProcess activeProcess) {
+    public boolean uploadBigFile(FileInfo0 entity, final ActiveProcess activeProcess) {
 
-		TClient tClient=null;
-		File file;
-		long size=entity.getFilesize();
-		if(!NetworkUtils.isNetworkAvailable(context)){
-			return false;
-		}
-		try {
-			tClient= TClient.getinstance();
-		} catch (Exception e) {
-			Log.w(TAG,e.getLocalizedMessage());
-			return false;
-		}
-		file = new File(entity.getFilePath());
-		if (!file.exists() ||  !file.isFile())
-			return false;
-		if (size<1) {
-			size = file.length();
-			entity.setFilesize(size);
-		}
-		if (size<1)
-			return  false;
+        TClient tClient = null;
+        File file;
+        long size = entity.getFilesize();
+        if (!NetworkUtils.isNetworkAvailable(context)) {
+            return false;
+        }
+        try {
+            tClient = TClient.getinstance();
+        } catch (Exception e) {
+            Log.w(TAG, e.getLocalizedMessage());
+            return false;
+        }
+        file = new File(entity.getFilePath());
+        if (!file.exists() || !file.isFile())
+            return false;
+        if (size < 1) {
+            size = file.length();
+            entity.setFilesize(size);
+        }
+        if (size < 1)
+            return false;
 
-		System.out.println("开始上传喽");
-			//先检查 云端是否 有同名文件
-			long start=0;
-			//是否 需要查询 服务器端是否有同名的 未传完的 文件
-			FileInfo fileInfo=tClient.queryFile(entity);
-			//fileInfo=null;
-			su.open();
-			if (fileInfo!=null  ) {
+        System.out.println("开始上传喽");
+        //先检查 云端是否 有同名文件
+        long start = 0;
+        //是否 需要查询 服务器端是否有同名的 未传完的 文件
+        FileInfo fileInfo = tClient.queryFile(entity);
+        //fileInfo=null;
+        su.open();
+        if (fileInfo != null) {
 
-				Log.e(TAG,"upload file exist !!");
-				return false;
-			}
-			else
-			{
-				long oft=tClient.queryUpObjOffset(entity);
-				if ( (oft>0))
-					start =/*entity.getOffset()*/oft;
-				else
-				{
-					if (oft<0)
-					{
-						su.close();
-						Log.e(TAG," query obj failed ");
-						return false;
-					}
-				}
+            Log.e(TAG, "upload file exist !!");
+            return false;
+        } else {
+            long oft = tClient.queryUpObjOffset(entity);
+            if ((oft > 0))
+                start =/*entity.getOffset()*/oft;
+            else {
+                if (oft < 0) {
+                    su.close();
+                    Log.e(TAG, " query obj failed ");
+                    return false;
+                }
+            }
 
-					if (activeProcess != null) {
-						activeProcess.setParMessage("正在上传");
-						activeProcess.setMaxProgress(100);
-						activeProcess.setProgress((int) (start / size * 100));
-				}
-			}
-			int len=0;
-        byte[] buffer = new byte[1024*5];
+            if (activeProcess != null) {
+                activeProcess.setParMessage("正在上传");
+                activeProcess.setMaxProgress(100);
+                activeProcess.setProgress((int) (start / size * 100));
+            }
+        }
+        int len = 0;
+        byte[] buffer = new byte[1024 * 5];
         boolean succed = false;
         TClient.TFilebuilder filebuilder = null;
         try {
@@ -292,7 +289,7 @@ public class SyncLocalFileBackground implements Runnable {
                 if (filebuilder.Append(/*pz,*/buffer)) {
                     entity.setOffset(pz);
                     if (activeProcess != null) {
-                            activeProcess.updateProgress((int) ((pz * 100 / size)));
+                        activeProcess.updateProgress((int) ((pz * 100 / size)));
                     }
                     Log.d("synclocalupload", "progress:" + (int) ((pz * 100 / size)));
                     su.setUploadStatus(entity);
@@ -316,6 +313,7 @@ public class SyncLocalFileBackground implements Runnable {
             Log.w(TAG, e.getMessage());
         } finally {
             if (activeProcess != null) {
+                activeProcess.toastMain("上传成功");
                 activeProcess.finishProgress();
             }
             su.close();
@@ -329,7 +327,6 @@ public class SyncLocalFileBackground implements Runnable {
 
         return true;
     }
-
 
 
 }

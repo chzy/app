@@ -48,7 +48,7 @@ public abstract class ActiveProcess extends Activity {
 
         @Override
         public void run() {
-            Log.d("lmj", "正在上传:" + progress);
+            Log.d("lmj", msg+":" + progress);
             if (progress < 100 && dialog.isShowing()) {
                 dialog.setMessage( msg+ progress + "%");
             } else if (progress > 0 && !dialog.isShowing()) {
@@ -75,7 +75,6 @@ public abstract class ActiveProcess extends Activity {
     public void setParMessage(String message)
     {
         msg=message;
-        return;
     }
 
     @Override
