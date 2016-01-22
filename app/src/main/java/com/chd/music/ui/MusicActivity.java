@@ -23,6 +23,7 @@ import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,32 +96,30 @@ public class MusicActivity extends Activity implements OnClickListener,OnItemCli
 		cloudUnits.clear();
 		cloudUnits=null;
 		List<FileLocal> fileLocals=filelistEntity.getLocallist();
-		cloudUnits= filelistEntity.getBklist();
+		cloudUnits=filelistEntity.getBklist();
 		//显示的时候过滤文件类型
-		MFileFilter fileFilter=new MFileFilter();
-		fileFilter.setCustomCategory(new String[]{"mp3"},true);
-
+	
 		for(FileInfo0 item:cloudUnits)
 		{
 			//FileInfo0 item=new FileInfo0(finfo);
 			item.setFilePath(new ShareUtils(this).getMusicFile().getPath()+ "/"+item.getObjid());
-			if(!fileFilter.contains(item.getObjid()))
-				continue;
+
 			//已备份文件
 			String path = item.getFilePath();
 			String name = item.getFilename();
-			int id = item.getSysid();
+
 			MusicBean musicBean = new MusicBean(name, path);
-			musicBean.setId(id);
 			musicBean.setFileInfo0(item);
-			if (syncTask.haveLocalCopy(item))
-				musicBean.setFileInfo0(item);
-			
+			if (syncTask.haveLocalCopy(item)) {
+				int id=musicBean.getId();
+			}
+		
+			//	syncTask.download(item, null, false);
 			mMusicList.add(musicBean);
 		}
-		
+
 		mTvNumber.setText(String.format("未备份音乐%d首", fileLocals.size()));
-		
+
 		handler.sendEmptyMessage(0);
 
 	}

@@ -33,12 +33,12 @@ public class MusicBean /*extends FileInfo*/ implements Serializable {
 	}
 
 	public int getId() {
-		return id;
+		return fileInfo0.getSysid();
 	}
 
-	public void setId(int id) {
+	/*public void setId(int id) {
 		this.id = id;
-	}
+	}*/
 
 	public FileInfo0 getFileInfo0() {
 		return fileInfo0;

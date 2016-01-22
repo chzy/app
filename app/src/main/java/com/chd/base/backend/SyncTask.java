@@ -150,7 +150,7 @@ public class SyncTask {
 	public FilelistEntity analyPhotoUnits(List<FileInfo0> remotelist) {
 		filelistEntity = new FilelistEntity();
 		dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Picture, new String[]{"jpg", "png", "gif"}, true);
-		dbManager.anlayLocalUnits(remotelist,filelistEntity);
+		dbManager.anlayLocalUnits(remotelist, filelistEntity);
 		filelistEntity.setLocallist(dbManager.getLocalUnits());
 		return filelistEntity;
 	}
@@ -158,7 +158,7 @@ public class SyncTask {
 	public FilelistEntity analyMusicUnits(List<FileInfo0> remotelist) {
 		filelistEntity = new FilelistEntity();
 		dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Music, new String[]{"mp3", "wav" }, true);
-		dbManager.anlayLocalUnits(remotelist,filelistEntity);
+		dbManager.anlayLocalUnits(remotelist, filelistEntity);
 		filelistEntity.setLocallist(dbManager.getLocalUnits());
 		return filelistEntity;
 	}
@@ -166,7 +166,7 @@ public class SyncTask {
 	public FilelistEntity analyOtherUnits(List<FileInfo0> remotelist) {
 		filelistEntity = new FilelistEntity();
 		dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Other, new String[]{"pdf", "xls", "doc","docx"}, true);
-		dbManager.anlayLocalUnits(remotelist,filelistEntity);
+		dbManager.anlayLocalUnits(remotelist, filelistEntity);
 		filelistEntity.setLocallist(dbManager.getLocalUnits());
 		return filelistEntity;
 	}
@@ -174,7 +174,7 @@ public class SyncTask {
 	public FilelistEntity analyUnits(List<FileInfo0> remotelist) {
 		filelistEntity = new FilelistEntity();
 		//dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Music, new String[]{"mp3", "wav" }, true);
-		dbManager.anlayLocalUnits(remotelist,filelistEntity);
+		dbManager.anlayLocalUnits(remotelist, filelistEntity);
 		//filelistEntity.setLocallist(dbManager.getLocalUnits());
 		return filelistEntity;
 	}
@@ -190,9 +190,13 @@ public class SyncTask {
 		}
 	}
 
+	/*
+	activeProcess 对象 实现进度条展现
+	beeque  放入数据库 做队列 通过服务方式后台下载
+	* */
 
 
-	public void upload(/*final String fileName,*/ final FileInfo0 item, final ActiveProcess activeProcess,boolean beeque) {
+	public void upload( final FileInfo0 item, final ActiveProcess activeProcess,boolean beeque) {
 
 		if (!item.isSetFtype())
 			item.setFtype(_ftype);
@@ -203,7 +207,7 @@ public class SyncTask {
 		new SyncLocalFileBackground(context ).uploadBigFile(item, activeProcess);
 	}
 
-	public void download(/*final String fileName, */final FileInfo0 item, final ActiveProcess activeProcess,boolean beeque) {
+	public void download(final FileInfo0 item, final ActiveProcess activeProcess,boolean beeque) {
 
 		//ProgressBar bar = activity.getProgressBar();
 		if (!item.isSetFtype())
@@ -212,7 +216,17 @@ public class SyncTask {
 			dbManager.addDownloadingFile(item);
 			return;
 		}
-		new SyncLocalFileBackground(context).downloadBigFile(item, activeProcess);
+		//new Runnable{}
+		Thread thread = new Thread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				new SyncLocalFileBackground(context).downloadBigFile(item, activeProcess);
+			}
+		});
+		thread.start();
+		//new SyncLocalFileBackground(context).downloadBigFile(item, activeProcess);
 	}
 
 

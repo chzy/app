@@ -113,7 +113,7 @@ public class PicActivity extends Activity implements OnClickListener {
 		}
 		else
 		{
-			 tmpMonthMap = new HashMap<>();
+			 tmpMonthMap = new HashMap();
 			 YearMap.put(year,tmpMonthMap);
 		}
 
