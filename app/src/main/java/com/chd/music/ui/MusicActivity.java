@@ -67,8 +67,6 @@ public class MusicActivity extends Activity implements OnClickListener, OnItemCl
             @Override
             public void run() {
 
-                //未备份文件 ==  backedlist . removeAll(localist);
-
                 final List<FileInfo0> cloudUnits = syncTask.getCloudUnits(0, 1000);
                 runOnUiThread(new Runnable() {
                     public void run() {
@@ -91,7 +89,7 @@ public class MusicActivity extends Activity implements OnClickListener, OnItemCl
         cloudUnits = null;
         List<FileLocal> fileLocals = filelistEntity.getLocallist();
         cloudUnits = filelistEntity.getBklist();
-        //显示的时候过滤文件类型
+	
 
         for (FileInfo0 item : cloudUnits) {
             //FileInfo0 item=new FileInfo0(finfo);
@@ -101,9 +99,9 @@ public class MusicActivity extends Activity implements OnClickListener, OnItemCl
             String path = item.getFilePath();
             String name = item.getFilename();
 
-            if (syncTask.haveLocalCopy(item)) {
+            /*if (syncTask.haveLocalCopy(item)) {
 
-            }
+            }*/
             MusicBean musicBean = new MusicBean(name, path);
             musicBean.setFileInfo0(item);
 

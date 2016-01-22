@@ -29,7 +29,7 @@ public class SyncLocalFileBackground implements Runnable {
 
     
     private final String TAG = "SyncLocal";
-    private final int readbuflen = 1024 * 10;
+    private final int readbuflen = 1024 * 7;
     List<FileInfo0> files = new ArrayList<FileInfo0>();
     private MediaMgr su = null;
     private Context context = null;
@@ -183,7 +183,7 @@ public class SyncLocalFileBackground implements Runnable {
 				os.write(buffer, 0, readlen);
 				offset+=readlen;
 				//Log.d(TAG,"read:"+offset+" bytes");
-				int progress= (int) (((float)offset/total)*100);
+				int progress=( offset*100 / total) ;
 				Log.d( TAG,"progress :"+ progress );
 				if (pb!=null)
 					pb.updateProgress(progress);
