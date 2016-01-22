@@ -239,11 +239,8 @@ public class SyncLocalFileBackground implements Runnable {
 			//fileInfo=null;
 			su.open();
 			if (fileInfo!=null  ) {
-				if (activeProcess != null) {
-					activeProcess.setParMessage("正在上传");
-					activeProcess.setMaxProgress(100);
-				}
-				Log.e(TAG,"upload file invliad");
+
+				Log.e(TAG,"upload file exist !!");
 				return false;
 			}
 			else
@@ -260,9 +257,11 @@ public class SyncLocalFileBackground implements Runnable {
 						return false;
 					}
 				}
-				{
-				if (activeProcess!=null)
-					activeProcess.setProgress((int) (start / size * 100));
+
+					if (activeProcess != null) {
+						activeProcess.setParMessage("正在上传");
+						activeProcess.setMaxProgress(100);
+						activeProcess.setProgress((int) (start / size * 100));
 				}
 			}
 			int len=0;

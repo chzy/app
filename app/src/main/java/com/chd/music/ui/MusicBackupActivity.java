@@ -96,9 +96,11 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 		
 		for (FileLocal fileLocal : fileLocals)
 		{
+			if (fileLocal.bakuped)
+				continue;
 			String name = fileLocal.fname;
 			FileInfo0 fileInfo0 = syncTask.queryLocalInfo(fileLocal.sysid);
-			if (fileInfo0 == null)
+			if (fileInfo0 == null )
 			{
 				continue;
 			}

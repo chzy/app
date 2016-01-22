@@ -109,7 +109,7 @@ public class MusicActivity extends Activity implements OnClickListener, OnItemCl
             mMusicList.add(musicBean);
         }
 
-        mTvNumber.setText(String.format("未备份音乐%d首", fileLocals.size()));
+        mTvNumber.setText(String.format("未备份音乐%d首", filelistEntity.getUnbakNumber()));
 
         handler.sendEmptyMessage(0);
 
