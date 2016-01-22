@@ -12,7 +12,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.backend.SyncTask;
 import com.chd.music.adapter.MusicAdapter;
@@ -20,6 +19,7 @@ import com.chd.music.entity.MusicBean;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
+import com.chd.yunpan.share.ShareUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +87,6 @@ public class MusicActivity extends Activity implements OnClickListener, OnItemCl
         FilelistEntity filelistEntity = syncTask.analyMusicUnits(cloudUnits);
         cloudUnits.clear();
         cloudUnits = null;
-        List<FileLocal> fileLocals = filelistEntity.getLocallist();
         cloudUnits = filelistEntity.getBklist();
 	
 
@@ -98,7 +97,13 @@ public class MusicActivity extends Activity implements OnClickListener, OnItemCl
             //已备份文件
             String path = item.getFilePath();
             String name = item.getFilename();
-
+            if(item.getFilePath()==null){
+                if(item.getSysid()>0){
+                    item =syncTask.queryLocalInfo(item.getSysid());
+                }else{
+                    item.setFilePath(new ShareUtils(this).getMusicFile().getPath()+ "/"+item.getObjid());
+                }
+            }
             /*if (syncTask.haveLocalCopy(item)) {
 
             }*/

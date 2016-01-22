@@ -83,13 +83,7 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
         if (fileInfo0 == null) {
             return;
         }
-        if(fileInfo0.getFilePath()==null){
-            if(fileInfo0.getSysid()>0){
-                fileInfo0 =syncTask.queryLocalInfo(fileInfo0.getSysid());
-            }else{
-                fileInfo0.setFilePath(new ShareUtils(this).getMusicFile().getPath()+ "/"+fileInfo0.getObjid());
-            }
-        }
+
 
         mTvMusicName.setText(fileInfo0.getFilename());
         String url = fileInfo0.getFilePath();

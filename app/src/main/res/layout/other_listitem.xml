@@ -6,16 +6,26 @@
     android:gravity="center_vertical"
     android:orientation="horizontal" >
 
+    <CheckBox
+        android:id="@+id/cb_edit_check"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@null"
+        android:button="@drawable/select_cb"
+        android:visibility="gone" />
+
+
+
     <ImageView
         android:id="@+id/other_list_item_img"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/ic_launcher" />
+        android:layout_width="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_height="50dp" />
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="60dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="5dp"
         android:orientation="vertical" >
 
         <TextView
@@ -23,7 +33,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="沃空间"
+            android:text=""
             android:textColor="#333333"
             android:textSize="16sp" />
 
@@ -39,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_weight="1.0"
-                android:text="沃空间介绍"
+                android:text=""
                 android:textColor="#999999"
                 android:textSize="14sp" />
 
@@ -49,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
-                android:text="1024M"
+                android:text=""
                 android:textColor="#999999"
                 android:textSize="14sp" />
         </LinearLayout>
