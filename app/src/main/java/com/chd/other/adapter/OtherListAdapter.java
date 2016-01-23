@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,23 +14,30 @@ import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.utils.TimeUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OtherListAdapter extends BaseAdapter {
     private Context mContext;
     private List<FileInfo0> _list;
     private boolean isShow;
+    private ArrayList<FileInfo0> checkList;
     private Resources mResources;
 
     public OtherListAdapter(Context context, List<FileInfo0> list) {
         mContext = context;
         _list = list;
+        checkList=new ArrayList<>();
         mResources=mContext.getResources();
     }
 
     @Override
     public int getCount() {
         return _list == null ? 0 : _list.size();
+    }
+
+    public ArrayList<FileInfo0> getCheckList() {
+        return checkList;
     }
 
     @Override
@@ -67,15 +75,35 @@ public class OtherListAdapter extends BaseAdapter {
             String substring = name.substring(last);
             int id=getResId("ft_"+substring, "drawable");
 
+            if(id==0){
+                id=getResId("ft_unknow","drawable");
+            }
+
             item.text_appname.setText(name);
             String time= TimeUtils.getTime(_list.get(position).getLastModified());
             item.text_appintro.setText(time);
             item.img_url.setImageResource(id);
-
            /* item.text_appintro.setText(_list.get(position).());
             item.img_url.setImageResource(_list.get(position).getPicid());
             item.text_appsize.setText(_list.get(position).getFilesize());*/
         }
+        item.cb.setTag(position);
+        item.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                int pos= (int) compoundButton.getTag();
+                FileInfo0 checkItem = _list.get(pos);
+                checkItem.setIsChecked(b);
+                if(b){
+                    //选中
+                    checkList.add(checkItem);
+                }else{
+                    //未选中
+                    checkList.remove(checkItem);
+                }
+            }
+        });
+
 
         if(isShow){
             item.cb.setVisibility(View.VISIBLE);

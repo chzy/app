@@ -1,6 +1,5 @@
 package com.chd.other.ui;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,21 +11,25 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chd.MediaMgr.utils.MFileFilter;
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
+import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.backend.SyncTask;
+import com.chd.contacts.vcard.StringUtils;
 import com.chd.other.adapter.OtherListAdapter;
 import com.chd.other.entity.FileInfoL;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
+import com.chd.yunpan.share.ShareUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class OtherActivity extends Activity implements OnClickListener {
+public class OtherActivity extends ActiveProcess implements OnClickListener {
 
     List<FileInfo0> tmpFileInfo = new ArrayList<FileInfo0>();
     private ImageView mIvLeft;
@@ -42,10 +45,10 @@ public class OtherActivity extends Activity implements OnClickListener {
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
 
-
-            if (!filetype.equals("")) {
+            tmpFileInfo.clear();
+            if (!StringUtils.isNullOrEmpty(filetype)&&!FileInfoL.FILE_TYPE_ALL.equals(filetype)) {
                 for (FileInfo0 fileInfo : mFileInfoList) {
-                    if (fileInfo.getFtype().equals(filetype)) {
+                    if (fileInfo.getObjid().contains(filetype)) {
                         tmpFileInfo.add(fileInfo);
                     }
                 }
@@ -67,6 +70,7 @@ public class OtherActivity extends Activity implements OnClickListener {
     private RelativeLayout mEditRlRelativeLayout;
     private Button mEditCancelButton;
     private SyncTask syncTask;
+    String path;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +87,7 @@ public class OtherActivity extends Activity implements OnClickListener {
         initResourceId();
         initListener();
         syncTask = new SyncTask(OtherActivity.this, FTYPE.NORMAL);
+        path=new ShareUtils(this).getOtherFile().getPath();
         adapter = new OtherListAdapter(OtherActivity.this, tmpFileInfo);
         mListView.setAdapter(adapter);
         onNewThreadRequest();
@@ -200,6 +205,7 @@ public class OtherActivity extends Activity implements OnClickListener {
         mTvCenter.setText("免流量应用");
         mTvRight.setText("编辑");
     }
+    ArrayList<FileInfo0> checkList;
 
     @Override
     public void onClick(View v) {
@@ -213,11 +219,58 @@ public class OtherActivity extends Activity implements OnClickListener {
                 break;
             case R.id.other_edit_del:
                 //删除
+               checkList=adapter.getCheckList();
+                for (final FileInfo0 info:
+                        checkList) {
+                    if (syncTask != null && info != null) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                boolean delS = syncTask.DelRemoteObj(info);
+                                if (delS) {
 
+                                    handler.post(new Runnable() {
+                                        @Override
+
+                                        public void run() {
+                                            Toast.makeText(OtherActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                                            tmpFileInfo.remove(info);
+                                            adapter.notifyDataSetChanged();
+                                        }
+                                    });
+                                } else {
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(OtherActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+                                }
+                            }
+                        }).start();
+                    }
+                }
 
                 break;
             case R.id.other_edit_down:
                 //下载
+                checkList=adapter.getCheckList();
+
+                for (final FileInfo0 info:
+                        checkList) {
+                    if(info.getSysid()<=0){
+                        info.setFilePath(path+"/"+info.getObjid());
+                    }
+
+                    if (syncTask != null && info != null) {
+                        syncTask.download(info, OtherActivity.this, false);
+                    }
+                }
+
+
+
+
 
 
 
@@ -258,7 +311,7 @@ public class OtherActivity extends Activity implements OnClickListener {
                 mTabXLS.setTextColor(nRgbColorNor);
                 mTabPDF.setTextColor(nRgbColorNor);
 
-                //filetype = FileInfo.FILE_TYPE_ALL;
+                filetype = FileInfoL.FILE_TYPE_ALL;
                 handler.sendEmptyMessage(0);
             }
             break;
@@ -275,7 +328,7 @@ public class OtherActivity extends Activity implements OnClickListener {
                 mTabXLS.setTextColor(nRgbColorNor);
                 mTabPDF.setTextColor(nRgbColorNor);
 
-                //filetype = FileInfo.FILE_TYPE_DOC;
+                filetype = FileInfoL.FILE_TYPE_DOC;
                 handler.sendEmptyMessage(0);
             }
             break;
@@ -292,7 +345,7 @@ public class OtherActivity extends Activity implements OnClickListener {
                 mTabXLS.setTextColor(nRgbColorNor);
                 mTabPDF.setTextColor(nRgbColorSel);
 
-                //filetype = FileInfo.FILE_TYPE_PDF;
+                filetype = FileInfoL.FILE_TYPE_PDF;
                 handler.sendEmptyMessage(0);
             }
             break;
@@ -309,7 +362,7 @@ public class OtherActivity extends Activity implements OnClickListener {
                 mTabXLS.setTextColor(nRgbColorNor);
                 mTabPDF.setTextColor(nRgbColorNor);
 
-                //filetype = FileInfo.FILE_TYPE_PPT;
+                filetype = FileInfoL.FILE_TYPE_PPT;
                 handler.sendEmptyMessage(0);
             }
             break;
@@ -319,14 +372,12 @@ public class OtherActivity extends Activity implements OnClickListener {
                 mTabPPT.setBackgroundResource(R.drawable.other_tab_center_normal);
                 mTabXLS.setBackgroundResource(R.drawable.other_tab_center_checked);
                 mTabPDF.setBackgroundResource(R.drawable.other_tab_right_normal);
-
                 mTabAll.setTextColor(nRgbColorNor);
                 mTabDOC.setTextColor(nRgbColorNor);
                 mTabPPT.setTextColor(nRgbColorNor);
                 mTabXLS.setTextColor(nRgbColorSel);
                 mTabPDF.setTextColor(nRgbColorNor);
-
-                //filetype = FileInfo.FILE_TYPE_XLS;
+                filetype = FileInfoL.FILE_TYPE_XLS;
                 handler.sendEmptyMessage(0);
             }
             break;

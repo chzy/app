@@ -24,6 +24,7 @@ public class ShareUtils {
 	private final String DOWNLOAD=Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+"com.chd.yunpan";
 	private final String PHOTO=DOWNLOAD+"/"+"pic";
 	private final String MUSIC=DOWNLOAD+"/"+"music";
+	private final String OTHER=DOWNLOAD+"/"+"other";
 	public ShareUtils(Context context) {
 		this.context=context;
 		sp = context.getSharedPreferences("data", Context.MODE_PRIVATE);
@@ -142,6 +143,17 @@ public class ShareUtils {
 		return f;
 	}
 
+	/**
+	 * 其他下载地址
+	 * @return
+	 */
+	public File getOtherFile(){
+		File f=new File(OTHER);
+		if(!f.exists()){
+			f.mkdirs();
+		}
+		return f;
+	}
 
 
 
