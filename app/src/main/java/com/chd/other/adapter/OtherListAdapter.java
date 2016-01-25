@@ -27,7 +27,7 @@ public class OtherListAdapter extends BaseAdapter {
     public OtherListAdapter(Context context, List<FileInfo0> list) {
         mContext = context;
         _list = list;
-        checkList=new ArrayList<>();
+        checkList=new ArrayList();
         mResources=mContext.getResources();
     }
 
@@ -91,7 +91,7 @@ public class OtherListAdapter extends BaseAdapter {
         item.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                int pos= (int) compoundButton.getTag();
+                int pos= (Integer) compoundButton.getTag();
                 FileInfo0 checkItem = _list.get(pos);
                 checkItem.setIsChecked(b);
                 if(b){
