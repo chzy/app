@@ -83,6 +83,7 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
     private Button mEditCancelButton;
     private SyncTask syncTask;
     private TextView mTvNumber;
+    private Button mBtnDown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,7 +194,7 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
         mEditCancelButton.setOnClickListener(this);
         mEditDelButton.setOnClickListener(this);
         mEditDownButton.setOnClickListener(this);
-
+        mBtnDown.setOnClickListener(this);
         mRlOther.setOnClickListener(this);
     }
 
@@ -209,6 +210,7 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
         mEditRlRelativeLayout = (RelativeLayout) findViewById(R.id.other_edit_rl);
         mRlOther = (RelativeLayout) findViewById(R.id.rl_other_ubk_layout);
         mTvNumber = (TextView) findViewById(R.id.tv_other_number);
+        mBtnDown = (Button) findViewById(R.id.other_btn_down);
         mListView = (ListView) findViewById(R.id.other_listview);
     }
 
@@ -225,6 +227,13 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.other_btn_down:
+                //任务列表
+                Intent intent=new Intent(OtherActivity.this, DownListActivity.class);
+                startActivity(intent);
+
+                break;
+
             case R.id.rl_other_ubk_layout:
                 //未备份文件
                 isLocal = true;
@@ -235,14 +244,10 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
 
             case R.id.other_edit_cancel:
                 //取消
-                Intent intent=new Intent(OtherActivity.this, DownListActivity.class);
-                startActivity(intent);
-
-
-//                adapter.showCB(false);
-//                adapter.notifyDataSetChanged();
-//                mTvRight.setText("编辑");
-//                mEditRlRelativeLayout.setVisibility(View.GONE);
+                adapter.showCB(false);
+                adapter.notifyDataSetChanged();
+                mTvRight.setText("编辑");
+                mEditRlRelativeLayout.setVisibility(View.GONE);
                 break;
             case R.id.other_edit_del:
                 //删除

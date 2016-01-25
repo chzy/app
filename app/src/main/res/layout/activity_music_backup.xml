@@ -1,53 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#eeeeee"
-    android:orientation="vertical" >
+    android:layout_height="match_parent">
 
-    <include layout="@layout/title_bar" />
 
-    <View
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="12dp"
-        android:background="#eeeeee" />
+        android:layout_height="match_parent"
+        android:background="#eeeeee"
+        android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/gv_music"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.0"
-        android:background="#ffffff"
-        android:divider="#b6b6b6"
-        android:dividerHeight="1dp"
-        android:listSelector="@null" >
-    </ListView>
+        <include layout="@layout/title_bar" />
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="#b6b6b6" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="12dp"
+            android:background="#eeeeee" />
 
-    <TextView
-        android:id="@+id/gv_music_backup_num"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="共：132首"
-        android:textColor="#f5ad10"
-        android:textSize="18sp" />
+        <ListView
+            android:id="@+id/gv_music"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:background="#ffffff"
+            android:divider="#b6b6b6"
+            android:dividerHeight="1dp"
+            android:listSelector="@null"></ListView>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#b6b6b6" />
+
+        <TextView
+            android:id="@+id/gv_music_backup_num"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text=""
+            android:textColor="#f5ad10"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/gv_music_backup"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/btn_music_backup"
+            android:text="备份"
+            android:textColor="#ffffff"
+            android:textSize="17sp" />
+
+    </LinearLayout>
 
     <Button
-        android:id="@+id/gv_music_backup"
-        android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:background="@drawable/btn_music_backup"
-        android:text="备份"
-        android:textColor="#ffffff"
-        android:textSize="17sp" />
+        android:id="@+id/music_btn_down"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/iconfont_xiazai" />
 
-</LinearLayout>
+</RelativeLayout>

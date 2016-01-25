@@ -24,6 +24,8 @@ public class ShareUtils {
 	private final String DOWNLOAD=Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+"com.chd.yunpan";
 	private final String PHOTO=DOWNLOAD+"/"+"pic";
 	private final String MUSIC=DOWNLOAD+"/"+"music";
+	private final String CONTACT =DOWNLOAD+"/"+"contact";
+	private final String SMS =DOWNLOAD+"/"+"sms";
 	private final String OTHER=DOWNLOAD+"/"+"other";
 	public ShareUtils(Context context) {
 		this.context=context;
@@ -142,6 +144,31 @@ public class ShareUtils {
 		}
 		return f;
 	}
+	/**
+	 * 短信下载地址
+	 * @return
+	 */
+	public File getSmsFile(){
+		File f=new File(SMS);
+		if(!f.exists()){
+			f.mkdirs();
+		}
+		return f;
+	}
+	/**
+	 * 联系人下载地址
+	 * @return
+	 */
+	public File getContactFile(){
+		File f=new File(CONTACT);
+		if(!f.exists()){
+			f.mkdirs();
+		}
+		return f;
+	}
+
+
+
 
 	/**
 	 * 其他下载地址

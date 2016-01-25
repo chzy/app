@@ -1,5 +1,6 @@
 package com.chd.music.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.Ui.ActiveProcess;
+import com.chd.base.Ui.DownListActivity;
 import com.chd.base.backend.SyncTask;
 import com.chd.music.adapter.MusicBackupAdapter;
 import com.chd.music.entity.MusicBackupBean;
@@ -42,7 +44,8 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 			mTvNumber.setText(String.format("共：%d首", mMusicBackupList.size()));
 		}
 	};
-	
+	private Button mBtnDown;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -117,6 +120,7 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 		mTvNumber = (TextView) findViewById(R.id.gv_music_backup_num);
 		mGvMusic = (ListView) findViewById(R.id.gv_music);
 		mBtnBackup = (Button) findViewById(R.id.gv_music_backup);
+		mBtnDown = (Button) findViewById(R.id.music_btn_down);
 	}
 
 	private void initListener() {
@@ -124,6 +128,7 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 		mTvRight.setOnClickListener(this);
 		mGvMusic.setOnItemClickListener(this);
 		mBtnBackup.setOnClickListener(this);
+		mBtnDown.setOnClickListener(this);
 	}
 
 	private void initTitle() {
@@ -140,6 +145,12 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 	public void onClick(View v) 
 	{
 		switch (v.getId()) {
+			case R.id.music_btn_down:
+				//任务列表页面
+				Intent intent=new Intent(MusicBackupActivity.this, DownListActivity.class);
+				startActivity(intent);
+				break;
+
 		case R.id.iv_left:
 			finish();
 			break;
@@ -170,7 +181,7 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 					@Override
 					public void run() {
 						SyncTask syncTask = new SyncTask(MusicBackupActivity.this, FTYPE.MUSIC);
-						syncTask.upload(musicBackupBean.getFileInfo0(), MusicBackupActivity.this, false);
+						syncTask.upload(musicBackupBean.getFileInfo0(), null, true);
 
 					}
 				}).start();
