@@ -175,7 +175,7 @@ public class SyncLocalFileBackground implements Runnable {
             Log.e(TAG, "open inputstrnsport fail");
             return false;
         }
-
+        su.open();
         while ((readlen = inputTrasnport.read(buffer, offset, readbuflen)) > -1) {
             try {
                 os.write(buffer, 0, readlen);
@@ -183,6 +183,8 @@ public class SyncLocalFileBackground implements Runnable {
                 //Log.d(TAG,"read:"+offset+" bytes");
                 int progress = (offset * 100 / total);
                 Log.d(TAG, "progress :" + progress);
+                fileInfo0.setOffset(offset);
+                su.setDownloadStatus(fileInfo0);
                 if (pb != null)
                     pb.updateProgress(progress);
             } catch (Exception e) {
@@ -202,6 +204,7 @@ public class SyncLocalFileBackground implements Runnable {
             if (pb != null) {
                 pb.toastMain("下载完成");
             }
+            su.close();
         }
         MediaMgr.fileScan(fileInfo0.getFilePath(), context);
         return true;
@@ -276,7 +279,7 @@ public class SyncLocalFileBackground implements Runnable {
                     return false;
                 }
                 entity.setObjid(objid);
-                //su.setUploadStatus(entity);
+                su.setUploadStatus(entity);
             } else {
                 objid = entity.getObjid();
             }

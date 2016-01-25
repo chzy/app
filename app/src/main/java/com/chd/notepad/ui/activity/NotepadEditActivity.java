@@ -106,14 +106,14 @@ public class NotepadEditActivity extends Activity {
 			contentText = content.getText().toString();
 			
 			try{
-				dm.open();
+				//dm.open();
 				
 				if(state == EDIT_STATE)//新增状态
 					dm.insert(titleText, contentText);
 				if(state == ALERT_STATE)//修改状态
 					dm.update(Integer.parseInt(id), titleText, contentText);
 				setResult(RESULT_OK);
-				dm.close();
+				//dm.close();
 				
 			}catch(Exception ex){
 				ex.printStackTrace();

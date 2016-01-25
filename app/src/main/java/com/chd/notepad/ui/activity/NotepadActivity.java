@@ -24,11 +24,14 @@ import android.widget.TextView;
 import com.chd.notepad.service.SyncService;
 import com.chd.notepad.ui.adapter.ListViewAdapter;
 import com.chd.notepad.ui.db.DatabaseManage;
+import com.chd.notepad.ui.db.FileDBmager;
 import com.chd.notepad.ui.item.NoteItemtag;
 import com.chd.yunpan.R;
+import com.chd.yunpan.share.ShareUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 
 
 public class NotepadActivity extends ListActivity implements OnScrollListener {
@@ -59,6 +62,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
     private int meunid = 3;
 
     private long month;
+    FileDBmager fileDBmager;
 
 
     private ArrayList<NoteItemtag> items;
@@ -107,6 +111,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
         Intent intent = new Intent(this, SyncService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         startService(intent);
+        fileDBmager=new FileDBmager(this);
     }
 
     private void initListener() {
@@ -144,9 +149,9 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
         dm.open();//打开数据库操作对象
 
         month = 0;
-        cursor = dm.selectAll();//获取所有数据
+       // cursor = dm.selectAll();//获取所有数据
 
-        cursor.moveToFirst();//将游标移动到第一条数据，使用前必须调用
+        //cursor.moveToFirst();//将游标移动到第一条数据，使用前必须调用
 
         int count = cursor.getCount();//个数
 
@@ -155,30 +160,34 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
 
 
         Calendar cal = Calendar.getInstance();
+        Iterator<String> iterator=fileDBmager.getLocallist(new ShareUtils(this.getApplicationContext()).getStorePathStr());
 
-        for (int i = 0; i < count; i++) {
-            if (cursor.getInt(cursor.getColumnIndex("syncstate")) == DatabaseManage.SYNC_STAT.DEL)
-                continue;
+
+        //for (int i = 0; i < count; i++)
+        while (iterator.hasNext())
+        {
             NoteItemtag item = new NoteItemtag();
-            item.time = cursor.getLong(cursor.getColumnIndex("time"));
-            cal.setTimeInMillis(item.time);
+            String title =iterator.next();
+            item.set_fname(title);
+            cal.setTimeInMillis(item.getStamp()*1000l);
             if (month != cal.get(Calendar.MONTH)) {
                 month = cal.get(Calendar.MONTH);
                 NoteItemtag head = new NoteItemtag();
-                head.time = -1;
+                //head.time = -1;
                 head.content = null;
                 String txt = String.format("%d年%d月份", cal.get(Calendar.YEAR), month);
-                head.title = txt;
+                head.isHead=true;
+                head.setDateStr(txt);
                 items.add(head);
             }
-            item.id = cursor.getInt(cursor.getColumnIndex("id"));
-            item.content = cursor.getString(cursor.getColumnIndex("content"));
-            item.syncstate = cursor.getInt(cursor.getColumnIndex("syncstate"));
+           // item.id = cursor.getInt(cursor.getColumnIndex("id"));
+            //item.content = cursor.getString(cursor.getColumnIndex("content"));
+            //item.syncstate = cursor.getInt(cursor.getColumnIndex("syncstate"));
             items.add(item);
 
             cursor.moveToNext();//将游标指向下一个
         }
-        dm.close();//关闭数据操作对象
+       // dm.close();//关闭数据操作对象
         adapter.notifyDataSetChanged();
 
     }
@@ -227,16 +236,17 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                         .getMenuInfo();
         //	HashMap<String, Object> map = List.get(menuInfo.position);
         //	Log.v("show", "shibai");
-        if (adapter.getItem(menuInfo.position).time == -1)
+        if (adapter.getItem(menuInfo.position).isHead )
             return false;
 
         NoteItemtag nt = adapter.getItem(menuInfo.position);
         switch (item.getItemId()) {
             case 0://删除
                 try {
-                    dm.open();
-                    int i = dm.delete(adapter.getItemId(menuInfo.position));
-                    dm.close();
+                   // dm.open();
+                    //int i = dm.delete(adapter.getItemId(menuInfo.position));
+                    //dm.close();
+                    fileDBmager.delFile(nt.get_fname());
                     adapter.removeListItem(menuInfo.position);//删除数据
                     adapter.notifyDataSetChanged();//通知数据源，数据已经改变，刷新界面
                     needsyc = true;
@@ -249,9 +259,9 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                 try {
                     //用于Activity之间的通讯
                     Intent intent = new Intent();
-                    intent.putExtra("id", nt.id);
-                    intent.putExtra("state", ALERT_STATE);
-                    intent.putExtra("time", /*cursor.getLong(cursor.getColumnIndex("time"))*/nt.time);
+                    //intent.putExtra("id", nt.id);
+                    //intent.putExtra("state", ALERT_STATE);
+                    intent.putExtra("fname", /*cursor.getLong(cursor.getColumnIndex("time"))*/nt.get_fname());
                     intent.putExtra("content", /*cursor.getString(cursor.getColumnIndex("content"))*/nt.content);
                     intent.setClass(NotepadActivity.this, NotepadEditActivity.class);
                     NotepadActivity.this.startActivity(intent);
@@ -262,9 +272,10 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
             case 2://查看
                 try {
                     Intent intent = new Intent();
-                    intent.putExtra("id", nt.id);
-                    intent.putExtra("time", nt.time + "");
-                    intent.putExtra("content", nt.content);
+                    //intent.putExtra("id", nt.id);
+                    //intent.putExtra("time",nt.get_fname());
+                    //intent.putExtra("content", nt.content);
+                    intent.putExtra("item",nt);
                     intent.setClass(NotepadActivity.this, NotepadCheckActivity.class);
                     NotepadActivity.this.startActivity(intent);
                 } catch (Exception ex) {
@@ -285,14 +296,16 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
 
 
         NoteItemtag item = adapter.getItem(position);
-        if (item.time < 1000)
+        if (item.isHead)
             return;
         Intent intent = new Intent();
-        intent.putExtra("state", CHECK_STATE);
+        //intent.putExtra("state", CHECK_STATE);
         //intent.putExtra("hashcode", item.hashcode);
-        intent.putExtra("id", item.id);
-        intent.putExtra("time", item.time + "");
-        intent.putExtra("content", item.content);
+        //intent.putExtra("id", item.id);
+        //intent.putExtra("time", item.time + "");
+        //intent.putExtra("content", item.content);
+        //intent.putExtra("fname", item.get_fname());
+        intent.putExtra("item", item);
 
         intent.setClass(NotepadActivity.this, NotepadCheckActivity.class);
         NotepadActivity.this.startActivity(intent);
@@ -323,7 +336,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
 
             int ps = ((AdapterView.AdapterContextMenuInfo) menuInfo).position;
 
-            if (adapter.getItem(ps).time == -1)
+            if (adapter.getItem(ps).isHead )
                 return;
 
             menu.setHeaderTitle("");
