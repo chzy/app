@@ -126,16 +126,16 @@ public class SyncBackground extends Thread {
 	private boolean SyncSingle(NoteItemtag itemtag) {
 
 
-       if (itemtag.syncstate== DatabaseManage.SYNC_STAT.DONE)
-			return false;
+       //if (itemtag.syncstate== DatabaseManage.SYNC_STAT.DONE)
+	//		return false;
 
 	   /*
 	   * TODO call sync method
 	   * */
-		if (itemtag.syncstate!= DatabaseManage.SYNC_STAT.DEL)
-			su.delete(itemtag.id);
-		else
-			su.markSyncbyId(itemtag.id);
+		//if (itemtag.syncstate!= DatabaseManage.SYNC_STAT.DEL)
+		//	su.delete(itemtag.id);
+		//else
+		//	su.markSyncbyId(itemtag.id);
 		System.gc();
 
 		//return b;

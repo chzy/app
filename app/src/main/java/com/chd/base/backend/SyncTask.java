@@ -200,11 +200,32 @@ public class SyncTask {
 
 		if (!item.isSetFtype())
 			item.setFtype(_ftype);
-		if (beeque) {
+		/*if (beeque)
+		{
 			dbManager.addUpLoadingFile(item);
 			return;
+		}*/
+		try
+		{
+				dbManager.open();
+				dbManager.addUpLoadingFile(item);
+				dbManager.close();
+				//	return;
+
+		}catch (Exception e)
+		{
+			e.printStackTrace();
+			Log.e(TAG, "upload fail " + e.getMessage());
+			activeProcess.setParMessage("上传失败");
+			activeProcess.finishProgress();
 		}
-		new SyncLocalFileBackground(context ).uploadBigFile(item, activeProcess);
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				new SyncLocalFileBackground(context).uploadBigFile(item, activeProcess);
+			}
+		});
+		thread.start();
 	}
 
 	public void download(final FileInfo0 item, final ActiveProcess activeProcess,boolean beeque) {
@@ -212,9 +233,24 @@ public class SyncTask {
 		//ProgressBar bar = activity.getProgressBar();
 		if (!item.isSetFtype())
 			item.setFtype(_ftype);
-		if (beeque) {
+		/*if (beeque)
+		{
 			dbManager.addDownloadingFile(item);
 			return;
+		}*/
+		try
+		{
+			dbManager.open();
+			dbManager.addUpLoadingFile(item);
+			dbManager.close();
+			//	return;
+
+		}catch (Exception e)
+		{
+			e.printStackTrace();
+			Log.e(TAG,"upload fail "+e.getMessage());
+			activeProcess.setParMessage("下载失败");
+			activeProcess.finishProgress();
 		}
 		//new Runnable{}
 		Thread thread = new Thread(new Runnable()

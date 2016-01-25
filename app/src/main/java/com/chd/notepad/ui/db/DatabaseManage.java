@@ -238,7 +238,7 @@ public class DatabaseManage {
 				item.id =cursor.getInt(cursor.getColumnIndex("id"));
 				item.content=cursor.getString(cursor.getColumnIndex("content"));
 				/*item.title=cursor.getString(cursor.getColumnIndex("title"));*/
-				item.time=cursor.getLong(cursor.getColumnIndex("time"));
+				//item.time=cursor.getLong(cursor.getColumnIndex("time"));
 				/*item.hashcode=cursor.getInt(cursor.getColumnIndex("hashcode"));*/
 				lists.add(item);
 			}

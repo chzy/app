@@ -4,11 +4,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chd.notepad.ui.db.FileDBmager;
+import com.chd.notepad.ui.item.NoteItemtag;
 import com.chd.yunpan.R;
+import com.chd.yunpan.share.ShareUtils;
+
+import java.io.IOException;
 
 public class NotepadCheckActivity extends Activity {
 
@@ -16,6 +22,7 @@ public class NotepadCheckActivity extends Activity {
 	private TextView timeText = null;
 	private ImageView mIvLeft;
 	private TextView mTvCenter;
+	private final String TAG=this.getClass().getName();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +36,22 @@ public class NotepadCheckActivity extends Activity {
 		
 		Intent intent = getIntent();//获取启动该Activity的intent对象
 		
-		String id = intent.getStringExtra("hashcode");
-		String time= intent.getStringExtra("time");
-		String content = intent.getStringExtra("content");
-		
-		long t = Long.parseLong(time);
-		
-		String datetime = DateFormat.format("yyyy-MM-dd kk:mm:ss", t).toString();
-		
+		//String id = intent.getStringExtra("hashcode");
+		//String time= intent.getStringExtra("time");
+		//String content = intent.getStringExtra("content");
+		//String fname=intent.getStringExtra("fname");
+		//long t = Long.parseLong(time);
+		NoteItemtag noteItemtag= (NoteItemtag) intent.getSerializableExtra("item");
+		String path=new ShareUtils(this.getApplicationContext()).getStorePathStr();
+		FileDBmager fileDBmager=new FileDBmager(this);
+		String datetime = DateFormat.format("yyyy-MM-dd kk:mm:ss", noteItemtag.getStamp()*1000L).toString();
+		String content= "";
+		try {
+			content = fileDBmager.readFile(noteItemtag.get_fname());
+		} catch (IOException e) {
+			e.printStackTrace();
+			Log.d(TAG,e.getMessage());
+		}
 		this.timeText.setText(datetime);
 		this.contentText.setText(content);
 	}

@@ -134,8 +134,8 @@ public class ListViewAdapter extends BaseAdapter {
 			line.setLayoutParams(lparams);
 		}
 		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(tag.time);
-		if (tag.time ==-1)
+		cal.setTimeInMillis(tag.getStamp()*1000L);
+		if (tag.isHead )
 		{
 			ImageView view = (ImageView) convertView.findViewById(R.id.notepad_title_bg);
 
@@ -147,7 +147,7 @@ public class ListViewAdapter extends BaseAdapter {
 			head.setGravity(Gravity.CENTER | Gravity.LEFT);
 			head.setTextSize(20);
 			head.setTextColor(Color.rgb(51, 51, 51));
-			head.setText("  " + tag.title);
+			head.setText("  " + tag.getDateStr());
 
 			hidenView(view);
 			hidenView(txt_day);
