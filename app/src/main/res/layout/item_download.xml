@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/item_download_icon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerVertical="true"
+        android:layout_margin="8dp"
+        android:src="@drawable/pic_icon1"
+        />
+
+    <TextView
+        android:id="@+id/item_download_title"
+        android:layout_width="100dp"
+        android:textSize="18sp"
+        android:layout_toRightOf="@id/item_download_icon"
+        android:layout_alignTop="@id/item_download_icon"
+        android:textColor="#000"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:singleLine="true"
+        android:text="备份图片"
+        android:ellipsize="end"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/item_download_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:layout_marginRight="10dp"
+        android:textColor="#6b6b6b"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:gravity="right"
+        android:layout_toRightOf="@id/item_download_title"
+        android:text="等待备份"
+        />
+
+    <SeekBar
+        android:id="@+id/item_download_seekbar"
+        android:layout_width="match_parent"
+        android:layout_toRightOf="@id/item_download_icon"
+        android:layout_marginRight="20dp"
+        android:layout_alignBottom="@id/item_download_icon"
+        android:layout_height="5dp" />
+    
+    
+
+
+
+</RelativeLayout>

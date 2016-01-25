@@ -157,6 +157,8 @@
 <!--
         <attr name="borderRadius" />
         <attr name="type" /> -->
-    </declare-styleable>  
+    </declare-styleable>
+
+
 
 </resources>

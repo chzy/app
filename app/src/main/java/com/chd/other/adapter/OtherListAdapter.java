@@ -61,7 +61,6 @@ public class OtherListAdapter extends BaseAdapter {
             item.text_appintro = (TextView) convertView.findViewById(R.id.other_list_item_appintro);
             item.img_url = (ImageView) convertView.findViewById(R.id.other_list_item_img);
             item.cb = (CheckBox) convertView.findViewById(R.id.cb_edit_check);
-            item.text_appsize = (TextView) convertView.findViewById(R.id.other_list_item_appsize);
             convertView.setTag(item);
         } else {
             item = (MenuItem) convertView.getTag();

@@ -98,6 +98,9 @@
     <string name="mysapce_menu6">menu6</string>
     <string name="mysapce_menu7">menu7</string>
     <string name="addButtonText">增加</string>
+    <string name="Complete">打开</string>
+    <string name="Error">重试</string>
+    <string name="Upload">上传</string>
 
 
 </resources>

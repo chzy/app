@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="84dp"
     android:layout_marginLeft="12dp"
     android:gravity="center_vertical"
-    android:orientation="horizontal" >
+    android:orientation="horizontal">
 
     <CheckBox
         android:id="@+id/cb_edit_check"
@@ -15,48 +16,50 @@
         android:visibility="gone" />
 
 
-
     <ImageView
         android:id="@+id/other_list_item_img"
         android:layout_width="50dp"
-        android:layout_toRightOf="@id/cb_edit_check"
+        android:layout_height="50dp"
         android:layout_marginLeft="10dp"
-        android:layout_height="50dp" />
+        android:layout_toRightOf="@id/cb_edit_check" />
 
 
-        <TextView
-            android:id="@+id/other_list_item_appname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="-5dp"
-            android:layout_alignTop="@id/other_list_item_img"
-            android:layout_toRightOf="@id/other_list_item_img"
-            android:text="1231"
-            android:textColor="#333333"
-            android:textSize="16sp" />
+    <TextView
+        android:id="@+id/other_list_item_appname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/other_list_item_img"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="-5dp"
+        android:layout_toRightOf="@id/other_list_item_img"
+        android:text=""
+        android:textColor="#333333"
+        android:textSize="16sp" />
 
 
+    <TextView
+        android:id="@+id/other_list_item_appintro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/other_list_item_appname"
+        android:layout_below="@id/other_list_item_appname"
+        android:layout_marginTop="10dp"
+        android:text=""
+        android:textColor="#999999"
+        android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/other_list_item_appintro"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="dsadsa"
-                android:layout_below="@id/other_list_item_appname"
-                android:layout_alignLeft="@id/other_list_item_appname"
-                android:textColor="#999999"
-                android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/other_list_item_appsize"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:text=""
-                android:textColor="#999999"
-                android:textSize="14sp" />
+    <com.chd.yunpan.view.CircularProgressButton
+        android:id="@+id/other_list_item_progress"
+        android:layout_width="60dp"
+        android:layout_height="35dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:cpb_textComplete="@string/Complete"
+        app:cpb_textError="@string/Error"
+        app:cpb_textIdle="@string/Upload" />
 
 </RelativeLayout>
