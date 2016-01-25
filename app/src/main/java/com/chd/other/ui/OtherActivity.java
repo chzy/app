@@ -1,5 +1,6 @@
 package com.chd.other.ui;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,7 +8,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,6 +17,7 @@ import com.chd.MediaMgr.utils.MFileFilter;
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.Ui.ActiveProcess;
+import com.chd.base.Ui.DownListActivity;
 import com.chd.base.backend.SyncTask;
 import com.chd.contacts.vcard.StringUtils;
 import com.chd.other.adapter.OtherListAdapter;
@@ -32,6 +33,8 @@ import java.util.List;
 public class OtherActivity extends ActiveProcess implements OnClickListener {
 
     List<FileInfo0> tmpFileInfo = new ArrayList<FileInfo0>();
+    String path;
+    ArrayList<FileInfo0> checkList;
     private ImageView mIvLeft;
     private TextView mTvCenter;
     private TextView mTvRight;
@@ -40,37 +43,47 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
     private TextView mTabAll, mTabDOC, mTabXLS, mTabPPT, mTabPDF;
     private ListView mListView;
     private List<FileInfo0> mFileInfoList = new ArrayList<FileInfo0>();
+    private List<FileInfo0> mFileLocalList = new ArrayList<FileInfo0>();
     private String filetype = "";
+    private boolean isLocal = false;
     private OtherListAdapter adapter;
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
 
             tmpFileInfo.clear();
-            if (!StringUtils.isNullOrEmpty(filetype)&&!FileInfoL.FILE_TYPE_ALL.equals(filetype)) {
-                for (FileInfo0 fileInfo : mFileInfoList) {
-                    if (fileInfo.getObjid().contains(filetype)) {
-                        tmpFileInfo.add(fileInfo);
+            if (isLocal) {
+                if (!StringUtils.isNullOrEmpty(filetype) && !FileInfoL.FILE_TYPE_ALL.equals(filetype)) {
+                    for (FileInfo0 fileInfo : mFileLocalList) {
+                        if (fileInfo.getObjid().contains(filetype)) {
+                            tmpFileInfo.add(fileInfo);
+                        }
                     }
+                } else {
+                    tmpFileInfo.addAll(mFileLocalList);
                 }
             } else {
-                tmpFileInfo.addAll(mFileInfoList);
+                if (!StringUtils.isNullOrEmpty(filetype) && !FileInfoL.FILE_TYPE_ALL.equals(filetype)) {
+                    for (FileInfo0 fileInfo : mFileInfoList) {
+                        if (fileInfo.getObjid().contains(filetype)) {
+                            tmpFileInfo.add(fileInfo);
+                        }
+                    }
+                } else {
+                    tmpFileInfo.addAll(mFileInfoList);
+                }
             }
             adapter.notifyDataSetChanged();
         }
     };
-    private TextView mTabAllTextView;
-    private TextView mTabDocTextView;
-    private TextView mTabXlsTextView;
-    private TextView mTabPptTextView;
-    private TextView mTabPdfTextView;
-    private LinearLayout mFreedownTabLayoutLinearLayout;
-    private ListView mListviewListView;
+
+    private RelativeLayout mRlOther;
     private Button mEditDownButton;
     private Button mEditDelButton;
     private RelativeLayout mEditRlRelativeLayout;
     private Button mEditCancelButton;
     private SyncTask syncTask;
-    String path;
+    private TextView mTvNumber;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,13 +94,11 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
         setContentView(R.layout.activity_other);
 
 
-
-
         initTitle();
         initResourceId();
         initListener();
         syncTask = new SyncTask(OtherActivity.this, FTYPE.NORMAL);
-        path=new ShareUtils(this).getOtherFile().getPath();
+        path = new ShareUtils(this).getOtherFile().getPath();
         adapter = new OtherListAdapter(OtherActivity.this, tmpFileInfo);
         mListView.setAdapter(adapter);
         onNewThreadRequest();
@@ -125,22 +136,24 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
         cloudUnits.clear();
         cloudUnits = null;
         List<FileLocal> fileLocals = filelistEntity.getLocallist();
-        cloudUnits=filelistEntity.getBklist();
+        if (fileLocals != null) {
+            mTvNumber.setText("未备份文件" + fileLocals.size() + "个");
+        } else {
+            mTvNumber.setText("未备份文件0个");
+        }
+        cloudUnits = filelistEntity.getBklist();
         //显示的时候过滤文件类型
         MFileFilter fileFilter = new MFileFilter();
         fileFilter.setCustomCategory(new String[]{FileInfoL.FILE_TYPE_DOC, FileInfoL.FILE_TYPE_PDF, FileInfoL.FILE_TYPE_PPT, FileInfoL.FILE_TYPE_XLS}, true);
 
-		for(FileInfo0 item:cloudUnits)
-		{
+        for (FileInfo0 item : cloudUnits) {
             mFileInfoList.add(item);
-			//FileInfo0 item=new FileInfo0(finfo);
-			if(!fileFilter.contains(item.getObjid()))
-				continue;
-			//已备份文件
-			if (syncTask.haveLocalCopy(item))
-			{
-				String path=item.getFilePath();
-			}
+            if (!fileFilter.contains(item.getObjid()))
+                continue;
+            //已备份文件
+            if (syncTask.haveLocalCopy(item)) {
+                String path = item.getFilePath();
+            }
 //			else
 //			{
 //				String savepath= new ShareUtils(this).getStorePathStr()+item.getFilename();
@@ -148,22 +161,22 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
 //				//param1  object ,param2 progressBar, param 3  beeque
 //				syncTask.download(item,null,false);
 //			}
-		}
-//        if (fileLocals != null) {
-//            for (FileLocal fileLocal : fileLocals) {
-//                if (fileLocal.bakuped)
-//                    continue;
-//
-//                FileInfo0 fileInfo0 = syncTask.queryLocalInfo(fileLocal.sysid);
-//                if (fileInfo0 == null) {
-//                    continue;
-//                }
-//
-//                if (fileFilter.contains(fileInfo0.getFilePath())) {
-//                    mFileInfoList.add(fileInfo0);
-//                }
-//            }
-//        }
+        }
+        if (fileLocals != null) {
+            for (FileLocal fileLocal : fileLocals) {
+                if (fileLocal.bakuped)
+                    continue;
+
+                FileInfo0 fileInfo0 = syncTask.queryLocalInfo(fileLocal.sysid);
+                if (fileInfo0 == null) {
+                    continue;
+                }
+
+                if (fileFilter.contains(fileInfo0.getFilePath())) {
+                    mFileLocalList.add(fileInfo0);
+                }
+            }
+        }
         handler.sendEmptyMessage(0);
     }
 
@@ -180,6 +193,8 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
         mEditCancelButton.setOnClickListener(this);
         mEditDelButton.setOnClickListener(this);
         mEditDownButton.setOnClickListener(this);
+
+        mRlOther.setOnClickListener(this);
     }
 
     private void initResourceId() {
@@ -192,8 +207,8 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
         mEditDelButton = (Button) findViewById(R.id.other_edit_del);
         mEditCancelButton = (Button) findViewById(R.id.other_edit_cancel);
         mEditRlRelativeLayout = (RelativeLayout) findViewById(R.id.other_edit_rl);
-
-
+        mRlOther = (RelativeLayout) findViewById(R.id.rl_other_ubk_layout);
+        mTvNumber = (TextView) findViewById(R.id.tv_other_number);
         mListView = (ListView) findViewById(R.id.other_listview);
     }
 
@@ -202,25 +217,37 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
         mTvCenter = (TextView) findViewById(R.id.tv_center);
         mTvRight = (TextView) findViewById(R.id.tv_right);
 
-        mTvCenter.setText("免流量应用");
+
+        mTvCenter.setText("其他");
         mTvRight.setText("编辑");
     }
-    ArrayList<FileInfo0> checkList;
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.rl_other_ubk_layout:
+                //未备份文件
+                isLocal = true;
+                mEditDownButton.setText("上传");
+                mRlOther.setVisibility(View.GONE);
+                handler.sendEmptyMessage(0);
+                break;
+
             case R.id.other_edit_cancel:
                 //取消
-                adapter.showCB(false);
-                adapter.notifyDataSetChanged();
-                mTvRight.setText("编辑");
-                mEditRlRelativeLayout.setVisibility(View.GONE);
+                Intent intent=new Intent(OtherActivity.this, DownListActivity.class);
+                startActivity(intent);
+
+
+//                adapter.showCB(false);
+//                adapter.notifyDataSetChanged();
+//                mTvRight.setText("编辑");
+//                mEditRlRelativeLayout.setVisibility(View.GONE);
                 break;
             case R.id.other_edit_del:
                 //删除
-               checkList=adapter.getCheckList();
-                for (final FileInfo0 info:
+                checkList = adapter.getCheckList();
+                for (final FileInfo0 info :
                         checkList) {
                     if (syncTask != null && info != null) {
                         new Thread(new Runnable() {
@@ -254,29 +281,32 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
 
                 break;
             case R.id.other_edit_down:
-                //下载
-                checkList=adapter.getCheckList();
+                checkList = adapter.getCheckList();
+                if (isLocal) {
+                    //上传
+                    for (final FileInfo0 info :
+                            checkList) {
+                        if (info.getSysid() <= 0) {
+                            info.setFilePath(path + "/" + info.getObjid());
+                        }
 
-                for (final FileInfo0 info:
-                        checkList) {
-                    if(info.getSysid()<=0){
-                        info.setFilePath(path+"/"+info.getObjid());
+                        if (syncTask != null && info != null) {
+                            syncTask.upload(info, null, true);
+                        }
                     }
+                } else {
+                    //下载
+                    for (final FileInfo0 info :
+                            checkList) {
+                        if (info.getSysid() <= 0) {
+                            info.setFilePath(path + "/" + info.getObjid());
+                        }
 
-                    if (syncTask != null && info != null) {
-                        syncTask.download(info, OtherActivity.this, false);
+                        if (syncTask != null && info != null) {
+                            syncTask.download(info, null, true);
+                        }
                     }
                 }
-
-
-
-
-
-
-
-
-                //上传
-
 
                 break;
             case R.id.tv_right:

@@ -6,7 +6,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.chd.base.Ui.ActiveProcess;
+import com.chd.base.backend.SyncTask;
+import com.chd.proto.FTYPE;
 import com.chd.yunpan.R;
 
 /**
@@ -24,6 +25,7 @@ public class DownListActivity extends ActiveProcess implements View.OnClickListe
     private ListView listView;
     private TextView tv_center;
     private ImageView iv_left;
+    private SyncTask syncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class DownListActivity extends ActiveProcess implements View.OnClickListe
         iv_left = (ImageView) findViewById(R.id.iv_left);
         tv_center.setText("任务列表");
         iv_left.setOnClickListener(this);
+        syncTask=new SyncTask(this, FTYPE.NORMAL);
 
 
 

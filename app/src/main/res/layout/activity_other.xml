@@ -7,11 +7,50 @@
 
     <include layout="@layout/title_bar" />
 
+    <RelativeLayout
+        android:id="@+id/rl_other_ubk_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="15dp"
+        android:background="#ffa500" >
+
+        <ImageView
+            android:id="@+id/iv_other"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="14dp"
+            android:src="@drawable/pic_icon1" />
+
+        <TextView
+            android:id="@+id/tv_other_number"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="12dp"
+            android:layout_toRightOf="@+id/iv_other"
+            android:gravity="center_vertical"
+            android:textColor="#ffffff"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="14dp"
+            android:src="@drawable/pic_icon2" />
+    </RelativeLayout>
+
+
+
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:layout_marginTop="15dp"
         android:background="#F0F0F0" />
+
+
+
 
     <LinearLayout
         android:id="@+id/freedown_tab_layout"

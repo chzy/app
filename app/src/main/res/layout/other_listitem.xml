@@ -4,6 +4,8 @@
     android:layout_width="fill_parent"
     android:layout_height="84dp"
     android:layout_marginLeft="12dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
@@ -12,6 +14,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:background="@null"
+       android:layout_centerVertical="true"
         android:button="@drawable/select_cb"
         android:visibility="gone" />
 
@@ -49,17 +52,5 @@
         android:textSize="14sp" />
 
 
-    <com.chd.yunpan.view.CircularProgressButton
-        android:id="@+id/other_list_item_progress"
-        android:layout_width="60dp"
-        android:layout_height="35dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="5dp"
-        android:layout_alignParentRight="true"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        app:cpb_textComplete="@string/Complete"
-        app:cpb_textError="@string/Error"
-        app:cpb_textIdle="@string/Upload" />
 
 </RelativeLayout>

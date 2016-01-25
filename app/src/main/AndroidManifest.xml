@@ -106,11 +106,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.chd.yunpan.ui.SettingActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.chd.yunpan.ui.AboutActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.chd.yunpan.ui.UpLoadActivity"
@@ -151,11 +149,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.chd.userinfo.ui.UserInfoActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.chd.userinfo.ui.UserInfoEditActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.chd.yunpan.ui.CRBTActivity"
@@ -175,7 +171,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.chd.other.ui.OtherActivity"
-            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.base.Ui.DownListActivity"
             android:screenOrientation="portrait" />
         
         <service android:name="com.chd.service.SyncFileService" >
