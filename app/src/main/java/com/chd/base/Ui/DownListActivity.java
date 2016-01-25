@@ -1,4 +1,4 @@
-package com.chd.photo.ui;
+package com.chd.base.Ui;
 
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +11,7 @@ import com.chd.yunpan.R;
 
 /**
  * @description
- * @FileName: com.chd.photo.ui.DownListActivity
+ * @FileName: com.chd.base.Ui.DownListActivity
  * @author: liumj
  * @date:2016-01-20 20:17
  * OS:Mac 10.10

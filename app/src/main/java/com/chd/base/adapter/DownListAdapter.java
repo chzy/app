@@ -1,4 +1,4 @@
-package com.chd.photo.adapter;
+package com.chd.base.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,7 +13,7 @@ import com.chd.yunpan.R;
 
 /**
  * @description
- * @FileName: com.chd.photo.adapter.DownListAdapter
+ * @FileName: com.chd.base.adapter.DownListAdapter
  * @author: liumj
  * @date:2016-01-20 20:22
  * OS:Mac 10.10
