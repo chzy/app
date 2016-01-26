@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chd.notepad.ui.db.DatabaseManage;
+import com.chd.notepad.ui.db.FileDBmager;
+import com.chd.notepad.ui.item.NoteItemtag;
 import com.chd.yunpan.R;
 import com.chd.yunpan.utils.TimeUtils;
 
@@ -28,8 +30,8 @@ public class NotepadEditActivity extends Activity {
 	private TextView mTvRight;
 	private TextView title;
 	private EditText content;
-	private DatabaseManage dm = null;
-	
+	//private DatabaseManage dm = null;
+	private FileDBmager fileDBmager;
 	private String id = "";
 	private String titleText = "";
 	private String contentText = "";
@@ -42,7 +44,7 @@ public class NotepadEditActivity extends Activity {
 		setContentView(R.layout.notepad_edit);
 		
 		initTitle();
-		
+		fileDBmager=new FileDBmager(this);
 		Intent intent = getIntent();
 		state = intent.getIntExtra("state", EDIT_STATE);
 		
@@ -54,26 +56,25 @@ public class NotepadEditActivity extends Activity {
 			public boolean onTouch(View v, MotionEvent event) {
 				// TODO Auto-generated method stub
 				content.setSelection(content.getText().toString().length());
-				
 				return false;
 			}
 			
 		});
 		
 		if(state == ALERT_STATE){//修改状态,赋值控件
-			id = intent.getStringExtra("id");
+			//id = intent.getStringExtra("id");
 			//titleText = intent.getStringExtra("title");
-			long time = intent.getLongExtra("time",0);
-			if (time<1000)
-				time=System.currentTimeMillis();
-			contentText = intent.getStringExtra("content");
-			timeText = intent.getStringExtra("time");
-			
-			title.setText(TimeUtils.getTime(time));
-			content.setText(contentText);
+			//long time = intent.getLongExtra("time",0);
+			//if (time<1000)
+			//	time=System.currentTimeMillis();
+			//contentText = intent.getStringExtra("content");
+			//timeText = intent.getStringExtra("time");
+			NoteItemtag itemtag= (NoteItemtag) intent.getSerializableExtra("item");
+			title.setText(TimeUtils.getTime(itemtag.getStamp() * 1000L));
+			content.setText(fileDBmager.readFile(itemtag.get_fname()));
 		}
 		
-		dm = new DatabaseManage(this);
+		//dm = new DatabaseManage(this);
 	}
 
 	private void initTitle() {
@@ -109,9 +110,9 @@ public class NotepadEditActivity extends Activity {
 				//dm.open();
 				
 				if(state == EDIT_STATE)//新增状态
-					dm.insert(titleText, contentText);
+					//dm.insert(titleText, contentText);
 				if(state == ALERT_STATE)//修改状态
-					dm.update(Integer.parseInt(id), titleText, contentText);
+					//dm.update(Integer.parseInt(id), titleText, contentText);
 				setResult(RESULT_OK);
 				//dm.close();
 				

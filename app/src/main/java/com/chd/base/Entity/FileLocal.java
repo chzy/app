@@ -29,11 +29,11 @@ public class FileLocal {
         this.sysid = sysid;
     }
 
-    public String getFname() {
+    public String get_fname() {
         return fname;
     }
 
-    public void setFname(String fname) {
+    public void set_fname(String fname) {
         this.fname = fname;
     }*/
 }
