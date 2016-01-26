@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.chd.notepad.ui.db.FileDBmager;
 import com.chd.notepad.ui.item.NoteItemtag;
 import com.chd.yunpan.R;
 
@@ -31,6 +32,7 @@ public class ListViewAdapter extends BaseAdapter {
 
 	private  static  int month ;
 	private LayoutInflater inflater;
+	private FileDBmager fileDBmager;
 	
 	public ListViewAdapter(Context context, List<NoteItemtag> listItems0){
 		this.listItems = listItems0;
@@ -38,6 +40,7 @@ public class ListViewAdapter extends BaseAdapter {
 		//this.listItemTimes = times;
 		inflater = (LayoutInflater)
 				context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		fileDBmager=new FileDBmager(context);
 	}
 	
 	
@@ -161,7 +164,8 @@ public class ListViewAdapter extends BaseAdapter {
 		txt_day.setText((cal.get(Calendar.MONTH)+1)+"月"+cal.get(Calendar.DAY_OF_MONTH) + "日");
 		txt_hour.setText("" + cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE) + " " + (cal.get(Calendar.AM_PM) > 0 ? "PM" : "AM"));
 		//time1=TimeUtils.getTimeTxt(tag.time,"kk:mm");
-		text.setText(tag.content);
+		String content=fileDBmager.readFile(tag.get_fname());
+		text.setText(content);
 		
 		return convertView;
 	}

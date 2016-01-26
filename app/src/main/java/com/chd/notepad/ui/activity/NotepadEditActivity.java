@@ -70,7 +70,7 @@ public class NotepadEditActivity extends Activity {
 			//contentText = intent.getStringExtra("content");
 			//timeText = intent.getStringExtra("time");
 			NoteItemtag itemtag= (NoteItemtag) intent.getSerializableExtra("item");
-			title.setText(TimeUtils.getTime(itemtag.getStamp() * 1000L));
+			title.setText(TimeUtils.getTime(itemtag.getStamp()));
 			content.setText(fileDBmager.readFile(itemtag.get_fname()));
 		}
 		
@@ -105,11 +105,13 @@ public class NotepadEditActivity extends Activity {
 		public void onClick(View v) {
 			titleText = title.getText().toString();
 			contentText = content.getText().toString();
+
 			
 			try{
 				//dm.open();
 				
 				if(state == EDIT_STATE)//新增状态
+					fileDBmager.writeFile(System.currentTimeMillis()+"",contentText);
 					//dm.insert(titleText, contentText);
 				if(state == ALERT_STATE)//修改状态
 					//dm.update(Integer.parseInt(id), titleText, contentText);
@@ -120,10 +122,10 @@ public class NotepadEditActivity extends Activity {
 				ex.printStackTrace();
 			}
 			
-			/*Intent intent = new Intent();
+			Intent intent = new Intent();
 			intent.setClass(NotepadEditActivity.this, NotepadActivity.class);
 			intent.putExtra("needsync",(state==EDIT_STATE || state==ALERT_STATE));
-			NotepadEditActivity.this.startActivity(intent);*/
+			NotepadEditActivity.this.startActivity(intent);
 			finish();
 		}
 		

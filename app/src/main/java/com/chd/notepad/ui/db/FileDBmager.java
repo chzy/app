@@ -30,6 +30,7 @@ public class FileDBmager {
     private Context _context;
     private  String _path;
     private final String TAG=this.getClass().getName();
+    private final String file_ext=".ntp";
 
     public  FileDBmager(Context context)
     {
@@ -38,7 +39,7 @@ public class FileDBmager {
     }
 
 
-    private final String file_ext=".ntp";
+
     private List<String> files=new ArrayList<String>();
     public Iterator getLocallist(String path)
     {
@@ -80,7 +81,7 @@ public class FileDBmager {
     public String readFile(String fileName)  {
 
         String res="";
-        File file = new File(fileName);
+        File file = new File(_path+File.separator+fileName+file_ext);
 
         FileInputStream fis = null;
         try {
@@ -105,7 +106,7 @@ public class FileDBmager {
     //写文件
     public synchronized  void writeFile(String fileName, String write_str) throws IOException{
 
-        File file = new File(fileName);
+        File file = new File(_path+File.separator+fileName+file_ext);
 
         FileOutputStream fos = new FileOutputStream(file);
 

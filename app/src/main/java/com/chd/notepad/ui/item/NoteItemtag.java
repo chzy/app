@@ -24,7 +24,7 @@ public class NoteItemtag implements Serializable {
         return  fname.substring(idx + 1);
     }
 
-    static   public int  getStamp0( String fname)
+    static   public Long  getStamp0( String fname)
     {
      /*   int idx=-1;
         if (_fname ==null)
@@ -34,10 +34,10 @@ public class NoteItemtag implements Serializable {
             return 0;
         return  Integer.valueOf(_fname.substring(0, idx - 1))*1000;
         */
-        return Integer.valueOf(fname);
+        return Long.valueOf(fname);
     }
 
-    public int getStamp()
+    public Long getStamp()
     {
         return getStamp0(_fname);
     }
