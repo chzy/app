@@ -42,6 +42,12 @@ public class SyncTask {
 		//dbManager.open();
 	}
 
+	public List<FileInfo0> getDownList(int max){
+		dbManager.open();
+		return dbManager.getUpLoadTask(max);
+	}
+
+
 	public FileInfo0 getUnitinfo(int id) {
 		return filelistEntity.getBklist().get(id);
 	}

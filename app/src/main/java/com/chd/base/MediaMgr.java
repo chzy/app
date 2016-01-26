@@ -693,6 +693,7 @@ public class MediaMgr  {
 			list.add(info0);
 		}
 		cursor.close();
+		db.close();
 		return list;
 	}
 

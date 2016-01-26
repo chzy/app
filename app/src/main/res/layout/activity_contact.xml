@@ -79,7 +79,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="102dp"
             android:gravity="center"
-            android:text="选择备份"
+            android:text="一键备份"
             android:textColor="#fea501"
             android:textSize="15sp" />
     </RelativeLayout>
@@ -98,7 +98,7 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
             android:layout_toRightOf="@+id/iv_circle"
             android:gravity="center_vertical"

@@ -20,6 +20,7 @@ import com.chd.contacts.adapter.ContactBean;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
+import com.chd.yunpan.share.ShareUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class ContactActivity extends ActiveProcess implements OnClickListener,On
 	private TextView mCloudNumber;
 	private ImageView mIvSelect;
 	private ListView mLvContact;
+	private String contactPath;
 
 	private List<ContactBean> mContactList = new ArrayList<ContactBean>();
 
@@ -48,19 +50,32 @@ public class ContactActivity extends ActiveProcess implements OnClickListener,On
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_contact);
-
+		syncTask =new SyncTask(this, FTYPE.ADDRESS);
+		contactPath=new ShareUtils(this).getContactFile().getPath();
 		initTitle();
 		initResourceId();
 		initListener();
-		initData();
+		newRequest();
 	}
 
-	private void initData() {
+	private void newRequest() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				final List<FileInfo0> cloudUnits=syncTask.getCloudUnits(0, 1000);
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						initData(cloudUnits);
+					}
+				});
 
+			}
+		}).start();
+	}
+	SyncTask syncTask;
+	private void initData(List<FileInfo0> cloudUnits) {
 
-		SyncTask syncTask =new SyncTask(this, FTYPE.ADDRESS);
-
-		List<FileInfo0> cloudUnits=syncTask.getCloudUnits(0, 1000);
 		if (cloudUnits==null)
 		{
 			System.out.print("query remote failed");
@@ -89,11 +104,12 @@ public class ContactActivity extends ActiveProcess implements OnClickListener,On
 			}
 		}
 
+		if(fileLocals==null){
+			return;
+		}
 		//显示未备份文件
 		for(FileLocal fileLocal:fileLocals)
 		{
-
-
 			if (fileLocal.bakuped)
 				continue;
 
@@ -101,17 +117,7 @@ public class ContactActivity extends ActiveProcess implements OnClickListener,On
 			syncTask.upload(info0, null,false);
 		}
 
-		// 模拟数据
-		ContactBean contactBean0 = new ContactBean("2015年10月", "3");
-		ContactBean contactBean1 = new ContactBean("2015年8月", "3");
-		ContactBean contactBean2 = new ContactBean("2015年6月", "5");
-		ContactBean contactBean3 = new ContactBean("2015年12月", "31");
-		ContactBean contactBean4 = new ContactBean("2015年5月", "4");
-		mContactList.add(contactBean0);
-		mContactList.add(contactBean1);
-		mContactList.add(contactBean2);
-		mContactList.add(contactBean3);
-		mContactList.add(contactBean4);
+
 		handler.sendEmptyMessage(0);
 
 	}
@@ -139,7 +145,7 @@ public class ContactActivity extends ActiveProcess implements OnClickListener,On
 		mTvRight = (TextView) findViewById(R.id.tv_right);
 
 		mTvCenter.setText("联系人备份");
-		mTvRight.setText("回收");
+		mTvRight.setText("一键恢复");
 	}
 
 	@Override
@@ -148,7 +154,7 @@ public class ContactActivity extends ActiveProcess implements OnClickListener,On
 		case R.id.iv_left:
 			finish();
 			break;
-		case R.id.tv_right: // 回收
+		case R.id.tv_right: // 一键恢复
 			// TODO
 			break;
 		case R.id.iv_select: // 选择备份

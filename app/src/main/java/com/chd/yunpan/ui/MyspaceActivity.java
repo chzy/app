@@ -12,7 +12,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.chd.contacts.ui.Contacts;
+import com.chd.contacts.ui.ContactActivity;
 import com.chd.music.ui.MusicActivity;
 import com.chd.notepad.ui.activity.NotepadActivity;
 import com.chd.other.ui.OtherActivity;
@@ -63,8 +63,8 @@ public class MyspaceActivity extends Activity implements OnClickListener, OnItem
         MySpaceBean mySpaceBean0 = new MySpaceBean("照片", R.drawable.myspace_grid_photo, PicActivity.class);
         MySpaceBean mySpaceBean1 = new MySpaceBean("音乐", R.drawable.myspace_grid_music, MusicActivity.class);
         MySpaceBean mySpaceBean2 = new MySpaceBean("小心事", R.drawable.myspace_grid_notepad, NotepadActivity.class);
-        //MySpaceBean mySpaceBean3 = new MySpaceBean("联系人", R.drawable.myspace_grid_contact, ContactActivity.class);
-		MySpaceBean mySpaceBean3 = new MySpaceBean("联系人", R.drawable.myspace_grid_contact, Contacts.class);
+        MySpaceBean mySpaceBean3 = new MySpaceBean("联系人", R.drawable.myspace_grid_contact, ContactActivity.class);
+//		MySpaceBean mySpaceBean3 = new MySpaceBean("联系人", R.drawable.myspace_grid_contact, Contacts.class);
         MySpaceBean mySpaceBean4 = new MySpaceBean("短信", R.drawable.myspace_grid_message, SmsActivity.class);
 		//MySpaceBean mySpaceBean4 = new MySpaceBean("短信", R.drawable.myspace_grid_message, Contacts.class);
         MySpaceBean mySpaceBean5 = new MySpaceBean("其他", R.drawable.myspace_grid_other, OtherActivity.class);

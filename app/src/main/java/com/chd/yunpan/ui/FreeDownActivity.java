@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.GridView;
@@ -31,34 +32,23 @@ public class FreeDownActivity extends Activity implements OnClickListener
 	private TextView mTabLeft, mTabRight;
 	private GridView mViewLeftGridView;
 	private ListView mViewRightListView;
-	
+
+	private boolean isDown=true;
 	private List<AppInfo0> mAppList = new ArrayList<AppInfo0>();
-	
+
+	private PakageInfoProvider appProvider;
+	private FreeDownListAdapter listAdapter;
+	private FreeDownGridAdapter gridAdapter;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 
-			PakageInfoProvider pakageInfoProvider = new PakageInfoProvider(FreeDownActivity.this);
 			mAppList.clear();
-			mAppList.addAll(pakageInfoProvider.getAppInfo());
-
-			List<AppInfo0> apps=pakageInfoProvider.getAppInfo();
-
-			for (AppInfo0 app:apps)
-			{
-				if (app.isNeedUp())
-					System.out.print(app.getAppName() + "need update");
-				if (!app.isInstalled())
-					System.out.print(app.getAppName() + "un loaded");
-			}
-
-			
-			if (msg.what == 0)
-			{
-				mViewLeftGridView.setAdapter(new FreeDownGridAdapter(FreeDownActivity.this, mAppList));				
-			}
-			else
-			{
-				mViewRightListView.setAdapter(new FreeDownListAdapter(FreeDownActivity.this, mAppList));
+			if(isDown){
+				mAppList.addAll(appProvider.getDownApps());
+				gridAdapter.notifyDataSetChanged();
+			}else{
+				mAppList.addAll(appProvider.getUnDownApps());
+				listAdapter.notifyDataSetChanged();
 			}
 		}
 	};
@@ -69,16 +59,37 @@ public class FreeDownActivity extends Activity implements OnClickListener
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_freedown);
-        
-        initTitle();
+		appProvider=new PakageInfoProvider(this);
+		listAdapter=new FreeDownListAdapter(FreeDownActivity.this, mAppList);
+		gridAdapter=new FreeDownGridAdapter(FreeDownActivity.this, mAppList);
+		initTitle();
 		initResourceId();
+		mViewLeftGridView.setAdapter(gridAdapter);
+		mViewRightListView.setAdapter(listAdapter);
 		initListener();
 		initData();
+
+
 	}
 	
 	private void initData()
 	{
-		handler.sendEmptyMessage(0);
+
+		try {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					boolean b = appProvider.queryRemoteApps();
+					if(b){
+						handler.sendEmptyMessage(0);
+					}
+				}
+			}).start();
+
+
+		} catch (Exception e) {
+			Log.e("lmj","数据异常");
+		}
 	}
 
 	private void initListener() {
@@ -122,9 +133,10 @@ public class FreeDownActivity extends Activity implements OnClickListener
 			break;
 		case R.id.freedown_tab_left:
 		{
+			isDown=true;
 			mTabLayout.setBackgroundResource(R.drawable.freedown_hasdownload_bg);
 			mViewLeftGridView.setVisibility(View.VISIBLE);
-			//mViewRightListView.setVisibility(View.GONE);
+			mViewRightListView.setVisibility(View.GONE);
 			mTabRight.setTextColor(Color.rgb(248, 184, 45));
 			mTabLeft.setTextColor(Color.rgb(255, 255, 255));
 			
@@ -133,9 +145,10 @@ public class FreeDownActivity extends Activity implements OnClickListener
 			break;
 		case R.id.freedown_tab_right:
 		{
+			isDown=false;
 			mTabLayout.setBackgroundResource(R.drawable.freedown_nodownload_bg);
-			mViewLeftGridView.setVisibility(View.VISIBLE);
-			//mViewRightListView.setVisibility(View.VISIBLE);
+			mViewLeftGridView.setVisibility(View.GONE);
+			mViewRightListView.setVisibility(View.VISIBLE);
 			mTabLeft.setTextColor(Color.rgb(248, 184, 45));
 			mTabRight.setTextColor(Color.rgb(255, 255, 255));
 			handler.sendEmptyMessage(0);

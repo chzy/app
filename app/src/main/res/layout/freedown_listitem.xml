@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="84dp"
+    android:layout_height="wrap_content"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
     android:gravity="center_vertical" >
 
     <TextView
@@ -10,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
         android:gravity="center"
-        android:text="01" />
+        android:text="" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -23,8 +25,7 @@
         <ImageView
             android:id="@+id/freedown_list_item_img"
             android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/ic_launcher" />
+            android:layout_height="60dp" />
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -37,7 +38,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="沃空间"
+                android:text=""
                 android:textColor="#333333"
                 android:textSize="16sp" />
 
@@ -46,7 +47,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="沃空间介绍"
+                android:text=""
                 android:textColor="#999999"
                 android:textSize="14sp" />
         </LinearLayout>

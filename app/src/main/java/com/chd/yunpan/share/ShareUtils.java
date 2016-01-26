@@ -27,6 +27,7 @@ public class ShareUtils {
 	private final String CONTACT =DOWNLOAD+"/"+"contact";
 	private final String SMS =DOWNLOAD+"/"+"sms";
 	private final String OTHER=DOWNLOAD+"/"+"other";
+	private final String APK=DOWNLOAD+"/"+"apk";
 	public ShareUtils(Context context) {
 		this.context=context;
 		sp = context.getSharedPreferences("data", Context.MODE_PRIVATE);
@@ -182,6 +183,17 @@ public class ShareUtils {
 		return f;
 	}
 
+	/**
+	 * APP下载地址
+	 * @return
+	 */
+	public File getApkFile(){
+		File f=new File(APK);
+		if(!f.exists()){
+			f.mkdirs();
+		}
+		return f;
+	}
 
 
 	public void removeDownPath(String path){

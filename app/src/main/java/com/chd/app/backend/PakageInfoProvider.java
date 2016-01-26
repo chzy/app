@@ -19,19 +19,25 @@ public class PakageInfoProvider {
 
     private static final String tag = "GetappinfoActivity";
     private Context context;
-    private List<AppInfo0> appInfos;
+    private List<AppInfo0> localApps;
+    private List<AppInfo0> downApps;
+    private List<AppInfo0> unDownApps;
     private AppInfo0 appInfo;
     public PakageInfoProvider(Context context) {
         super();
         this.context = context;
+        localApps=new ArrayList<>();
+        downApps=new ArrayList<>();
+        unDownApps=new ArrayList<>();
+
     }
     public List<AppInfo0> compareApps() {
         PackageManager pm = context.getPackageManager();
         List<PackageInfo> pakageinfos = pm.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES);
-        appInfos = new ArrayList<AppInfo0>();
+        unDownApps = new ArrayList<AppInfo0>();
         for (PackageInfo packageInfo : pakageinfos) {
             appInfo = new AppInfo0();
-            appInfo.setIndex(appInfos.size());
+            appInfo.setIndex(localApps.size());
             if ( (packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) !=0)
                 continue;
             //获取字符串方法
@@ -55,23 +61,30 @@ public class PakageInfoProvider {
             Drawable drawable = packageInfo.applicationInfo.loadIcon(pm);
             appInfo.setDrawable(drawable);
             // 获取应用程序是否是第三方应用程序
-            if (filterApp(appInfo))
-                continue;
+            if (filterApp(appInfo)){
+                downApps.add(appInfo);
+            }
             //else
              //   appInfo.setIsUserApp(filterApp(packageInfo.applicationInfo));
 
             //Logger.i(tag, "版本号:" + version + "程序名称:" + str_name);
-            appInfos.add(appInfo);
-            appInfo = null;
+
         }
-        return appInfos;
+        unDownApps.addAll(remoteApps);
+        unDownApps.removeAll(downApps);
+        return downApps;
     }
 
 
     public List<AppInfo0> getAppInfo() {
         compareApps();
-        return appInfos;
+        return localApps;
     }
+
+    public List<AppInfo0> getRemoteApps(){
+        return remoteApps;
+    }
+
     /**
      * 三方应用程序的过滤器
      *
@@ -79,8 +92,9 @@ public class PakageInfoProvider {
      * @return true 三方应用 false 系统应用
      */
     public boolean filterApp(AppInfo0 info) {
-        if (remoteApps==null)
-            queryRemoteApps();
+        if (remoteApps==null){
+                return false;
+        }
 
         for (AppInfo0 item:remoteApps)
         {
@@ -113,11 +127,38 @@ public class PakageInfoProvider {
 
     }
 
+
+    public List<AppInfo0> getLocalApps() {
+        return localApps;
+    }
+
+    public void setLocalApps(List<AppInfo0> localApps) {
+        this.localApps = localApps;
+    }
+
+    public List<AppInfo0> getDownApps() {
+        return downApps;
+    }
+
+    public void setDownApps(List<AppInfo0> downApps) {
+        this.downApps = downApps;
+    }
+
+    public List<AppInfo0> getUnDownApps() {
+
+        return unDownApps;
+    }
+
+    public void setUnDownApps(List<AppInfo0> unDownApps) {
+        this.unDownApps = unDownApps;
+    }
+
     static List<AppInfo0> remoteApps;
 
-    private void queryRemoteApps()
+    public boolean queryRemoteApps()
     {
         remoteApps=new ArrayList<AppInfo0>();
+
         try {
             List<AppInfo> list= TClient.getinstance().QueryApps();
             if (list!=null)
@@ -127,9 +168,11 @@ public class PakageInfoProvider {
                     AppInfo0 item=new AppInfo0(appInfo);
                     remoteApps.add(item);
                 }
+                compareApps();
             }
+            return true;
         } catch (Exception e) {
-            e.printStackTrace();
+           return false;
         }
     }
 }
