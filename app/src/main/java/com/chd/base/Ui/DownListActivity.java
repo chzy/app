@@ -35,7 +35,7 @@ public class DownListActivity extends ActiveProcess implements View.OnClickListe
     private ImageView iv_left;
     private SyncTask syncTask;
     private DownListAdapter adapter;
-    private List<FileInfo0> mDownList = new ArrayList<>();
+    private List<FileInfo0> mDownList = new ArrayList();
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {

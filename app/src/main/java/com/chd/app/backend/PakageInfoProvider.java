@@ -26,9 +26,9 @@ public class PakageInfoProvider {
     public PakageInfoProvider(Context context) {
         super();
         this.context = context;
-        localApps=new ArrayList<>();
-        downApps=new ArrayList<>();
-        unDownApps=new ArrayList<>();
+        localApps=new ArrayList();
+        downApps=new ArrayList();
+        unDownApps=new ArrayList();
 
     }
     public List<AppInfo0> compareApps() {
