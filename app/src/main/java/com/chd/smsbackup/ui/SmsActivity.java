@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.chd.TClient;
 import com.chd.base.backend.SyncTask;
-import com.chd.contacts.adapter.ContactBean;
+import com.chd.contacts.entity.ContactBean;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;

@@ -11,162 +11,146 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chd.base.Entity.FileLocal;
-import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.Ui.ActiveProcess;
-import com.chd.base.backend.SyncTask;
 import com.chd.contacts.adapter.ContactAdapter;
-import com.chd.contacts.adapter.ContactBean;
-import com.chd.proto.FTYPE;
-import com.chd.proto.FileInfo0;
+import com.chd.contacts.entity.ContactBean;
+import com.chd.contacts.vcard.VCardIO;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactActivity extends ActiveProcess implements OnClickListener,OnItemClickListener {
+public class ContactActivity extends ActiveProcess implements OnClickListener, OnItemClickListener {
 
-	private ImageView mIvLeft;
-	private TextView mTvCenter;
-	private TextView mTvRight;
-	private TextView mSmsNumber;
-	private TextView mCloudNumber;
-	private ImageView mIvSelect;
-	private ListView mLvContact;
-	private String contactPath;
-
-	private List<ContactBean> mContactList = new ArrayList<ContactBean>();
-
-	private Handler handler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
-			mLvContact.setAdapter(new ContactAdapter(ContactActivity.this,
-					mContactList));
-		}
-	};
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		setContentView(R.layout.activity_contact);
-		syncTask =new SyncTask(this, FTYPE.ADDRESS);
-		contactPath=new ShareUtils(this).getContactFile().getPath();
-		initTitle();
-		initResourceId();
-		initListener();
-		newRequest();
-	}
-
-	private void newRequest() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				final List<FileInfo0> cloudUnits=syncTask.getCloudUnits(0, 1000);
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						initData(cloudUnits);
-					}
-				});
-
-			}
-		}).start();
-	}
-	SyncTask syncTask;
-	private void initData(List<FileInfo0> cloudUnits) {
-
-		if (cloudUnits==null)
-		{
-			System.out.print("query remote failed");
-		}
-		FilelistEntity filelistEntity=syncTask.analyUnits(cloudUnits);
-		cloudUnits.clear();
-		cloudUnits=null;
-		List<FileLocal> fileLocals=filelistEntity.getLocallist();
-		cloudUnits= filelistEntity.getBklist();
-		//显示的时候过滤文件类型
-
-		for(FileInfo0 item:cloudUnits)
-		{
-			//FileInfo0 item=new FileInfo0(finfo);
-			//已备份文件
-			if (syncTask.haveLocalCopy(item))
-			{
-				String path=item.getFilePath();
-			}
-			else
-			{
-				String savepath="/sdcard/ddd";
-				item.setFilePath(savepath);
-				//param1  object ,param2 progressBar, param 3  beeque
-				//syncTask.download(item,null,false);
-			}
-		}
-
-		if(fileLocals==null){
-			return;
-		}
-		//显示未备份文件
-		for(FileLocal fileLocal:fileLocals)
-		{
-			if (fileLocal.bakuped)
-				continue;
-
-			FileInfo0 info0 =syncTask.queryLocalInfo(fileLocal.sysid);//本地文件信息
-			syncTask.upload(info0, null,false);
-		}
+    private ImageView mIvLeft;
+    private TextView mTvCenter;
+    private TextView mTvRight;
+    private TextView mSmsNumber;
+    private TextView mCloudNumber;
+    private ImageView mIvSelect;
+    private ListView mLvContact;
+    private String contactPath;
 
 
-		handler.sendEmptyMessage(0);
+    private List<ContactBean> mContactList = new ArrayList<ContactBean>();
+    private VCardIO vcarIO;
+    private Handler handler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            switch (msg.what) {
+                case 998:
+                    //本地通讯里数量
+                    long size = (long) msg.obj;
+                    mSmsNumber.setText(size + "");
+                    break;
+                case 999:
+                    //网络通讯录数量
+                    int length = (int) msg.obj;
+                    mCloudNumber.setText(length + "");
+                    break;
+                case 0:
+                    vcarIO.getLocalSize(handler);
+                    vcarIO.getNetSize(contactPath, handler);
+                    mLvContact.setAdapter(new ContactAdapter(ContactActivity.this,
+                            mContactList));
+                    break;
+            }
 
-	}
 
-	private void initResourceId() {
-		mSmsNumber = (TextView) findViewById(R.id.tv_sms_number);
-		mCloudNumber = (TextView) findViewById(R.id.tv_cloud_number);
-		mIvSelect = (ImageView) findViewById(R.id.iv_select);
-		mLvContact = (ListView) findViewById(R.id.lv_contact);
+        }
+    };
 
-		mSmsNumber.setText("135");
-		mCloudNumber.setText("135");
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-	private void initListener() {
-		mIvLeft.setOnClickListener(this);
-		mTvRight.setOnClickListener(this);
-		mIvSelect.setOnClickListener(this);
-		mLvContact.setOnItemClickListener(this);
-	}
+        setContentView(R.layout.activity_contact);
+        contactPath = new ShareUtils(this).getContactFile().getPath() + "/backup.vcf";
 
-	private void initTitle() {
-		mIvLeft = (ImageView) findViewById(R.id.iv_left);
-		mTvCenter = (TextView) findViewById(R.id.tv_center);
-		mTvRight = (TextView) findViewById(R.id.tv_right);
+        vcarIO = new VCardIO(this);
 
-		mTvCenter.setText("联系人备份");
-		mTvRight.setText("一键恢复");
-	}
+        initTitle();
+        initResourceId();
+        initListener();
+        newRequest();
+    }
 
-	@Override
-	public void onClick(View view) {
-		switch (view.getId()) {
-		case R.id.iv_left:
-			finish();
-			break;
-		case R.id.tv_right: // 一键恢复
-			// TODO
-			break;
-		case R.id.iv_select: // 选择备份
-			// TODO
-			break;
-		}
-	}
-	
-	/**列表点击**/
-	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		//TODO
-		Toast.makeText(this, "点击了条目"+arg2, Toast.LENGTH_SHORT).show();
-	}
+    private void newRequest() {
+
+
+        //显示的时候过滤文件类型
+
+        new Thread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        vcarIO.download(contactPath, null);
+                        handler.sendEmptyMessage(0);
+                    }
+                }
+        ).start();
+    }
+
+
+    private void initResourceId() {
+        mSmsNumber = (TextView) findViewById(R.id.tv_sms_number);
+        mCloudNumber = (TextView) findViewById(R.id.tv_cloud_number);
+        mIvSelect = (ImageView) findViewById(R.id.iv_select);
+        mLvContact = (ListView) findViewById(R.id.lv_contact);
+    }
+
+    private void initListener() {
+        mIvLeft.setOnClickListener(this);
+        mTvRight.setOnClickListener(this);
+        mIvSelect.setOnClickListener(this);
+        mLvContact.setOnItemClickListener(this);
+    }
+
+    private void initTitle() {
+        mIvLeft = (ImageView) findViewById(R.id.iv_left);
+        mTvCenter = (TextView) findViewById(R.id.tv_center);
+        mTvRight = (TextView) findViewById(R.id.tv_right);
+
+        mTvCenter.setText("联系人备份");
+        mTvRight.setText("一键恢复");
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_left:
+                finish();
+                break;
+            case R.id.tv_right: // 一键恢复
+                // TODO
+                if (vcarIO != null) {
+                    // 更新进度
+                    setParMessage("正在导入,请稍候...");
+                    updateProgress(0);
+                    vcarIO.doImport(contactPath, false,
+                            ContactActivity.this);
+                }
+
+                break;
+            case R.id.iv_select: // 一键备份
+                // TODO
+                if (vcarIO != null) {
+                    // 更新进度
+                    setParMessage("正在上传,请稍候...");
+                    updateProgress(0);
+                    vcarIO.doExport(contactPath, ContactActivity.this);
+                }
+
+                break;
+        }
+    }
+
+    /**
+     * 列表点击
+     **/
+    @Override
+    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+        //TODO
+        Toast.makeText(this, "点击了条目" + arg2, Toast.LENGTH_SHORT).show();
+    }
 }

@@ -67,7 +67,7 @@ public class Contacts extends ActiveProcess {
 							.getText().toString();
 					// 更新进度
 					progressDlg.show();
-					importing = "正在到出,请稍后...";
+					importing = "正在导出,请稍后...";
 					updateProgress(0);
 					vcarIO.doExport(fileName, Contacts.this);
 				}

@@ -71,17 +71,9 @@
             android:layout_height="72dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="102dp"
-            android:src="@drawable/contact_icon5" />
+            android:src="@drawable/iconfont_synchro" />
 
-        <TextView
-            android:layout_width="31dp"
-            android:layout_height="72dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="102dp"
-            android:gravity="center"
-            android:text="一键备份"
-            android:textColor="#fea501"
-            android:textSize="15sp" />
+
     </RelativeLayout>
     <!-- 上部分结束 -->
 

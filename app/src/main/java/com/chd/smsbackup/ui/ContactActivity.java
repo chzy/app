@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chd.contacts.adapter.ContactAdapter;
-import com.chd.contacts.adapter.ContactBean;
+import com.chd.contacts.entity.ContactBean;
 import com.chd.yunpan.R;
 
 import java.util.ArrayList;
