@@ -1,6 +1,7 @@
 package com.chd.notepad.ui.db;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.chd.proto.FileInfo;
 import com.chd.yunpan.share.ShareUtils;
@@ -10,6 +11,7 @@ import org.apache.http.util.EncodingUtils;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -27,6 +29,8 @@ import java.util.List;
 public class FileDBmager {
     private Context _context;
     private  String _path;
+    private final String TAG=this.getClass().getName();
+
     public  FileDBmager(Context context)
     {
         this._context=context;
@@ -73,21 +77,28 @@ public class FileDBmager {
 
 
 
-    public String readFile(String fileName) throws IOException {
+    public String readFile(String fileName)  {
 
         String res="";
         File file = new File(fileName);
 
-        FileInputStream fis = new FileInputStream(file);
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
+            int length = fis.available();
 
-        int length = fis.available();
+            byte [] buffer = new byte[length];
+            fis.read(buffer);
 
-        byte [] buffer = new byte[length];
-        fis.read(buffer);
+            res = EncodingUtils.getString(buffer, "UTF-8");
 
-        res = EncodingUtils.getString(buffer, "UTF-8");
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(TAG,e.getMessage());
+        }
 
-        fis.close();
+
         return res;
     }
 

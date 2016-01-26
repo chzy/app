@@ -670,13 +670,14 @@ public class MediaMgr  {
 		String sel="";
 		if (ftype!=null)
 			sel="where type= "+ftype.getValue();
-		Cursor cursor = db.rawQuery("select * from "+buildTable(dbtab) +sel,null);
+		String sql="select sysid,objid,size,offset,time from "+buildTable(dbtab) +sel+ " order by time ";
+		Cursor cursor = db.rawQuery(sql,null);
 		List<FileInfo0> list=new ArrayList<FileInfo0>();
 		boolean finished=(dbtab.equals(DBTAB.UPing) || dbtab.equals(DBTAB.Dling));
-
+		int count=cursor.getCount();
 		while (cursor.moveToNext() && max>0) {
 			FileInfo0 info0=new FileInfo0();
-			info0.setFilePath(cursor.getString(cursor.getColumnIndex("path")));
+			info0.setFilePath(cursor.getString(cursor.getColumnIndex("objid")));
 			info0.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
 			info0.setLastModified(cursor.getInt(cursor.getColumnIndex("time")));
 			info0.setFilesize(cursor.getLong(cursor.getColumnIndex("size")));
@@ -686,7 +687,7 @@ public class MediaMgr  {
 				info0.setSysid(cursor.getInt(cid));
 			}catch (Exception e)
 			{
-
+				Log.e(TAG,e.getMessage());
 			}
 			max--;
 			list.add(info0);
@@ -697,7 +698,7 @@ public class MediaMgr  {
 
 	public void addUpLoadingFile(FileInfo0 entity){
 		ContentValues values = new ContentValues();
-		values.put(/*"hash"*/"sysid",/*entity.getFilePath().hashCode()*/entity.getSysid());
+		//values.put(/*"hash"*/"sysid",/*entity.getFilePath().hashCode()*/entity.getSysid());
 		values.put("objid",entity.getObjid());
 		values.put("path", entity.getFilePath());
 		values.put("size",entity.getFilesize());
@@ -713,7 +714,7 @@ public class MediaMgr  {
 		values.put("sysid",entity.getSysid());
 		values.put("objid",entity.getObjid());
 		values.put("offset", entity.getOffset());
-		db.update("upload_inter", values, "type=? and objid=?", new String[]{String.valueOf(entity.getFtype()), entity.getObjid()});
+		int ret=db.update("upload_inter", values, "type=? and objid=?", new String[]{String.valueOf(entity.getFtype()), entity.getObjid()});
 	}
 
 
@@ -759,6 +760,11 @@ public class MediaMgr  {
 	public  List<FileInfo0> getUpLoadTask(int max)
 	{
 		return QueryDBUnits(DBTAB.UPing,null,max);
+	}
+
+	public  List<FileInfo0> getDlLoadTask(int max)
+	{
+		return QueryDBUnits(DBTAB.Dling,null,max);
 	}
 
 	public void addDownloadedFile(FileInfo0 entity){

@@ -260,9 +260,10 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                     //用于Activity之间的通讯
                     Intent intent = new Intent();
                     //intent.putExtra("id", nt.id);
-                    //intent.putExtra("state", ALERT_STATE);
-                    intent.putExtra("fname", /*cursor.getLong(cursor.getColumnIndex("time"))*/nt.get_fname());
-                    intent.putExtra("content", /*cursor.getString(cursor.getColumnIndex("content"))*/nt.content);
+                    intent.putExtra("state", ALERT_STATE);
+                    //intent.putExtra("fname", /*cursor.getLong(cursor.getColumnIndex("time"))*/nt.get_fname());
+                   // intent.putExtra("content", /*cursor.getString(cursor.getColumnIndex("content"))*/nt.content);
+                    intent.putExtra("item", nt);
                     intent.setClass(NotepadActivity.this, NotepadEditActivity.class);
                     NotepadActivity.this.startActivity(intent);
                 } catch (Exception ex) {

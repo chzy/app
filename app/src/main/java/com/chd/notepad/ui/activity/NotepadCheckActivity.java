@@ -46,12 +46,9 @@ public class NotepadCheckActivity extends Activity {
 		FileDBmager fileDBmager=new FileDBmager(this);
 		String datetime = DateFormat.format("yyyy-MM-dd kk:mm:ss", noteItemtag.getStamp()*1000L).toString();
 		String content= "";
-		try {
-			content = fileDBmager.readFile(noteItemtag.get_fname());
-		} catch (IOException e) {
-			e.printStackTrace();
-			Log.d(TAG,e.getMessage());
-		}
+
+		content = fileDBmager.readFile(noteItemtag.get_fname());
+
 		this.timeText.setText(datetime);
 		this.contentText.setText(content);
 	}

@@ -14,10 +14,7 @@ public class NoteItemtag implements Serializable {
     public int  id;
     public  boolean isHead=false;
 
-    /*public NoteItemtag()
-    {
-        hashcode=id;
-    }*/
+
    static public String getTitle0(String fname)
     {
         int idx=-1;
