@@ -670,7 +670,7 @@ public class MediaMgr  {
 		String sel="";
 		if (ftype!=null)
 			sel="where type= "+ftype.getValue();
-		String sql="select sysid,objid,size,offset,time from "+buildTable(dbtab) +sel+ " order by time ";
+		String sql="select objid,size,offset,time from "+buildTable(dbtab) +sel+ " order by time ";
 		Cursor cursor = db.rawQuery(sql,null);
 		List<FileInfo0> list=new ArrayList<FileInfo0>();
 		boolean finished=(dbtab.equals(DBTAB.UPing) || dbtab.equals(DBTAB.Dling));
@@ -693,7 +693,6 @@ public class MediaMgr  {
 			list.add(info0);
 		}
 		cursor.close();
-		db.close();
 		return list;
 	}
 

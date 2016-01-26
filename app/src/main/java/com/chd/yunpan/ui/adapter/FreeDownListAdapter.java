@@ -96,7 +96,7 @@ public class FreeDownListAdapter extends BaseAdapter {
 				@Override
 				public void onClick(View v) 
 				{
-				    int pos= (int) v.getTag();
+				    int pos= (Integer) v.getTag();
 
                     new Thread(new Runnable() {
                         @Override

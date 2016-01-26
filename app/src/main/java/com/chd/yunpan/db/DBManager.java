@@ -94,7 +94,7 @@ public class DBManager implements DBhandler {
 		values.put("objid",entity.getObjid());
 		/*values.put("path", entity.getFilePath());
 		values.put("size",entity.getSize());
-		values.put("name",entity.getFname());
+		values.put("name",entity.get_fname());
 	*/
 		//int hash=entity.getFilePath().hashCode();
 		values.put("offset",entity.getOffset());

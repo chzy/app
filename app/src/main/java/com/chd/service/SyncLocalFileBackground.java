@@ -65,49 +65,81 @@ public class SyncLocalFileBackground implements Runnable {
     }
 
     public void run() {
-        upLoad();
+        while (true) {
+             if (files.isEmpty()) {
+                 upLoad();
+                 download();
+             }
+            else
+                 try {
+                     Thread.sleep(10000L);
+                 } catch (InterruptedException e) {
+                     e.printStackTrace();
+                 }
+
+        }
         //su.close();
 
     }
 
-    // 找到所有需要上传的列表
-    private void findList2UpLoad() {
-        files = su.getUpLoadTask(100);
-
-    }
-
-    // 递归上传所有
-    private void upLoad() {
-        su.open();
-        findList2UpLoad();
-        if (files.size() == 0) {
+    private void download() {
+        if (files.isEmpty()) {
+            su.open();
+            files=su.getDlLoadTask(100);
             su.close();
+        }
+        if (files.size() == 0) {
             return;
         }
-
 
         for (FileInfo0 item : files) {
             if (!NetworkUtils.isNetworkAvailable(context)) {
                 break;
             }
-            if (upLoadFile(item)) {
+            if (downloadBigFile(item, null)) {
                 //su.deleteUpLoadingFile(item.getObjid());
-                su.addUpLoadedFile(item);
+                //su.addUpLoadedFile(item);
             } else {
+               Log.e(TAG,"下载失败");
+            }
+            su.close();
+        }
+
+    }
+
+    private void upLoad() {
+
+        if (files.isEmpty()) {
+            su.open();
+            files = su.getUpLoadTask(100);
+            su.close();
+        }
+        if (files.size() == 0) {
+            return;
+        }
+
+        for (FileInfo0 item : files) {
+            if (!NetworkUtils.isNetworkAvailable(context)) {
+                break;
+            }
+            if (uploadBigFile(item, null)) {
                 //su.deleteUpLoadingFile(item.getObjid());
+                //su.addUpLoadedFile(item);
+            } else {
+                Log.e(TAG,"下载失败");
             }
             su.close();
         }
     }
 
-    private boolean upLoadFile(FileInfo0 file) {
+   /* private boolean upLoadFile(FileInfo0 file) {
         Log.v(TAG, file.getObjid() + "------------------" + file.getFilePath());
         boolean b = new BigFileOrBreakPointUploadUtil()
                 .uploadBigFile(file, null, context);
         System.out.println(b);
         System.gc();
         return b;
-    }
+    }*/
 
 
     public boolean downloadBigFile(FileInfo0 fileInfo0, ActiveProcess pb) {
@@ -220,7 +252,7 @@ public class SyncLocalFileBackground implements Runnable {
             return false;
         }
         try {
-            tClient = TClient.getinstance();
+            tClient = new TClient(false);
         } catch (Exception e) {
             Log.w(TAG, e.getLocalizedMessage());
             return false;

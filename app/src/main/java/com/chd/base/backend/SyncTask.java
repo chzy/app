@@ -42,12 +42,6 @@ public class SyncTask {
 		//dbManager.open();
 	}
 
-	public List<FileInfo0> getDownList(int max){
-		dbManager.open();
-		return dbManager.getUpLoadTask(max);
-	}
-
-
 	public FileInfo0 getUnitinfo(int id) {
 		return filelistEntity.getBklist().get(id);
 	}
@@ -185,6 +179,12 @@ public class SyncTask {
 		return filelistEntity;
 	}
 
+	public List<FileInfo0> getDownList(int max){
+		dbManager.open();
+		List<FileInfo0> lst= dbManager.getUpLoadTask(max);
+		dbManager.close();
+		return lst;
+	}
 	protected class SortBydesc implements Comparator<Object> {
 		@Override
 		public int compare(Object o1, Object o2) {
