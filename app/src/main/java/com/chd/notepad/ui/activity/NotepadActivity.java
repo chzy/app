@@ -111,7 +111,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
         Intent intent = new Intent(this, SyncService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         startService(intent);
-        fileDBmager=new FileDBmager(this);
+
     }
 
     private void initListener() {
@@ -147,13 +147,13 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
     public void initAdapter() {
         items.clear();
         dm.open();//打开数据库操作对象
-
+        fileDBmager=new FileDBmager(this);
         month = 0;
        // cursor = dm.selectAll();//获取所有数据
 
         //cursor.moveToFirst();//将游标移动到第一条数据，使用前必须调用
 
-        int count = cursor.getCount();//个数
+       // int count = cursor.getCount();//个数
 
         //ArrayList<String> items = new ArrayList<String>();
         //ArrayList<String> times = new ArrayList<String>();
@@ -168,8 +168,9 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
         {
             NoteItemtag item = new NoteItemtag();
             String title =iterator.next();
+            title=title.substring(0,title.length()-4);
             item.set_fname(title);
-            cal.setTimeInMillis(item.getStamp()*1000l);
+            cal.setTimeInMillis(item.getStamp());
             if (month != cal.get(Calendar.MONTH)) {
                 month = cal.get(Calendar.MONTH);
                 NoteItemtag head = new NoteItemtag();
@@ -185,7 +186,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
             //item.syncstate = cursor.getInt(cursor.getColumnIndex("syncstate"));
             items.add(item);
 
-            cursor.moveToNext();//将游标指向下一个
+           // cursor.moveToNext();//将游标指向下一个
         }
        // dm.close();//关闭数据操作对象
         adapter.notifyDataSetChanged();
