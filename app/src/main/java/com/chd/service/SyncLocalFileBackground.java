@@ -8,6 +8,7 @@ import com.chd.TClient;
 import com.chd.Transform.InputTrasnport;
 import com.chd.base.MediaMgr;
 import com.chd.base.Ui.ActiveProcess;
+import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.net.NetworkUtils;
@@ -273,8 +274,8 @@ public class SyncLocalFileBackground implements Runnable {
         FileInfo fileInfo = tClient.queryFile(entity);
         //fileInfo=null;
         su.open();
-        if (fileInfo != null) {
 
+        if (fileInfo != null&&!(fileInfo.ftype== FTYPE.SMS||fileInfo.ftype==FTYPE.ADDRESS)) {
             Log.e(TAG, "upload file exist !!");
             return false;
         } else {

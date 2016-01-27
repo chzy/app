@@ -5,18 +5,15 @@ import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.chd.base.Ui.ActiveProcess;
-import com.chd.contacts.entity.ContactBean;
-import com.chd.smsbackup.service.ExportSms;
-import com.chd.smsbackup.service.ImportSms;
+import com.chd.base.backend.SyncTask;
+import com.chd.proto.FTYPE;
+import com.chd.smsbackup.newservice.ExportSms;
+import com.chd.smsbackup.newservice.ImportSms;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SmsBackActivity extends ActiveProcess implements OnClickListener {
 
@@ -26,42 +23,25 @@ public class SmsBackActivity extends ActiveProcess implements OnClickListener {
 	private TextView mSmsNumber;
 	private TextView mCloudNumber;
 	private ImageView mIvSelect;
-	private ListView mLvContact;
 	private String smsPath;
 	private ExportSms exportSms;
 	private ImportSms importSms;
+	private SyncTask mSyncTask;
 
-	private List<ContactBean> mContactList = new ArrayList<ContactBean>();
 
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 				switch (msg.what){
 					case 0:
-						new Thread(new Runnable() {
-							@Override
-							public void run() {
-								final int count = exportSms.getCount();
-								handler.post(new Runnable() {
-									@Override
-									public void run() {
-										mSmsNumber.setText(count+"");
-									}
-								});
-							}
-						}).start();
-						new Thread(new Runnable() {
-							@Override
-							public void run() {
-								final int size=importSms.getCount(smsPath);
-								handler.post(new Runnable() {
-									@Override
-									public void run() {
-										mCloudNumber.setText(size+"");
-									}
-								});
-							}
-						}).start();
 
+						break;
+					case 998:
+						//本地短信量
+						mSmsNumber.setText(""+msg.obj);
+						break;
+					case 999:
+						//远程短信量
+						mCloudNumber.setText(""+msg.obj);
 						break;
 				}
 		}
@@ -72,9 +52,10 @@ public class SmsBackActivity extends ActiveProcess implements OnClickListener {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_contact);
-		smsPath=new ShareUtils(this).getSmsFile().getPath()+"/message.xml";
+		smsPath=new ShareUtils(this).getSmsFile().getPath()+"/back.txt";
 		exportSms=new ExportSms(this);
 		importSms=new ImportSms(this);
+		mSyncTask=new SyncTask(this, FTYPE.SMS);
 		initTitle();
 		initResourceId();
 		initListener();
@@ -82,13 +63,14 @@ public class SmsBackActivity extends ActiveProcess implements OnClickListener {
 	}
 
 	private void newRequest() {
-
+		exportSms.getCount(smsPath,handler);
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 
-				exportSms.download(smsPath,SmsBackActivity.this);
-				handler.sendEmptyMessage(0);
+
+//				exportSms.download(smsPath,SmsBackActivity.this);
+//				handler.sendEmptyMessage(0);
 
 
 			}
@@ -128,36 +110,12 @@ public class SmsBackActivity extends ActiveProcess implements OnClickListener {
 		case R.id.tv_right: // 一键恢复
 			// TODO
 			setParMessage("正在恢复");
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					importSms.testInsertSMS(smsPath);
-				}
-			}).start();
+			importSms.ImpSMS(smsPath);
 			break;
 		case R.id.iv_select: // 一键备份
 			// TODO
 			setParMessage("正在上传");
-			new Thread(new Runnable(){
-				@Override
-				public void run() {
-					try {
-						boolean b = exportSms.createXml(smsPath);
-
-						if(b){
-							final int size=importSms.getCount(smsPath);
-							handler.post(new Runnable() {
-								@Override
-								public void run() {
-									mCloudNumber.setText(size+"");
-								}
-							});
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}).start();
+			exportSms.ExpSMS(smsPath);
 
 
 			break;

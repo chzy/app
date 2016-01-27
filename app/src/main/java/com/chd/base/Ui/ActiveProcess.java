@@ -55,7 +55,7 @@ public abstract class ActiveProcess extends Activity {
         @Override
         public void run() {
             Log.d("lmj", msg+":" + progress);
-            if (progress < 100 && dialog.isShowing()) {
+            if (progress < max && dialog.isShowing()) {
                 dialog.setMessage( msg+ progress+"/"+max);
             } else if (progress > 0 && !dialog.isShowing()) {
                 dialog.show();
@@ -85,7 +85,7 @@ public abstract class ActiveProcess extends Activity {
 
     public  void setMaxProgress(int max)
     {
-        return;
+        this.max=max;
     }
 
     public synchronized  void finishProgress(){
