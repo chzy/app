@@ -9,37 +9,57 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Looper;
 import android.util.Log;
+import android.util.Xml;
 import android.widget.Toast;
 
+import com.chd.base.Ui.ActiveProcess;
 import com.chd.smsbackup.entity.SmsField;
 import com.chd.smsbackup.entity.SmsItem;
-import com.google.gson.Gson;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.nio.ByteBuffer;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ImportSms {
 
-    private Context context;
 
-    //private List<SmsItem> smsItems;
+    private ActiveProcess context;
+
+    private List<SmsItem> smsItems;
     private ContentResolver conResolver;
 
-    public ImportSms(Context context) {
+    public ImportSms(ActiveProcess context) {
         this.context = context;
         conResolver = context.getContentResolver();
     }
 
-    @SuppressWarnings("unchecked")
-    public void InsertSMS(String backfile) {
+    public int getCount(String path){
+        if(smsItems!=null){
+        }else{
+            smsItems=this.getSmsItemsFromXml(path);
+        }
+        return smsItems==null?0:smsItems.size();
+    }
 
-        List<SmsItem> smsItems = this.getSmsItemsFromTxt(backfile);
+
+    @SuppressWarnings("unchecked")
+    public void testInsertSMS(String path) {
+        /**
+         * 放一个解析xml文件的模块
+         */
+        smsItems = this.getSmsItemsFromXml(path);
         Log.d("sqk", "after smsItems");
+        int i=0;
+        int size=smsItems.size();
         for (SmsItem item : smsItems) {
 
             // 判断短信数据库中是否已包含该条短信，如果有，则不需要恢复
@@ -47,6 +67,7 @@ public class ImportSms {
                     new String[] { item.getDate() }, null);
 
             if (!cursor.moveToFirst()) {// 没有该条短信
+
                 ContentValues values = new ContentValues();
                 values.put(SmsField.ADDRESS, item.getAddress());
                 // 如果是空字符串说明原来的值是null，所以这里还原为null存入数据库
@@ -62,110 +83,26 @@ public class ImportSms {
                 values.put(SmsField.ERROR_CODE, item.getError_code());
                 values.put(SmsField.SEEN, item.getSeen());
                 conResolver.insert(Uri.parse("content://sms"), values);
+                context.updateProgress(i+1,size);
             }
+            i++;
             cursor.close();
         }
+        context.finishProgress();
     }
 
 
 
-    public List<SmsItem> getSmsItemsFromTxt(String bakfile){
-
-        List<SmsItem> smsItems  = new ArrayList<SmsItem>();
-        Gson gson=new Gson();
-        File file = new File(bakfile);
-        String line;
-        if (!file.exists()) {
-            Looper.prepare();
-            Toast.makeText(context, "message.xml短信备份文件不在sd卡中", Toast.LENGTH_SHORT).show();
-            Looper.loop();//退出线程
-        }
-        try {
-            // BufferedReader bufferedReader = new BufferedReader(new FileReader(bakfile));
-            FileInputStream finput = new FileInputStream(file);
-            //int i=0;
-            //while ((line = bufferedReader.readLine()) != null)
-            int rd, pos = 0;
-            //byte[] readbuf = new byte[1024];
-            ByteBuffer readbuf=ByteBuffer.allocate(1024);
-            int len = 0, dimcout = 0;
-            String tag;
-            while ((rd = finput.read()) != -1) {
-
-                if (rd == '}' )
-                {
-                    if (dimcout !=1)
-                    {
-                        pos=0;
-                        len=0;
-                        dimcout=0;
-                        continue;
-                    }
-                     readbuf.put((byte)rd);
-
-                    readbuf.flip();
-                    byte[] strbuf=new byte[readbuf.remaining()];
-                    readbuf.get(strbuf,0,strbuf.length);
-                    tag = new String(strbuf);
-                    strbuf=null;
-                    SmsItem item = gson.fromJson(tag, SmsItem.class);
-                    if (item != null)
-                        smsItems.add(item);
-                    else {
-                        Log.d("@@@", "parse file error");
-                        throw new Exception("parse file error");
-                    }
-                    pos = 0;
-                    len = 0;
-                    dimcout=0;
-                }
-
-                if (rd=='{') {
-                    dimcout++;
-                    readbuf.clear();
-                }
-                if (dimcout==1)
-                { readbuf.put( (byte) rd);
-                    pos++;
-                    len++;
-                }
-            }
-
-
-
-            finput.close();
-
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-           // Looper.prepare();
-            Toast.makeText(context, "短信恢复出错", Toast.LENGTH_LONG).show();
-            //Looper.loop();
-            e.printStackTrace();
-            smsItems.clear();
-            return  null;
-        }
-        return smsItems;
-    }
-
-
-
-//  public void delete() {
-//
-//      conResolver.delete(Uri.parse("content://sms"), null, null);
-//  }
-
-  /*  public List<SmsItem> getSmsItemsFromXml(){
+    public List<SmsItem> getSmsItemsFromXml(String path){
 
         SmsItem smsItem = null;
         XmlPullParser parser = Xml.newPullParser();
-        String absolutePath = Environment.getExternalStorageDirectory() + "/SMSBackup/message.xml";
-        File file = new File(absolutePath);
+        File file = new File(path);
         if (!file.exists()) {
 
             Looper.prepare();
-            Toast.makeText(context, "message.xml短信备份文件不在sd卡中", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "message.xml短信备份文件不在sd卡中", 1).show();
             Looper.loop();//退出线程
-//          return null;
         }
         try {
             FileInputStream fis = new FileInputStream(file);
@@ -207,26 +144,20 @@ public class ImportSms {
             }
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
-            Looper.prepare();
-            Toast.makeText(context, "短信恢复出错", Toast.LENGTH_LONG).show();
-            Looper.loop();
             e.printStackTrace();
 
         } catch (XmlPullParserException e) {
             // TODO Auto-generated catch block
-            Looper.prepare();
-            Toast.makeText(context, "短信恢复出错", Toast.LENGTH_LONG).show();
-            Looper.loop();
+
             e.printStackTrace();
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            Looper.prepare();
-            Toast.makeText(context, "短信恢复出错", Toast.LENGTH_LONG).show();
-            Looper.loop();
+
             e.printStackTrace();
         }
         return smsItems;
     }
-*/
+
+
 }

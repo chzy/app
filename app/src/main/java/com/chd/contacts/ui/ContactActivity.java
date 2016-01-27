@@ -4,15 +4,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.chd.base.Ui.ActiveProcess;
-import com.chd.contacts.adapter.ContactAdapter;
 import com.chd.contacts.entity.ContactBean;
 import com.chd.contacts.vcard.VCardIO;
 import com.chd.yunpan.R;
@@ -21,7 +16,7 @@ import com.chd.yunpan.share.ShareUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactActivity extends ActiveProcess implements OnClickListener, OnItemClickListener {
+public class ContactActivity extends ActiveProcess implements OnClickListener{
 
     private ImageView mIvLeft;
     private TextView mTvCenter;
@@ -29,7 +24,6 @@ public class ContactActivity extends ActiveProcess implements OnClickListener, O
     private TextView mSmsNumber;
     private TextView mCloudNumber;
     private ImageView mIvSelect;
-    private ListView mLvContact;
     private String contactPath;
 
 
@@ -51,8 +45,6 @@ public class ContactActivity extends ActiveProcess implements OnClickListener, O
                 case 0:
                     vcarIO.getLocalSize(handler);
                     vcarIO.getNetSize(contactPath, handler);
-                    mLvContact.setAdapter(new ContactAdapter(ContactActivity.this,
-                            mContactList));
                     break;
             }
 
@@ -96,14 +88,12 @@ public class ContactActivity extends ActiveProcess implements OnClickListener, O
         mSmsNumber = (TextView) findViewById(R.id.tv_sms_number);
         mCloudNumber = (TextView) findViewById(R.id.tv_cloud_number);
         mIvSelect = (ImageView) findViewById(R.id.iv_select);
-        mLvContact = (ListView) findViewById(R.id.lv_contact);
     }
 
     private void initListener() {
         mIvLeft.setOnClickListener(this);
         mTvRight.setOnClickListener(this);
         mIvSelect.setOnClickListener(this);
-        mLvContact.setOnItemClickListener(this);
     }
 
     private void initTitle() {
@@ -145,12 +135,5 @@ public class ContactActivity extends ActiveProcess implements OnClickListener, O
         }
     }
 
-    /**
-     * 列表点击
-     **/
-    @Override
-    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-        //TODO
-        Toast.makeText(this, "点击了条目" + arg2, Toast.LENGTH_SHORT).show();
-    }
+
 }

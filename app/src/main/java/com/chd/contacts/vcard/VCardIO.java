@@ -101,7 +101,7 @@ public class VCardIO {
                     handler.sendMessage(msg);
                 }
             }
-        });
+        }).start();
     }
 
 
@@ -144,7 +144,7 @@ public class VCardIO {
                 }
 
             }
-        });
+        }).start();
     }
 
 
@@ -239,8 +239,6 @@ public class VCardIO {
      */
 
     public boolean download(final String filePath, final ActiveProcess activity) {
-
-
         // 线程中执行
         FileInfo0 info = new FileInfo0();
         info.setObjid(MediaFileUtil.getNameFromFilepath(filePath));

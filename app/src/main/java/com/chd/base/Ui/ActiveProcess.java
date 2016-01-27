@@ -26,11 +26,19 @@ public abstract class ActiveProcess extends Activity {
     }
 
     private  int progress;
+    private int max;
     private String msg;
     public synchronized void updateProgress( int progress)
     {
         this.progress=progress;
         runOnUiThread(updata);
+    }
+
+    public synchronized void updateProgress( int progress,int max)
+    {
+        this.progress=progress;
+        this.max=max;
+        runOnUiThread(updata2);
     }
 
     public void toastMain(final String msg){
@@ -41,6 +49,22 @@ public abstract class ActiveProcess extends Activity {
             }
         });
     }
+
+    public Runnable updata2=new Runnable(){
+
+        @Override
+        public void run() {
+            Log.d("lmj", msg+":" + progress);
+            if (progress < 100 && dialog.isShowing()) {
+                dialog.setMessage( msg+ progress+"/"+max);
+            } else if (progress > 0 && !dialog.isShowing()) {
+                dialog.show();
+            } else {
+                dialog.dismiss();
+            }
+        }
+    };
+
 
 
 

@@ -75,7 +75,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.chd.smsbackup.ui.SmsActivity"
+            android:name="com.chd.smsbackup.ui.SmsBackActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity

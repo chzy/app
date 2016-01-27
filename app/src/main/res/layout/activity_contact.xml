@@ -106,13 +106,5 @@
             android:background="#cccccc" />
     </RelativeLayout>
 
-    <ListView
-        android:listSelector="@android:color/transparent"
-        android:fadingEdge="none"  
-        android:divider="@null"
-        android:id="@+id/lv_contact"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </ListView>
 
 </LinearLayout>

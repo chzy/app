@@ -10,7 +10,6 @@ import com.chd.base.MediaMgr;
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
-import com.chd.yunpan.net.BigFileOrBreakPointUploadUtil;
 import com.chd.yunpan.net.NetworkUtils;
 
 import org.apache.thrift.TException;
@@ -252,7 +251,7 @@ public class SyncLocalFileBackground implements Runnable {
             return false;
         }
         try {
-            tClient = new TClient(false);
+            tClient = TClient.getinstance();
         } catch (Exception e) {
             Log.w(TAG, e.getLocalizedMessage());
             return false;
