@@ -58,8 +58,6 @@ public class ImportSms {
          */
         smsItems = this.getSmsItemsFromXml(path);
         Log.d("sqk", "after smsItems");
-        int i=0;
-        int size=smsItems.size();
         for (SmsItem item : smsItems) {
 
             // 判断短信数据库中是否已包含该条短信，如果有，则不需要恢复
@@ -83,9 +81,7 @@ public class ImportSms {
                 values.put(SmsField.ERROR_CODE, item.getError_code());
                 values.put(SmsField.SEEN, item.getSeen());
                 conResolver.insert(Uri.parse("content://sms"), values);
-                context.updateProgress(i+1,size);
             }
-            i++;
             cursor.close();
         }
         context.finishProgress();
@@ -117,7 +113,6 @@ public class ImportSms {
                     case XmlPullParser.START_TAG: // 如果遇到开始标记，如<smsItems>,<smsItem>等
                         if ("item".equals(parser.getName())) {
                             smsItem = new SmsItem();
-
                             smsItem.setAddress(parser.getAttributeValue(0));
                             smsItem.setPerson(parser.getAttributeValue(1));
                             smsItem.setDate(parser.getAttributeValue(2));

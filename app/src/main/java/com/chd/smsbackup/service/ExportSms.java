@@ -82,8 +82,6 @@ public class ExportSms {
                     SmsField.BODY,SmsField.LOCKED,SmsField.ERROR_CODE, SmsField.SEEN }; // type=1是收件箱，==2是发件箱;read=0表示未读，read=1表示读过，seen=0表示未读，seen=1表示读过
             Uri uri = Uri.parse(SMS_URI_ALL);
             cursor = conResolver.query(uri, projection, null, null, "_id asc");
-            int count = cursor.getCount();
-            int current=0;
             if (cursor.moveToFirst()) {
                 // 查看数据库sms表得知 subject和service_center始终是null所以这里就不获取它们的数据了。
                 String address;
@@ -173,8 +171,6 @@ public class ExportSms {
                     serializer.attribute(null, SmsField.SEEN, seen);
                     // 结束标记
                     serializer.endTag(null, "item");
-                    context.updateProgress(current+1,count);
-                    current++;
                 } while (cursor.moveToNext());
             } else {
                 return false;
@@ -210,15 +206,11 @@ public class ExportSms {
 
 
         // 线程中执行
-        //new Thread(new Runnable() {
-        //public void run() {
         FileInfo0 info = new FileInfo0();
         info.setObjid(MediaFileUtil.getNameFromFilepath(filePath));
         info.setFilePath(filePath);
         info.setFtype(FTYPE.SMS);
         return new SyncLocalFileBackground(activity).uploadBigFile(info, activity);
-        //}
-        //}).start();
     }
 
 
