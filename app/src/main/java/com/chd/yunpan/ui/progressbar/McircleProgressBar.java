@@ -13,7 +13,8 @@ public class McircleProgressBar extends View {
     private int maxProgress = 100;
     private int progress = 10;
     private int progressStrokeWidth = 15;
-    private int linecolor=Color.rgb(0xf8,0xb8,0x2d);
+    private int linecolor=Color.rgb(248,178,45);
+    private int circleBgColor=Color.rgb(236,237,238);
     private String  text;
     //画圆所在的距形区域
     RectF oval;
@@ -29,6 +30,10 @@ public class McircleProgressBar extends View {
     {
         linecolor=rgb;
     }
+    public void setCircleBgColor(int rgb){
+        this.circleBgColor=rgb;
+    }
+
 
     public void setTxt(String txt) {
         this.text = txt;
@@ -49,7 +54,7 @@ public class McircleProgressBar extends View {
         }
 
         paint.setAntiAlias(true); // 设置画笔为抗锯齿
-        paint.setColor(Color.WHITE); // 设置画笔颜色
+        paint.setColor(circleBgColor); // 设置画笔颜色
         canvas.drawColor(Color.TRANSPARENT); // 白色背景
         paint.setStrokeWidth(progressStrokeWidth); //线宽
         paint.setStyle(Style.STROKE);
