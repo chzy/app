@@ -8,7 +8,6 @@ import com.chd.TClient;
 import com.chd.Transform.InputTrasnport;
 import com.chd.base.MediaMgr;
 import com.chd.base.Ui.ActiveProcess;
-import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.net.NetworkUtils;
@@ -242,8 +241,12 @@ public class SyncLocalFileBackground implements Runnable {
         return true;
     }
 
+    public boolean uploadBigFile(FileInfo0 entity, final ActiveProcess activeProcess)
+    {
+        return uploadBigFile0( entity,   activeProcess,null);
+    }
 
-    public boolean uploadBigFile(FileInfo0 entity, final ActiveProcess activeProcess) {
+    public boolean uploadBigFile0(FileInfo0 entity, final ActiveProcess activeProcess,Map<String, String> desc) {
 
         TClient tClient = null;
         File file;
@@ -252,7 +255,8 @@ public class SyncLocalFileBackground implements Runnable {
             return false;
         }
         try {
-            tClient = TClient.getinstance();
+            //tClient = new TClient(false); 创建新的实列
+			tClient = TClient.getinstance();
         } catch (Exception e) {
             Log.w(TAG, e.getLocalizedMessage());
             return false;
@@ -274,8 +278,8 @@ public class SyncLocalFileBackground implements Runnable {
         FileInfo fileInfo = tClient.queryFile(entity);
         //fileInfo=null;
         su.open();
+        if (fileInfo != null) {
 
-        if (fileInfo != null&&!(fileInfo.ftype== FTYPE.SMS||fileInfo.ftype==FTYPE.ADDRESS)) {
             Log.e(TAG, "upload file exist !!");
             return false;
         } else {
@@ -334,8 +338,10 @@ public class SyncLocalFileBackground implements Runnable {
                 }
             }
 
-            Map<String, String> desc = new HashMap();
-            desc.put("date", String.valueOf(file.lastModified() / 1000));
+            /*if (desc==null) {
+                desc = new HashMap();
+                desc.put("date", String.valueOf(file.lastModified() / 1000));
+            }*/
             if (succed && filebuilder.Commit(desc)) {
                 su.finishTransform(MediaMgr.DBTAB.UPed, entity);
                 succed = true;
