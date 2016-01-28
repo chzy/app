@@ -74,7 +74,7 @@
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="小艾"
+            android:text=""
             android:textColor="#999999"
             android:textSize="15sp" />
 
@@ -115,7 +115,7 @@
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="女"
+            android:text=""
             android:textColor="#999999"
             android:textSize="15sp" />
 
@@ -156,7 +156,7 @@
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="20"
+            android:text=""
             android:textColor="#999999"
             android:textSize="15sp" />
 
@@ -203,7 +203,7 @@
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="152****2234"
+            android:text=""
             android:textColor="#999999"
             android:textSize="15sp" />
 
@@ -244,7 +244,7 @@
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="******"
+            android:text=""
             android:textColor="#999999"
             android:textSize="15sp" />
 

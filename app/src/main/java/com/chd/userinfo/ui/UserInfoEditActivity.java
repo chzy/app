@@ -1,11 +1,5 @@
 package com.chd.userinfo.ui;
 
-import java.util.Random;
-
-import com.chd.userinfo.ui.entity.UserInfoFlag;
-import com.chd.yunpan.R;
-import com.chd.yunpan.utils.ToastUtils;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +10,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.chd.userinfo.ui.entity.UserInfoFlag;
+import com.chd.yunpan.R;
+import com.chd.yunpan.utils.ToastUtils;
+
+import java.util.Random;
 
 public class UserInfoEditActivity extends Activity implements OnClickListener
 {
@@ -97,7 +97,7 @@ public class UserInfoEditActivity extends Activity implements OnClickListener
 		{
 			mViewOther.setVisibility(View.VISIBLE);
 			mTextOtherLable.setText("年龄");
-			mEditOtherValue.setInputType(InputType.TYPE_CLASS_PHONE);
+			mEditOtherValue.setInputType(InputType.TYPE_CLASS_NUMBER);
 			mEditOtherValue.setText(sEditValue);
 		}
 			break;

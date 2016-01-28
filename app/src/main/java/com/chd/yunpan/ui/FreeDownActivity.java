@@ -116,7 +116,7 @@ public class FreeDownActivity extends Activity implements OnClickListener
 		mTvRight = (TextView) findViewById(R.id.tv_right);
 
 		mTvCenter.setText("免流量应用");
-		mTvRight.setText("更新");
+//		mTvRight.setText("更新");
 	}
 
 	@Override
@@ -128,7 +128,6 @@ public class FreeDownActivity extends Activity implements OnClickListener
 			break;
 		case R.id.tv_right:
 		{
-			
 		}
 			break;
 		case R.id.freedown_tab_left:
@@ -139,7 +138,6 @@ public class FreeDownActivity extends Activity implements OnClickListener
 			mViewRightListView.setVisibility(View.GONE);
 			mTabRight.setTextColor(Color.rgb(248, 184, 45));
 			mTabLeft.setTextColor(Color.rgb(255, 255, 255));
-			
 			handler.sendEmptyMessage(0);
 		}
 			break;

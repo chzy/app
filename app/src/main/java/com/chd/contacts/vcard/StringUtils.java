@@ -271,6 +271,33 @@ public class StringUtils {
 		return str.trim().equals("");
 	}
 
+	public static String isNullStr(String str){
+		if(isNullOrEmpty(str)){
+			return "";
+		}else{
+			return str;
+		}
+	}
+
+	public static String isPhoneStr(String str){
+		if(isNullOrEmpty(str)){
+			return "";
+		}else{
+			StringBuilder sb=new StringBuilder();
+			try{
+				String start=str.substring(0,4);
+				String end=str.substring(7);
+				sb.append(start);
+				sb.append("****");
+				sb.append(end);
+			}catch (Exception e){
+
+			}
+			return sb.toString();
+		}
+	}
+
+
 	/**
 	 * Returns true if the string does not fit in standard ASCII
 	 */
