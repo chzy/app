@@ -17,6 +17,7 @@ import com.chd.yunpan.R;
 import com.chd.yunpan.parse.entity.LoginEntity;
 import com.chd.yunpan.share.ShareUtils;
 import com.chd.yunpan.ui.progressbar.McircleProgressBar;
+import com.chd.yunpan.utils.TimeAndSizeUtil;
 import com.chd.yunpan.utils.ToastUtils;
 import com.chd.yunpan.view.CircularProgressButton;
 
@@ -56,17 +57,29 @@ public class netdiskActivity extends Activity implements OnClickListener {
 	}
 
 	private void initData() {
-		int spacePro = (int) (entity.getSpace()*100/entity.getSpace());
-		
+		int flow = entity.getFlow();//免费流量
+		int uflow = entity.getUflow();//已使用流量
+		long space = entity.getSpace();//用户空间k
+		long uspace = entity.getUspace();//用户已经使用的空间k
+
+
+		int spacePro = (int) (uspace*100l/space);
+		String spaceStr = TimeAndSizeUtil.getSize((space - uspace) + "");
+		mProSpace.setTxt(spaceStr );
 		mProSpace.setProgress(spacePro);
 		mTextUserSpace.setText(String.format("%d%%", spacePro));
-		
-		mProFreeapp.setProgress(spacePro);
-		mTextFreeapp.setText(String.format("%d%%", spacePro));
-		
-		mTextTitle.setText(String.format("%s空间+%s空间流量", "16G", "100M"));
-		
-		mTextRemainder.setText(String.format("本月剩余%sM", "10%"));
+
+		int freePro= (int) (uflow*100l/flow);
+		String freeStr = TimeAndSizeUtil.getSize((flow - uflow) + "");
+		mProFreeapp.setProgress(freePro);
+		mProFreeapp.setTxt(freeStr );
+		mTextFreeapp.setText(String.format("%d%%", freePro));
+		String spaceS=TimeAndSizeUtil.getSize(space+"");
+		String flowS=TimeAndSizeUtil.getSize(flow+"");
+
+		mTextTitle.setText(String.format(spaceS+"空间"+flowS+"空间流量"));
+
+		mTextRemainder.setText(String.format("本月剩余"+freeStr));
 	}
 
 	private void initListener() {

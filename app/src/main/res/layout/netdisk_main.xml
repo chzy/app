@@ -28,7 +28,7 @@
             android:layout_height="20dp"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:text="16G空间+100M空间流量"
+            android:text=""
             android:textColor="#ffffff"
             android:textSize="14sp" />
 
@@ -86,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:gravity="center"
-                    android:text="11%"
+                    android:text=""
                     android:textColor="#fb9540"
                     android:textSize="24sp" />
             </LinearLayout>

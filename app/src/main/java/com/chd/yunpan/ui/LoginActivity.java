@@ -79,7 +79,6 @@ public class LoginActivity extends Activity implements OnClickListener {
                     ToastUtils.toast(LoginActivity.this, msg.obj.toString());
                     break;
                 case 2:
-
                     btn_login.setProgress(0);
                     break;
             }
@@ -88,6 +87,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 
     };
+    private TextView ll_head_help;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -261,6 +261,12 @@ public class LoginActivity extends Activity implements OnClickListener {
                     Intent startIntent=new Intent(LoginActivity.this,RegisterActivity.class);
                     startActivity(startIntent);
                     break;
+                case R.id.ll_head_help:
+                    //TODO 帮助
+
+
+
+                    break;
             }
 
     }
@@ -288,9 +294,15 @@ public class LoginActivity extends Activity implements OnClickListener {
         tv_forgot = (TextView) findViewById(R.id.log_tv_forgrt);
         mgb = (ImageView) this.findViewById(R.id.tv_forget_password);
         show = (Button) findViewById(R.id.log_btn_show);
+        ll_head_help = (TextView) findViewById(R.id.ll_head_help);
         register = (TextView) findViewById(R.id.log_tv_register);
 
         register.setOnClickListener(this);
+        ll_head_help.setOnClickListener(this);
+
+
+
+
 
 
         ShareUtils shareUtils = new ShareUtils(this);

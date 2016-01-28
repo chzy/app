@@ -97,7 +97,7 @@ public class MyspaceActivity extends Activity implements OnClickListener, OnItem
 		mTvRight = (TextView) findViewById(R.id.tv_right);
 
 		mTvCenter.setText("私属空间");
-		mTvRight.setText("设置");
+//		mTvRight.setText("设置");
 	}
 
 	@Override

@@ -22,10 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-
-
-
-
+import com.chd.TClient;
 import com.chd.yunpan.R;
 import com.chd.yunpan.ui.dialog.DialogPopupFromBottom2;
 import com.chd.yunpan.ui.dialog.DialogPopupFromBottom2.OnConfirmListener;
@@ -47,7 +44,6 @@ public class SettingActivity extends Activity implements OnClickListener {
 
 	private View update = null;
 
-	private ProgressDialog pd = null;
 
 	private TextView settingROM;
 
@@ -56,10 +52,10 @@ public class SettingActivity extends Activity implements OnClickListener {
 
 			switch (msg.what) {
 			case -1:
-
+				//获取更新失败
+				Toast.makeText(SettingActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
 				break;
 			case 0:
-				pd.dismiss();
 				createUpdateDialog();
 				break;
 			case 1:
@@ -138,8 +134,19 @@ public class SettingActivity extends Activity implements OnClickListener {
 			break;
 
 		case R.id.settingCheckUpdate:
-			pd = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
-			pd.setMessage("正在获取最新版本");
+			//TODO 更新提示
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+//						TClient.getinstance().NeedUPdate();
+					} catch (Exception e) {
+						checkUpdateHandler.sendEmptyMessage(-1);
+					}
+				}
+			}).start();
+
+
 			//pd.show();
 			Toast.makeText(this, "当前是最新版本", 0).show();
 			// 更新检查
@@ -160,6 +167,7 @@ public class SettingActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.setting_help:
 		{
+		//TODO 帮助
 
 
 			
