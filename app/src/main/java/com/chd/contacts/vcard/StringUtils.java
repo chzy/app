@@ -1,5 +1,8 @@
 package com.chd.contacts.vcard;
 
+import android.app.Activity;
+import android.widget.Toast;
+
 import java.util.Vector;
 
 /**
@@ -312,4 +315,20 @@ public class StringUtils {
 		return true;
 	}
 
+	public static boolean isConfirmPass(Activity act,String pass1, String pass2) {
+		if(isNullOrEmpty(pass1)){
+			Toast.makeText(act, "请输入密码", Toast.LENGTH_SHORT).show();
+			return false;
+		}
+		if(isNullOrEmpty(pass2)){
+			Toast.makeText(act, "请输入密码", Toast.LENGTH_SHORT).show();
+			return false;
+		}
+
+		if(!pass1.equals(pass2)){
+			Toast.makeText(act, "两次密码不一致", Toast.LENGTH_SHORT).show();
+			return false;
+		}
+		return true;
+	}
 }

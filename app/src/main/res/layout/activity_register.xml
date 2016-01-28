@@ -6,15 +6,7 @@
     android:background="@color/white"
     tools:context=".RegisterActivity" >
 
-    <TextView
-        android:id="@+id/reg_title"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/background"
-        android:gravity="center"
-        android:text="注册"
-        android:textColor="@color/white"
-        android:textSize="18sp" />
+    <include android:id="@+id/reg_title" layout="@layout/title_bar" />
 
     <LinearLayout
         android:id="@+id/reg_account"
@@ -31,6 +23,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:text="  |  " />
 
         <EditText
@@ -53,7 +46,8 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:text="  |  " />
 
         <EditText
@@ -82,7 +76,8 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:text="  |  " />
 
         <EditText
@@ -117,20 +112,13 @@
             android:layout_margin="50dp"
             android:textColor="@color/white"
             android:textSize="18sp"
-            app:cpb_cornerRadius="48dp"
+            app:cpb_cornerRadius="30dp"
             app:cpb_textComplete="注册完成"
             app:cpb_textError="注册失败"
             app:cpb_textIdle="提交"
             app:cpb_selectorIdle="@drawable/idle_state_selector"
             app:cpb_selectorComplete="@drawable/complete_state_selector"
             app:cpb_selectorError="@drawable/error_state_selector"/>
-        <Button
-            android:id="@+id/reg_btn"
-            android:visibility="gone"
-            style="@style/accountButtonStyle"
-            android:layout_marginRight="4dp"
-            android:background="@drawable/btn_add_accounts"
-            android:text="注册" />
     </LinearLayout>
 
 

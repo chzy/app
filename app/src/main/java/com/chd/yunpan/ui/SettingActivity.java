@@ -160,6 +160,8 @@ public class SettingActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.setting_help:
 		{
+
+
 			
 		}
 			break;

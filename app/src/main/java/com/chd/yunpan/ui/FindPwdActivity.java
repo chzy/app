@@ -4,36 +4,34 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.chd.yunpan.R;
 
-public class FindPwdActivity extends Activity {
+public class FindPwdActivity extends Activity implements View.OnClickListener {
 
 	private WebView web = null;
 
 	private WebSettings ws = null;
 
-	private View back = null;
-
+	private ImageView iv_left;
+	private TextView tv_title;
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
 		this.setContentView(R.layout.lz_find_password);
 
-		back = this.findViewById(R.id.findPwdBack);
-		back.setOnClickListener(new OnClickListener() {
+		iv_left= (ImageView) findViewById(R.id.iv_left);
+		tv_title= (TextView) findViewById(R.id.tv_title);
 
-			@Override
-			public void onClick(View v) {
-				FindPwdActivity.this.finish();
+		tv_title.setText("找回密码");
+		iv_left.setOnClickListener(this);
 
-			}
-		});
 		web = (WebView) this.findViewById(R.id.findPwdWebView);
 		ws = web.getSettings();
 		ws.setJavaScriptEnabled(true);
@@ -57,4 +55,15 @@ public class FindPwdActivity extends Activity {
 		return false;
 	}
 
+	@Override
+	public void onClick(View view) {
+		int id=view.getId();
+		switch (id){
+			case R.id.iv_left:
+				onBackPressed();
+				break;
+		}
+
+
+	}
 }

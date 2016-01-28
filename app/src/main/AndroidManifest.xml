@@ -43,6 +43,7 @@
             android:name="com.chd.yunpan.ui.MainFragmentActivity"
             android:screenOrientation="portrait" >
         </activity>
+
         <activity
             android:name="com.chd.yunpan.ui.MyspaceActivity"
             android:screenOrientation="portrait" />
@@ -80,6 +81,11 @@
         </activity>
         <activity
             android:name="com.chd.contacts.ui.Contacts"
+            android:screenOrientation="portrait" >
+        </activity>
+        <!-- 注册页面-->
+        <activity
+            android:name=".ui.RegisterActivity"
             android:screenOrientation="portrait" >
         </activity>
 

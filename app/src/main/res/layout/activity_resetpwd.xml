@@ -6,15 +6,7 @@
     android:background="@color/white"
     tools:context=".ResetpwdActivity" >
 
-    <TextView
-        android:id="@+id/resetpwd_title"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/title_tab_normal"
-        android:gravity="center"
-        android:text="重置密码"
-        android:textColor="@color/white"
-        android:textSize="18sp" />
+   <include layout="@layout/title_bar" android:id="@+id/resetpwd_title"/>
 
 
     <LinearLayout
@@ -31,7 +23,8 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:text="  |  " />
 
         <EditText
@@ -60,7 +53,8 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:text="  |  " />
 
         <EditText
