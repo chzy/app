@@ -1,18 +1,18 @@
 package com.chd.yunpan.ui.adapter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chd.app.backend.AppInfo0;
-import com.chd.base.backend.SyncTask;
-import com.chd.proto.FTYPE;
+import com.chd.base.backend.DownFileUtils;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
+import com.chd.yunpan.utils.AutoInstall;
+import com.chd.yunpan.view.CircularProgressButton;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
@@ -20,18 +20,16 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import java.util.List;
 
 public class FreeDownListAdapter extends BaseAdapter {
-    private Context mContext;
+    private Activity mContext;
     private List<AppInfo0> _list;
 
     protected ImageLoader imageLoader = ImageLoader.getInstance();
     DisplayImageOptions options;
-    private String appPath;
-    private SyncTask mSyncTask;
-    public  FreeDownListAdapter(Context context, List<AppInfo0> list)
+    private String path;
+    public  FreeDownListAdapter(Activity context, List<AppInfo0> list)
     {
         this.mContext=context;
         this._list=list;
-        this.mSyncTask=new SyncTask(context, FTYPE.STORE);
         this.options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.pic_test1)
                 .cacheInMemory(true)
@@ -39,7 +37,7 @@ public class FreeDownListAdapter extends BaseAdapter {
                 .considerExifParams(true)
                 .displayer(new RoundedBitmapDisplayer(20))
                 .build();
-       appPath= new ShareUtils(context).getApkFile().getPath()+"/";
+        this.path=new ShareUtils(mContext).getApkFile().getPath();
 
 
     }
@@ -69,7 +67,7 @@ public class FreeDownListAdapter extends BaseAdapter {
             item.text_index = (TextView) convertView.findViewById(R.id.freedown_list_item_index);
             item.text_appname = (TextView) convertView.findViewById(R.id.freedown_list_item_appname);
             item.text_appintro = (TextView) convertView.findViewById(R.id.freedown_list_item_appintro);
-            item.btn_get = (Button) convertView.findViewById(R.id.freedown_list_item_btn);
+            item.btn_get = (CircularProgressButton) convertView.findViewById(R.id.freedown_list_item_btn);
             item.img_url = (ImageView) convertView.findViewById(R.id.freedown_list_item_img);
             convertView.setTag(item);
 		} else {
@@ -83,8 +81,7 @@ public class FreeDownListAdapter extends BaseAdapter {
             item.text_index.setText(String.format("%d", position + 1));
             item.text_appname.setText(appInfo0.getAppName());
             item.text_appintro.setText(appInfo0.getAppVersion());
-            //下载地址
-            String url=appInfo0.getUrl();
+
 //            item.img_url.setImageDrawable(_list.get(position).getIco_url());
             String icon=appInfo0.getIco_url();
 
@@ -94,16 +91,32 @@ public class FreeDownListAdapter extends BaseAdapter {
             {
 				
 				@Override
-				public void onClick(View v) 
+				public void onClick(final View v)
 				{
-				    int pos= (Integer) v.getTag();
+
+                    //下载函数
+                    CircularProgressButton btn= (CircularProgressButton) v;
+                    int pos= (Integer) v.getTag();
+                    final String url=_list.get(pos).getUrl();
+                    String filename = url.substring(url.lastIndexOf("/") + 1);
+                    //下载地址
+
+
+                    if(btn.getProgress()==0||btn.getProgress()==-1){
+
 
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-
+                            new DownFileUtils(mContext, (CircularProgressButton) v,url);
                         }
                     }).start();
+                    }else if(btn.getProgress()==100){
+                        AutoInstall.setUrl(path+"/"+filename);
+                        AutoInstall.install(mContext);
+                    }else{
+
+                    }
 
 				}
 				
@@ -117,7 +130,7 @@ public class FreeDownListAdapter extends BaseAdapter {
     class MenuItem
     {
         TextView text_index, text_appname, text_appintro;
-        Button btn_get;
+        CircularProgressButton btn_get;
         ImageView img_url;
     }
 

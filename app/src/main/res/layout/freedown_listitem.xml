@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:paddingTop="5dp"
     android:paddingBottom="5dp"
-    android:gravity="center_vertical" >
+    android:gravity="center_vertical">
 
     <TextView
         android:id="@+id/freedown_list_item_index"
@@ -32,7 +33,6 @@
             android:layout_height="60dp"
             android:layout_marginLeft="10dp"
             android:orientation="vertical" >
-
             <TextView
                 android:id="@+id/freedown_list_item_appname"
                 android:layout_width="fill_parent"
@@ -53,13 +53,20 @@
         </LinearLayout>
     </LinearLayout>
 
-    <Button
+    <com.chd.yunpan.view.CircularProgressButton
         android:id="@+id/freedown_list_item_btn"
         android:layout_width="60dp"
-        android:layout_height="28dp"
+        android:layout_height="40dp"
         android:layout_marginRight="18dp"
-        android:background="@drawable/btn_userinfo_logout"
-        android:text="获取"
+        app:cpb_selectorIdle="@drawable/down_idle_state_selector"
+        app:cpb_colorIndicator="@color/yellow"
+        app:cpb_colorIndicatorBackground="@color/cpb_grey"
+        app:cpb_colorProgress="@color/white"
+        app:cpb_selectorComplete="@drawable/down_idle_state_selector"
+        app:cpb_textIdle="获取"
+        app:cpb_textComplete="安装"
+        app:cpb_textError="重试"
+        app:cpb_cornerRadius="6dp"
         android:textColor="#ffffff" />
 
 </LinearLayout>
