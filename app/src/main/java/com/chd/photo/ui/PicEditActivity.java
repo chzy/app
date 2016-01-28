@@ -183,6 +183,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 
         mTvCenter.setText("照片");
         mTvRight.setText("编辑");
+        mTvRight.setVisibility(View.GONE);
     }
 
     @Override
@@ -227,7 +228,6 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
                             continue;
                         }
 
-                        final SyncTask syncTask = new SyncTask(this, FTYPE.PICTURE);
                         ///FileInfo fileInfo = syncTask.queryLocalInfo(picEditItemBean.getPicid());
 					/*if (fileInfo==null) {
 						Log.e(TAG, "query localfile fail!!!!");

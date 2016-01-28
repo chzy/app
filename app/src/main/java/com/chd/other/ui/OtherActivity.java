@@ -296,7 +296,7 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
                         }
 
                         if (syncTask != null && info != null) {
-                            syncTask.upload(info, null, true);
+                            syncTask.upload(info, OtherActivity.this, true);
                         }
                     }
                 } else {
@@ -308,7 +308,7 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
                         }
 
                         if (syncTask != null && info != null) {
-                            syncTask.download(info, null, true);
+                            syncTask.download(info,  OtherActivity.this, true);
                         }
                     }
                 }

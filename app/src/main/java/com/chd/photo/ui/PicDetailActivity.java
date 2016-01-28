@@ -1,6 +1,5 @@
 package com.chd.photo.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -11,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.backend.SyncTask;
 import com.chd.contacts.vcard.StringUtils;
 import com.chd.photo.entity.PicEditItemBean;
@@ -25,7 +25,7 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
-public class PicDetailActivity extends Activity implements OnClickListener
+public class PicDetailActivity extends ActiveProcess implements OnClickListener
 {
 
 	private ImageView mIvLeft;
@@ -43,7 +43,8 @@ public class PicDetailActivity extends Activity implements OnClickListener
 	private final String TAG=this.getClass().getName();
 	private int pos;
 	private int pos2;
-	
+	private TextView mTvRight;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -57,6 +58,9 @@ public class PicDetailActivity extends Activity implements OnClickListener
 		if (bIsUbkList)
 		{
 			findViewById(R.id.pic_detail_btm_layout).setVisibility(View.GONE);
+			mTvRight = (TextView) findViewById(R.id.tv_right);
+			mTvRight.setText("上传");
+			mTvRight.setOnClickListener(this);
 		}
 
 		options = new DisplayImageOptions.Builder()
@@ -167,7 +171,6 @@ public class PicDetailActivity extends Activity implements OnClickListener
 	private void initTitle() {
 		mIvLeft = (ImageView) findViewById(R.id.iv_left);
 		mTvCenter = (TextView) findViewById(R.id.tv_center);
-		//mTvRight = (TextView) findViewById(R.id.tv_right);
 
 		mTvCenter.setText("照片");
 	}
@@ -177,6 +180,11 @@ public class PicDetailActivity extends Activity implements OnClickListener
 	{
 		switch (v.getId()) 
 		{
+			case R.id.tv_right:
+				//本地文件 上传云端
+				syncTask.upload(fileInfo0, PicDetailActivity.this, false);
+				break;
+
 		case R.id.iv_left:
 		case R.id.pic_detail_cancel:
 		{

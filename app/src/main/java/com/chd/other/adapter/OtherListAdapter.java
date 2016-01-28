@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -65,11 +64,11 @@ public class OtherListAdapter extends BaseAdapter {
         } else {
             item = (MenuItem) convertView.getTag();
         }
+        FileInfo0 fileItem = _list.get(position);
+        if (fileItem!= null) {
 
-        if (_list.get(position) != null) {
 
-
-            String name=_list.get(position).getObjid();
+            String name=fileItem.getObjid();
             int last=name.lastIndexOf(".")+1;
             String substring = name.substring(last);
             int id=getResId("ft_"+substring, "drawable");
@@ -79,27 +78,34 @@ public class OtherListAdapter extends BaseAdapter {
             }
 
             item.text_appname.setText(name);
-            String time= TimeUtils.getTime(_list.get(position).getLastModified());
+            String time= TimeUtils.getTime(fileItem.getLastModified());
             item.text_appintro.setText(time);
             item.img_url.setImageResource(id);
            /* item.text_appintro.setText(_list.get(position).());
             item.img_url.setImageResource(_list.get(position).getPicid());
             item.text_appsize.setText(_list.get(position).getFilesize());*/
+            item.cb.setChecked(fileItem.isSelected());
         }
         item.cb.setTag(position);
-        item.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        item.cb.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                int pos= (Integer) compoundButton.getTag();
+            public void onClick(View view) {
+                boolean check=((CheckBox)view).isChecked();
+                int pos= (Integer) view.getTag();
                 FileInfo0 checkItem = _list.get(pos);
-                checkItem.setIsChecked(b);
-                if(b){
+                for (FileInfo0 info :
+                        checkList) {
+                    info.setIsChecked(false);
+                }
+                checkItem.setIsChecked(check);
+                if(check){
                     //选中
                     checkList.add(checkItem);
                 }else{
                     //未选中
                     checkList.remove(checkItem);
                 }
+                notifyDataSetChanged();
             }
         });
 

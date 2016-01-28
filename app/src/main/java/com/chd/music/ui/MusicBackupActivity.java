@@ -138,6 +138,7 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 
 		mTvCenter.setText("音乐");
 		mTvRight.setText("全选");
+		mTvRight.setVisibility(View.GONE);
 		mTvRight.setTag(false);
 	}
 
@@ -181,7 +182,7 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 					@Override
 					public void run() {
 						SyncTask syncTask = new SyncTask(MusicBackupActivity.this, FTYPE.MUSIC);
-						syncTask.upload(musicBackupBean.getFileInfo0(), null, true);
+						syncTask.upload(musicBackupBean.getFileInfo0(), MusicBackupActivity.this, false);
 
 					}
 				}).start();
@@ -193,8 +194,19 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) 
 	{
-		boolean bSel = mMusicBackupList.get(arg2).isSelect();
-		mMusicBackupList.get(arg2).setSelect(!bSel);
+		boolean isSel=false;
+		MusicBackupBean musicBackupBean = mMusicBackupList.get(arg2);
+		if(!musicBackupBean.isSelect()){
+			isSel=true;
+		}
+		for (MusicBackupBean bean:
+			 mMusicBackupList) {
+			bean.setSelect(false);
+		}
+		if(isSel) {
+			musicBackupBean.setSelect(true);
+		}
+
 		handler.sendEmptyMessage(0);
 	}
 
