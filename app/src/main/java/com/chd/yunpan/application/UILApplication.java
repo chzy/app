@@ -32,6 +32,8 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
+import cn.smssdk.SMSSDK;
+
 /**
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
  */
@@ -57,7 +59,7 @@ public class UILApplication extends Application {
 			e.printStackTrace();
 			Log.e("Application", e.getMessage());
 		}
-
+		SMSSDK.initSDK(this, "appkey", "appsecret");
 	}
 	public static class Config {
 		public static final boolean DEVELOPER_MODE = false;

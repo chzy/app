@@ -57,17 +57,17 @@ public class DownFileUtils {
                     break;
                 case 1:
                     //下载中
-                    progress= (int) msg.obj;
+                    progress= (Integer) msg.obj;
                     mBtn.setProgress(progress);
                     break;
                 case 2:
                     //完成
-                    progress= (int) msg.obj;
+                    progress= (Integer) msg.obj;
                     mBtn.setProgress(progress);
                     break;
                 case 3:
                     //异常
-                    progress= (int) msg.obj;
+                    progress= (Integer) msg.obj;
                     mBtn.setProgress(progress);
                     Toast.makeText(mAct, "地址异常", Toast.LENGTH_SHORT).show();
                     break;
