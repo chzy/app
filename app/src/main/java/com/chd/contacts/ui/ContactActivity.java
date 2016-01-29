@@ -34,12 +34,12 @@ public class ContactActivity extends ActiveProcess implements OnClickListener{
             switch (msg.what) {
                 case 998:
                     //本地通讯里数量
-                    long size = (long) msg.obj;
+                    int size = (Integer) msg.obj;
                     mSmsNumber.setText(size + "");
                     break;
                 case 999:
                     //网络通讯录数量
-                    int length = (int) msg.obj;
+                    int length = (Integer) msg.obj;
                     mCloudNumber.setText(length + "");
                     break;
                 case 0:
