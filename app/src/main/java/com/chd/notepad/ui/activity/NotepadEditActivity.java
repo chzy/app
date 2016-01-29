@@ -32,7 +32,7 @@ public class NotepadEditActivity extends Activity {
 	private EditText content;
 	//private DatabaseManage dm = null;
 	private FileDBmager fileDBmager;
-	private String id = "";
+	private String fname = "";
 	private String titleText = "";
 	private String contentText = "";
 	private String timeText = "";
@@ -72,6 +72,7 @@ public class NotepadEditActivity extends Activity {
 			NoteItemtag itemtag= (NoteItemtag) intent.getSerializableExtra("item");
 			title.setText(TimeUtils.getTime(itemtag.getStamp()));
 			content.setText(fileDBmager.readFile(itemtag.get_fname()));
+			fname=itemtag.get_fname();
 		}
 		
 		//dm = new DatabaseManage(this);
@@ -114,7 +115,7 @@ public class NotepadEditActivity extends Activity {
 					fileDBmager.writeFile(System.currentTimeMillis()+"",contentText);
 					//dm.insert(titleText, contentText);
 				if(state == ALERT_STATE)//修改状态
-					//dm.update(Integer.parseInt(id), titleText, contentText);
+					fileDBmager.editFile(fname, contentText);
 				setResult(RESULT_OK);
 				//dm.close();
 				

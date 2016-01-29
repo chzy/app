@@ -54,7 +54,12 @@ public class FileDBmager {
     public boolean delFile(String fname) {
        /* File file=new File(fname);
         return  file.delete();*/
-        return  _context.deleteFile(_path + File.separator+fname);
+        return  _context.deleteFile(_path + File.separator + fname);
+    }
+
+    public void editFile(String s, String contentText) {
+        delFile(s);
+        writeFile(System.currentTimeMillis()+"",contentText);
     }
 
     protected class SortBydesc implements Comparator<String> {
@@ -104,16 +109,22 @@ public class FileDBmager {
     }
 
     //写文件
-    public synchronized  void writeFile(String fileName, String write_str) throws IOException{
+    public synchronized  boolean writeFile(String fileName, String write_str){
 
         File file = new File(_path+File.separator+fileName+file_ext);
 
-        FileOutputStream fos = new FileOutputStream(file);
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            byte [] bytes = write_str.getBytes();
+            fos.write(bytes);
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(TAG,e.getMessage());
+            return false;
+        }
 
-        byte [] bytes = write_str.getBytes();
-
-        fos.write(bytes);
-
-        fos.close();
+        return true;
     }
 }
