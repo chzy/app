@@ -189,6 +189,15 @@
         <!--<meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />-->
+
+<!--mob短信验证码-->
+        <activity
+            android:name="com.mob.tools.MobUIShell"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+
     </application>
 
 </manifest>

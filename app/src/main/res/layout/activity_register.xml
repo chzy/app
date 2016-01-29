@@ -30,6 +30,7 @@
             android:id="@+id/reg_ed_account"
             style="@style/accountEditText"
             android:hint="@string/et_account_hint"
+            android:inputType="phone"
             android:layout_height="fill_parent" />
     </LinearLayout>
     <LinearLayout
@@ -64,10 +65,20 @@
 
     <LinearLayout
         android:id="@+id/reg_confim_password"
-        style="@style/accountInputBorder"
         android:layout_below="@id/reg_password"
-        android:layout_marginTop="50dp" >
-
+        android:layout_marginTop="50dp"
+        style="@style/accountInputBorder"
+        android:orientation="horizontal"
+        android:paddingLeft="0dp"
+        android:background="#fff">
+    <LinearLayout
+        style="@style/accountInputBorder"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:orientation="horizontal"
+        >
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -85,13 +96,28 @@
             style="@style/accountEditText"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:hint="@string/et_confirm_password_hint"
-            android:password="true"
+            android:inputType="number"
+            android:hint="@string/et_regist_code"
             android:layout_height="fill_parent" />
 
 
     </LinearLayout>
 
+        <com.chd.yunpan.view.CircularProgressButton
+            android:id="@+id/log_btn_code"
+            android:layout_width="100dp"
+            android:layout_marginLeft="30dp"
+            android:layout_height="match_parent"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:cpb_cornerRadius="30dp"
+            app:cpb_textComplete="重新发送"
+            app:cpb_textError="发送失败"
+            app:cpb_textIdle="发送验证码"
+            app:cpb_selectorIdle="@drawable/idle_state_selector"
+            app:cpb_selectorComplete="@drawable/complete_state_selector"
+            app:cpb_selectorError="@drawable/error_state_selector"/>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayoutReg"

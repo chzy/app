@@ -91,7 +91,6 @@ public class UserInfoActivity extends Activity implements OnClickListener {
                             ms.what=3;
                             ms.obj=thumb;
                             mHandler.sendEmptyMessage(3);
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

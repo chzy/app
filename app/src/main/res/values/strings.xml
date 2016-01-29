@@ -23,6 +23,7 @@
     <string name="et_account_hint">请输入您的手机号\\邮箱\\用户名</string>
     <string name="et_password_hint">请输入密码</string>
     <string name="et_confirm_password_hint">确认密码</string>
+    <string name="et_regist_code">请输入验证码</string>
     <string name="et_password_hiden">隐藏密码</string>
     <string name="et_password_show">显示</string>
     <string name="title_activity_main">MainActivity</string>

@@ -59,7 +59,7 @@ public class UILApplication extends Application {
 			e.printStackTrace();
 			Log.e("Application", e.getMessage());
 		}
-		SMSSDK.initSDK(this, "appkey", "appsecret");
+		SMSSDK.initSDK(this, "f40f0f41f1d1", "8542792ca37ec28ce85a0ce024c957b2");
 	}
 	public static class Config {
 		public static final boolean DEVELOPER_MODE = false;

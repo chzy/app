@@ -13,6 +13,12 @@ import com.chd.yunpan.R;
 import com.chd.yunpan.utils.ToastUtils;
 import com.chd.yunpan.view.CircularProgressButton;
 
+import java.util.HashMap;
+
+import cn.smssdk.EventHandler;
+import cn.smssdk.SMSSDK;
+import cn.smssdk.gui.RegisterPage;
+
 /**
  * @description
  * @FileName: com.chd.yunpan.ui.RegisterActivity
@@ -25,7 +31,6 @@ import com.chd.yunpan.view.CircularProgressButton;
 public class RegisterActivity extends Activity implements View.OnClickListener {
 
 
-    private TextView mTitleTextView;
     private EditText mEdAccountEditText;
     private LinearLayout mAccountLinearLayout;
     private EditText mEdPwdEditText;
@@ -41,6 +46,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     private String name;
     private ImageView mIvLeft;
     private TextView mTvTitle;
+    private CircularProgressButton mBtnCodeCircularProgressButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +61,10 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     private void initListener() {
         mIvLeft.setOnClickListener(this);
         mBtnLogCircularProgressButton.setOnClickListener(this);
+        mBtnCodeCircularProgressButton.setOnClickListener(this);
     }
 
     private void initView() {
-        mTitleTextView = (TextView) findViewById(R.id.reg_title);
         mEdAccountEditText = (EditText) findViewById(R.id.reg_ed_account);
         mAccountLinearLayout = (LinearLayout) findViewById(R.id.reg_account);
         mEdPwdEditText = (EditText) findViewById(R.id.reg_ed_pwd);
@@ -66,13 +72,17 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         mEdConfirmPwdEditText = (EditText) findViewById(R.id.reg_ed_confirm_pwd);
         mConfimPasswordLinearLayout = (LinearLayout) findViewById(R.id.reg_confim_password);
         mBtnLogCircularProgressButton = (CircularProgressButton) findViewById(R.id.log_btn_log);
+        mBtnCodeCircularProgressButton = (CircularProgressButton) findViewById(R.id.log_btn_code);
         mLinearLayoutRegLinearLayout = (LinearLayout) findViewById(R.id.linearLayoutReg);
         mIvLeft = (ImageView) findViewById(R.id.iv_left);
-        mTvTitle= (TextView) findViewById(R.id.tv_title);
+        mTvTitle= (TextView) findViewById(R.id.tv_center);
         mLinearLayoutRegLinearLayout = (LinearLayout) findViewById(R.id.linearLayoutReg);
         mLinearLayoutRegLinearLayout = (LinearLayout) findViewById(R.id.linearLayoutReg);
 
         mTvTitle.setText("注册");
+
+
+
     }
 
 
@@ -80,6 +90,31 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     public void onClick(View view) {
         int id=view.getId();
         switch (id){
+            case R.id.log_btn_code:
+                //验证码
+                //        //打开注册页面
+         RegisterPage registerPage = new RegisterPage();
+        registerPage.setRegisterCallback(new EventHandler() {
+            public void afterEvent(int event, int result, Object data) {
+// 解析注册结果
+                if (result == SMSSDK.RESULT_COMPLETE) {
+                    @SuppressWarnings("unchecked")
+                    HashMap<String,Object> phoneMap = (HashMap<String, Object>) data;
+                    String country = (String) phoneMap.get("country");
+                    String phone = (String) phoneMap.get("phone");
+
+// 提交用户信息
+//                    registerUser(country, phone);
+                }
+            }
+        });
+        registerPage.show(this);
+
+
+
+
+                break;
+
             case R.id.iv_left:
                 //退出
                 onBackPressed();
