@@ -218,7 +218,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                             e.printStackTrace();
                         }
                     }
-                });
+                }).start();
 
 
 
