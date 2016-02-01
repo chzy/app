@@ -1,23 +1,24 @@
 package com.chd.yunpan.ui;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.chd.contacts.vcard.StringUtils;
+import com.chd.TClient;
 import com.chd.yunpan.R;
-import com.chd.yunpan.utils.ToastUtils;
 import com.chd.yunpan.view.CircularProgressButton;
-
-import java.util.HashMap;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
-import cn.smssdk.gui.RegisterPage;
 
 /**
  * @description
@@ -40,13 +41,21 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     private CircularProgressButton mBtnLogCircularProgressButton;
     private LinearLayout mLinearLayoutRegLinearLayout;
 
-    /**用户名*/
+    /**
+     * 用户名
+     */
     private String pass;
-    /**密码*/
+    /**
+     * 密码
+     */
     private String name;
     private ImageView mIvLeft;
     private TextView mTvTitle;
     private CircularProgressButton mBtnCodeCircularProgressButton;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +65,10 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         initListener();
 
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
     }
+    private TimeCount time;
 
     private void initListener() {
         mIvLeft.setOnClickListener(this);
@@ -75,43 +87,97 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         mBtnCodeCircularProgressButton = (CircularProgressButton) findViewById(R.id.log_btn_code);
         mLinearLayoutRegLinearLayout = (LinearLayout) findViewById(R.id.linearLayoutReg);
         mIvLeft = (ImageView) findViewById(R.id.iv_left);
-        mTvTitle= (TextView) findViewById(R.id.tv_center);
+        mTvTitle = (TextView) findViewById(R.id.tv_center);
         mLinearLayoutRegLinearLayout = (LinearLayout) findViewById(R.id.linearLayoutReg);
         mLinearLayoutRegLinearLayout = (LinearLayout) findViewById(R.id.linearLayoutReg);
 
         mTvTitle.setText("注册");
+    time=new TimeCount(60*1000,1000,mBtnCodeCircularProgressButton);
+
+        EventHandler eh = new EventHandler() {
+            @Override
+            public void afterEvent(int event, int result, Object data) {
+                Log.d("lmj", result + "");
+                if (result == SMSSDK.RESULT_COMPLETE) {
+                    //回调完成
+                    if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
+                        //提交验证码成功
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(RegisterActivity.this, "提交验证码成功", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                    } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
+                        //获取验证码成功
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(RegisterActivity.this, "获取验证码成功", Toast.LENGTH_SHORT).show();
+                                time.start();
+                            }
+                        });
 
 
+                    } else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {
+                        //返回支持发送验证码的国家列表
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(RegisterActivity.this, "支持国家成功", Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
+
+                    }
+                } else {
+                    ((Throwable) data).printStackTrace();
+                }
+            }
+        };
+        SMSSDK.registerEventHandler(eh);
     }
 
 
+
+    class TimeCount extends CountDownTimer {
+        private Button btn;
+        public TimeCount(long millisInFuture, long countDownInterval,Button v) {
+            super(millisInFuture, countDownInterval);//参数依次为总时长,和计时的时间间隔
+            this.btn=v;
+        }
+        @Override
+        public void onFinish() {//计时完毕时触发
+            btn.setText("重新验证");
+            btn.setClickable(true);
+        }
+        @Override
+        public void onTick(long millisUntilFinished){//计时过程显示
+            btn.setClickable(false);
+            btn.setText(millisUntilFinished /1000+"秒");
+        }
+    }
+
+
+
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        SMSSDK.unregisterAllEventHandler();
+    }
+
     @Override
     public void onClick(View view) {
-        int id=view.getId();
-        switch (id){
+        int id = view.getId();
+        switch (id) {
             case R.id.log_btn_code:
                 //验证码
-                //        //打开注册页面
-         RegisterPage registerPage = new RegisterPage();
-        registerPage.setRegisterCallback(new EventHandler() {
-            public void afterEvent(int event, int result, Object data) {
-// 解析注册结果
-                if (result == SMSSDK.RESULT_COMPLETE) {
-                    @SuppressWarnings("unchecked")
-                    HashMap<String,Object> phoneMap = (HashMap<String, Object>) data;
-                    String country = (String) phoneMap.get("country");
-                    String phone = (String) phoneMap.get("phone");
-
-// 提交用户信息
-//                    registerUser(country, phone);
-                }
-            }
-        });
-        registerPage.show(this);
-
-
-
+                String phone = mEdAccountEditText.getText().toString();
+                SMSSDK.getVerificationCode("86", phone);
 
                 break;
 
@@ -121,36 +187,65 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.log_btn_log:
                 //登陆
-                String name=mEdAccountEditText.getText().toString();
-                String pass1=mEdPwdEditText.getText().toString();
-                String pass2=mEdConfirmPwdEditText.getText().toString();
+                final String name = mEdAccountEditText.getText().toString();
+                final String pass1 = mEdPwdEditText.getText().toString();
+                final String code = mEdConfirmPwdEditText.getText().toString();
+                final ProgressDialog dialog=new ProgressDialog(this);
+                dialog.show();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            boolean b = TClient.getinstance().RegistUser(name, pass1, code);
+                            if(b){
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        dialog.dismiss();
+                                        Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }else{
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        dialog.dismiss();
+                                        Toast.makeText(RegisterActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
 
-                if(StringUtils.isNullOrEmpty(name)){
-                    ToastUtils.toast(this,"请输入用户名");
-                    return ;
-                }
-                boolean flag = StringUtils.isConfirmPass(this, pass1, pass2);
-
-               if(flag){
 
 
-
-
-
-
-
-
-               }else{
-                   return ;
-               }
-
-
-
-
-
+//                if(StringUtils.isNullOrEmpty(name)){
+//                    ToastUtils.toast(this,"请输入用户名");
+//                    return ;
+//                }
+//                boolean flag = StringUtils.isConfirmPass(this, pass1, pass2);
+//
+//               if(flag){
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//               }else{
+//                   return ;
+//               }
 
 
                 break;
         }
     }
+
 }
