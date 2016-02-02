@@ -243,10 +243,15 @@ public class SyncLocalFileBackground implements Runnable {
 
     public boolean uploadBigFile(FileInfo0 entity, final ActiveProcess activeProcess)
     {
-        return uploadBigFile0( entity,   activeProcess,null);
+        return uploadBigFile0( entity,   activeProcess,null,false);
     }
 
-    public boolean uploadBigFile0(FileInfo0 entity, final ActiveProcess activeProcess,Map<String, String> desc) {
+    public boolean uploadFileOvWrite(FileInfo0 entity, final ActiveProcess activeProcess)
+    {
+        return uploadBigFile0( entity,   activeProcess,null,true);
+    }
+
+    public boolean uploadBigFile0(FileInfo0 entity, final ActiveProcess activeProcess,Map<String, String> desc,boolean replace) {
 
         TClient tClient = null;
         File file;
@@ -279,9 +284,16 @@ public class SyncLocalFileBackground implements Runnable {
         //fileInfo=null;
         su.open();
         if (fileInfo != null) {
-
             Log.e(TAG, "upload file exist !!");
-            return false;
+            if (replace) {
+                Log.d(TAG, "del remote exist obj :" + entity.getObjid());
+               if (! tClient.delObj(entity.getObjid(), entity.getFtype())) {
+                   Log.e(TAG, "del remote exist obj :" + entity.getObjid()+ " failed !!");
+                   return  false;
+               }
+            }
+            else
+                return false;
         } else {
             long oft = tClient.queryUpObjOffset(entity);
             if ((oft > 0))
