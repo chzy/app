@@ -91,7 +91,7 @@ public class PicActivity extends Activity implements OnClickListener {
 				//未备份文件 ==  backedlist . removeAll(localist);
 				if (cloudUnits==null || cloudUnits.isEmpty())
 					// 0-100 分批取文件
-					cloudUnits=syncTask.getCloudUnits(0, 100);
+					cloudUnits=syncTask.getCloudUnits(0, 10000);
 				runOnUiThread(new Runnable() {
 					public void run() {
 						initData();
@@ -130,7 +130,7 @@ public class PicActivity extends Activity implements OnClickListener {
 			Log.e(TAG, "unknow file sysid:" + info.getSysid());
 			return;
 		}
-		picInfoBean.setUrl(uri);
+		//picInfoBean.setUrl(uri);
 		picInfoBean.setDay(TimeUtils.getTime(info.getLastModified()* 1000L, new SimpleDateFormat("MM月dd日")));
 
 		if (tmpMonthMap==null)

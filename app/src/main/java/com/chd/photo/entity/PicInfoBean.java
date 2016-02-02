@@ -9,14 +9,11 @@ public class PicInfoBean  implements Serializable{
 
 	private String day;
 
+	private int sysid;
+
 
 	
-	public PicInfoBean() 
-	{
-		super();
-	}
 
-	
 
 
 	public String getUrl() {
@@ -35,5 +32,12 @@ public class PicInfoBean  implements Serializable{
 		this.day = day;
 	}
 
-	
+
+    public int getSysid() {
+        return sysid;
+    }
+
+    public void setSysid(int sysid) {
+        this.sysid = sysid;
+    }
 }

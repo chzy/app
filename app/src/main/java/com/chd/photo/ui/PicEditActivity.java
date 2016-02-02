@@ -117,13 +117,20 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 
 
         Map<String, List<PicEditItemBean>> tmpDayMap = new HashMap<String, List<PicEditItemBean>>();
+        FileInfo0 info0=null;
         for (PicInfoBean item : mPicList0) {
             //if (bIsUbkList)
 
             String tmpDay = item.getDay();
             PicEditItemBean picInfoBean = new PicEditItemBean();
-
-            picInfoBean.setUrl(item.getUrl());
+            if (item.getSysid()>0)
+            {
+                info0=syncTask.queryLocalInfo(item.getSysid());
+                if (info0!=null)
+                 picInfoBean.setUrl(info0.getFilePath());
+            }
+            else
+                picInfoBean.setUrl(item.getUrl());
             picInfoBean.setSelect(false);
             picInfoBean.setbIsUbkList(bIsUbkList);
             //picInfoBean.setFileInfo0(info);

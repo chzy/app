@@ -164,7 +164,7 @@ public class MediaMgr  {
 
 
 	public void   anlayLocalUnits(List<FileInfo0> couldlist,FilelistEntity filelistEntity) {
-		int count= getLocalUnits().size();
+		int count= LocalUnits.size();
 		int count2=couldlist.size();
 		int max=Math.min(count, count2);
 		ArrayList<FileInfo0> baklist=new ArrayList(count2);
@@ -226,7 +226,7 @@ public class MediaMgr  {
 		}
 		c.close();
 		if (c == null) {
-			Log.e("", "fail to query uri" );
+			Log.e(TAG, "fail to query uri" );
 		}
 
 	}
