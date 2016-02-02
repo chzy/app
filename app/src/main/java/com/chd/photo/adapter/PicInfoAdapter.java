@@ -90,6 +90,7 @@ public class PicInfoAdapter extends BaseAdapter {
 		holder.tv_pic_info_month.setText(/*list.get(position).getMonth()*/_month + "月");
 		holder.tv_pic_info_number.setText("(" + /*list.get(position).getMonth()*/list.get(position).getPicunits().size()
 				+ ")");
+		//String url="";
 		imageLoader.displayImage(list.get(position).getUrl(), holder.iv_pic_info_photo,
 				options, new SimpleImageLoadingListener() {
 					@Override
