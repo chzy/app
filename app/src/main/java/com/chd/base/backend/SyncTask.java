@@ -122,7 +122,10 @@ public class SyncTask {
 		try {
 			final FilesListEntity filesListEntity = TClient.getinstance().queryFileList(_ftype, begin, max);
 			flist=filesListEntity.getList();
-			Collections.sort(flist, new SortBydesc());
+			if (flist!=null)
+				Collections.sort(flist, new SortBydesc());
+			else
+				return new ArrayList<FileInfo0>();
 		
 		} catch (Exception e) {
 			e.printStackTrace();

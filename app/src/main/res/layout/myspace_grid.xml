@@ -15,7 +15,6 @@
             android:id="@+id/myspace_space_textview"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_below="@+id/textTitle"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:background="@drawable/myspace_space_tv_bg"

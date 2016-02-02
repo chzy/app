@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chd.MediaMgr.utils.MediaFileUtil;
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.backend.SyncTask;
 import com.chd.contacts.vcard.StringUtils;
@@ -109,7 +110,7 @@ public class PicDetailActivity extends ActiveProcess implements OnClickListener
 		String uri=editItemBean.getUrl().substring(idx);
 		if (editItemBean.isbIsUbkList()) {
 			fileInfo0.setFilePath(uri);
-			fileInfo0.setObjid(uri);
+			fileInfo0.setObjid(MediaFileUtil.getFnameformPath(uri));
 		}
 		else{
 			fileInfo0.setObjid(uri);

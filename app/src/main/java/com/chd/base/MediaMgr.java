@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class MediaMgr  {
 	private boolean mExitTasksEarly;
 	static ShareUtils shareUtils ;
 	private   List<FileLocal> LocalUnits;
+	//private HashMap<String ,Integer> LocalUnits;
 	public final  static String sZipFileMimeType = "application/zip";
 
 	boolean contains=true;
@@ -177,10 +179,9 @@ public class MediaMgr  {
 			if (idx==j) {
 				item=new FileInfo0(fileInfo);
 				baklist.add(item);
-				//Math.max(j, idx++);
 				idx++;
 			}
-			//for(int k=0;k<count;k++)
+
 
 			for (FileLocal fileLocal: LocalUnits)
 			{
@@ -223,6 +224,7 @@ public class MediaMgr  {
 			fileLocal.sysid=c.getInt(COLUMN_ID);
 			fileLocal.fname= MediaFileUtil.getFnameformPath(c.getString(COLUMN_PATH));
 			LocalUnits.add(fileLocal);
+			//LocalUnits.put(fileLocal.fname,fileLocal);
 		}
 		c.close();
 		if (c == null) {

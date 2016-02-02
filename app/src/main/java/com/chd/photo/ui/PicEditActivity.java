@@ -127,10 +127,15 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
             {
                 info0=syncTask.queryLocalInfo(item.getSysid());
                 if (info0!=null)
-                 picInfoBean.setUrl(info0.getFilePath());
+                 picInfoBean.setUrl("file://"+info0.getFilePath());
             }
             else
-                picInfoBean.setUrl(item.getUrl());
+                picInfoBean.setUrl("trpc://"+item.getUrl());
+            //////////////////////////////////////////////
+
+
+
+            //////////////////////////////////////////
             picInfoBean.setSelect(false);
             picInfoBean.setbIsUbkList(bIsUbkList);
             //picInfoBean.setFileInfo0(info);

@@ -19,8 +19,10 @@ import com.chd.other.ui.OtherActivity;
 import com.chd.photo.ui.PicActivity;
 import com.chd.smsbackup.ui.SmsBackActivity;
 import com.chd.yunpan.R;
+import com.chd.yunpan.share.ShareUtils;
 import com.chd.yunpan.ui.adapter.MenuGridAdapter;
 import com.chd.yunpan.ui.entity.MySpaceBean;
+import com.chd.yunpan.utils.TimeAndSizeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +78,7 @@ public class MyspaceActivity extends Activity implements OnClickListener, OnItem
         
 		handler.sendEmptyMessage(0);
 		
-		mTvSpaceNumber.setText("16G");
+		mTvSpaceNumber.setText(TimeAndSizeUtil.getSize(""+new ShareUtils(this).getLoginEntity().getSpace()));
 	}
 
 	private void initListener() {

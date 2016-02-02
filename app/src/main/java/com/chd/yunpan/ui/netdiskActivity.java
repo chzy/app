@@ -69,7 +69,7 @@ public class netdiskActivity extends Activity implements OnClickListener {
 		mProSpace.setProgress(spacePro);
 		mTextUserSpace.setText(String.format("%d%%", spacePro));
 
-		int freePro= (int) (uflow*100l/flow);
+		int freePro=uflow==00?0 : (int) (uflow*100l/flow);
 		String freeStr = TimeAndSizeUtil.getSize((flow - uflow) + "");
 		mProFreeapp.setProgress(freePro);
 		mProFreeapp.setTxt(freeStr );

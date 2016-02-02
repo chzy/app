@@ -148,7 +148,7 @@ public class SettingActivity extends Activity implements OnClickListener {
 
 
 			//pd.show();
-			Toast.makeText(this, "当前是最新版本", 0).show();
+			Toast.makeText(this, "当前是最新版本", Toast.LENGTH_SHORT).show();
 			// 更新检查
 			new Thread() {
 				public void run() {

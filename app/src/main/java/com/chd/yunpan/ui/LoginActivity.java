@@ -173,8 +173,8 @@ public class LoginActivity extends Activity implements OnClickListener {
                         LoginResult entity = null;
                         try {
                             //new TClient();
-                            String username = et_pwd.getText().toString();
-                            String pwd = et_name.getText().toString();
+                            String pwd = et_pwd.getText().toString();
+                            String username = et_name.getText().toString();
                             TClient th = TClient.getinstance();
                             //TClient th=new TClient(false);
                             //th.addurl(new String[]{"http://221.7.13.207:8080/chdserver.php"});

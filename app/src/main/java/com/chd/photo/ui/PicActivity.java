@@ -124,6 +124,7 @@ public class PicActivity extends Activity implements OnClickListener {
 				return;
 			}
 		}
+		picInfoBean.setSysid(info.getSysid());
 		String uri=info.getUri();
 		if (uri==null)
 		{
@@ -131,6 +132,7 @@ public class PicActivity extends Activity implements OnClickListener {
 			return;
 		}
 		//picInfoBean.setUrl(uri);
+
 		picInfoBean.setDay(TimeUtils.getTime(info.getLastModified()* 1000L, new SimpleDateFormat("MM月dd日")));
 
 		if (tmpMonthMap==null)
