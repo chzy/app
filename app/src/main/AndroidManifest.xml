@@ -181,7 +181,11 @@
         <activity
             android:name="com.chd.base.Ui.DownListActivity"
             android:screenOrientation="portrait" />
-        
+        <activity
+            android:name=".ui.HelpActivity"
+            android:screenOrientation="portrait" />
+
+
         <service android:name="com.chd.service.SyncFileService" >
         </service>
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for

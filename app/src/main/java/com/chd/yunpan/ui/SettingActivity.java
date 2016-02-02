@@ -122,7 +122,7 @@ public class SettingActivity extends Activity implements OnClickListener {
 		}
 			break;
 		case R.id.settingAbout:
-			Intent aboutIntent = new Intent(this, AboutActivity.class);
+			Intent aboutIntent = new Intent(this, HelpActivity.class);
 			startActivity(aboutIntent);
 			break;
 

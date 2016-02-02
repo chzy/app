@@ -20,6 +20,8 @@ import com.chd.contacts.vcard.StringUtils;
 import com.chd.proto.UserInfo;
 import com.chd.userinfo.ui.entity.UserInfoFlag;
 import com.chd.yunpan.R;
+import com.chd.yunpan.share.ShareUtils;
+import com.chd.yunpan.ui.LoginActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class UserInfoActivity extends Activity implements OnClickListener {
@@ -185,7 +187,14 @@ public class UserInfoActivity extends Activity implements OnClickListener {
             }
             break;
             case R.id.userinfo_logout: {
-
+                ShareUtils shareUtils = new ShareUtils(UserInfoActivity.this);
+                shareUtils.setLoginEntity(null);
+                shareUtils.setURL("");
+                shareUtils.setAutoLogin(false);
+                shareUtils.setPwd("");
+                Intent startIntent=new Intent(UserInfoActivity.this, LoginActivity.class);
+                startActivity(startIntent);
+                finish();
             }
             return;
             default:

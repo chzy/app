@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chd.TClient;
+import com.chd.contacts.vcard.StringUtils;
 import com.chd.proto.LoginResult;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
@@ -109,16 +110,31 @@ public class LoginActivity extends Activity implements OnClickListener {
                 finish();
             }
         }
+        Intent intent = getIntent();
 
-        shareUtils = new ShareUtils(this);
+        if(intent!=null&&intent.getBooleanExtra("isReg",false)){
+            et_name.setText(intent.getStringExtra("phone"));
+            et_pwd.setText(intent.getStringExtra("pass"));
 
-        if (shareUtils.isAutoLogin()) {
-            //gotoMain();
-            if (shareUtils.getUsername().length() > 3 && shareUtils.getPwd().length() > 2) {
-                //isLogining=true;
-                ExecRunable.execRun(new LoginThread());
+            ExecRunable.execRun(new LoginThread());
+        }else{
+
+            shareUtils = new ShareUtils(this);
+
+            if(!StringUtils.isNullOrEmpty(shareUtils.getUsername())){
+                et_name.setText(shareUtils.getUsername());
+            }
+
+            if (shareUtils.isAutoLogin()) {
+                //gotoMain();
+                if (shareUtils.getUsername().length() > 3 && shareUtils.getPwd().length() > 2) {
+                    //isLogining=true;
+                    ExecRunable.execRun(new LoginThread());
+                }
             }
         }
+
+
     }
 
     private void setListener() {
@@ -253,22 +269,20 @@ public class LoginActivity extends Activity implements OnClickListener {
 
     @Override
     public void onClick(View view) {
-        int id = view.getId() ;
+        int id = view.getId();
 
-            switch (id) {
-                case R.id.log_tv_register:
-                    //登陆注册
-                    Intent startIntent=new Intent(LoginActivity.this,RegisterActivity.class);
-                    startActivity(startIntent);
-                    break;
-                case R.id.ll_head_help:
-                    //TODO 帮助
-
-
-
-                    break;
-            }
-
+        Intent startIntent = new Intent();
+        switch (id) {
+            case R.id.log_tv_register:
+                //登陆注册
+                startIntent.setClass(LoginActivity.this, RegisterActivity.class);
+                break;
+            case R.id.ll_head_help:
+                //TODO 帮助
+                startIntent.setClass(LoginActivity.this, AboutActivity.class);
+                break;
+        }
+        startActivity(startIntent);
     }
 
     public void gotoMain() {
@@ -299,10 +313,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 
         register.setOnClickListener(this);
         ll_head_help.setOnClickListener(this);
-
-
-
-
 
 
         ShareUtils shareUtils = new ShareUtils(this);
@@ -365,7 +375,7 @@ public class LoginActivity extends Activity implements OnClickListener {
                 entity = th.loginAuth(username, pwd, 1);
 
 								/*
-								获取登录成功后的状态数据
+                                获取登录成功后的状态数据
 								* */
 //								LoginEntity entity = new LoginEntity();
 //								entity.setName("account_name");

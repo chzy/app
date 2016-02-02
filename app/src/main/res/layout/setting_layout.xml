@@ -14,7 +14,7 @@
         android:background="@color/gray_background" />
 
     <LinearLayout
-        android:id="@+id/settingClearROM"
+        android:id="@+id/settingClearWIFI"
         android:layout_width="match_parent"
         android:layout_height="@dimen/other"
         android:background="#ffffff"
@@ -81,6 +81,7 @@
         android:layout_height="@dimen/other"
         android:background="#ffffff"
         android:clickable="true"
+        android:visibility="gone"
         android:orientation="horizontal" >
 
         <TextView
@@ -104,11 +105,13 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:visibility="gone"
         android:background="@color/gray_background" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:visibility="gone"
         android:layout_marginTop="15dp"
         android:background="@color/gray_background" />
 
@@ -158,7 +161,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="20dp"
         android:background="@color/gray_background" />
 
     <LinearLayout
@@ -201,6 +204,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:visibility="gone"
         android:background="@color/gray_background" />
 
     <LinearLayout
@@ -209,6 +213,7 @@
         android:layout_height="@dimen/other"
         android:background="#ffffff"
         android:clickable="true"
+        android:visibility="gone"
         android:orientation="horizontal" >
 
         <TextView

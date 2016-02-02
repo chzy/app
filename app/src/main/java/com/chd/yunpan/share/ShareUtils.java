@@ -239,6 +239,7 @@ public class ShareUtils {
 	}
 	
 	public void setLoginEntity(LoginResult entity){
+		if(entity!=null){
 //		TSerializer serializer = new TSerializer(new TSimpleJSONProtocol.Factory());
 		String json = null;
 //		try {
@@ -252,6 +253,7 @@ public class ShareUtils {
 		json=entity.getJson();
 		editor.putString("entity", json);
 		editor.commit();
+		}
 		//LoginEntity dd=getLoginEntity();
 	}
 	

@@ -2,6 +2,7 @@ package com.chd.yunpan.ui;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -14,8 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chd.TClient;
+import com.chd.proto.Errcode;
+import com.chd.proto.RetHead;
 import com.chd.yunpan.R;
 import com.chd.yunpan.view.CircularProgressButton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
@@ -96,7 +102,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
         EventHandler eh = new EventHandler() {
             @Override
-            public void afterEvent(int event, int result, Object data) {
+            public void afterEvent(int event, int result, final Object data) {
                 Log.d("lmj", result + "");
                 if (result == SMSSDK.RESULT_COMPLETE) {
                     //回调完成
@@ -132,6 +138,20 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
                     }
                 } else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                JSONObject obj=new JSONObject(data.toString());
+                                String msg=obj.getString("detail");
+                                Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_SHORT).show();
+                            } catch (JSONException e) {
+
+                            }
+
+                        }
+                    });
+
                     ((Throwable) data).printStackTrace();
                 }
             }
@@ -191,18 +211,28 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                 final String pass1 = mEdPwdEditText.getText().toString();
                 final String code = mEdConfirmPwdEditText.getText().toString();
                 final ProgressDialog dialog=new ProgressDialog(this);
+                dialog.setMessage("正在加载");
                 dialog.show();
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            boolean b = TClient.getinstance().RegistUser(name, pass1, code);
-                            if(b){
+                            final RetHead retHead = TClient.getinstance().RegistUser(name, pass1, code);
+
+                            if(Errcode.SUCCESS==retHead.getRet()){
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         dialog.dismiss();
                                         Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                                        Intent intent=new Intent();
+                                        intent.setClass(RegisterActivity.this,LoginActivity.class);
+                                        intent.putExtra("phone",name);
+                                        intent.putExtra("isReg",true);
+                                        intent.putExtra("pass",pass1);
+                                        startActivity(intent);
+
                                     }
                                 });
                             }else{
@@ -210,15 +240,15 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                                     @Override
                                     public void run() {
                                         dialog.dismiss();
-                                        Toast.makeText(RegisterActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
+                                        String msg=retHead.getMsg();
+                                        Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }
                         } catch (Exception e) {
-                            e.printStackTrace();
                         }
                     }
-                });
+                }).start();
 
 
 
