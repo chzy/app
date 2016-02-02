@@ -9,6 +9,7 @@ import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.chd.MediaMgr.utils.MediaFileUtil;
+import com.chd.TClient;
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
@@ -25,6 +26,7 @@ import java.io.IOException;
 
 public class VCardIO {
     private Context context;
+    private final  String TAG=this.getClass().getName();
 
     public VCardIO(Context context) {
         this.context = context;
@@ -94,7 +96,7 @@ public class VCardIO {
                         ContactsContract.Contacts.CONTENT_URI, projection,
                         null, null, null);
                 if (allContacts != null) {
-                    long maxlen = allContacts.getCount();
+                    int maxlen = allContacts.getCount();
                     Message msg = new Message();
                     msg.what = 998;
                     msg.obj = maxlen;
@@ -109,8 +111,9 @@ public class VCardIO {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                int size = 0;
                 try {
-                    File vcfFile = new File(fileName);
+                    /*File vcfFile = new File(fileName);
 
                     final BufferedReader vcfBuffer = new BufferedReader(
                             new FileReader(fileName));
@@ -118,7 +121,7 @@ public class VCardIO {
 
                     // 后台执行导入过程
                     long importStatus = 0;
-                    int size = 0;
+
                     Contact parseContact = new Contact();
                     try {
                         long ret = 0;
@@ -130,18 +133,26 @@ public class VCardIO {
                             size++;
                             importStatus += parseContact.getParseLen();
 
-                        } while (true);
-                        Message msg=new Message();
+                        } while (true);*/
+
+                        TClient tClient=TClient.getinstance();
+                        String lines=tClient.queryAttribute(fileName,FTYPE.ADDRESS,"lines");
+                        size=Integer.parseInt(lines);
+                    Message msg=new Message();
                         msg.what=999;
                         msg.obj=size;
                         handler.sendMessage(msg);
                     } catch (IOException e) {
 
-                    }
-
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    }catch (Exception e1)
+                {
+                    Log.e(TAG,e1.getMessage());
+                    return;
                 }
+
+               /* } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }*/
 
             }
         }).start();

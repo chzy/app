@@ -8,8 +8,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chd.base.Ui.ActiveProcess;
+import com.chd.base.backend.SyncTask;
 import com.chd.contacts.entity.ContactBean;
 import com.chd.contacts.vcard.VCardIO;
+import com.chd.proto.FTYPE;
+import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
 
@@ -25,6 +28,9 @@ public class ContactActivity extends ActiveProcess implements OnClickListener{
     private TextView mCloudNumber;
     private ImageView mIvSelect;
     private String contactPath;
+
+    private  List<FileInfo0> cloudUnits;
+    private SyncTask syncTask=null;
 
 
     private List<ContactBean> mContactList = new ArrayList<ContactBean>();
@@ -44,7 +50,10 @@ public class ContactActivity extends ActiveProcess implements OnClickListener{
                     break;
                 case 0:
                     vcarIO.getLocalSize(handler);
-                    vcarIO.getNetSize(contactPath, handler);
+                    if (cloudUnits.isEmpty())
+                        mCloudNumber.setText("尚未备份");
+                    else
+                        vcarIO.getNetSize(cloudUnits.get(0).getObjid(), handler);
                     break;
             }
 
@@ -70,13 +79,17 @@ public class ContactActivity extends ActiveProcess implements OnClickListener{
     private void newRequest() {
 
 
-        //显示的时候过滤文件类型
+        if (syncTask==null)
+            syncTask=new SyncTask(this,FTYPE.ADDRESS);
 
         new Thread(
                 new Runnable() {
                     @Override
                     public void run() {
-                        vcarIO.download(contactPath, null);
+                        //vcarIO.download(contactPath, null);
+                        if (cloudUnits==null || cloudUnits.isEmpty())
+                            // 0-100 分批取文件
+                            cloudUnits=syncTask.getCloudUnits(0, 10); //10个备份
                         handler.sendEmptyMessage(0);
                     }
                 }
