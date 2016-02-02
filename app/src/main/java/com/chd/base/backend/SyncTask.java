@@ -237,6 +237,32 @@ public class SyncTask {
 		thread.start();
 	}
 
+	public void uploadFileOvWrite( final FileInfo0 item, final ActiveProcess activeProcess,boolean beeque) {
+
+		if (!item.isSetFtype())
+			item.setFtype(_ftype);
+
+		try
+		{
+			dbManager.open();
+			dbManager.addUpLoadingFile(item);
+			dbManager.close();
+		}catch (Exception e)
+		{
+			e.printStackTrace();
+			Log.e(TAG, "upload fail " + e.getMessage());
+			activeProcess.setParMessage("上传失败");
+			activeProcess.finishProgress();
+		}
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				new SyncLocalFileBackground(context).uploadFileOvWrite(item, activeProcess);
+			}
+		});
+		thread.start();
+	}
+
 	public void download(final FileInfo0 item, final ActiveProcess activeProcess,boolean beeque) {
 
 		//ProgressBar bar = activity.getProgressBar();
