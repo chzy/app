@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -245,9 +246,9 @@ public class SyncLocalFileBackground implements Runnable {
         return uploadBigFile0( entity,   activeProcess,null,false);
     }
 
-    public boolean uploadFileOvWrite(FileInfo0 entity, final ActiveProcess activeProcess)
+    public boolean uploadFileOvWrite(FileInfo0 entity, final ActiveProcess activeProcess,HashMap<String, String> desc)
     {
-        return uploadBigFile0( entity,   activeProcess,null,true);
+        return uploadBigFile0( entity,   activeProcess,desc,true);
     }
 
     public boolean uploadBigFile0(FileInfo0 entity, final ActiveProcess activeProcess,Map<String, String> desc,boolean replace) {
@@ -279,9 +280,14 @@ public class SyncLocalFileBackground implements Runnable {
         //先检查 云端是否 有同名文件
         long start = 0;
         //是否 需要查询 服务器端是否有同名的 未传完的 文件
-        FileInfo fileInfo = tClient.queryFile(entity);
+
         //fileInfo=null;
+        if (replace) {
+            Log.d(TAG, "del remote exist obj :" + entity.getObjid());
+            tClient.delObj(entity.getObjid(), entity.getFtype());
+        }
         su.open();
+        FileInfo fileInfo = tClient.queryFile(entity);
         if (fileInfo != null) {
             Log.e(TAG, "upload file exist !!");
             if (replace) {
@@ -349,10 +355,6 @@ public class SyncLocalFileBackground implements Runnable {
                 }
             }
 
-            /*if (desc==null) {
-                desc = new HashMap();
-                desc.put("date", String.valueOf(file.lastModified() / 1000));
-            }*/
             if (succed && filebuilder.Commit(desc)) {
                 su.finishTransform(MediaMgr.DBTAB.UPed, entity);
                 succed = true;
@@ -365,7 +367,10 @@ public class SyncLocalFileBackground implements Runnable {
             Log.w(TAG, e.getMessage());
         } finally {
             if (activeProcess != null) {
-                activeProcess.toastMain("上传成功");
+                if (succed)
+                    activeProcess.toastMain("上传成功");
+                else
+                    activeProcess.toastMain("上传失败");
                 activeProcess.finishProgress();
             }
             su.close();
@@ -375,8 +380,6 @@ public class SyncLocalFileBackground implements Runnable {
                 return false;
             }
         }
-
-
         return true;
     }
 

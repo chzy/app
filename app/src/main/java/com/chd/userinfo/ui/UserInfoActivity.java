@@ -421,7 +421,7 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
             info0.setFilePath(icon_file.getPath());
             info0.setFtype(FTYPE.PICTURE);
             setParMessage("头像上传中");
-            boolean b = new SyncLocalFileBackground(UserInfoActivity.this).uploadFileOvWrite(info0, UserInfoActivity.this);
+            boolean b = new SyncLocalFileBackground(UserInfoActivity.this).uploadFileOvWrite(info0, UserInfoActivity.this,null);
             if(b){
                 runOnUiThread(new Runnable() {
                     @Override

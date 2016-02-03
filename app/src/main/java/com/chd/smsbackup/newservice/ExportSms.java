@@ -265,9 +265,9 @@ public class ExportSms {
         fos.flush();
         fos.close();
             if (successed){
-                boolean upload = upload(fpath, context);
+                boolean upload = upload(fpath, context,lines);
                 if(upload){
-                    TClient tClient =TClient.getinstance();
+                   /* TClient tClient =TClient.getinstance();
                     TClient.TFilebuilder filebuilder;
                     filebuilder = tClient.new TFilebuilder(fout.getName(), FTYPE.SMS);
                     String objid=null;
@@ -278,7 +278,7 @@ public class ExportSms {
                         }
                     Map<String, String> desc = new HashMap<String, String>();
                 desc.put("lines", lines+"");
-                filebuilder.Commit(desc);
+                filebuilder.Commit(desc);*/
                 }
             }else{
                     return false;
@@ -299,7 +299,10 @@ public class ExportSms {
                     int last=fpath.lastIndexOf("/");
                     String name=fpath.substring(last + 1);
                     String lines=tClient.queryAttribute(name, FTYPE.SMS, "lines");
-                    int size = Integer.parseInt(lines);
+                    int size=0;
+                    if (lines!=null) {
+                        size = Integer.parseInt(lines);
+                    }
                     msg.obj=size;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -322,7 +325,7 @@ public class ExportSms {
      * @param activity 主窗口
      */
 
-    public boolean upload(final String filePath, final ActiveProcess activity) {
+    public boolean upload(final String filePath, final ActiveProcess activity,int lines) {
         // 线程中执行
         int last=filePath.lastIndexOf("/");
         String name=filePath.substring(last+1);
@@ -331,7 +334,9 @@ public class ExportSms {
         info.setFilePath(filePath);
         info.setFilename(name);
         info.setFtype(FTYPE.SMS);
-        return new SyncLocalFileBackground(activity).uploadFileOvWrite(info, activity);
+        HashMap<String,String> desc=new HashMap<String, String>();
+        desc.put("lines",""+lines);
+        return new SyncLocalFileBackground(activity).uploadFileOvWrite(info, activity,desc);
     }
 
 

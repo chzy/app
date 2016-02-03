@@ -117,37 +117,21 @@ public class VCardIO {
                 Message msg = new Message();
                 msg.what = 999;
                 try {
-//                    File vcfFile = new File(fileName);
-//
-//                    final BufferedReader vcfBuffer = new BufferedReader(
-//                            new FileReader(fileName));
-//                    final long maxlen = vcfFile.length();
-//
-//                    // 后台执行导入过程
-//                    long importStatus = 0;
-//
-//                    Contact parseContact = new Contact();
-//                        long ret = 0;
-//                        do {
-//                            ret = parseContact.parseVCard(vcfBuffer);
-//                            if (ret < 0) {
-//                                break;
-//                            }
-//                            size++;
-//                            importStatus += parseContact.getParseLen();
-//
-//                        } while (true);
+               
+                       // TClient.getinstance().delObj()
+                        TClient tClient=TClient.getinstance();
+                        String lines=tClient.queryAttribute(fileName,FTYPE.ADDRESS,"lines");
+                        size=Integer.parseInt(lines);
 
-                    TClient tClient = TClient.getinstance();
-                    String lines = tClient.queryAttribute(fileName, FTYPE.ADDRESS, "lines");
-                    size = Integer.parseInt(lines);
+                        msg.what=999;
+                        msg.obj=size;
+                        handler.sendMessage(msg);
+                    } catch (IOException e) {
 
-                    msg.obj = size;
-
-                } catch (Exception e) {
-                    msg.obj = 0;
-                } finally {
-                    handler.sendMessage(msg);
+                    }catch (Exception e1)
+                {
+                    Log.e(TAG,e1.getMessage());
+                    return;
                 }
 
                /* } catch (FileNotFoundException e) {
@@ -180,7 +164,7 @@ public class VCardIO {
                         return;
                     }
 
-                    final long maxlen = allContacts.getCount();
+                    final int maxlen = allContacts.getCount();
                     // 线程中执行导出
                     {
                         long exportStatus = 0;
@@ -199,10 +183,10 @@ public class VCardIO {
                             vcfBuffer.flush();
                             vcfBuffer.close();
                             allContacts.close();
-                            if (!upload(fileName, activity)) {
+                            if (!upload(fileName, activity,maxlen)) {
                                 Log.e("", "upload failed ");
                             }else{
-                                TClient tClient =TClient.getinstance();
+                               /* TClient tClient =TClient.getinstance();
                                 TClient.TFilebuilder filebuilder;
                                 String name=MediaFileUtil.getNameFromFilepath(fileName);
                                 filebuilder = tClient.new TFilebuilder(name, FTYPE.ADDRESS);
@@ -214,7 +198,7 @@ public class VCardIO {
                                 Map<String, String> desc = new HashMap<String, String>();
                                 desc.put("lines", maxlen + "");
                                 boolean commit = filebuilder.Commit(desc);
-                                Log.i("liumj",commit+"提交desc");
+                                Log.i("liumj","提交desc");*/
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -236,7 +220,7 @@ public class VCardIO {
      * @param activity 主窗口
      */
 
-    public boolean upload(final String filePath, final ActiveProcess activity) {
+    public boolean upload(final String filePath, final ActiveProcess activity,int lines) {
 
 
         // 线程中执行
@@ -246,7 +230,9 @@ public class VCardIO {
         info.setObjid(MediaFileUtil.getNameFromFilepath(filePath));
         info.setFilePath(filePath);
         info.setFtype(FTYPE.ADDRESS);
-        return new SyncLocalFileBackground(context).uploadFileOvWrite(info, activity);
+        HashMap<String,String> desc=new HashMap<String, String>();
+        desc.put("lines", "" + lines);
+        return new SyncLocalFileBackground(context).uploadFileOvWrite(info, activity,desc);
         //}
         //}).start();
     }
