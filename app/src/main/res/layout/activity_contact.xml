@@ -35,7 +35,8 @@
 
             <ImageView
                 android:id="@+id/iv_cloud"
-                android:layout_width="50dp"
+                android:layout_width="wrap_content"
+                android:singleLine="true"
                 android:layout_height="40dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="55dp"
@@ -55,10 +56,11 @@
 
             <TextView
                 android:id="@+id/tv_cloud_number"
-                android:layout_width="50dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/iv_cloud"
-                android:layout_below="@+id/iv_cloud"
+                android:layout_alignLeft="@id/iv_cloud"
+                android:layout_below="@id/iv_cloud"
+                android:singleLine="true"
                 android:layout_marginTop="11dp"
                 android:gravity="center"
                 android:textColor="#ffffff"

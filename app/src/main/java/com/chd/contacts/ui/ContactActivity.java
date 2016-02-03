@@ -7,6 +7,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chd.MediaMgr.utils.MediaFileUtil;
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.backend.SyncTask;
 import com.chd.contacts.entity.ContactBean;
@@ -52,8 +53,11 @@ public class ContactActivity extends ActiveProcess implements OnClickListener{
                     vcarIO.getLocalSize(handler);
                     if (cloudUnits.isEmpty())
                         mCloudNumber.setText("尚未备份");
-                    else
-                        vcarIO.getNetSize(cloudUnits.get(0).getObjid(), handler);
+                    else{
+                        FileInfo0 info0 = new FileInfo0(cloudUnits.get(0));
+                        vcarIO.getNetSize(info0.getObjid(), handler);
+
+                    }
                     break;
             }
 
@@ -141,7 +145,16 @@ public class ContactActivity extends ActiveProcess implements OnClickListener{
                     // 更新进度
                     setParMessage("正在上传,请稍候...");
                     updateProgress(0);
-                    vcarIO.doExport(contactPath, ContactActivity.this);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            vcarIO.doExport(contactPath, ContactActivity.this);
+                            String name = MediaFileUtil.getNameFromFilepath(contactPath);
+                            vcarIO.getNetSize(name,handler);
+
+                        }
+                    }).start();
+
                 }
 
                 break;

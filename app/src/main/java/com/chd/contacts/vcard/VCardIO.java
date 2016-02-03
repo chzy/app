@@ -22,11 +22,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class VCardIO {
+    private final String TAG = this.getClass().getName();
     private Context context;
-    private final  String TAG=this.getClass().getName();
 
     public VCardIO(Context context) {
         this.context = context;
@@ -112,42 +114,40 @@ public class VCardIO {
             @Override
             public void run() {
                 int size = 0;
+                Message msg = new Message();
+                msg.what = 999;
                 try {
-                    /*File vcfFile = new File(fileName);
+//                    File vcfFile = new File(fileName);
+//
+//                    final BufferedReader vcfBuffer = new BufferedReader(
+//                            new FileReader(fileName));
+//                    final long maxlen = vcfFile.length();
+//
+//                    // 后台执行导入过程
+//                    long importStatus = 0;
+//
+//                    Contact parseContact = new Contact();
+//                        long ret = 0;
+//                        do {
+//                            ret = parseContact.parseVCard(vcfBuffer);
+//                            if (ret < 0) {
+//                                break;
+//                            }
+//                            size++;
+//                            importStatus += parseContact.getParseLen();
+//
+//                        } while (true);
 
-                    final BufferedReader vcfBuffer = new BufferedReader(
-                            new FileReader(fileName));
-                    final long maxlen = vcfFile.length();
+                    TClient tClient = TClient.getinstance();
+                    String lines = tClient.queryAttribute(fileName, FTYPE.ADDRESS, "lines");
+                    size = Integer.parseInt(lines);
 
-                    // 后台执行导入过程
-                    long importStatus = 0;
+                    msg.obj = size;
 
-                    Contact parseContact = new Contact();
-                    try {
-                        long ret = 0;
-                        do {
-                            ret = parseContact.parseVCard(vcfBuffer);
-                            if (ret < 0) {
-                                break;
-                            }
-                            size++;
-                            importStatus += parseContact.getParseLen();
-
-                        } while (true);*/
-
-                        TClient tClient=TClient.getinstance();
-                        String lines=tClient.queryAttribute(fileName,FTYPE.ADDRESS,"lines");
-                        size=Integer.parseInt(lines);
-                    Message msg=new Message();
-                        msg.what=999;
-                        msg.obj=size;
-                        handler.sendMessage(msg);
-                    } catch (IOException e) {
-
-                    }catch (Exception e1)
-                {
-                    Log.e(TAG,e1.getMessage());
-                    return;
+                } catch (Exception e) {
+                    msg.obj = 0;
+                } finally {
+                    handler.sendMessage(msg);
                 }
 
                /* } catch (FileNotFoundException e) {
@@ -160,12 +160,9 @@ public class VCardIO {
 
 
     public void doExport(final String fileName, final ActiveProcess activity) {
-        new Thread() {
-            @Override
-            public void run() {
                 try {
                     /*if (1==1)
-						upload( fileName,  activity);*/
+                        upload( fileName,  activity);*/
                     final BufferedWriter vcfBuffer = new BufferedWriter(
                             new FileWriter(fileName));
 
@@ -202,11 +199,24 @@ public class VCardIO {
                             vcfBuffer.flush();
                             vcfBuffer.close();
                             allContacts.close();
-
                             if (!upload(fileName, activity)) {
                                 Log.e("", "upload failed ");
+                            }else{
+                                TClient tClient =TClient.getinstance();
+                                TClient.TFilebuilder filebuilder;
+                                String name=MediaFileUtil.getNameFromFilepath(fileName);
+                                filebuilder = tClient.new TFilebuilder(name, FTYPE.ADDRESS);
+                                String objid=null;
+                                objid = filebuilder.ApplyObj();
+                                if (objid == null) {
+                                    Log.e("smsexport","alloc obj failed ");
+                                }
+                                Map<String, String> desc = new HashMap<String, String>();
+                                desc.put("lines", maxlen + "");
+                                boolean commit = filebuilder.Commit(desc);
+                                Log.i("liumj",commit+"提交desc");
                             }
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                             activity.finishProgress();
                         }
@@ -215,8 +225,7 @@ public class VCardIO {
                     e.printStackTrace();
                     activity.finishProgress();
                 }
-            }
-        }.start();
+
 
     }
 
@@ -237,7 +246,7 @@ public class VCardIO {
         info.setObjid(MediaFileUtil.getNameFromFilepath(filePath));
         info.setFilePath(filePath);
         info.setFtype(FTYPE.ADDRESS);
-        return new SyncLocalFileBackground(context).uploadBigFile(info, activity);
+        return new SyncLocalFileBackground(context).uploadFileOvWrite(info, activity);
         //}
         //}).start();
     }

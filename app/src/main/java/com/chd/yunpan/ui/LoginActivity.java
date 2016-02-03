@@ -112,17 +112,17 @@ public class LoginActivity extends Activity implements OnClickListener {
         }
         Intent intent = getIntent();
 
-        if(intent!=null&&intent.getBooleanExtra("isReg",false)){
+        if (intent != null && intent.getBooleanExtra("isReg", false)) {
             et_name.setText(intent.getStringExtra("phone"));
             et_pwd.setText(intent.getStringExtra("pass"));
-
             ExecRunable.execRun(new LoginThread());
-        }else{
+        } else {
 
             shareUtils = new ShareUtils(this);
 
-            if(!StringUtils.isNullOrEmpty(shareUtils.getUsername())){
+            if (!StringUtils.isNullOrEmpty(shareUtils.getUsername())) {
                 et_name.setText(shareUtils.getUsername());
+                et_pwd.setText(shareUtils.getPwd());
             }
 
             if (shareUtils.isAutoLogin()) {

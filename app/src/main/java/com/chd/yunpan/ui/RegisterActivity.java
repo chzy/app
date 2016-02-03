@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,6 +16,7 @@ import com.chd.TClient;
 import com.chd.proto.Errcode;
 import com.chd.proto.RetHead;
 import com.chd.yunpan.R;
+import com.chd.yunpan.utils.TimeCount;
 import com.chd.yunpan.view.CircularProgressButton;
 
 import org.json.JSONException;
@@ -161,23 +160,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
 
 
-    class TimeCount extends CountDownTimer {
-        private Button btn;
-        public TimeCount(long millisInFuture, long countDownInterval,Button v) {
-            super(millisInFuture, countDownInterval);//参数依次为总时长,和计时的时间间隔
-            this.btn=v;
-        }
-        @Override
-        public void onFinish() {//计时完毕时触发
-            btn.setText("重新验证");
-            btn.setClickable(true);
-        }
-        @Override
-        public void onTick(long millisUntilFinished){//计时过程显示
-            btn.setClickable(false);
-            btn.setText(millisUntilFinished /1000+"秒");
-        }
-    }
 
 
 

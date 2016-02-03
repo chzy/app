@@ -29,7 +29,7 @@ public class UserInfoEditActivity extends Activity implements OnClickListener
 	private EditText mEditNewMobile, mEditVCode;
 	private Button mBtnVCode;
 	
-	private TextView mTextOldPwd;
+	private EditText mEditOldPwd;
 	private EditText mEditNewPwd, mEditNewPwd2;
 	
 	private View mViewSexMan, mViewSexWomen;
@@ -110,7 +110,6 @@ public class UserInfoEditActivity extends Activity implements OnClickListener
 		case UserInfoFlag.FLAG_EDIT_TYPE_PWD:
 		{
 			mViewNewPwd.setVisibility(View.VISIBLE);
-			mTextOldPwd.setText(sEditValue);
 		}
 			break;
 		default:
@@ -139,7 +138,7 @@ public class UserInfoEditActivity extends Activity implements OnClickListener
 		mEditVCode = (EditText) findViewById(R.id.userinfoedit_vcode_txt);
 		mBtnVCode = (Button) findViewById(R.id.userinfoedit_vcode_btn);
 		
-		mTextOldPwd = (TextView) findViewById(R.id.userinfoedit_pwd_txt);
+		mEditOldPwd = (EditText) findViewById(R.id.userinfoedit_pwd_txt);
 		mEditNewPwd = (EditText) findViewById(R.id.userinfoedit_newpwd_txt);
 		mEditNewPwd2 = (EditText) findViewById(R.id.userinfoedit_newpwd2_txt);
 		
@@ -204,6 +203,7 @@ public class UserInfoEditActivity extends Activity implements OnClickListener
 	
 	private void onSaveUserInfo()
 	{
+		Intent intent = new Intent();
 		if (nEditType == -1)
 		{
 			return;
@@ -243,13 +243,14 @@ public class UserInfoEditActivity extends Activity implements OnClickListener
 				return;
 			}
 			vEditValue = mEditNewPwd.getText().toString();
+			intent.putExtra("oldPass",mEditOldPwd.getText().toString());
 		}
 			break;
 		default:
 			break;
 		}
 		
-		Intent intent = new Intent();
+
 		intent.putExtra(UserInfoFlag.FLAG_EDIT_TYPE, nEditType);
 		intent.putExtra(UserInfoFlag.FLAG_EDIT_VALUE, vEditValue);
 		setResult(1000, intent);

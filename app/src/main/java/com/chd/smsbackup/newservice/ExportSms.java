@@ -11,15 +11,20 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.chd.MediaMgr.utils.MediaFileUtil;
 import com.chd.TClient;
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.proto.FTYPE;
+import com.chd.proto.FileInfo0;
+import com.chd.service.SyncLocalFileBackground;
 import com.chd.smsbackup.entity.SmsField;
 import com.chd.smsbackup.entity.SmsItem;
 import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ExportSms {
 
@@ -31,8 +36,25 @@ public class ExportSms {
     }
 
 
-    public boolean ExpSMS(final String fpath) {
 
+    /**
+     * 下载联系人信息
+     *
+     * @param filePath 存放导出信息的文件
+     * @param activity 主窗口
+     */
+
+    public boolean download(final String filePath, final ActiveProcess activity) {
+        // 线程中执行
+        FileInfo0 info = new FileInfo0();
+        info.setObjid(MediaFileUtil.getNameFromFilepath(filePath));
+        info.setFilePath(filePath);
+        info.setFtype(FTYPE.SMS);
+        return new SyncLocalFileBackground(activity).downloadBigFile(info, activity);
+
+    }
+
+    public boolean ExpSMS(final String fpath) {
         Thread thread=new Thread(new Runnable() {
             @Override
             public void run() {
@@ -52,7 +74,7 @@ public class ExportSms {
         return true;
     }
 
-    public void getCount(final String fPath, final Handler handler){
+    public void getCount(final Handler handler){
         Thread thread=new Thread(new Runnable() {
             @Override
             public void run() {
@@ -97,17 +119,6 @@ public class ExportSms {
         fout.deleteOnExit();
         fos= new FileOutputStream(fout);
 
-        TClient tClient =TClient.getinstance();
-        TClient.TFilebuilder filebuilder;
-        filebuilder = tClient.new TFilebuilder(fout.getName(), FTYPE.SMS);
-        String objid=null;
-        {
-            objid = filebuilder.ApplyObj();
-            if (objid == null) {
-                Log.e("smsexport","alloc obj failed ");
-                return false;
-            }
-        }
 
         Cursor cursor = null;
         int lines=0;
@@ -253,23 +264,77 @@ public class ExportSms {
         }
         fos.flush();
         fos.close();
-
-      /*  if (filebuilder!=null) {
-            if (!successed)
-            {
-                filebuilder.DestoryObj();
-                return false;
-            }
-            else {
-                Map<String, String> desc = new HashMap<String, String>();
-                desc.put("lines", String.valueOf(lines));
+            if (successed){
+                boolean upload = upload(fpath, context);
+                if(upload){
+                    TClient tClient =TClient.getinstance();
+                    TClient.TFilebuilder filebuilder;
+                    filebuilder = tClient.new TFilebuilder(fout.getName(), FTYPE.SMS);
+                    String objid=null;
+                        objid = filebuilder.ApplyObj();
+                        if (objid == null) {
+                            Log.e("smsexport","alloc obj failed ");
+                            return false;
+                        }
+                    Map<String, String> desc = new HashMap<String, String>();
+                desc.put("lines", lines+"");
                 filebuilder.Commit(desc);
+                }
+            }else{
+                    return false;
             }
-        }*/
         return true;
     }
 
 
+    public void getRemontCount(final String fpath, final Handler mHandler){
 
-  
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Message msg=new Message();
+                msg.what=999;
+                try {
+                    TClient tClient = TClient.getinstance();
+                    int last=fpath.lastIndexOf("/");
+                    String name=fpath.substring(last + 1);
+                    String lines=tClient.queryAttribute(name, FTYPE.SMS, "lines");
+                    int size = Integer.parseInt(lines);
+                    msg.obj=size;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                   msg.obj=0;
+                }finally {
+                    mHandler.sendMessage(msg);
+                }
+
+            }
+        }).start();
+
+    }
+
+
+
+    /**
+     * 导出联系人信息
+     *
+     * @param filePath 存放导出信息的文件
+     * @param activity 主窗口
+     */
+
+    public boolean upload(final String filePath, final ActiveProcess activity) {
+        // 线程中执行
+        int last=filePath.lastIndexOf("/");
+        String name=filePath.substring(last+1);
+        FileInfo0 info = new FileInfo0();
+        info.setObjid(MediaFileUtil.getNameFromFilepath(filePath));
+        info.setFilePath(filePath);
+        info.setFilename(name);
+        info.setFtype(FTYPE.SMS);
+        return new SyncLocalFileBackground(activity).uploadFileOvWrite(info, activity);
+    }
+
+
+
+
 }
