@@ -45,7 +45,8 @@ public class FileDBmager {
     {
         File dir=new File(path);
 
-        files=Arrays.asList(dir.list(new MFileFilter(file_ext)));
+        MFileFilter fileFilter=new MFileFilter(file_ext);
+        files=Arrays.asList(dir.list(fileFilter));
         //Arrays.sort(files);
         Collections.sort(files);
         return  files.iterator();
@@ -71,13 +72,23 @@ public class FileDBmager {
 
     class MFileFilter implements FilenameFilter {
         String _ext;
+        int _min;
         public MFileFilter(String ext)
         {
-            _ext=ext;
+            _ext=ext.toLowerCase();
+            _min= _ext.length();
         }
         @Override
         public boolean accept(File dir, String filename) {
-            return (filename.length()-filename.lastIndexOf(_ext)-_ext.length()==0);
+            //int idx=filename.toLowerCase().lastIndexOf(_ext);
+            if (filename.length()<_min  )
+                return  false;
+            int idx=filename.lastIndexOf(_ext);
+            if (idx<0)
+                return  false;
+            return filename.length()- idx==_min;
+            //filename.substring()
+            //    return (filename.length()-filename.lastIndexOf(_ext)-_ext.length()==0);
         }
     }
 

@@ -167,9 +167,9 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
         while (iterator.hasNext())
         {
             NoteItemtag item = new NoteItemtag();
-            String title =iterator.next();
-            title=title.substring(0,title.length()-4);
-            item.set_fname(title);
+            String fname =iterator.next();
+            fname=fname.substring(0,fname.length()-4);
+            item.set_fname(fname);
             cal.setTimeInMillis(item.getStamp());
             if (month != cal.get(Calendar.MONTH)) {
                 month = cal.get(Calendar.MONTH);
