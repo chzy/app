@@ -39,6 +39,7 @@ import com.chd.yunpan.share.ShareUtils;
 import com.chd.yunpan.ui.LoginActivity;
 import com.chd.yunpan.ui.dialog.IconSelectWindow;
 import com.chd.yunpan.utils.PictureUtil;
+import com.chd.yunpan.view.CircleImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.ByteArrayOutputStream;
@@ -49,7 +50,7 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
     private TextView mTvCenter;
     private View mViewHead, mViewName, mViewSex, mViewAge, mViewMobile, mViewPwd;
     private TextView mTextName, mTextSex, mTextAge, mTextMobile, mTextPwd;
-    private ImageView mImgHead;
+    private CircleImageView mImgHead;
     private Button mBtnLogout;
     private UserInfo userInfo;
     private ImageLoader imageLoader = ImageLoader.getInstance();
@@ -77,14 +78,6 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
                 case 2:
                     Toast.makeText(UserInfoActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
                     break;
-                case 3:
-                    //头像
-                    byte[] thumb = (byte[]) msg.obj;
-                    if(thumb!=null){
-                        Bitmap bm = Bytes2Bimap(thumb);
-                        mImgHead.setImageBitmap(bm);
-                    }
-                    break;
             }
         }
     };
@@ -92,344 +85,23 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
     private IconSelectWindow iconWindow;
     private View root_view;
     private File icon_file;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_userinfo);
-        root_view= LayoutInflater.from(this).inflate(R.layout.activity_userinfo,null,false);
-
-        initTitle();
-        initResourceId();
-        initListener();
-        iconWindow = new IconSelectWindow(this);
-        new Thread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            userInfo = TClient.getinstance().QueryUserInfo();
-                            if (userInfo == null) {
-                                userInfo = new UserInfo();
-                            }
-                            FileInfo0 info = TClient.getinstance().queryFile(FTYPE.PICTURE, "netdiskportrait");
-                            if(info!=null){
-                            imageLoader.displayImage(info.getFilePath(),mImgHead);
-                            }
-                            mHandler.sendEmptyMessage(0);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-        ).start();
-        initData();
-    }
-
-    private void initData() {
-
-
-    }
-
-    public Bitmap Bytes2Bimap(byte[] b) {
-        if (b.length != 0) {
-            return BitmapFactory.decodeByteArray(b, 0, b.length);
-        } else {
-            return null;
-        }
-    }
-
-
-    private void initListener() {
-        mIvLeft.setOnClickListener(this);
-        mViewHead.setOnClickListener(this);
-        mViewName.setOnClickListener(this);
-        mViewSex.setOnClickListener(this);
-        mViewAge.setOnClickListener(this);
-        mViewMobile.setOnClickListener(this);
-        mViewPwd.setOnClickListener(this);
-        mBtnLogout.setOnClickListener(this);
-    }
-
-    private void initResourceId() {
-        mViewHead = findViewById(R.id.userinfo_head_layout);
-        mViewName = findViewById(R.id.userinfo_name_layout);
-        mViewSex = findViewById(R.id.userinfo_sex_layout);
-        mViewAge = findViewById(R.id.userinfo_age_layout);
-        mViewMobile = findViewById(R.id.userinfo_mobile_layout);
-        mViewPwd = findViewById(R.id.userinfo_pwd_layout);
-
-        mImgHead = (ImageView) findViewById(R.id.userinfo_head_img);
-        mTextName = (TextView) findViewById(R.id.userinfo_name_txt);
-        mTextSex = (TextView) findViewById(R.id.userinfo_sex_txt);
-        mTextAge = (TextView) findViewById(R.id.userinfo_age_txt);
-        mTextMobile = (TextView) findViewById(R.id.userinfo_mobile_txt);
-        mTextPwd = (TextView) findViewById(R.id.userinfo_pwd_txt);
-
-        mBtnLogout = (Button) findViewById(R.id.userinfo_logout);
-    }
-
-    private void initTitle() {
-        mIvLeft = (ImageView) findViewById(R.id.iv_left);
-        mTvCenter = (TextView) findViewById(R.id.tv_center);
-
-        mTvCenter.setText("个人信息");
-    }
-
-    @Override
-    public void onClick(View v) {
-        Intent intent = new Intent(this, UserInfoEditActivity.class);
-        int edit_type = -1;
-        String edit_value = "";
-        switch (v.getId()) {
-            case R.id.userinfo_head_layout: {
-                iconWindow.showPopupWindow(root_view);
-            }
-            break;
-            case R.id.userinfo_name_layout: {
-                edit_type = UserInfoFlag.FLAG_EDIT_TYPE_NAME;
-                edit_value = mTextName.getText().toString();
-            }
-            break;
-            case R.id.userinfo_sex_layout: {
-                edit_type = UserInfoFlag.FLAG_EDIT_TYPE_SEX;
-                edit_value = mTextSex.getText().toString();
-            }
-            break;
-            case R.id.userinfo_age_layout: {
-                edit_type = UserInfoFlag.FLAG_EDIT_TYPE_AGE;
-                edit_value = mTextAge.getText().toString();
-            }
-            break;
-            case R.id.userinfo_mobile_layout: {
-                edit_type = UserInfoFlag.FLAG_EDIT_TYPE_MOBILE;
-                edit_value = mTextMobile.getText().toString();
-            }
-            break;
-            case R.id.userinfo_pwd_layout: {
-                edit_type = UserInfoFlag.FLAG_EDIT_TYPE_PWD;
-                edit_value = mTextPwd.getText().toString();
-            }
-            break;
-            case R.id.userinfo_logout: {
-                ShareUtils shareUtils = new ShareUtils(UserInfoActivity.this);
-                shareUtils.setLoginEntity(null);
-                shareUtils.setURL("");
-                shareUtils.setAutoLogin(false);
-                shareUtils.setPwd("");
-                Intent startIntent=new Intent(UserInfoActivity.this, LoginActivity.class);
-                startActivity(startIntent);
-                finish();
-            }
-            return;
-            default:
-                break;
-        }
-
-        if (edit_type != -1) {
-            intent.putExtra(UserInfoFlag.FLAG_EDIT_TYPE, edit_type);
-            intent.putExtra(UserInfoFlag.FLAG_EDIT_VALUE, edit_value);
-            startActivityForResult(intent, 1000);
-        }
-    }
-
-
-
-
-    public void saveUser(final UserInfo info) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    boolean b = TClient.getinstance().SetUserInfo(info);
-                    Log.d("lmj-保存", b + "");
-                    if (b) {
-                        mHandler.sendEmptyMessage(1);
-                    } else {
-                        mHandler.sendEmptyMessage(2);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    mHandler.sendEmptyMessage(2);
-                }
-            }
-        })
-
-                .start();
-    }
-
-
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        Uri data2 = null;
-        if (data == null) {
-            data2 = PictureUtil.getImageUri();
-        } else {
-            data2 = data.getData();
-        }
-        if (data != null && requestCode == 1000) {
-            int edit_type = data.getIntExtra(UserInfoFlag.FLAG_EDIT_TYPE, -1);
-            String edit_value = data.getStringExtra(UserInfoFlag.FLAG_EDIT_VALUE);
-            if (edit_value == null) {
-                edit_value = "";
-            }
-            switch (edit_type) {
-                case UserInfoFlag.FLAG_EDIT_TYPE_NAME: {
-                    userInfo.setAliasname(edit_value);
-                    mTextName.setText(edit_value);
-                    saveUser(userInfo);
-                }
-                break;
-                case UserInfoFlag.FLAG_EDIT_TYPE_SEX: {
-                    if ("男".equals(edit_value)) {
-                        userInfo.setMale(true);
-                    } else {
-                        userInfo.setMale(false);
-                    }
-                    mTextSex.setText(edit_value);
-                    saveUser(userInfo);
-                }
-                break;
-                case UserInfoFlag.FLAG_EDIT_TYPE_AGE: {
-                    int age = Integer.valueOf(edit_value);
-                    userInfo.setAge(age);
-                    mTextAge.setText(edit_value);
-                    saveUser(userInfo);
-
-                }
-                break;
-                case UserInfoFlag.FLAG_EDIT_TYPE_MOBILE: {
-                    userInfo.setMobile(edit_value);
-                    mTextMobile.setText(edit_value);
-                    saveUser(userInfo);
-                }
-                break;
-                case UserInfoFlag.FLAG_EDIT_TYPE_PWD: {
-                    mTextPwd.setText(edit_value);
-                    final String oldPass=data.getStringExtra("oldPass");
-
-                    final String finalEdit_value = edit_value;
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                final RetHead retHead = TClient.getinstance().ChangePwd(oldPass, finalEdit_value);
-                                if(Errcode.SUCCESS==retHead.getRet()){
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(UserInfoActivity.this, "修改密码成功", Toast.LENGTH_SHORT).show();
-
-                                        }
-                                    });
-                                }else{
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            String msg=retHead.getMsg();
-                                            Toast.makeText(UserInfoActivity.this, msg, Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
-                            } catch (Exception e) {
-                            }
-                        }
-                    }).start();
-                }
-                break;
-                default:
-                    break;
-            }
-
-        }
-
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case PictureUtil.PHOTO_PICKED_WITH_DATA:
-                    intent.setDataAndType(data2, "image/*");
-                    intent.putExtra("crop", true);
-                    // 设置裁剪尺寸
-                    intent.putExtra("aspectX", 1);
-                    intent.putExtra("aspectY", 1);
-                    intent.putExtra("outputX", 160);
-                    intent.putExtra("outputY", 130);
-                    intent.putExtra("return-data", true);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT,
-                            PictureUtil.getImageCaiUri());
-                    startActivityForResult(intent, PictureUtil.PHOTO_CROP);
-                    break;
-                case PictureUtil.CAMERA_WITH_DATA:
-
-                    Uri ur = Uri.fromFile(PictureUtil.getmCurrentPhotoFile());
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                        String url = getPath(this, ur);
-                        intent.setDataAndType(Uri.fromFile(new File(url)), "image/*");
-                    } else {
-                        intent.setDataAndType(ur, "image/*");
-                    }
-                    intent.putExtra("crop", true);
-                    intent.putExtra("aspectX", 1);
-                    intent.putExtra("aspectY", 1);
-                    intent.putExtra("outputX", 160);
-                    intent.putExtra("outputY", 130);
-                    intent.putExtra("return-data", true);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, ur);
-                    startActivityForResult(intent, PictureUtil.PHOTO_CROP);
-                    break;
-                case PictureUtil.PHOTO_CROP:
-                    String fileName = PictureUtil.getCharacterAndNumber();
-                    if (data.getData() != null) {
-                        Bitmap pho = BitmapFactory.decodeFile(data.getData().getPath());
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        pho.compress(Bitmap.CompressFormat.JPEG, 75, stream);
-                        File file = new File(PictureUtil.PHOTO_DIR, fileName + ".png");
-                        PictureUtil.saveMyBitmap(pho, file);
-                        icon_file = file;
-                        mImgHead.setImageBitmap(pho);
-                        iconWindow.dismiss();
-                    } else {
-                        Bundle bundle = data.getExtras();
-                        Bitmap myBitmap = (Bitmap) bundle.get("data");
-                        Bitmap bitImage = PictureUtil.comp(myBitmap);
-                        File file = new File(PictureUtil.PHOTO_DIR, fileName + ".png");
-                        PictureUtil.saveMyBitmap(bitImage, file);
-                        icon_file = file;
-                        mImgHead.setImageBitmap(bitImage);
-                        iconWindow.dismiss();
-                    }
-                    if (icon_file == null) {
-                        Toast.makeText(UserInfoActivity.this, "头像不能为空", Toast.LENGTH_SHORT).show();
-                    } else {
-                        new Thread(savePic).start();
-                    }
-                    break;
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-
-    public Runnable savePic=new Runnable() {
+    public Runnable savePic = new Runnable() {
         @Override
         public void run() {
-            FileInfo0 info0=new FileInfo0();
+            FileInfo0 info0 = new FileInfo0();
             info0.setObjid("netdiskportrait");
             info0.setFilePath(icon_file.getPath());
             info0.setFtype(FTYPE.PICTURE);
             setParMessage("头像上传中");
-            boolean b = new SyncLocalFileBackground(UserInfoActivity.this).uploadFileOvWrite(info0, UserInfoActivity.this,null);
-            if(b){
+            boolean b = new SyncLocalFileBackground(UserInfoActivity.this).uploadFileOvWrite(info0, UserInfoActivity.this, null);
+            if (b) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
 //                        Toast.makeText(UserInfoActivity.this, "上传头像成功", Toast.LENGTH_SHORT).show();
                     }
                 });
-            }else{
+            } else {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -440,9 +112,6 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
 
         }
     };
-
-
-
 
     //以下是关键，原本uri返回的是file:///...来着的，android4.4返回的是content:///...
     @SuppressLint("NewApi")
@@ -573,6 +242,316 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
      */
     public static boolean isExternalStorageDocument(Uri uri) {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_userinfo);
+        root_view = LayoutInflater.from(this).inflate(R.layout.activity_userinfo, null, false);
+
+        initTitle();
+        initResourceId();
+        initListener();
+        iconWindow = new IconSelectWindow(this);
+        new Thread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            userInfo = TClient.getinstance().QueryUserInfo();
+                            if (userInfo == null) {
+                                userInfo = new UserInfo();
+                            }
+//                            final FileInfo0 info = TClient.getinstance().queryFile(FTYPE.PICTURE, "netdiskportrait");
+//                            if(info!=null){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    imageLoader.displayImage("trpc://netdiskportrait", mImgHead);
+                                }
+                            });
+
+//                            }
+                            mHandler.sendEmptyMessage(0);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        ).start();
+        initData();
+    }
+
+    private void initData() {
+
+
+    }
+
+    private void initListener() {
+        mIvLeft.setOnClickListener(this);
+        mViewHead.setOnClickListener(this);
+        mViewName.setOnClickListener(this);
+        mViewSex.setOnClickListener(this);
+        mViewAge.setOnClickListener(this);
+        mViewMobile.setOnClickListener(this);
+        mViewPwd.setOnClickListener(this);
+        mBtnLogout.setOnClickListener(this);
+    }
+
+    private void initResourceId() {
+        mViewHead = findViewById(R.id.userinfo_head_layout);
+        mViewName = findViewById(R.id.userinfo_name_layout);
+        mViewSex = findViewById(R.id.userinfo_sex_layout);
+        mViewAge = findViewById(R.id.userinfo_age_layout);
+        mViewMobile = findViewById(R.id.userinfo_mobile_layout);
+        mViewPwd = findViewById(R.id.userinfo_pwd_layout);
+
+        mImgHead = (CircleImageView) findViewById(R.id.userinfo_head_img);
+        mTextName = (TextView) findViewById(R.id.userinfo_name_txt);
+        mTextSex = (TextView) findViewById(R.id.userinfo_sex_txt);
+        mTextAge = (TextView) findViewById(R.id.userinfo_age_txt);
+        mTextMobile = (TextView) findViewById(R.id.userinfo_mobile_txt);
+        mTextPwd = (TextView) findViewById(R.id.userinfo_pwd_txt);
+
+        mBtnLogout = (Button) findViewById(R.id.userinfo_logout);
+    }
+
+    private void initTitle() {
+        mIvLeft = (ImageView) findViewById(R.id.iv_left);
+        mTvCenter = (TextView) findViewById(R.id.tv_center);
+
+        mTvCenter.setText("个人信息");
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(this, UserInfoEditActivity.class);
+        int edit_type = -1;
+        String edit_value = "";
+        switch (v.getId()) {
+            case R.id.userinfo_head_layout: {
+                iconWindow.showPopupWindow(root_view);
+            }
+            break;
+            case R.id.userinfo_name_layout: {
+                edit_type = UserInfoFlag.FLAG_EDIT_TYPE_NAME;
+                edit_value = mTextName.getText().toString();
+            }
+            break;
+            case R.id.userinfo_sex_layout: {
+                edit_type = UserInfoFlag.FLAG_EDIT_TYPE_SEX;
+                edit_value = mTextSex.getText().toString();
+            }
+            break;
+            case R.id.userinfo_age_layout: {
+                edit_type = UserInfoFlag.FLAG_EDIT_TYPE_AGE;
+                edit_value = mTextAge.getText().toString();
+            }
+            break;
+            case R.id.userinfo_mobile_layout: {
+                edit_type = UserInfoFlag.FLAG_EDIT_TYPE_MOBILE;
+                edit_value = mTextMobile.getText().toString();
+            }
+            break;
+            case R.id.userinfo_pwd_layout: {
+                edit_type = UserInfoFlag.FLAG_EDIT_TYPE_PWD;
+                edit_value = mTextPwd.getText().toString();
+            }
+            break;
+            case R.id.userinfo_logout: {
+                ShareUtils shareUtils = new ShareUtils(UserInfoActivity.this);
+                shareUtils.setLoginEntity(null);
+                shareUtils.setURL("");
+                shareUtils.setAutoLogin(false);
+                shareUtils.setPwd("");
+                Intent startIntent = new Intent(UserInfoActivity.this, LoginActivity.class);
+                startActivity(startIntent);
+                finish();
+            }
+            return;
+            default:
+                break;
+        }
+
+        if (edit_type != -1) {
+            intent.putExtra(UserInfoFlag.FLAG_EDIT_TYPE, edit_type);
+            intent.putExtra(UserInfoFlag.FLAG_EDIT_VALUE, edit_value);
+            startActivityForResult(intent, 1000);
+        }
+    }
+
+    public void saveUser(final UserInfo info) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    boolean b = TClient.getinstance().SetUserInfo(info);
+                    Log.d("lmj-保存", b + "");
+                    if (b) {
+                        mHandler.sendEmptyMessage(1);
+                    } else {
+                        mHandler.sendEmptyMessage(2);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    mHandler.sendEmptyMessage(2);
+                }
+            }
+        })
+
+                .start();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        Uri data2 = null;
+        if (data == null) {
+            data2 = PictureUtil.getImageUri();
+        } else {
+            data2 = data.getData();
+        }
+        if (data != null && requestCode == 1000) {
+            int edit_type = data.getIntExtra(UserInfoFlag.FLAG_EDIT_TYPE, -1);
+            String edit_value = data.getStringExtra(UserInfoFlag.FLAG_EDIT_VALUE);
+            if (edit_value == null) {
+                edit_value = "";
+            }
+            switch (edit_type) {
+                case UserInfoFlag.FLAG_EDIT_TYPE_NAME: {
+                    userInfo.setAliasname(edit_value);
+                    mTextName.setText(edit_value);
+                    saveUser(userInfo);
+                }
+                break;
+                case UserInfoFlag.FLAG_EDIT_TYPE_SEX: {
+                    if ("男".equals(edit_value)) {
+                        userInfo.setMale(true);
+                    } else {
+                        userInfo.setMale(false);
+                    }
+                    mTextSex.setText(edit_value);
+                    saveUser(userInfo);
+                }
+                break;
+                case UserInfoFlag.FLAG_EDIT_TYPE_AGE: {
+                    int age = Integer.valueOf(edit_value);
+                    userInfo.setAge(age);
+                    mTextAge.setText(edit_value);
+                    saveUser(userInfo);
+
+                }
+                break;
+                case UserInfoFlag.FLAG_EDIT_TYPE_MOBILE: {
+                    userInfo.setMobile(edit_value);
+                    mTextMobile.setText(edit_value);
+                    saveUser(userInfo);
+                }
+                break;
+                case UserInfoFlag.FLAG_EDIT_TYPE_PWD: {
+                    mTextPwd.setText(edit_value);
+                    final String oldPass = data.getStringExtra("oldPass");
+
+                    final String finalEdit_value = edit_value;
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                final RetHead retHead = TClient.getinstance().ChangePwd(oldPass, finalEdit_value);
+                                if (Errcode.SUCCESS == retHead.getRet()) {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(UserInfoActivity.this, "修改密码成功", Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    });
+                                } else {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            String msg = retHead.getMsg();
+                                            Toast.makeText(UserInfoActivity.this, msg, Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                            } catch (Exception e) {
+                            }
+                        }
+                    }).start();
+                }
+                break;
+                default:
+                    break;
+            }
+
+        }
+
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case PictureUtil.PHOTO_PICKED_WITH_DATA:
+                    intent.setDataAndType(data2, "image/*");
+                    intent.putExtra("crop", true);
+                    // 设置裁剪尺寸
+                    intent.putExtra("aspectX", 1);
+                    intent.putExtra("aspectY", 1);
+                    intent.putExtra("outputX", 160);
+                    intent.putExtra("outputY", 130);
+                    intent.putExtra("return-data", true);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT,
+                            PictureUtil.getImageCaiUri());
+                    startActivityForResult(intent, PictureUtil.PHOTO_CROP);
+                    break;
+                case PictureUtil.CAMERA_WITH_DATA:
+
+                    Uri ur = Uri.fromFile(PictureUtil.getmCurrentPhotoFile());
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                        String url = getPath(this, ur);
+                        intent.setDataAndType(Uri.fromFile(new File(url)), "image/*");
+                    } else {
+                        intent.setDataAndType(ur, "image/*");
+                    }
+                    intent.putExtra("crop", true);
+                    intent.putExtra("aspectX", 1);
+                    intent.putExtra("aspectY", 1);
+                    intent.putExtra("outputX", 160);
+                    intent.putExtra("outputY", 130);
+                    intent.putExtra("return-data", true);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, ur);
+                    startActivityForResult(intent, PictureUtil.PHOTO_CROP);
+                    break;
+                case PictureUtil.PHOTO_CROP:
+                    String fileName = PictureUtil.getCharacterAndNumber();
+                    if (data.getData() != null) {
+                        Bitmap pho = BitmapFactory.decodeFile(data.getData().getPath());
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        pho.compress(Bitmap.CompressFormat.JPEG, 75, stream);
+                        File file = new File(PictureUtil.PHOTO_DIR, fileName + ".png");
+                        PictureUtil.saveMyBitmap(pho, file);
+                        icon_file = file;
+                        mImgHead.setImageBitmap(pho);
+                        iconWindow.dismiss();
+                    } else {
+                        Bundle bundle = data.getExtras();
+                        Bitmap myBitmap = (Bitmap) bundle.get("data");
+                        Bitmap bitImage = PictureUtil.comp(myBitmap);
+                        File file = new File(PictureUtil.PHOTO_DIR, fileName + ".png");
+                        PictureUtil.saveMyBitmap(bitImage, file);
+                        icon_file = file;
+                        mImgHead.setImageBitmap(bitImage);
+                        iconWindow.dismiss();
+                    }
+                    if (icon_file == null) {
+                        Toast.makeText(UserInfoActivity.this, "头像不能为空", Toast.LENGTH_SHORT).show();
+                    } else {
+                        new Thread(savePic).start();
+                    }
+                    break;
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 
