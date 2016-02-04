@@ -16,7 +16,7 @@
     <LinearLayout
         android:id="@+id/userinfo_head_layout"
         android:layout_width="match_parent"
-        android:layout_height="65dp"
+        android:layout_height="wrap_content"
         android:background="#ffffff"
         android:orientation="horizontal" >
 
@@ -34,6 +34,8 @@
             android:id="@+id/userinfo_head_img"
             android:layout_width="57dp"
             android:layout_height="57dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:layout_gravity="center_vertical|right"
             android:layout_marginRight="21dp"/>
     </LinearLayout>

@@ -55,7 +55,7 @@
         <item name="android:layout_marginRight">10dp</item>
     </style>
 
-    <style name="AppTheme" mce_bogus="1" parent="@android:style/Theme.Light">
+    <style name="AppTheme" mce_bogus="1" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowAnimationStyle">@style/default_animation</item>
         <item name="android:windowNoTitle">true</item>
         <!--<item name="android:windowBackground">@drawable/icon_about</item>-->

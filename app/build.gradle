@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion 21
     buildToolsVersion "23.0.1"
     defaultConfig {
         applicationId "com.chd.yunpan"
-        minSdkVersion 14
-        targetSdkVersion 19
+        minSdkVersion 13
+        targetSdkVersion 21
         multiDexEnabled true
     }
     buildTypes {
@@ -62,4 +62,6 @@ dependencies {
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
     compile files('libs/MobCommons.jar')
     compile files('libs/MobTools.jar')
+    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.squareup.picasso:picasso:2.4.0'
 }

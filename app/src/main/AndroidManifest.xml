@@ -3,10 +3,7 @@
     android:versionCode="2"
     android:versionName="2.1内测版" >
 
-    <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="19" >
-    </uses-sdk>
+
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -184,6 +181,16 @@
         <activity
             android:name=".ui.HelpActivity"
             android:screenOrientation="portrait" />
+        <!-- 多图选择-->
+        <activity
+            android:name="com.multi_image_selector.MultiImageSelectorActivity"
+            android:screenOrientation="portrait" />
+        <!-- 图片浏览-->
+        <activity
+            android:name="com.chd.notepad.ui.activity.PhotoBrowseActivity"
+            android:screenOrientation="portrait" />
+
+
 
 
         <service android:name="com.chd.service.SyncFileService" >

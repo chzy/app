@@ -34,6 +34,9 @@ public class NoteItemtag implements Serializable {
             return 0;
         return  Integer.valueOf(_fname.substring(0, idx - 1))*1000;
         */
+        if(fname==null){
+            return 0L;
+        }
         return Long.valueOf(fname);
     }
 

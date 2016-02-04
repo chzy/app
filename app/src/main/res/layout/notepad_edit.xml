@@ -6,30 +6,35 @@
 
     <include layout="@layout/title_bar" />
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@color/white"
-        android:orientation="vertical" >
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="none">
 
-        <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+        <EditText
             android:id="@+id/editTitle"
             android:layout_width="188dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="75dp"
             android:background="@null"
             android:gravity="center"
+            android:hint="在此输入标题"
             android:paddingTop="20dp"
             android:singleLine="true" />
 
         <EditText
             android:id="@+id/editContent"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="100dp"
             android:background="@null"
             android:gravity="top"
-            android:hint="输入内容"
+            android:hint="此处输入内容"
             android:textSize="16sp"
             android:textColor="#bcbcbc"
             android:lineSpacingExtra="4dp"
@@ -38,37 +43,17 @@
             android:paddingRight="10dp"
             android:paddingTop="5dp"
             android:singleLine="false" />
+
+
+        <com.chd.yunpan.view.NineGridlayout
+            android:id="@+id/editNineGrid"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/notepad_edit_img_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:orientation="horizontal"
-        android:visibility="invisible" >
-
-        <ImageView
-            android:id="@+id/notepad_edit_img_0"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:layout_weight="1.0"
-            android:src="@drawable/pic_test1" />
-
-        <ImageView
-            android:id="@+id/notepad_edit_img_1"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:layout_weight="1.0"
-            android:src="@drawable/pic_test1" />
-
-        <ImageView
-            android:id="@+id/notepad_edit_img_2"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:layout_weight="1.0"
-            android:src="@drawable/pic_test1" />
-    </LinearLayout>
-
+</ScrollView>
 </LinearLayout>
