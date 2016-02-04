@@ -130,7 +130,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
                  picInfoBean.setUrl("file://"+info0.getFilePath());
             }
             else
-                picInfoBean.setUrl("trpc://"+item.getUrl());
+                picInfoBean.setUrl(item.getUrl());
             //////////////////////////////////////////////
 
 

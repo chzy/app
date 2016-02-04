@@ -59,8 +59,8 @@ public class netdiskActivity extends Activity implements OnClickListener {
 	private void initData() {
 		int flow = entity.getFlow();//免费流量
 		int uflow = entity.getUflow();//已使用流量
-		long space = entity.getSpace();//用户空间k
-		long uspace = entity.getUspace();//用户已经使用的空间k
+		long space = entity.getSpace();//用户空间bite
+		long uspace = entity.getUspace();//用户已经使用的空间bite
 
 
 		int spacePro = (int) (uspace*100l/space);
@@ -69,7 +69,7 @@ public class netdiskActivity extends Activity implements OnClickListener {
 		mProSpace.setProgress(spacePro);
 		mTextUserSpace.setText(String.format("%d%%", spacePro));
 
-		int freePro=uflow==00?0 : (int) (uflow*100l/flow);
+		int freePro=uflow==00?0 : (int) (uflow*100/flow);
 		String freeStr = TimeAndSizeUtil.getSize((flow - uflow) + "");
 		mProFreeapp.setProgress(freePro);
 		mProFreeapp.setTxt(freeStr );

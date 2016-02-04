@@ -117,20 +117,23 @@ public class PicActivity extends Activity implements OnClickListener {
 			 YearMap.put(year,tmpMonthMap);
 		}
 
-		PicInfoBean picInfoBean = new PicInfoBean();
-		if (info.getSysid()>0 ) {
-			if (!syncTask.haveLocalCopy(info)) {
-				Log.e(TAG, "unknow file sysid:" + info.getSysid());
-				return;
-			}
-		}
-		picInfoBean.setSysid(info.getSysid());
-		String uri=info.getUri();
-		if (uri==null)
+		/*if (uri==null)
 		{
 			Log.e(TAG, "unknow file sysid:" + info.getSysid());
 			return;
+		}*/
+		PicInfoBean picInfoBean = new PicInfoBean();
+		if (info.getSysid()==0 ) {
+			/*if (!syncTask.haveLocalCopy(info)) {
+				Log.e(TAG, "unknow file sysid:" + info.getSysid());
+				//return;
+			}*/
+			String uri=info.getUri();
+			picInfoBean.setUrl(uri);
 		}
+		else
+			picInfoBean.setSysid(info.getSysid());
+
 		//picInfoBean.setUrl(uri);
 
 		picInfoBean.setDay(TimeUtils.getTime(info.getLastModified()* 1000L, new SimpleDateFormat("MM月dd日")));
