@@ -30,7 +30,7 @@
             android:textColor="#333333"
             android:textSize="15sp" />
 
-        <ImageView
+        <com.chd.yunpan.view.CircleImageView
             android:id="@+id/userinfo_head_img"
             android:layout_width="57dp"
             android:layout_height="57dp"

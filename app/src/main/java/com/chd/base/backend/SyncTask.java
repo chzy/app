@@ -257,7 +257,7 @@ public class SyncTask {
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				new SyncLocalFileBackground(context).uploadFileOvWrite(item, activeProcess);
+				new SyncLocalFileBackground(context).uploadFileOvWrite(item, activeProcess,null);
 			}
 		});
 		thread.start();
