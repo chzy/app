@@ -44,6 +44,7 @@ public class SettingActivity extends Activity implements OnClickListener {
 
 	private View update = null;
 
+	private String appurl=null;
 
 	private TextView settingROM;
 
@@ -139,7 +140,7 @@ public class SettingActivity extends Activity implements OnClickListener {
 				@Override
 				public void run() {
 					try {
-//						TClient.getinstance().NeedUPdate();
+						appurl=TClient.getinstance().CheckVer("4.0.0");
 					} catch (Exception e) {
 						checkUpdateHandler.sendEmptyMessage(-1);
 					}
@@ -147,8 +148,10 @@ public class SettingActivity extends Activity implements OnClickListener {
 			}).start();
 
 
-			//pd.show();
-			Toast.makeText(this, "当前是最新版本", Toast.LENGTH_SHORT).show();
+			if (appurl==null)
+				Toast.makeText(this, "当前是最新版本", Toast.LENGTH_SHORT).show();
+			else
+				Toast.makeText(this, "检测到新版本", Toast.LENGTH_SHORT).show();
 			// 更新检查
 			new Thread() {
 				public void run() {
