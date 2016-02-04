@@ -157,31 +157,18 @@ public class BaseImageDownloader implements ImageDownloader {
 			Log.e("Baseimageloader", ex.getMessage());
 			throw new IOException();
 		}
-
-		File file = new File(savefile);
-		if (file.isFile() && file.exists()) {
-				/*StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-						.detectDiskReads()
-						.detectDiskWrites()
-						.detectAll()
-						.penaltyLog()
-						.build());
-				StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-						.detectLeakedSqlLiteObjects()
-						.detectLeakedClosableObjects()
-						.penaltyLog()
-						.build());*/
-			//FileInputStream fileInputStream = new FileInputStream(file);
-			length=imageStream.available();
-			if (length==(int)(file.length())) {
-				imageStream.close();
-				return new ContentLengthInputStream(new BufferedInputStream(new FileInputStream(savefile), BUFFER_SIZE), length);
-				//return  getStreamFromFile("file://"+savefile,null);
+		if (savefile!=null) {
+			File file = new File(savefile);
+			if (file.isFile() && file.exists()) {
+				length = imageStream.available();
+				if (length == (int) (file.length())) {
+					imageStream.close();
+					return new ContentLengthInputStream(new BufferedInputStream(new FileInputStream(savefile), BUFFER_SIZE), length);
+					//return  getStreamFromFile("file://"+savefile,null);
+				} else
+					Log.d("BaseImageDownloader", " local file not completed");
 			}
-			else
-				Log.d("BaseImageDownloader"," local file not completed");
 		}
-
 		return new ContentLengthInputStream(new BufferedInputStream(imageStream, BUFFER_SIZE),length);
 	}
 
