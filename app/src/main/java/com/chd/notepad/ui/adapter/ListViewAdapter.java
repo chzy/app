@@ -13,8 +13,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chd.notepad.ui.db.FileDBmager;
+import com.chd.notepad.ui.item.NoteItem;
 import com.chd.notepad.ui.item.NoteItemtag;
 import com.chd.yunpan.R;
+import com.google.gson.Gson;
 
 import java.util.Calendar;
 import java.util.List;
@@ -33,10 +35,12 @@ public class ListViewAdapter extends BaseAdapter {
 	private  static  int month ;
 	private LayoutInflater inflater;
 	private FileDBmager fileDBmager;
-	
+
+	private Gson gson;
 	public ListViewAdapter(Context context, List<NoteItemtag> listItems0){
 		this.listItems = listItems0;
 		month=0;
+		gson=new Gson();
 		//this.listItemTimes = times;
 		inflater = (LayoutInflater)
 				context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -165,7 +169,12 @@ public class ListViewAdapter extends BaseAdapter {
 		txt_hour.setText("" + cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE) + " " + (cal.get(Calendar.AM_PM) > 0 ? "PM" : "AM"));
 		//time1=TimeUtils.getTimeTxt(tag.time,"kk:mm");
 		String content=fileDBmager.readFile(tag.get_fname());
-		text.setText(content);
+		try{
+		NoteItem noteItem = gson.fromJson(content, NoteItem.class);
+		text.setText(noteItem.getContent());
+		}catch (Exception e){
+			text.setText(content);
+		}
 		
 		return convertView;
 	}

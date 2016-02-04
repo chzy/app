@@ -6,6 +6,14 @@
 
     <include layout="@layout/title_bar" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
     <TextView
         android:id="@+id/checkContent"
         android:layout_width="fill_parent"
@@ -19,36 +27,17 @@
         android:textColor="#666666"
         android:textSize="17sp" />
 
-    <LinearLayout
-        android:id="@+id/check_img_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:orientation="horizontal"
-        android:visibility="invisible" >
+            <com.chd.yunpan.view.NineGridlayout
+                android:id="@+id/editNineGrid"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-        <ImageView
-            android:id="@+id/check_img_0"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:layout_weight="1.0"
-            android:src="@drawable/pic_test1" />
 
-        <ImageView
-            android:id="@+id/check_img_1"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:layout_weight="1.0"
-            android:src="@drawable/pic_test1" />
 
-        <ImageView
-            android:id="@+id/check_img_2"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:layout_weight="1.0"
-            android:src="@drawable/pic_test1" />
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -70,9 +59,10 @@
             android:layout_marginLeft="10dp"
             android:gravity="center_vertical|left"
             android:paddingRight="5dp"
-            android:text="12312312312312312"
+            android:text=""
             android:textColor="#666666"
             android:textSize="16sp" />
     </LinearLayout>
-
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

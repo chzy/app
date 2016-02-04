@@ -18,13 +18,13 @@
         android:orientation="vertical">
         <EditText
             android:id="@+id/editTitle"
-            android:layout_width="188dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="75dp"
             android:background="@null"
+            android:layout_gravity="center_horizontal"
             android:gravity="center"
             android:hint="在此输入标题"
-            android:paddingTop="20dp"
+            android:layout_margin="20dp"
             android:singleLine="true" />
 
         <EditText

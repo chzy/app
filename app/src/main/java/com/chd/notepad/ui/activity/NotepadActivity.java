@@ -28,6 +28,7 @@ import com.chd.notepad.ui.db.FileDBmager;
 import com.chd.notepad.ui.item.NoteItemtag;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -63,6 +64,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
 
     private long month;
     FileDBmager fileDBmager;
+    Gson gson;
 
 
     private ArrayList<NoteItemtag> items;
@@ -91,7 +93,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notepad_main);
-
+gson=new Gson();
         initTitle();
         initResourceId();
         initListener();
@@ -182,7 +184,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                 items.add(head);
             }
            // item.id = cursor.getInt(cursor.getColumnIndex("id"));
-            //item.content = cursor.getString(cursor.getColumnIndex("content"));
+//            item.content = cursor.getString(cursor.getColumnIndex("content"));
             //item.syncstate = cursor.getInt(cursor.getColumnIndex("syncstate"));
             items.add(item);
 
