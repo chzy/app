@@ -1,18 +1,27 @@
 package com.chd.notepad.service;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.chd.TClient;
+import com.chd.base.backend.SyncTask;
 import com.chd.notepad.ui.db.DatabaseManage;
+import com.chd.notepad.ui.db.FileDBmager;
 import com.chd.notepad.ui.item.NoteItemtag;
+import com.chd.proto.FTYPE;
+import com.chd.proto.FileInfo0;
+import com.chd.yunpan.share.ShareUtils;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 
 public class SyncBackground extends Thread {
 
-	private List<NoteItemtag> tasks ;
+	private List<String> tasks ;
 
 	private DatabaseManage su = null;
 
@@ -20,10 +29,17 @@ public class SyncBackground extends Thread {
 
 	private boolean runing=true;
 
+	private File file=null;
+	private SyncTask syncTask;
+
+	private FileDBmager fdb;
 	/**
 	 * 0：更新同步 1：全量同步 2:单条同步
 	 * */
 	private int syncType = -1;
+
+	private List<FileInfo0> cloudlist=null;
+	private String _workpath;
 
 	/**
 
@@ -31,8 +47,10 @@ public class SyncBackground extends Thread {
 	public SyncBackground(Context context) {
 		this.context = context;
 		this.syncType = syncType;
-		su = new DatabaseManage(context);
-
+		//su = new DatabaseManage(context);
+		syncTask=new SyncTask(context, FTYPE.STORE);
+		fdb=new FileDBmager(context);
+		_workpath=new ShareUtils(context).getStorePathStr();
 		//su.open();
 	}
 
@@ -51,14 +69,6 @@ public class SyncBackground extends Thread {
 	}
 	public void run() {
 
-		// if (syncType == 1) {
-		// if (SharePreUtil.getAutoPhotoBackupThread(context)) {
-		// return;
-		// }
-		// }
-		// if (syncType == 1) {
-		// SharePreUtil.saveAutoPhotoBackupThread(context, true);
-		// }
 
 		while (runing) {
 			synchronized (this) {
@@ -72,56 +82,79 @@ public class SyncBackground extends Thread {
 			//su.open();
 			sync();
 		}
-		// if (syncType == 1) {
-		// SharePreUtil.saveAutoPhotoBackupThread(context, false);
-		// }
-		//su.close();
 
 	}
 
 	// 找到所有需要上传的列表
 	private void getTasks() {
-		//su.open();
-		tasks = su.getSyncTasks();
 
+		Iterator<String> iterator=fdb.getLocallist();
+		String fname;
+		while (iterator.hasNext())
+		{
+			fname=iterator.next();
+			if (!contains(fname ))
+				tasks.add(fname);
+
+		}
+		//su.open();
+		//tasks = su.getSyncTasks();
+
+
+	}
+
+	boolean contains(String fname)
+	{
+		if (cloudlist==null)
+			cloudlist=syncTask.getCloudUnits(0,10000);
+		for(FileInfo0 fileInfo0:cloudlist)
+		{
+			if (fileInfo0.getSysid()>0)
+				continue;
+			if (fname.compareToIgnoreCase(fileInfo0.getObjid())==0) {
+				cloudlist.remove(fileInfo0);
+				fileInfo0.setSysid(1);
+				return true;
+			}
+		}
+		return  false;
 	}
 
 	// 递归上传所有
 	private void sync() {
-		su.open();
 
-		switch (syncType)
-		{
-			case 0:
-			{
 				getTasks();
 				if(tasks.size()==0)
-					break;
-				for(NoteItemtag item :tasks)
+					return;
+				for (String fname:tasks)
 				{
-					SyncSingle(item);
+					FileInfo0 fileInfo0=new FileInfo0();
+					fileInfo0.setFilePath(_workpath+File.separator+fname);
+					fileInfo0.setObjid(fname);
+					syncTask.upload(fileInfo0,null,false);
 				}
 				tasks.clear();
-			}
-			case 1:
-				break;
-		}
-		
-//		if(upLoadFile(tasks.get(0))){
-//
-//			su.deleteUpLoadingFile(tasks.get(0).getFid());
-//			su.addUpLoadedFile(tasks.get(0));
-//		}else{
-//			su.deleteUpLoadingFile(tasks.get(0).getFid());
-//		}
-//
-//
-//		if(NetworkUtils.isNetworkAvailable(context)){
-//			sync();
-//		}
-		
+				for (FileInfo0 fileInfo0:cloudlist)
+				{
+					if (fileInfo0.getSysid()==0)
+						try {
+							TClient.getinstance().delObj(fileInfo0.getObjid(),fileInfo0.getFtype());
+						} catch (Exception e) {
+							e.printStackTrace();
+							Log.e("SyncnoteService",e.getMessage());
+						}
+
+				}
+
 
 	}
+
+
+	private void work() {
+
+
+	}
+
 
 	private boolean SyncSingle(NoteItemtag itemtag) {
 
@@ -141,6 +174,7 @@ public class SyncBackground extends Thread {
 		//return b;
 		return true;
 	}
+
 
 	private boolean SyncFull(List<NoteItemtag> locallists,Set<NoteItemtag> remotelist) {
 
@@ -170,4 +204,7 @@ public class SyncBackground extends Thread {
 		return true;
 	}
 
+	public void setFile(File file) {
+		this.file = file;
+	}
 }

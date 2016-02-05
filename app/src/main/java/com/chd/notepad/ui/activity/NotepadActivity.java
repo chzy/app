@@ -8,6 +8,7 @@ import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
@@ -21,18 +22,24 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.chd.base.backend.SyncTask;
 import com.chd.notepad.service.SyncService;
 import com.chd.notepad.ui.adapter.ListViewAdapter;
 import com.chd.notepad.ui.db.DatabaseManage;
 import com.chd.notepad.ui.db.FileDBmager;
 import com.chd.notepad.ui.item.NoteItemtag;
+import com.chd.proto.FTYPE;
+import com.chd.proto.FileInfo;
+import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.List;
 
 
 public class NotepadActivity extends ListActivity implements OnScrollListener {
@@ -50,10 +57,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
 
     private ListView listView;
     private ListViewAdapter adapter;// 数据源对象
-
-    private DatabaseManage dm = null;// 数据库管理对象
     private Cursor cursor = null;
-
     private int id = -1;//被点击的条目
 
     private boolean needsyc = false;
@@ -65,12 +69,15 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
     private long month;
     FileDBmager fileDBmager;
     Gson gson;
+   
+    private SyncTask syncTask;
+    private List<FileInfo0> cloudUnits;
 
 
     private ArrayList<NoteItemtag> items;
     private ServiceConnection mConnection = new ServiceConnection() {
 
-        //@Override
+        @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
@@ -83,25 +90,65 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
             }
         }
 
-        //@Override
+        @Override
         public void onServiceDisconnected(ComponentName arg0) {
             mBound = false;
         }
     };
 
+    private void runfrist()
+    {
+        final String savepath=new ShareUtils(this).getStorePathStr();
+        Thread thread = new Thread(new Runnable()
+        {
+
+            @Override
+            public void run()
+            {
+
+                if (syncTask==null)
+                    syncTask =new SyncTask(NotepadActivity.this, FTYPE.STORE);
+                //未备份文件 ==  backedlist . removeAll(localist);
+                if (cloudUnits==null || cloudUnits.isEmpty())
+                    // 0-100 分批取文件
+                    cloudUnits=syncTask.getCloudUnits(0, 10000);
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                       // initData();
+                        String file;
+                        for (FileInfo0 fileInfo0:cloudUnits)
+                        {
+                            file=savepath+ File.separator+fileInfo0.getObjid();
+                            if (new File(file).exists()==false) {
+                                fileInfo0.setFilePath(savepath + File.separator + fileInfo0.getObjid());
+                                syncTask.download(fileInfo0, null, false);
+                                Log.d("NotepadActivity","download note :"+ fileInfo0.getObjid());
+                            }
+                        }
+                    }
+                });
+            }
+        });
+        thread.start();
+    }
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notepad_main);
-gson=new Gson();
+        gson=new Gson();
         initTitle();
         initResourceId();
         initListener();
         initData();
+       
+       
     }
 
     private void initData() {
-        dm = new DatabaseManage(this);//数据库操作对象
+        //dm = new DatabaseManage(this);//数据库操作对象
 
         items = new ArrayList<NoteItemtag>();
         adapter = new ListViewAdapter(this, items);//创建数据源
@@ -110,9 +157,10 @@ gson=new Gson();
 
         Intent intent1 = getIntent();
         needsyc = intent1.getBooleanExtra("needsync", needsyc);
+
         Intent intent = new Intent(this, SyncService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        startService(intent);
+        //bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        //startService(intent);
 
     }
 
@@ -148,7 +196,7 @@ gson=new Gson();
     //初始化数据源
     public void initAdapter() {
         items.clear();
-        dm.open();//打开数据库操作对象
+        //dm.open();//打开数据库操作对象
         fileDBmager=new FileDBmager(this);
         month = 0;
        // cursor = dm.selectAll();//获取所有数据
@@ -162,7 +210,7 @@ gson=new Gson();
 
 
         Calendar cal = Calendar.getInstance();
-        Iterator<String> iterator=fileDBmager.getLocallist(new ShareUtils(this.getApplicationContext()).getStorePathStr());
+        Iterator<String> iterator=fileDBmager.getLocallist();
 
 
         //for (int i = 0; i < count; i++)
@@ -198,8 +246,8 @@ gson=new Gson();
     @Override
     protected void onStart() {
         super.onStart();
-        Intent intent = new Intent(this, SyncService.class);
-        bindService(intent, mConnection, 0);
+        Intent intent = new Intent(NotepadActivity.this, SyncService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override

@@ -9,12 +9,6 @@ import android.util.Log;
 
 public class SyncService extends Service {
 
-//	@Override
-//	public int onStartCommand(Intent intent, int flags, int startId) {
-//		isStarting = true;
-//		handler.sendEmptyMessage(0);
-//		return super.onStartCommand(intent, flags, startId);
-//	}
 
 	private final IBinder mBinder = new SyncBinder();
 	private SyncBackground syncthread= new SyncBackground(SyncService.this);
@@ -34,33 +28,6 @@ public class SyncService extends Service {
 		syncthread.start();
 	}
 	
-	
-	//private Thread t;
-	
-	//private boolean isStarting = true;;
-	
-//	public Handler handler =new Handler(){
-//
-//		public void handleMessage(android.os.Message msg) {
-//			if(isStarting){
-//				//if(NetworkUtils.isNetworkAvailable(SyncService.this))
-//				if (true)
-//				{
-//					if(t==null||!t.isAlive()){
-//						System.out.println("上传吗？");
-//						t =  new Thread(new SyncBackground(SyncService.this, 0));
-//						System.out.println("开始了");
-//						t.start();
-//					}
-//				}else {
-//					//Toast.makeText(SyncService.this, "网络不可用", 0).show();
-//				}
-//
-//				handler.sendEmptyMessageDelayed(0, 10000);
-//			}
-//		};
-//	};
-
 
 
 	public void NotifySync()
@@ -82,6 +49,7 @@ public class SyncService extends Service {
 		//System.out.print("d22222222222");
 	}
 
+
 	@Override
 	public void onDestroy() {
 		Log.d("$$$", "Service ->OnDestory");
@@ -95,16 +63,19 @@ public class SyncService extends Service {
 	{
 		runing=false;
 	}
+
+
 	public class SyncBinder extends Binder {
 		public SyncService getService() {
 			// Return this instance of LocalService so clients can call public methods
+			System.out.println("sssssssssssssssss");
 			return SyncService.this;
 		}
 	}
 	@Override
 	public void onRebind(Intent intent) {
 		// TODO Auto-generated method stub
-		//System.out.print("ddddddddddddd");
+		System.out.print("ddddddddddddd");
 		super.onRebind(intent);
 
 	}
@@ -112,7 +83,7 @@ public class SyncService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		
+		System.out.print("ddddddddddddd");
 		return mBinder;
 	}
 
@@ -124,5 +95,7 @@ public class SyncService extends Service {
 		return true;
 		//return  super.onUnbind(intent);
 	}
+
+
 
 }

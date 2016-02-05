@@ -41,10 +41,9 @@ public class FileDBmager {
 
 
     private List<String> files=new ArrayList<String>();
-    public Iterator getLocallist(String path)
+    public Iterator getLocallist()
     {
-        File dir=new File(path);
-
+        File dir=new File(_path);
         MFileFilter fileFilter=new MFileFilter(file_ext);
         files=Arrays.asList(dir.list(fileFilter));
         //Arrays.sort(files);

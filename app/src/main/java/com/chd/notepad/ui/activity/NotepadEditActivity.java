@@ -52,6 +52,7 @@ public class NotepadEditActivity extends Activity {
     private int DELFOODIMG = 0xAE;
     private ArrayList<String> delList = new ArrayList<>();
     private Gson gson;
+   
 
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -112,6 +113,7 @@ public class NotepadEditActivity extends Activity {
             //contentText = intent.getStringExtra("content");
             //timeText = intent.getStringExtra("time");
             NoteItemtag itemtag = (NoteItemtag) intent.getSerializableExtra("item");
+
             title.setText(TimeUtils.getTime(itemtag.getStamp()));
             String contentStr = fileDBmager.readFile(itemtag.get_fname());
             try {
