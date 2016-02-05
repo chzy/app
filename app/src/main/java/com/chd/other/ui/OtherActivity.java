@@ -137,8 +137,8 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
         cloudUnits.clear();
         cloudUnits = null;
         List<FileLocal> fileLocals = filelistEntity.getLocallist();
-        if (fileLocals != null) {
-            mTvNumber.setText("未备份文件" + fileLocals.size() + "个");
+        if (filelistEntity != null) {
+            mTvNumber.setText("未备份文件" + filelistEntity.getUnbakNumber() + "个");
         } else {
             mTvNumber.setText("未备份文件0个");
         }

@@ -295,7 +295,8 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
         mViewName.setOnClickListener(this);
         mViewSex.setOnClickListener(this);
         mViewAge.setOnClickListener(this);
-        mViewMobile.setOnClickListener(this);
+        //TODO 手机号屏蔽
+//        mViewMobile.setOnClickListener(this);
         mViewPwd.setOnClickListener(this);
         mBtnLogout.setOnClickListener(this);
     }
@@ -451,7 +452,8 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
                 }
                 break;
                 case UserInfoFlag.FLAG_EDIT_TYPE_PWD: {
-                    mTextPwd.setText(edit_value);
+//                    mTextPwd.setText(edit_value);
+                    mTextPwd.setText("******");
                     final String oldPass = data.getStringExtra("oldPass");
 
                     final String finalEdit_value = edit_value;

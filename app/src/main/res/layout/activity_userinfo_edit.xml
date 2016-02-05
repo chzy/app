@@ -216,7 +216,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone" >
+        android:visibility="visible" >
 
         <View
             android:layout_width="fill_parent"
@@ -246,9 +246,10 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:gravity="right"
+                android:gravity="center_vertical|right"
                 android:background="@null"
                 android:text=""
+                android:password="true"
                 android:textColor="#999999"
                 android:textSize="15sp" />
         </LinearLayout>

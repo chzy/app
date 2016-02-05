@@ -54,6 +54,9 @@ public class FilelistEntity {
 
     public int getUnbakNumber()
     {
+        if(locallist!=null){
         return locallist.size()-bakNumber;
+        }
+        return 0;
     }
 }
