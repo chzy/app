@@ -25,11 +25,9 @@ import android.widget.TextView;
 import com.chd.base.backend.SyncTask;
 import com.chd.notepad.service.SyncService;
 import com.chd.notepad.ui.adapter.ListViewAdapter;
-import com.chd.notepad.ui.db.DatabaseManage;
 import com.chd.notepad.ui.db.FileDBmager;
 import com.chd.notepad.ui.item.NoteItemtag;
 import com.chd.proto.FTYPE;
-import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
@@ -157,11 +155,6 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
 
         Intent intent1 = getIntent();
         needsyc = intent1.getBooleanExtra("needsync", needsyc);
-
-        Intent intent = new Intent(this, SyncService.class);
-        //bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        //startService(intent);
-
     }
 
     private void initListener() {
@@ -243,15 +236,15 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         Intent intent = new Intent(NotepadActivity.this, SyncService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         if (mBound) {
             unbindService(mConnection);
             mBound = false;
@@ -259,11 +252,17 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+
+    }
+
+    @Override
     protected void onDestroy() {//销毁Activity之前，所做的事
         if (cursor != null) {
             cursor.close();//关闭游标
         }
-        unbindService(mConnection);
+
         super.onDestroy();
     }
 

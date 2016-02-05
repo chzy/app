@@ -11,7 +11,7 @@ public class SyncService extends Service {
 
 
 	private final IBinder mBinder = new SyncBinder();
-	private SyncBackground syncthread= new SyncBackground(SyncService.this);
+	private SyncBackground syncthread;
 	//private static boolean created=false;
 	private static boolean runing=false;
 	//private SyncBackground sync = new SyncBackground(SyncService.this);
@@ -23,6 +23,7 @@ public class SyncService extends Service {
 //			return;
 		super.onCreate();
 		//created=true;
+		syncthread=new SyncBackground(getApplication());
 		runing=true;
 		//isStarting = true;
 		syncthread.start();
