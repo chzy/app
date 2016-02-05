@@ -78,16 +78,19 @@ public class UpdateDialog{
     public UpdateDialog(Activity act, final VersionResult result){
         this.mAct=act;
         this.result=result;
-        String msg=result.getWhatsnew();
+        final String msg=result.getWhatsnew();
 
        path=new ShareUtils(act).getApkFile().getPath()+"";
-        this.mDialog=new AlertDialog.Builder(mAct).setMessage("系统更新").setMessage(msg).setPositiveButton("下载", new DialogInterface.OnClickListener() {
+        this.mDialog=new AlertDialog.Builder(mAct).setTitle("系统更新").setMessage(msg).setPositiveButton("下载", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 mBar=new ProgressDialog(mAct);
                 mBar.setTitle("正在下载");
                 mBar.setMessage("请稍候");
                 mBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                mBar.show();
+                mBar.setCanceledOnTouchOutside(false);
+                mBar.setCancelable(false);
                 new Thread(new Runnable() {
                 @Override
                 public void run() {

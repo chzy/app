@@ -109,6 +109,7 @@ private  String verName;
             public void run() {
                 try {
                     final VersionResult result = TClient.getinstance().CheckVer(verName);
+                    Log.d("更新:",result.toString());
                     if(result!=null){
                     loginHandler.post(new Runnable() {
                         @Override
@@ -122,7 +123,7 @@ private  String verName;
                     Log.e("liumj","更新异常");
                 }
             }
-        });
+        }).start();
 
 
 
