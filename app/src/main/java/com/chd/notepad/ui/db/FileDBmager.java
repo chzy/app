@@ -53,9 +53,10 @@ public class FileDBmager {
     }
 
     public boolean delFile(String fname) {
-       /* File file=new File(fname);
-        return  file.delete();*/
-        return  _context.deleteFile(_path + File.separator + fname);
+        String delfile=_path + File.separator + fname+file_ext;
+       File file=new File(delfile);
+        return  file.delete();
+       // return  _context.deleteFile(_path + File.separator + fname+file_ext);
     }
 
     public void editFile(String s, String contentText) {
