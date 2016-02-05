@@ -136,16 +136,16 @@ public class SettingActivity extends Activity implements OnClickListener {
 
 		case R.id.settingCheckUpdate:
 			//TODO 更新提示
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						TClient.getinstance().CheckVer("4.0.0");
-					} catch (Exception e) {
-						checkUpdateHandler.sendEmptyMessage(-1);
-					}
-				}
-			}).start();
+//			new Thread(new Runnable() {
+//				@Override
+//				public void run() {
+//					try {
+//						appurl=TClient.getinstance().CheckVer("4.0.0");
+//					} catch (Exception e) {
+//						checkUpdateHandler.sendEmptyMessage(-1);
+//					}
+//				}
+//			}).start();
 
 
 			if (appurl==null)

@@ -3,12 +3,15 @@ package com.chd.yunpan.ui;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,11 +25,13 @@ import android.widget.TextView;
 import com.chd.TClient;
 import com.chd.contacts.vcard.StringUtils;
 import com.chd.proto.LoginResult;
+import com.chd.proto.VersionResult;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.net.ExecRunable;
 import com.chd.yunpan.net.NetworkUtils;
 import com.chd.yunpan.share.ShareUtils;
+import com.chd.yunpan.ui.dialog.UpdateDialog;
 import com.chd.yunpan.utils.Logs;
 import com.chd.yunpan.utils.ToastUtils;
 import com.chd.yunpan.view.CircularProgressButton;
@@ -89,7 +94,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
     };
     private TextView ll_head_help;
-
+private  String verName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +103,28 @@ public class LoginActivity extends Activity implements OnClickListener {
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
 */
         setContentView(R.layout.activity_login);
+        verName=getVersion();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final VersionResult result = TClient.getinstance().CheckVer(verName);
+                    if(result!=null){
+                    loginHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            new UpdateDialog(LoginActivity.this,result).show();
+                        }
+                    });
+                    }
+
+                } catch (Exception e) {
+                    Log.e("liumj","更新异常");
+                }
+            }
+        });
+
+
 
         initViews();
         setListener();
@@ -406,5 +433,22 @@ public class LoginActivity extends Activity implements OnClickListener {
         }
 
     }
+
+
+    /**
+     2  * 获取版本号
+     3  * @return 当前应用的版本号
+     4  */
+     public String getVersion() {
+         try {
+                     PackageManager manager = this.getPackageManager();
+                     PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
+                     String version = info.versionName;
+                     return version;
+                 } catch (Exception e) {
+                     e.printStackTrace();
+                     return "2.1.1";
+                 }
+        }
 
 }

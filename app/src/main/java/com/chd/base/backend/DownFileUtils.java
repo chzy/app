@@ -44,7 +44,6 @@ public class DownFileUtils {
                 }
             }
         }).start();
-
     }
     private Handler mHandler=new Handler(Looper.getMainLooper()){
 
