@@ -4,11 +4,14 @@ import android.content.Context;
 import android.util.Log;
 
 import com.chd.TClient;
+import com.chd.base.Entity.FileLocal;
+import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.backend.SyncTask;
 import com.chd.notepad.ui.db.DatabaseManage;
 import com.chd.notepad.ui.db.FileDBmager;
 import com.chd.notepad.ui.item.NoteItemtag;
 import com.chd.proto.FTYPE;
+import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.share.ShareUtils;
 
@@ -16,6 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -40,7 +44,8 @@ public class SyncBackground extends Thread {
 
 	private List<FileInfo0> cloudlist=null;
 	private String _workpath;
-
+	private final String TAG="SyncnoteService";
+	//private int sleepsecond=6;
 	/**
 
 	 * */
@@ -48,16 +53,21 @@ public class SyncBackground extends Thread {
 		this.context = context;
 		this.syncType = syncType;
 		//su = new DatabaseManage(context);
-		syncTask=new SyncTask(context, FTYPE.STORE);
+		syncTask=new SyncTask(context, FTYPE.NOTEPAD);
 		fdb=new FileDBmager(context);
 		_workpath=new ShareUtils(context).getStorePathStr();
+		tasks=new ArrayList<>();
+
 		//su.open();
 	}
 
 
     public void safeshutdown()
 	{
+
+		wakeup(1);
 		this.runing=false;
+
 	}
 	public void wakeup(int type)
 	{
@@ -82,12 +92,20 @@ public class SyncBackground extends Thread {
 			//su.open();
 			sync();
 		}
-
 	}
 
 	// 找到所有需要上传的列表
 	private void getTasks() {
 
+		cloudlist=syncTask.getCloudUnits(0,10000);
+		int total=cloudlist.size();
+		for(int i=0;i<total;i++) {
+			FileInfo info=cloudlist.get(i);
+			FileInfo0 fileInfo0 = new FileInfo0(cloudlist.get(i));
+			cloudlist.set(i,fileInfo0);
+			info=null;
+
+		}
 		Iterator<String> iterator=fdb.getLocallist();
 		String fname;
 		while (iterator.hasNext())
@@ -105,8 +123,7 @@ public class SyncBackground extends Thread {
 
 	boolean contains(String fname)
 	{
-		if (cloudlist==null)
-			cloudlist=syncTask.getCloudUnits(0,10000);
+
 		for(FileInfo0 fileInfo0:cloudlist)
 		{
 			if (fileInfo0.getSysid()>0)
@@ -120,7 +137,7 @@ public class SyncBackground extends Thread {
 		return  false;
 	}
 
-	// 递归上传所有
+
 	private void sync() {
 
 				getTasks();
@@ -141,11 +158,11 @@ public class SyncBackground extends Thread {
 							TClient.getinstance().delObj(fileInfo0.getObjid(),fileInfo0.getFtype());
 						} catch (Exception e) {
 							e.printStackTrace();
-							Log.e("SyncnoteService",e.getMessage());
+							Log.e(TAG,e.getMessage());
 						}
 
 				}
-
+				Log.d(TAG,"all task finished ");
 
 	}
 

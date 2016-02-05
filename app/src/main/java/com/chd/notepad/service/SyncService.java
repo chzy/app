@@ -23,10 +23,10 @@ public class SyncService extends Service {
 //			return;
 		super.onCreate();
 		//created=true;
-		syncthread=new SyncBackground(getApplication());
+
 		runing=true;
 		//isStarting = true;
-		syncthread.start();
+
 	}
 	
 
@@ -57,6 +57,7 @@ public class SyncService extends Service {
 //		if (runing)
 //			return;
 		//syncthread.safeshutdown();
+
 		super.onDestroy();
 	}
 
@@ -69,22 +70,29 @@ public class SyncService extends Service {
 	public class SyncBinder extends Binder {
 		public SyncService getService() {
 			// Return this instance of LocalService so clients can call public methods
-			System.out.println("sssssssssssssssss");
+			//System.out.println("sssssssssssssssss");
 			return SyncService.this;
 		}
 	}
 	@Override
 	public void onRebind(Intent intent) {
 		// TODO Auto-generated method stub
-		System.out.print("ddddddddddddd");
-		super.onRebind(intent);
-
+		System.out.println(" on rebind");
+		/*if (syncthread==null)*/
+			super.onRebind(intent);
+	/*	else
+			return;*/
 	}
 
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		System.out.print("ddddddddddddd");
+		if (syncthread==null) {
+			syncthread = new SyncBackground(getApplication());
+			syncthread.start();
+			System.out.print("on bind start thread");
+		}
+
 		return mBinder;
 	}
 
@@ -93,6 +101,9 @@ public class SyncService extends Service {
 	{
 
 		System.out.print("onunbind");
+		syncthread.safeshutdown();
+		//syncthread=null;
+		//syncthread.notify();
 		return true;
 		//return  super.onUnbind(intent);
 	}

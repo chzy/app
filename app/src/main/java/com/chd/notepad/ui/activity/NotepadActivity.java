@@ -191,16 +191,6 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
         //dm.open();//打开数据库操作对象
         fileDBmager=new FileDBmager(this);
         month = 0;
-       // cursor = dm.selectAll();//获取所有数据
-
-        //cursor.moveToFirst();//将游标移动到第一条数据，使用前必须调用
-
-       // int count = cursor.getCount();//个数
-
-        //ArrayList<String> items = new ArrayList<String>();
-        //ArrayList<String> times = new ArrayList<String>();
-
-
         Calendar cal = Calendar.getInstance();
         Iterator<String> iterator=fileDBmager.getLocallist();
 
@@ -235,11 +225,18 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
 
     }
 
+    protected  void  bindsrvic()
+    {
+        Intent intent = new Intent(NotepadActivity.this, SyncService.class);
+        bindService(intent, mConnection, 0);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         Intent intent = new Intent(NotepadActivity.this, SyncService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        startService(intent);
+        bindsrvic();
     }
 
     @Override
@@ -299,6 +296,8 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                     adapter.removeListItem(menuInfo.position);//删除数据
                     adapter.notifyDataSetChanged();//通知数据源，数据已经改变，刷新界面
                     needsyc = true;
+
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

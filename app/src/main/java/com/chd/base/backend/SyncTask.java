@@ -30,6 +30,7 @@ public class SyncTask {
 	private FilelistEntity filelistEntity;
 	private final FTYPE _ftype;
 	private final String TAG=this.getClass().getName();
+	private SyncLocalFileBackground syncLocalFileBackground;
 	//private MediaFileUtil.FileCategory;
 
 
@@ -39,6 +40,7 @@ public class SyncTask {
 		_ftype=tp;
 		_CloudList=new ArrayList<FileInfo>();
 		dbManager = new MediaMgr(context,_ftype);
+		syncLocalFileBackground =new SyncLocalFileBackground(context);
 		//dbManager.open();
 	}
 
@@ -97,7 +99,7 @@ public class SyncTask {
 	public List<FileInfo0> getCloudUnits(int begin, int max) {
 		/*if (filelistEntity!=null && filelistEntity.getBklist()!=null)
 			return filelistEntity.getBklist();*/
-		List<FileInfo0> flist=null;
+		List<FileInfo0> flist=new ArrayList<>();
 		try {
 			final FilesListEntity filesListEntity = TClient.getinstance().queryFileList(_ftype, begin, max);
 			flist=filesListEntity.getList();
@@ -207,13 +209,14 @@ public class SyncTask {
 			activeProcess.setParMessage("上传失败");
 			activeProcess.finishProgress();
 		}
-		Thread thread = new Thread(new Runnable() {
+		/*Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				new SyncLocalFileBackground(context).uploadBigFile(item, activeProcess);
 			}
 		});
-		thread.start();
+		thread.start();*/
+		syncLocalFileBackground.uploadBigFile(item, activeProcess);
 	}
 
 	public void uploadFileOvWrite( final FileInfo0 item, final ActiveProcess activeProcess,boolean beeque) {
@@ -267,7 +270,7 @@ public class SyncTask {
 			activeProcess.finishProgress();
 		}
 		//new Runnable{}
-		Thread thread = new Thread(new Runnable()
+		/*Thread thread = new Thread(new Runnable()
 		{
 			@Override
 			public void run()
@@ -275,8 +278,8 @@ public class SyncTask {
 				new SyncLocalFileBackground(context).downloadBigFile(item, activeProcess);
 			}
 		});
-		thread.start();
-		//new SyncLocalFileBackground(context).downloadBigFile(item, activeProcess);
+		thread.start();*/
+		syncLocalFileBackground.downloadBigFile(item, activeProcess);
 	}
 
 

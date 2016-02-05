@@ -251,7 +251,7 @@ public class SyncLocalFileBackground implements Runnable {
         return uploadBigFile0( entity,   activeProcess,desc,true);
     }
 
-    public boolean uploadBigFile0(FileInfo0 entity, final ActiveProcess activeProcess,Map<String, String> desc,boolean replace) {
+    public synchronized  boolean uploadBigFile0(FileInfo0 entity, final ActiveProcess activeProcess,Map<String, String> desc,boolean replace) {
 
         TClient tClient = null;
         File file;
@@ -360,8 +360,10 @@ public class SyncLocalFileBackground implements Runnable {
                 succed = true;
                 Log.d(TAG, objid + " upload finished !!");
             }
-            desc.clear();
-            desc = null;
+
+           /*     desc.clear();
+                desc = null;*/
+
 
         } catch (Exception e) {
             Log.w(TAG, e.getMessage());
