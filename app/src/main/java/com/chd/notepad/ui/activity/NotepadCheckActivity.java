@@ -17,7 +17,6 @@ import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
 import com.chd.yunpan.view.NineGridlayout;
 import com.google.gson.Gson;
-import com.multi_image_selector.MultiImageSelectorActivity;
 
 import java.util.ArrayList;
 
@@ -34,9 +33,9 @@ public class NotepadCheckActivity extends Activity {
 	private ArrayList<String> eatPath;
 	private Context mContext;
 	private int FOOD_IMAGE=0xAF;
-	private ArrayList<String> eatPhotoData=new ArrayList<>();
 	private int DELFOODIMG=0xAE;
 	private NineAdapter adapter;
+	private TextView checkTitle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +47,7 @@ public class NotepadCheckActivity extends Activity {
 		mContext=this;
 		initTitle();
 		contentText = (TextView)findViewById(R.id.checkContent);
+		checkTitle = (TextView)findViewById(R.id.checkTitle);
 		timeText = (TextView)findViewById(R.id.checkTime);
 		nineGrid = (NineGridlayout) findViewById(R.id.editNineGrid);
 
@@ -56,22 +56,11 @@ public class NotepadCheckActivity extends Activity {
 		nineGrid.setOnItemClickListerner(new NineGridlayout.OnItemClickListerner() {
 			@Override
 			public void onItemClick(View view, int position) {
-				if (position == (eatPath.size() - 1)) {
-					Intent intent = new Intent(mContext, MultiImageSelectorActivity.class);
-					intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
-					if (eatPath.contains("assets://add_photo.png")) {
-						intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 5 - eatPath.size() + 1);
-					} else {
-						intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 5 - eatPath.size());
-					}
-					intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI);
-					startActivityForResult(intent, FOOD_IMAGE);
-				} else {
+
 					Intent intent = new Intent(mContext, PhotoBrowseActivity.class);
-					intent.putStringArrayListExtra("PhotoPath", eatPhotoData);
-					intent.putExtra("PhotoPosition", position);
+					intent.putStringArrayListExtra("PhotoPath", eatPath);
+				intent.putExtra("PhotoPosition", position);
 					startActivityForResult(intent, DELFOODIMG);
-				}
 			}
 		});
 
@@ -93,6 +82,7 @@ public class NotepadCheckActivity extends Activity {
 		try {
 			NoteItem noteItem = gson.fromJson(content, NoteItem.class);
 			this.contentText.setText(noteItem.getContent());
+			this.checkTitle.setText(noteItem.getTitle());
 			eatPath=noteItem.getPicList();
 			if(eatPath!=null&&eatPath.size()>0){
 				adapter=new NineAdapter(this,eatPath);

@@ -3,6 +3,7 @@ package com.chd.notepad.ui.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -12,7 +13,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.chd.yunpan.R;
-import com.chd.yunpan.utils.PictureUtil;
+import com.chd.yunpan.utils.Base64Utils;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +53,7 @@ public class PhotoBrowseActivity extends Activity implements View.OnClickListene
         photo_del.setOnClickListener(this);
         try{
             photoPath = getIntent().getStringArrayListExtra("PhotoPath");
-            selectPosition = getIntent().getIntExtra("PhotoPosition",0);
+            selectPosition = getIntent().getIntExtra("PhotoPosition", 0);
             //Log.e("TAG",photoPath.toString());
 
             for (int i = 0; i < photoPath.size(); i++) {
@@ -63,7 +65,15 @@ public class PhotoBrowseActivity extends Activity implements View.OnClickListene
 //                    uri = Uri.fromFile(file);
 //                }
 //                Picasso.with(this).load(uri).resize(500,500).error(R.drawable.load_failure).into(photo);
-                photo.setImageBitmap(PictureUtil.getSmallBitmap(photoPath.get(i)));
+                if(photoPath.get(i).startsWith("file")){
+                    Picasso.with(this)
+                            .load((String) photoPath.get(i))
+                            .resize(150, 150)
+                            .into(photo);
+                }else{
+                    Bitmap bitmap = Base64Utils.base64ToBitmap(photoPath.get(i));
+                    photo.setImageBitmap(bitmap);
+                }
 
                 imgList.add(photo);
             }
