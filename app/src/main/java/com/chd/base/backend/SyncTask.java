@@ -87,27 +87,6 @@ public class SyncTask {
 
 
 
-	/*public FileInfo0 GetLocalCopy(FileInfo0 info0) {
-		if (info0.getSysid() > 0)
-		{
-			if (info0.getFilePath()!=null && info0.getFilePath().indexOf(".")>1 ) {
-				File file=new File(info0.getFilePath());
-				if (file.exists() && file.isFile())
-				{
-					return info0;
-				}
-			}
-			FileInfo0 info01=dbManager.queryLocalInfo(info0.getSysid(),_ftype);
-			if (info01!=null) {
-				FileInfo0 item=new FileInfo0(info0);
-				item.setFilePath(info0.getFilePath());
-				item.setSysid(info0.getSysid());
-				return item;
-			}
-		}
-		boolean ret=false;
-		return  null;
-	}*/
 
 	public void flush() {
 		filelistEntity.getBklist().clear();
