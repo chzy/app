@@ -140,7 +140,7 @@ public class SettingActivity extends Activity implements OnClickListener {
 				@Override
 				public void run() {
 					try {
-						appurl=TClient.getinstance().CheckVer("4.0.0");
+						TClient.getinstance().CheckVer("4.0.0");
 					} catch (Exception e) {
 						checkUpdateHandler.sendEmptyMessage(-1);
 					}

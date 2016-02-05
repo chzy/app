@@ -1,5 +1,7 @@
 package com.chd.notepad.ui.item;
 
+import android.util.Log;
+
 import java.io.Serializable;
 
 /**
@@ -24,7 +26,7 @@ public class NoteItemtag implements Serializable {
         return  fname.substring(idx + 1);
     }
 
-    static   public Long  getStamp0( String fname)
+    static   public int  getStamp0( String fname)
     {
      /*   int idx=-1;
         if (_fname ==null)
@@ -35,12 +37,13 @@ public class NoteItemtag implements Serializable {
         return  Integer.valueOf(_fname.substring(0, idx - 1))*1000;
         */
         if(fname==null){
-            return 0L;
+            Log.e("noteitem","fname is null");
+            return (int) System.currentTimeMillis()/1000;
         }
-        return Long.valueOf(fname);
+        return (int) (Long.valueOf(fname)/1000);
     }
 
-    public Long getStamp()
+    public int getStamp()
     {
         return getStamp0(_fname);
     }
