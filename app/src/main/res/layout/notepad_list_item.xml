@@ -96,8 +96,9 @@
                 android:gravity="left|top"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:paddingTop="8dp"
-                android:text="ddddddddddddddddddddd\n\n\ndddddddddddddddddddddddddddddd"
                 android:textColor="@color/notepad_txt_color" />
         </LinearLayout>
     </LinearLayout>

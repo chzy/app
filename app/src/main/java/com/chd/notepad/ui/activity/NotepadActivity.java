@@ -124,7 +124,6 @@ gson=new Gson();
     }
 
     private void initResourceId() {
-
         listView = getListView();//获取id为list的对象
     }
 
