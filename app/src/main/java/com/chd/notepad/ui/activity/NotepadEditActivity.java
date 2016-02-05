@@ -36,7 +36,7 @@ public class NotepadEditActivity extends Activity {
     private ImageView mIvLeft;
     private TextView mTvCenter;
     private TextView mTvRight;
-    private TextView title;
+    private EditText title;
     private EditText content;
     //private DatabaseManage dm = null;
     private FileDBmager fileDBmager;
@@ -66,7 +66,7 @@ public class NotepadEditActivity extends Activity {
         state = intent.getIntExtra("state", EDIT_STATE);
 
         //赋值控件对象
-        title = (TextView) findViewById(R.id.editTitle);
+        title = (EditText) findViewById(R.id.editTitle);
         content = (EditText) findViewById(R.id.editContent);
         nineGrid = (NineGridlayout) findViewById(R.id.editNineGrid);
 
@@ -119,9 +119,14 @@ public class NotepadEditActivity extends Activity {
             try {
                 NoteItem noteItem = gson.fromJson(contentStr, NoteItem.class);
                 content.setText(noteItem.getContent());
+                content.setSelection(noteItem.getContent().length());
                 title.setText(noteItem.getTitle());
+                title.setSelection(noteItem.getTitle().length());
                 eatPath = noteItem.getPicList();
-                eatPath.add("assets://add_photo.png");
+                if(eatPath.size()<5){
+                    eatPath.add("assets://add_photo.png");
+                }
+                eatPhotoData=eatPath;
                 mAdapter = new NineAdapter(this, eatPath);
                 nineGrid.setAdapter(mAdapter);
             } catch (Exception e) {
@@ -185,9 +190,16 @@ public class NotepadEditActivity extends Activity {
             eatPath.clear();
             eatPhotoData = delList;
             for (int i = 0; i < delList.size(); i++) {
-                eatPath.add("file://" + eatPhotoData.get(i));
+                String path=eatPhotoData.get(i);
+//                if(path.contains("storage")){
+//                    eatPath.add("file://" + eatPhotoData.get(i));
+//                }else{
+                    eatPath.add(path);
+//                }
             }
+            if(!eatPath.contains("assets://add_photo.png")&&eatPath.size()<5){
             eatPath.add("assets://add_photo.png");
+            }
             nineGrid.setAdapter(new NineAdapter(this, eatPath));
         }
 

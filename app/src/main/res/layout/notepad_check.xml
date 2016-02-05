@@ -14,6 +14,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <TextView
+                android:id="@+id/checkTitle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_margin="10dp"
+                android:textColor="#4A4A4A"
+                android:textSize="17sp" />
+
+
     <TextView
         android:id="@+id/checkContent"
         android:layout_width="fill_parent"

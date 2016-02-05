@@ -172,7 +172,6 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
     }
 
     private void initResourceId() {
-
         listView = getListView();//获取id为list的对象
     }
 
