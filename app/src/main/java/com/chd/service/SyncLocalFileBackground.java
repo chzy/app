@@ -322,7 +322,7 @@ public class SyncLocalFileBackground implements Runnable {
         boolean succed = false;
         TClient.TFilebuilder filebuilder = null;
         try {
-            String fname = entity.getFilename() == null ? MediaFileUtil.getFnameformPath(entity.getFilePath()) : entity.getFilename();
+            String fname = entity.getObjid() == null ? MediaFileUtil.getFnameformPath(entity.getFilePath()) : entity.getObjid();
             filebuilder = tClient.new TFilebuilder(fname, entity.getFtype());
             String objid = null;
             if (start == 0) {
