@@ -102,6 +102,11 @@ public class SyncService extends Service {
 
 		System.out.print("onunbind");
 		syncthread.safeshutdown();
+		try {
+			Thread.sleep(10000L);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		//syncthread=null;
 		//syncthread.notify();
 		return true;

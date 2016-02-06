@@ -28,6 +28,7 @@ import com.chd.notepad.ui.adapter.ListViewAdapter;
 import com.chd.notepad.ui.db.FileDBmager;
 import com.chd.notepad.ui.item.NoteItemtag;
 import com.chd.proto.FTYPE;
+import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
@@ -111,11 +112,13 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                     // 0-100 分批取文件
                     cloudUnits=syncTask.getCloudUnits(0, 10000);
                 runOnUiThread(new Runnable() {
+
                     public void run() {
                        // initData();
                         String file;
-                        for (FileInfo0 fileInfo0:cloudUnits)
+                        for (FileInfo fileInfo:cloudUnits)
                         {
+                            FileInfo0 fileInfo0=new FileInfo0(fileInfo);
                             file=savepath+ File.separator+fileInfo0.getObjid();
                             if (new File(file).exists()==false) {
                                 fileInfo0.setFilePath(savepath + File.separator + fileInfo0.getObjid());
@@ -141,13 +144,17 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
         initResourceId();
         initListener();
         initData();
+
+        Intent intent = new Intent(NotepadActivity.this, SyncService.class);
+        startService(intent);
+        bindsrvic();
        
        
     }
 
     private void initData() {
         //dm = new DatabaseManage(this);//数据库操作对象
-
+        runfrist();
         items = new ArrayList<NoteItemtag>();
         adapter = new ListViewAdapter(this, items);//创建数据源
         initAdapter();//初始化
@@ -234,18 +241,16 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
     @Override
     protected void onResume() {
         super.onResume();
-        Intent intent = new Intent(NotepadActivity.this, SyncService.class);
-        startService(intent);
-        bindsrvic();
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (mBound) {
+        /*if (mBound) {
             unbindService(mConnection);
             mBound = false;
-        }
+        }*/
     }
 
     @Override
