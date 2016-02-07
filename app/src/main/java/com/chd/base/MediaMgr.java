@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -142,7 +141,7 @@ public class MediaMgr  {
 
 	public void open(){
 		if (db==null ) {
-			db = new MedSqlHelper(context, dbname + shareUtils.getLoginEntity().getId() + ".db", 1).getWritableDatabase();
+			db = new MedSqlHelper(context, dbname + shareUtils.getLoginEntity().getUserid() + ".db", 1).getWritableDatabase();
 			return;
 		}
 		if (db.isOpen())
@@ -151,7 +150,7 @@ public class MediaMgr  {
 		}
 		else {
 			//db.close();
-			db = new MedSqlHelper(context, dbname + shareUtils.getLoginEntity().getId() + ".db", 1).getWritableDatabase();
+			db = new MedSqlHelper(context, dbname + shareUtils.getLoginEntity().getUserid() + ".db", 1).getWritableDatabase();
 			return;
 		}
 		//ShareUtils shareUtils = new ShareUtils(context);;

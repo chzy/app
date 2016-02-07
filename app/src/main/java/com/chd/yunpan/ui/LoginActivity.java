@@ -71,7 +71,6 @@ public class LoginActivity extends Activity implements OnClickListener {
                 case 0://sucess
                     Logs.log(msg.obj.toString());
                     ShareUtils shareUtils = new ShareUtils(LoginActivity.this);
-                    shareUtils.setLoginEntity((LoginResult) (msg.obj));
                     //shareUtils.setURL(et_url.getText().toString());
                     shareUtils.setAutoLogin(switcherState);
                     shareUtils.setUsername(et_name.getText().toString());
@@ -213,7 +212,7 @@ private  String verName;
                             }
                             entity = th.loginAuth(username, pwd, 1);
 
-
+                            shareUtils.setLoginEntity(entity);
                             //获取登录成功后的状态数据
 
 //								LoginEntity entity = new LoginEntity();
@@ -231,8 +230,6 @@ private  String verName;
                                 msg.obj = entity;
 
                                 //loginEntity 里面有用户容量,多少空间等属性. 需要显示在 Myspace里面
-                                shareUtils.setLoginEntity(entity);
-
 
                             } else {
                                 msg.what = -1;

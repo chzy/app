@@ -7,7 +7,6 @@ import android.os.Environment;
 
 import com.chd.proto.LoginResult;
 import com.chd.yunpan.net.CookieUtil;
-import com.chd.yunpan.parse.entity.LoginEntity;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -257,7 +256,7 @@ public class ShareUtils {
 		//LoginEntity dd=getLoginEntity();
 	}
 	
-	public LoginEntity getLoginEntity(){
+	public LoginResult getLoginEntity(){
 		String e = sp.getString("entity","");
 //		loginResult entity=new loginResult();
 //		TMemoryBuffer tmb = new TMemoryBuffer(32);
@@ -277,7 +276,7 @@ public class ShareUtils {
 
 		//g.fromJson(e, LoginEntity.class);
 
-		return g.fromJson(e, LoginEntity.class);
+		return g.fromJson(e, LoginResult.class);
 	}
 	
 	public void setAutoLogin(boolean isAuto){

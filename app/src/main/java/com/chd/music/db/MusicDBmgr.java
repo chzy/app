@@ -54,7 +54,7 @@ public class MusicDBmgr implements DBhandler {
 
     public void open() {
         if (db == null) {
-            db = new MySQLHelper(context, dbname + shareUtils.getLoginEntity().getId() + ".db", 1).getWritableDatabase();
+            db = new MySQLHelper(context, dbname + shareUtils.getLoginEntity().getUserid() + ".db", 1).getWritableDatabase();
             return;
         }
         if (db.isOpen()) {

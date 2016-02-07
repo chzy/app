@@ -229,7 +229,7 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
         switch (v.getId()) {
             case R.id.other_btn_down:
                 //任务列表
-                Intent intent=new Intent(OtherActivity.this, DownListActivity.class);
+                Intent intent = new Intent(OtherActivity.this, DownListActivity.class);
                 startActivity(intent);
 
                 break;
@@ -252,12 +252,13 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
             case R.id.other_edit_del:
                 //删除
                 checkList = adapter.getCheckList();
-                for (final FileInfo0 info :
-                        checkList) {
-                    if (syncTask != null && info != null) {
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (final FileInfo0 info :
+                                checkList) {
+                            if (syncTask != null && info != null) {
+
                                 boolean delS = syncTask.DelRemoteObj(info);
                                 if (delS) {
 
@@ -280,37 +281,54 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
 
                                 }
                             }
-                        }).start();
+                        }
                     }
                 }
+                ).start();
 
                 break;
             case R.id.other_edit_down:
                 checkList = adapter.getCheckList();
                 if (isLocal) {
                     //上传
-                    for (final FileInfo0 info :
-                            checkList) {
-                        if (info.getSysid() <= 0) {
-                            info.setFilePath(path + "/" + info.getObjid());
-                        }
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
 
-                        if (syncTask != null && info != null) {
-                            syncTask.upload(info, OtherActivity.this, true);
+                            for (final FileInfo0 info :
+                                    checkList) {
+                                if (info.getSysid() <= 0) {
+                                    info.setFilePath(path + "/" + info.getObjid());
+                                }
+
+                                if (syncTask != null && info != null) {
+                                    syncTask.upload(info, OtherActivity.this, true);
+                                }
+                            }
+
+
                         }
-                    }
+                    }).start();
+
                 } else {
                     //下载
-                    for (final FileInfo0 info :
-                            checkList) {
-                        if (info.getSysid() <= 0) {
-                            info.setFilePath(path + "/" + info.getObjid());
-                        }
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (final FileInfo0 info :
+                                    checkList) {
+                                if (info.getSysid() <= 0) {
+                                    info.setFilePath(path + "/" + info.getObjid());
+                                }
 
-                        if (syncTask != null && info != null) {
-                            syncTask.download(info,  OtherActivity.this, true);
+                                if (syncTask != null && info != null) {
+                                    syncTask.download(info, OtherActivity.this, true);
+                                }
+                            }
                         }
-                    }
+                    }).start();
+
+
                 }
 
                 break;

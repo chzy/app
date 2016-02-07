@@ -127,10 +127,10 @@ public class SettingFragment extends BaseFragment implements OnClickListener  {
 		pb.setMax(100);
 		
 		ShareUtils shareUtils = new ShareUtils(getActivity());
-		LoginEntity entity = shareUtils.getLoginEntity();
-		imageLoader.displayImage(entity.getHead_url(), userPhoto, options, animateFirstListener);
-		userID.setText(entity.getName());
-		userPhoneNumber.setText(entity.getNick_name());
+		LoginResult entity = shareUtils.getLoginEntity();
+		imageLoader.displayImage("", userPhoto, options, animateFirstListener);
+		userID.setText(entity.getUserid());
+		userPhoneNumber.setText(entity.getUserid());
 		pb.setProgress((int)(entity.getUspace()*100/entity.getSpace()));
 		netDiskCapacity.setText("网盘容量："+TimeAndSizeUtil.getSize(entity.getUspace()+"")+"/"+TimeAndSizeUtil.getSize(entity.getSpace()+""));
 		createNewFile();

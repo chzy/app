@@ -3,21 +3,17 @@ package com.chd.notepad.ui.db;
 import android.content.Context;
 import android.util.Log;
 
-import com.chd.proto.FileInfo;
+import com.chd.proto.LoginResult;
 import com.chd.yunpan.share.ShareUtils;
 
 import org.apache.http.util.EncodingUtils;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -36,6 +32,12 @@ public class FileDBmager {
     {
         this._context=context;
         _path=new ShareUtils(_context).getStorePathStr();
+        ShareUtils shareUtils = new ShareUtils(context);
+        LoginResult loginEntity = shareUtils.getLoginEntity();
+        _path=_path+"/"+loginEntity.getUserid();
+        if(!new File(_path).exists()){
+            new File(_path).mkdir();
+        }
     }
 
 
@@ -121,9 +123,7 @@ public class FileDBmager {
 
     //写文件
     public synchronized  boolean writeFile(String fileName, String write_str){
-
         File file = new File(_path+File.separator+fileName+file_ext);
-
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(file);
@@ -135,7 +135,6 @@ public class FileDBmager {
             Log.e(TAG,e.getMessage());
             return false;
         }
-
         return true;
     }
 }

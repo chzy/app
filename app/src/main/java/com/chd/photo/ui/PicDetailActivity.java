@@ -183,7 +183,13 @@ public class PicDetailActivity extends ActiveProcess implements OnClickListener
 		{
 			case R.id.tv_right:
 				//本地文件 上传云端
-				syncTask.upload(fileInfo0, PicDetailActivity.this, false);
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						syncTask.upload(fileInfo0, PicDetailActivity.this, false);
+					}
+				}).start();
+
 				break;
 
 		case R.id.iv_left:
@@ -235,7 +241,13 @@ public class PicDetailActivity extends ActiveProcess implements OnClickListener
 				}
 				if (syncTask != null)
 				{
-					syncTask.download(fileInfo0, null, false);
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							syncTask.download(fileInfo0, null, false);
+						}
+					}).start();
+
 				}
 			}
 			ToastUtils.toast(this, "保存成功!");

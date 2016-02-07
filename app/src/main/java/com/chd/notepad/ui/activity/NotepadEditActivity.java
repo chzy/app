@@ -244,13 +244,8 @@ public class NotepadEditActivity extends Activity {
                 //dm.close();
 
             } catch (Exception ex) {
-                ex.printStackTrace();
             }
 
-            Intent intent = new Intent();
-            intent.setClass(NotepadEditActivity.this, NotepadActivity.class);
-            intent.putExtra("needsync", (state == EDIT_STATE || state == ALERT_STATE));
-            NotepadEditActivity.this.startActivity(intent);
             finish();
         }
 

@@ -12,9 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chd.payfor.ui.OpenSpaceActivity;
+import com.chd.proto.LoginResult;
 import com.chd.userinfo.ui.UserInfoActivity;
 import com.chd.yunpan.R;
-import com.chd.yunpan.parse.entity.LoginEntity;
 import com.chd.yunpan.share.ShareUtils;
 import com.chd.yunpan.ui.progressbar.McircleProgressBar;
 import com.chd.yunpan.utils.TimeAndSizeUtil;
@@ -44,7 +44,7 @@ public class netdiskActivity extends Activity implements OnClickListener {
 	private View mViewMenu2;
 	private View mViewMenu3;
 
-	private  LoginEntity entity;
+	private LoginResult entity;
 	private boolean isLogining=false;
 	
 	@Override
