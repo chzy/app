@@ -106,17 +106,11 @@ public class SyncBackground extends Thread {
 	}
 
 	// 找到所有需要上传的列表
+	//上传是本地有  服务器没有
 	private void getTasks() {
 
 		cloudlist=syncTask.getCloudUnits(0,10000);
-		int total=cloudlist.size();
-//		for(int i=0;i<total;i++) {
-//			FileInfo info=cloudlist.get(i);
-//			FileInfo0 fileInfo0 = new FileInfo0(cloudlist.get(i));
-//			cloudlist.set(i,fileInfo0);
-//			info=null;
-//
-//		}
+//本地列表
 		Iterator<String> iterator=fdb.getLocallist();
 		String fname;
 		while (iterator.hasNext())
@@ -126,11 +120,9 @@ public class SyncBackground extends Thread {
 				tasks.add(fname);
 
 		}
-		//su.open();
-		//tasks = su.getSyncTasks();
-
-
 	}
+
+
 
 	boolean contains(String fname)
 	{
@@ -138,11 +130,11 @@ public class SyncBackground extends Thread {
 		for(FileInfo fileInfo:cloudlist)
 		{
 			FileInfo0 fileInfo0=new FileInfo0(fileInfo);
-			if (fileInfo0.getSysid()>0)
-				continue;
-			if (fname.compareToIgnoreCase(fileInfo0.getObjid())==0) {
+			//本地与服务器的判断,如果有,则不加入,否则加入上传列表
+
+			if (fname.equalsIgnoreCase(fileInfo0.getObjid())) {
 				cloudlist.remove(fileInfo0);
-				fileInfo0.setSysid(1);
+				//将服务器上相同移除,剩下的是需要删除的
 				return true;
 			}
 		}
@@ -155,8 +147,6 @@ public class SyncBackground extends Thread {
 			@Override
 			public void run() {
 				getTasks();
-				if(tasks.size()==0)
-					return;
 				for (String fname:tasks)
 				{
 					FileInfo0 fileInfo0=new FileInfo0();
@@ -166,37 +156,14 @@ public class SyncBackground extends Thread {
 					syncTask.upload(fileInfo0,null,false);
 				}
 				tasks.clear();
-				for (FileInfo0 fileInfo0:cloudlist)
+				for (FileInfo fileInfo0:cloudlist)
 				{
-					if (fileInfo0.getSysid()==0)
 						try {
 							TClient.getinstance().delObj(fileInfo0.getObjid(),fileInfo0.getFtype());
 						} catch (Exception e) {
 							e.printStackTrace();
 							Log.e(TAG,e.getMessage());
 						}
-
-				}
-				for (String fname:tasks)
-				{
-					FileInfo0 fileInfo0=new FileInfo0();
-					fileInfo0.setFilePath(_workpath + File.separator + fname);
-					fileInfo0.setObjid(fname);
-					fileInfo0.setFtype(FTYPE.NOTEPAD);
-
-					syncTask.upload(fileInfo0,null,false);
-				}
-				tasks.clear();
-				for (FileInfo0 fileInfo0:cloudlist)
-				{
-					if (fileInfo0.getSysid()==0)
-						try {
-							TClient.getinstance().delObj(fileInfo0.getObjid(),fileInfo0.getFtype());
-						} catch (Exception e) {
-							e.printStackTrace();
-							Log.e(TAG,e.getMessage());
-						}
-
 				}
 			mHandler.sendEmptyMessage(SUCESS);
 			}
