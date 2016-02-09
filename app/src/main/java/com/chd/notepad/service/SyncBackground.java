@@ -106,7 +106,6 @@ public class SyncBackground extends Thread {
 	}
 
 	// 找到所有需要上传的列表
-	//上传是本地有  服务器没有
 	private void getTasks() {
 
 		cloudlist=syncTask.getCloudUnits(0,10000);

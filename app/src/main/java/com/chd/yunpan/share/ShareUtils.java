@@ -239,16 +239,7 @@ public class ShareUtils {
 	
 	public void setLoginEntity(LoginResult entity){
 		if(entity!=null){
-//		TSerializer serializer = new TSerializer(new TSimpleJSONProtocol.Factory());
 		String json = null;
-//		try {
-//			 json = serializer.toString(entity);
-//		} catch (TException e) {
-//			e.printStackTrace();
-//		}
-		//json=entity.toString();
-		//Gson gson = new Gson();
-		//editor.putString("entity", gson.toJson(entity));
 		json=entity.getJson();
 		editor.putString("entity", json);
 		editor.commit();
@@ -258,27 +249,18 @@ public class ShareUtils {
 	
 	public LoginResult getLoginEntity(){
 		String e = sp.getString("entity","");
-//		loginResult entity=new loginResult();
-//		TMemoryBuffer tmb = new TMemoryBuffer(32);
-//		//TProtocol tp = new org.apache.thrift.protocol.TBinaryProtocol(tmb);
-//
-//		try {
-//			tmb.write(e.getBytes());
-//			TSimpleJSONProtocol tp = new org.apache.thrift.protocol.TSimpleJSONProtocol(tmb);
-//			entity.read(tp);
-//		} catch (Exception e1) {
-//
-//		}
-//		int sp=entity.getSpace();
-//		return null;
-
 		Gson g = new Gson();
-
-		//g.fromJson(e, LoginEntity.class);
-
 		return g.fromJson(e, LoginResult.class);
 	}
 	
+	public int getUserid()
+	{
+		LoginResult lg=getLoginEntity();
+		if (lg==null)
+			return 0;
+		else
+			return lg.getUserid();
+	}
 	public void setAutoLogin(boolean isAuto){
 		editor.putBoolean("autoLogin", isAuto);
 		editor.commit();

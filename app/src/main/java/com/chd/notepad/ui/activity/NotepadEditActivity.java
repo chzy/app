@@ -244,6 +244,7 @@ public class NotepadEditActivity extends Activity {
                 //dm.close();
 
             } catch (Exception ex) {
+                ex.printStackTrace();
             }
 
             finish();
