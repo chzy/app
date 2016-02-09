@@ -35,7 +35,6 @@ import com.chd.yunpan.ui.dialog.UpdateDialog;
 import com.chd.yunpan.utils.Logs;
 import com.chd.yunpan.utils.ToastUtils;
 import com.chd.yunpan.view.CircularProgressButton;
-import com.lockscreen.pattern.UnlockGesturePasswordActivity;
 
 
 public class LoginActivity extends Activity implements OnClickListener {
@@ -59,6 +58,7 @@ public class LoginActivity extends Activity implements OnClickListener {
     private ShareUtils shareUtils;
     private TextView register;
     private boolean f = true;
+    private boolean isUnlock;
     private boolean canLogin = true;
     private Handler loginHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
@@ -76,6 +76,9 @@ public class LoginActivity extends Activity implements OnClickListener {
                     shareUtils.setAutoLogin(switcherState);
                     shareUtils.setUsername(et_name.getText().toString());
                     shareUtils.setPwd(et_pwd.getText().toString());
+                    if(isUnlock){
+                        UILApplication.getInstance().getLockPatternUtils().clearLock();
+                    }
                     gotoMain();
                     break;
                 case -1:
@@ -127,18 +130,21 @@ private  String verName;
 
 
 
+
+
         initViews();
         setListener();
         dialog = new ProgressDialog(LoginActivity.this);
 
-        if (UILApplication.getInstance().getLockPatternUtils().savedPatternExists()) {
-            if (!getIntent().getBooleanExtra("unlock", false)) {
-                Intent i = new Intent(this, UnlockGesturePasswordActivity.class);
-                startActivity(i);
-                finish();
-            }
-        }
+//        if (UILApplication.getInstance().getLockPatternUtils().savedPatternExists()) {
+//            if (!getIntent().getBooleanExtra("unlock", false)) {
+//                Intent i = new Intent(this, UnlockGesturePasswordActivity.class);
+//                startActivity(i);
+//                finish();
+//            }
+//        }
         Intent intent = getIntent();
+        isUnlock=intent.getBooleanExtra("Unlock",false);
 
         if (intent != null && intent.getBooleanExtra("isReg", false)) {
             et_name.setText(intent.getStringExtra("phone"));

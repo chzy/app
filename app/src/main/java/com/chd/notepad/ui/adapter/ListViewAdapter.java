@@ -170,8 +170,8 @@ public class ListViewAdapter extends BaseAdapter {
 		//time1=TimeUtils.getTimeTxt(tag.time,"kk:mm");
 		String content=fileDBmager.readFile(tag.get_fname());
 		try{
-		NoteItem noteItem = gson.fromJson(content, NoteItem.class);
-		text.setText(noteItem.getContent());
+			NoteItem noteItem = gson.fromJson(content, NoteItem.class);
+			text.setText(noteItem.getContent());
 		}catch (Exception e){
 			text.setText(content);
 		}

@@ -307,11 +307,11 @@ public class SyncLocalFileBackground implements Runnable {
                 if (size==oft)
                 {
                     Log.e(TAG,"remote obj exist!!");
-					
+                    boolean ret = false;
                     try {
-                        boolean ret;
+
                         ret= tClient.CommitObj(entity.objid,entity.ftype,null);
-                        //ret= tClient.delObj(entity.getObjid(),entity.ftype);
+//                        ret= tClient.delObj(entity.getObjid(),entity.ftype);
                     } catch (TException e) {
                         e.printStackTrace();
                     }

@@ -1,7 +1,5 @@
 package com.lockscreen.pattern;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -14,11 +12,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chd.notepad.ui.activity.NotepadActivity;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
 import com.lockscreen.view.LockPatternUtils;
 import com.lockscreen.view.LockPatternView;
 import com.lockscreen.view.LockPatternView.Cell;
+
+import java.util.List;
 
 public class UnlockGesturePassword2Activity extends Activity {
 	private LockPatternView mLockPatternView;
@@ -93,12 +94,11 @@ public class UnlockGesturePassword2Activity extends Activity {
 			if (UILApplication.getInstance().getLockPatternUtils().checkPattern(pattern)) {
 				mLockPatternView
 						.setDisplayMode(LockPatternView.DisplayMode.Correct);
-//				Intent intent = new Intent(UnlockGesturePassword2Activity.this,
-//LoginActivity.class);
-//// 打开新的Activity
-//				intent.putExtra("unlock", true);
-//				startActivity(intent);
-				
+				Intent intent = new Intent(UnlockGesturePassword2Activity.this,
+NotepadActivity.class);
+// 打开新的Activity
+				intent.putExtra("unlock", true);
+				startActivity(intent);
 				showToast("解锁成功");
 				finish();
 			} else {

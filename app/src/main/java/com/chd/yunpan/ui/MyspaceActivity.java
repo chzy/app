@@ -62,14 +62,15 @@ public class MyspaceActivity extends Activity implements OnClickListener, OnItem
 
 	private void initData() {
 		//模拟数据
-        MySpaceBean mySpaceBean0 = new MySpaceBean("照片", R.drawable.myspace_grid_photo, PicActivity.class);
-        MySpaceBean mySpaceBean1 = new MySpaceBean("音乐", R.drawable.myspace_grid_music, MusicActivity.class);
         MySpaceBean mySpaceBean2 = new MySpaceBean("小心事", R.drawable.myspace_grid_notepad, NotepadActivity.class);
+		MySpaceBean mySpaceBean0 = new MySpaceBean("照片", R.drawable.myspace_grid_photo, PicActivity.class);
+		MySpaceBean mySpaceBean1 = new MySpaceBean("音乐", R.drawable.myspace_grid_music, MusicActivity.class);
+
         MySpaceBean mySpaceBean3 = new MySpaceBean("联系人", R.drawable.myspace_grid_contact, ContactActivity.class);
         MySpaceBean mySpaceBean4 = new MySpaceBean("短信", R.drawable.myspace_grid_message, SmsBackActivity.class);
         MySpaceBean mySpaceBean5 = new MySpaceBean("其他", R.drawable.myspace_grid_other, OtherActivity.class);
-		
-        meumList.add(mySpaceBean0);
+
+		meumList.add(mySpaceBean0);
         meumList.add(mySpaceBean1);
         meumList.add(mySpaceBean2);
         meumList.add(mySpaceBean3);

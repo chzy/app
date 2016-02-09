@@ -31,7 +31,10 @@ import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
+import com.chd.yunpan.application.UILApplication;
 import com.google.gson.Gson;
+import com.lockscreen.pattern.GuideGesturePasswordActivity;
+import com.lockscreen.pattern.UnlockGesturePasswordActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -124,25 +127,25 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notepad_main);
-        gson = new Gson();
-        if (syncBackground==null)
-		{
-            syncBackground = new SyncBackground(this, mHandler);
-		}	
-        syncBackground.start();
-        //if (needsyc) {
-         //   syncBackground.wakeup(1);
-         //   needsyc=!needsyc;
-        //}
-        dialog = new ProgressDialog(this);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setMessage("正在加载");
-        dialog.show();
-        runfrist();
-        initTitle();
-        initResourceId();
-        initListener();
+        if (UILApplication.getInstance().getLockPatternUtils().savedPatternExists()) {
+            if (!getIntent().getBooleanExtra("unlock", false)) {
+                Intent i = new Intent(this, UnlockGesturePasswordActivity.class);
+                startActivity(i);
+                finish();
+            }
+        }else{
+            Intent i = new Intent(this, GuideGesturePasswordActivity.class);
+            startActivity(i);
+            finish();
+        }
+
+
     }
+
+
+
+
+
 
     private void initData() {
         //dm = new DatabaseManage(this);//数据库操作对象
@@ -225,6 +228,16 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
     @Override
     protected void onResume() {
         super.onResume();
+                gson = new Gson();
+        syncBackground = new SyncBackground(this, mHandler);
+        dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("正在加载");
+        dialog.show();
+        runfrist();
+        initTitle();
+        initResourceId();
+        initListener();
     }
 
     @Override

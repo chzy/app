@@ -1,7 +1,5 @@
 package com.lockscreen.pattern;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,17 +7,22 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.view.Gravity;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chd.notepad.ui.activity.NotepadActivity;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
+import com.chd.yunpan.share.ShareUtils;
 import com.chd.yunpan.ui.LoginActivity;
 import com.lockscreen.view.LockPatternUtils;
 import com.lockscreen.view.LockPatternView;
 import com.lockscreen.view.LockPatternView.Cell;
+
+import java.util.List;
 
 public class UnlockGesturePasswordActivity extends Activity {
 	private LockPatternView mLockPatternView;
@@ -30,6 +33,7 @@ public class UnlockGesturePasswordActivity extends Activity {
 	private Animation mShakeAnim;
 
 	private Toast mToast;
+	private TextView mForgetTextView;
 
 	private void showToast(CharSequence message) {
 		if (null == mToast) {
@@ -52,6 +56,25 @@ public class UnlockGesturePasswordActivity extends Activity {
 		mLockPatternView.setOnPatternListener(mChooseNewLockPatternListener);
 		mLockPatternView.setTactileFeedbackEnabled(true);
 		mHeadTextView = (TextView) findViewById(R.id.gesturepwd_unlock_text);
+		mForgetTextView = (TextView) findViewById(R.id.gesturepwd_unlock_forget);
+		mForgetTextView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent intent=new Intent(UnlockGesturePasswordActivity.this,LoginActivity.class);
+				ShareUtils shareUtils = new ShareUtils(UnlockGesturePasswordActivity.this);
+				shareUtils.setLoginEntity(null);
+				shareUtils.setURL("");
+				shareUtils.setAutoLogin(false);
+				shareUtils.setPwd("");
+				intent.putExtra("Unlock", true);
+				startActivity(intent);
+
+				showToast("忘记手机密码需重新登录");
+				UnlockGesturePasswordActivity.this.finish();
+
+			}
+		});
+
 		mShakeAnim = AnimationUtils.loadAnimation(this, R.anim.shake_x);
 	}
 
@@ -95,7 +118,7 @@ public class UnlockGesturePasswordActivity extends Activity {
 				mLockPatternView
 						.setDisplayMode(LockPatternView.DisplayMode.Correct);
 				Intent intent = new Intent(UnlockGesturePasswordActivity.this,
-LoginActivity.class);
+NotepadActivity.class);
 // 打开新的Activity
 				intent.putExtra("unlock", true);
 				startActivity(intent);
