@@ -170,7 +170,7 @@ public class SyncLocalFileBackground implements Runnable {
             os = new RandomAccessFile(f, "rws");
             total = inputTrasnport.getobjlength().intValue();
 
-            if (total < 0) {
+            if (total <= 0) {
                 Log.e(TAG, " obj length invild");
                 return false;
             }
@@ -255,7 +255,7 @@ public class SyncLocalFileBackground implements Runnable {
 
         TClient tClient = null;
         File file;
-        long size = entity.getFilesize();
+        long size =entity.getFilesize();
         if (!NetworkUtils.isNetworkAvailable(context)) {
             return false;
         }
@@ -288,6 +288,7 @@ public class SyncLocalFileBackground implements Runnable {
         }
         su.open();
         FileInfo fileInfo = tClient.queryFile(entity);
+        TClient.TFilebuilder filebuilder = null;
         if (fileInfo != null) {
             Log.e(TAG, "upload file exist !!");
             if (replace) {
@@ -301,8 +302,32 @@ public class SyncLocalFileBackground implements Runnable {
                 return false;
         } else {
             long oft = tClient.queryUpObjOffset(entity);
-            if ((oft > 0))
+            if ((oft > 0)) {
+
+                if (size==oft)
+                {
+                    Log.e(TAG,"remote obj exist!!");
+					
+                    try {
+                        boolean ret;
+                        ret= tClient.CommitObj(entity.objid,entity.ftype,null);
+                        //ret= tClient.delObj(entity.getObjid(),entity.ftype);
+                    } catch (TException e) {
+                        e.printStackTrace();
+                    }
+					
+                    return ret;
+                }
+                if (size<oft)
+                {
+                    Log.e(TAG,"remote file size > local");
+                    return false;
+                }
                 start =/*entity.getOffset()*/oft;
+
+
+
+            }
             else {
                 if (oft < 0) {
                     su.close();
@@ -318,12 +343,12 @@ public class SyncLocalFileBackground implements Runnable {
             }
         }
         int len = 0;
-        byte[] buffer = new byte[1024 * 5];
+
         boolean succed = false;
-        TClient.TFilebuilder filebuilder = null;
+
         try {
             String fname = entity.getObjid() == null ? MediaFileUtil.getFnameformPath(entity.getFilePath()) : entity.getObjid();
-            filebuilder = tClient.new TFilebuilder(fname, entity.getFtype());
+            filebuilder = tClient.new TFilebuilder(fname, entity.getFtype(),(int)size);
             String objid = null;
             if (start == 0) {
                 objid = filebuilder.ApplyObj();
@@ -337,12 +362,12 @@ public class SyncLocalFileBackground implements Runnable {
                 objid = entity.getObjid();
             }
             RandomAccessFile rf = new RandomAccessFile(entity.getFilePath(), "r");
-
+            byte[] buffer = new byte[1024 * 5];
             rf.seek(start);
             long pz = 0;
             while ((len = rf.read(buffer, 0, buffer.length)) != -1) {
                 pz = pz + len;
-                if (filebuilder.Append(/*pz,*/buffer)) {
+                if (filebuilder.Append(/*pz,*/buffer,len)) {
                     entity.setOffset(pz);
                     if (activeProcess != null) {
                         activeProcess.updateProgress((int) ((pz * 100 / size)));

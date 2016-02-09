@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.chd.TClient;
 import com.chd.base.backend.SyncTask;
 import com.chd.notepad.service.SyncBackground;
 import com.chd.notepad.ui.adapter.ListViewAdapter;
@@ -96,6 +97,16 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                 for (FileInfo fileInfo : cloudUnits) {
                     FileInfo0 fileInfo0 = new FileInfo0(fileInfo);
                     file = savepath + File.separator + fileInfo0.getObjid();
+                    if (fileInfo.filesize==0) {
+                        try {
+
+                            if (!TClient.getinstance().delObj(fileInfo0.getObjid(), fileInfo0.getFtype()))
+                                Log.e("ddd", fileInfo0.getObjid() + " " + fileInfo0.getFtype());
+                            continue;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                     if (new File(file).exists() == false) {
                         fileInfo0.setFilePath(file);
                         syncTask.download(fileInfo0, null, false);
@@ -114,7 +125,15 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notepad_main);
         gson = new Gson();
-        syncBackground = new SyncBackground(this, mHandler);
+        if (syncBackground==null)
+		{
+            syncBackground = new SyncBackground(this, mHandler);
+		}	
+        syncBackground.start();
+        //if (needsyc) {
+         //   syncBackground.wakeup(1);
+         //   needsyc=!needsyc;
+        //}
         dialog = new ProgressDialog(this);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setMessage("正在加载");
@@ -258,11 +277,17 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                     // dm.open();
                     //int i = dm.delete(adapter.getItemId(menuInfo.position));
                     //dm.close();
-                    fileDBmager.delFile(nt.get_fname());
+                    if (fileDBmager.delFile(nt.get_fname()))
+                        Log.d("notepad",nt.get_fname()+"删除文件失败！");
                     adapter.removeListItem(menuInfo.position);//删除数据
                     adapter.notifyDataSetChanged();//通知数据源，数据已经改变，刷新界面
                     dialog.show();
-                    syncBackground.run();
+                    if (syncBackground==null) {
+                        syncBackground=new SyncBackground(this, mHandler);
+                        syncBackground.start();
+                    }
+                    syncBackground.wakeup(1);
+                    //needsyc = false;
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -333,7 +358,12 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
             switch (requestCode) {
                 case MODIFY_NOTPAD:
                     dialog.show();
-                    syncBackground.run();
+                    if (syncBackground==null)
+                    {
+                        syncBackground=new SyncBackground(this,mHandler);
+						syncBackground.start();
+                    }
+                    syncBackground.wakeup(1);
                     break;
 
 

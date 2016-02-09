@@ -24,13 +24,11 @@ import android.widget.Toast;
 import com.chd.TClient;
 import com.chd.proto.Errcode;
 import com.chd.proto.LoginResult;
-import com.chd.proto.LoginResult0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.net.ExecRunable;
 import com.chd.yunpan.net.NetworkUtils;
 import com.chd.yunpan.net.TouXiangUpLoad;
-import com.chd.yunpan.parse.entity.LoginEntity;
 import com.chd.yunpan.share.ShareUtils;
 import com.chd.yunpan.ui.AutoPhotoBackupsActivity;
 import com.chd.yunpan.ui.LoginActivity;
@@ -381,12 +379,12 @@ public class SettingFragment extends BaseFragment implements OnClickListener  {
 			case 0:
 				
 				if(msg.obj!=null){
-					LoginEntity entity = (LoginEntity) msg.obj;
+					LoginResult entity = (LoginResult) msg.obj;
 					ShareUtils shareUtils = new ShareUtils(getActivity());
-					shareUtils.setLoginEntity((LoginResult0)(msg.obj));
-					imageLoader.displayImage(entity.getHead_url(), userPhoto, options, animateFirstListener);
-					userID.setText(entity.getName());
-					userPhoneNumber.setText(entity.getNick_name());
+					shareUtils.setLoginEntity(entity);
+					imageLoader.displayImage("trpc://netdiskportrait", userPhoto, options, animateFirstListener);
+					userID.setText(entity.getUserid());
+					userPhoneNumber.setText(entity.getUserid());
 					pb.setProgress((int)(entity.getUspace()*100/entity.getSpace()));
 					netDiskCapacity.setText("网盘容量："+TimeAndSizeUtil.getSize(entity.getUspace()+"")+"/"+TimeAndSizeUtil.getSize(entity.getSpace()+""));
 				}

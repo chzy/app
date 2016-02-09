@@ -71,6 +71,7 @@ public class LoginActivity extends Activity implements OnClickListener {
                 case 0://sucess
                     Logs.log(msg.obj.toString());
                     ShareUtils shareUtils = new ShareUtils(LoginActivity.this);
+                    shareUtils.setLoginEntity((LoginResult) (msg.obj));
                     //shareUtils.setURL(et_url.getText().toString());
                     shareUtils.setAutoLogin(switcherState);
                     shareUtils.setUsername(et_name.getText().toString());
@@ -108,8 +109,8 @@ private  String verName;
             public void run() {
                 try {
                     final VersionResult result = TClient.getinstance().CheckVer(verName);
-                    Log.d("更新:",result.toString());
                     if(result!=null){
+                        Log.d("更新:",result.getVersion());
                     loginHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -212,7 +213,7 @@ private  String verName;
                             }
                             entity = th.loginAuth(username, pwd, 1);
 
-                            shareUtils.setLoginEntity(entity);
+
                             //获取登录成功后的状态数据
 
 //								LoginEntity entity = new LoginEntity();
@@ -230,6 +231,8 @@ private  String verName;
                                 msg.obj = entity;
 
                                 //loginEntity 里面有用户容量,多少空间等属性. 需要显示在 Myspace里面
+                                shareUtils.setLoginEntity(entity);
+
 
                             } else {
                                 msg.what = -1;

@@ -193,7 +193,7 @@ public class BigFileOrBreakPointUploadUtil {
 					 DBManager su = new DBManager(context);
 					 su.open();
 					 TClient.TFilebuilder filebuilder;
-					 filebuilder = tClient.new TFilebuilder(entity.getFilename(),entity.getFtype());
+					 filebuilder = tClient.new TFilebuilder(entity.getFilename(),entity.getFtype(),(int)size);
 					 String objid=filebuilder.ApplyObj();
 					 if (objid!=null)
 					 {
@@ -206,7 +206,7 @@ public class BigFileOrBreakPointUploadUtil {
 					 while (   (len=rf.read(buffer, 0, 1024)) !=-1)
 					 {
 						 pz=start+len;
-						 if (filebuilder.Append(/*pz,*/buffer) ) {
+						 if (filebuilder.Append(/*pz,*/buffer,len) ) {
 							 if(pb!=null)
 								 pb.setProgress((int)(pz/size*100));
 							 su.updateDownloadingFile(objid, pz);

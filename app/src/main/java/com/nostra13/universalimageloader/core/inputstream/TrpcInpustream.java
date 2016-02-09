@@ -20,6 +20,7 @@ public final   class TrpcInpustream extends InputStream {
    private String _savefile;
     private int remoteoffset=0;
     private int objlen=-1;
+    private final  String TAG="TrpcInpustream";
 
 
     public TrpcInpustream(String name, String savefile)    {

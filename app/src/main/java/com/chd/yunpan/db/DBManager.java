@@ -52,7 +52,7 @@ public class DBManager implements DBhandler {
 */
 	public void open(){
 		ShareUtils shareUtils = new ShareUtils(context);
-		db = new MySQLHelper(context, "photo"+shareUtils.getLoginEntity().getUserid()+".db", 1).getWritableDatabase();
+		db = new MySQLHelper(context, "photo"+shareUtils.getUserid()+".db", 1).getWritableDatabase();
 	}
 	public void close(){
 		if(db!=null){
