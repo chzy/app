@@ -736,7 +736,7 @@ public class MediaMgr  {
 	public  void setDownloadStatus(FileInfo0 entity)
 	{
 		ContentValues values = new ContentValues();
-		values.put("sysid",entity.getSysid());
+		//values.put("sysid",entity.getSysid());
 		values.put("objid",entity.getObjid());
 		values.put("offset", entity.getOffset());
 		db.update("download_inter", values, "type=? and objid=?", new String[]{String.valueOf(entity.getFtype()), entity.getObjid()});

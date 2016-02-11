@@ -87,11 +87,11 @@ public class SyncService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		if (syncthread==null) {
+	/*	if (syncthread==null) {
 			syncthread = new SyncBackground(getApplication(),null);
 			syncthread.start();
 			System.out.print("on bind start thread");
-		}
+		}*/
 
 		return mBinder;
 	}

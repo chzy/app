@@ -32,6 +32,7 @@ import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
+import com.chd.yunpan.share.ShareUtils;
 import com.google.gson.Gson;
 import com.lockscreen.pattern.GuideGesturePasswordActivity;
 import com.lockscreen.pattern.UnlockGesturePasswordActivity;
@@ -68,7 +69,8 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
     private ArrayList<NoteItemtag> items;
     private SyncBackground syncBackground;
     private ProgressDialog dialog;
-    private Handler mHandler = new Handler() {
+    private  String  savepath;
+    private Handler mHandler= new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -80,10 +82,11 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                     break;
             }
         }
+
     };
 
     private void runfrist() {
-        final String savepath = syncBackground.getWorkPath();
+
         Thread thread = new Thread(new Runnable() {
 
             @Override
@@ -95,12 +98,18 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                 if (cloudUnits == null || cloudUnits.isEmpty())
                     // 0-100 分批取文件
                     cloudUnits = syncTask.getCloudUnits(0, 10000);
-                // initData();
+
+                if (syncBackground==null) {
+                    syncBackground = new SyncBackground(NotepadActivity.this, mHandler, cloudUnits, savepath);
+                    syncBackground.start();
+                }
+
                 String file;
                 for (FileInfo fileInfo : cloudUnits) {
                     FileInfo0 fileInfo0 = new FileInfo0(fileInfo);
                     file = savepath + File.separator + fileInfo0.getObjid();
-                    if (fileInfo.filesize==0) {
+                    if (fileInfo.filesize==0)
+                    {
                         try {
 
                             if (!TClient.getinstance().delObj(fileInfo0.getObjid(), fileInfo0.getFtype()))
@@ -125,6 +134,8 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        savepath = new ShareUtils(this).getNotepadDir();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notepad_main);
         if (UILApplication.getInstance().getLockPatternUtils().savedPatternExists()) {
@@ -228,8 +239,8 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
     @Override
     protected void onResume() {
         super.onResume();
-                gson = new Gson();
-        syncBackground = new SyncBackground(this, mHandler);
+        //gson = new Gson();
+       // syncBackground = new SyncBackground(this, mHandler);
         dialog = new ProgressDialog(this);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setMessage("正在加载");
@@ -238,6 +249,13 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
         initTitle();
         initResourceId();
         initListener();
+        //if (syncBackground==null)
+        //    syncBackground = new SyncBackground(this, mHandler,cloudUnits,savepath);
+
+/*
+        Log.d("ntp", "" + syncBackground.getState());
+        if (syncBackground.getState()==Thread.State.NEW )
+                syncBackground.start();*/
     }
 
     @Override
@@ -295,10 +313,10 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                     adapter.removeListItem(menuInfo.position);//删除数据
                     adapter.notifyDataSetChanged();//通知数据源，数据已经改变，刷新界面
                     dialog.show();
-                    if (syncBackground==null) {
-                        syncBackground=new SyncBackground(this, mHandler);
-                        syncBackground.start();
-                    }
+                    //if (syncBackground==null) {
+                   //     syncBackground=new SyncBackground(this, mHandler,cloudUnits);
+                   //     syncBackground.start();
+                   // }
                     syncBackground.wakeup(1);
                     //needsyc = false;
                 } catch (Exception ex) {
@@ -371,11 +389,11 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
             switch (requestCode) {
                 case MODIFY_NOTPAD:
                     dialog.show();
-                    if (syncBackground==null)
+                    /*if (syncBackground==null)
                     {
-                        syncBackground=new SyncBackground(this,mHandler);
+                        syncBackground=new SyncBackground(this,mHandler,cloudUnits);
 						syncBackground.start();
-                    }
+                    }*/
                     syncBackground.wakeup(1);
                     break;
 

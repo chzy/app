@@ -56,7 +56,15 @@ public class FileDBmager {
     public boolean delFile(String fname) {
         String delfile=_path + File.separator + fname+file_ext;
        File file=new File(delfile);
-        return  file.delete();
+        if (file.exists()) {
+            Log.d(TAG,delfile+" file not exists");
+            if ( !file.delete())
+                return _context.deleteFile(delfile);
+            else
+                return  true;
+        }
+        else
+            return false;
        // return  _context.deleteFile(_path + File.separator + fname+file_ext);
     }
 
@@ -75,32 +83,37 @@ public class FileDBmager {
     class MFileFilter implements FilenameFilter {
         String _ext;
         int _min;
-        public MFileFilter(String ext)
-        {
-            _ext=ext.toLowerCase();
-            _min= _ext.length();
+
+        public MFileFilter(String ext) {
+            _ext = ext.toLowerCase();
+            _min = _ext.length();
         }
+
         @Override
         public boolean accept(File dir, String filename) {
             //int idx=filename.toLowerCase().lastIndexOf(_ext);
-            if (filename.length()<_min  )
-                return  false;
-            int idx=filename.lastIndexOf(_ext);
-            if (idx<0)
-                return  false;
-            return filename.length()- idx==_min;
-            //filename.substring()
-            //    return (filename.length()-filename.lastIndexOf(_ext)-_ext.length()==0);
+            if (filename.length() < _min)
+                return false;
+            int idx = filename.lastIndexOf(_ext);
+            if (idx < 0)
+                return false;
+
+            if (filename.length() - idx != _min)
+                return false;
+
+            for (int i = idx; --i >= 0; ) {
+                if (!Character.isDigit(filename.charAt(i)))
+                    return false;
+            }
+            return true;
+
         }
     }
-
-
-
     public String readFile(String fileName)  {
 
         String res="";
         File file = new File(_path+File.separator+fileName+file_ext);
-
+                            //_path + File.separator + fname+file_ext;
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(file);
@@ -124,11 +137,13 @@ public class FileDBmager {
     //写文件
     public synchronized  boolean writeFile(String fileName, String write_str){
         File file = new File(_path+File.separator+fileName+file_ext);
+                            //_path + File.separator + fname+file_ext;
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(file);
             byte [] bytes = write_str.getBytes();
             fos.write(bytes);
+            fos.flush();
             fos.close();
         } catch (Exception e) {
             e.printStackTrace();

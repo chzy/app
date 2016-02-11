@@ -2,6 +2,7 @@ package com.chd.notepad.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -173,6 +174,8 @@ public class ListViewAdapter extends BaseAdapter {
 			NoteItem noteItem = gson.fromJson(content, NoteItem.class);
 			text.setText(noteItem.getContent());
 		}catch (Exception e){
+			if (e!=null)
+				Log.e("noteListview", e.toString());
 			text.setText(content);
 		}
 		
