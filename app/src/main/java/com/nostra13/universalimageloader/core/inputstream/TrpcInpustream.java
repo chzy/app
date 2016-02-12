@@ -18,16 +18,19 @@ public final   class TrpcInpustream extends InputStream {
    private InputTrasnport transport;
    private /*RandomAccessFile*/FileOutputStream outfilewrter=null;
    private String _savefile;
-    private int remoteoffset=0;
+    private long remoteoffset=-1;
     private int objlen=-1;
     private final  String TAG="TrpcInpustream";
+    private int marked=-1;
+
 
 
     public TrpcInpustream(String name, String savefile)    {
         transport=new InputTrasnport(name, FTYPE.PICTURE);
         if (savefile==null || savefile.indexOf('.')<0)
-            return;
+            Log.d(TAG,"skip save local file");
         _savefile=savefile;
+        remoteoffset=0;
 
     }
 
@@ -54,69 +57,85 @@ public final   class TrpcInpustream extends InputStream {
 
     @Override
    public int read(byte[] buffer, int byteOffset, int byteCount)  throws IOException {
-        Log.d("TrpcInpustream", "offset:" + remoteoffset + " readcount:" + (buffer.length - byteOffset));
+
         int redbytes=0;
-       // int offset=remoteoffset+redbytes;
-         redbytes= transport.read(buffer,remoteoffset,byteCount);
+        long offset=remoteoffset+byteOffset;
+        Log.d(TAG, "offset:" + offset + " readcount:" + (/*buffer.length - byteOffset*/ byteCount));
+
+        redbytes= transport.read(buffer,offset,byteCount);
 
         if (redbytes>-1 )
         {
-            if (outfilewrter==null)
-            try {
-                outfilewrter=new FileOutputStream(_savefile);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                Log.e("TrpcInputstream",e.getMessage());
+            if (outfilewrter==null && _savefile!=null) {
+                try {
+                    outfilewrter = new FileOutputStream(_savefile);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    Log.e("TrpcInputstream", e.getMessage());
+                }
             }
-
-            remoteoffset+=redbytes;
-            if ( outfilewrter!=null)
-            //outfilewrter.seek(byteOffset);
-            try {
-               /* if (byteCount==1)
-                    outfilewrter.write(new byte[]{(byte)redbytes},byteOffset,byteCount);
-                else
-                    outfilewrter.write(buffer,byteOffset,redbytes);*/
-                outfilewrter.write(buffer, byteOffset, redbytes);
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-                Log.e("TrpcInpustream",e.getMessage());
+            remoteoffset=offset+redbytes;
+            if ( outfilewrter!=null) {
+                try {
+                    outfilewrter.write(buffer, byteOffset, redbytes);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("TrpcInpustream", e.getMessage());
+                }
             }
-
         }
         return  redbytes;
     }
 
     @Override
     public int available() throws IOException {
+       /* if (objlen>-1)
+            return objlen-remoteoffset;
+        try {
+            objlen=transport.getobjlength().intValue();
+            return objlen;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(TAG,e.getMessage());
+        }
+        return -1;*/
+        return 0;
+    }
+
+    public long getSize()  {
         if (objlen>-1)
             return objlen;
         try {
             objlen=transport.getobjlength().intValue();
+            return objlen;
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e(TAG,e.getMessage());
         }
-        return -1;
+        return 0;
     }
+
+
 
 
     @Override
     public void close() throws IOException {
+        Log.d(TAG,"call close()");
         if (outfilewrter!=null) {
             outfilewrter.flush();
             outfilewrter.close();
             if (remoteoffset>0 && remoteoffset!=available()  )
                 new File(_savefile).delete();
         }
-        remoteoffset=0;
+            //remoteoffset=0;
             transport.close();
     }
 
 
-    /*@Override
+    @Override
     public synchronized void mark(int readlimit) {
-
+        marked=readlimit;
+        Log.d(TAG,"mark called");
     }
 
 
@@ -125,15 +144,29 @@ public final   class TrpcInpustream extends InputStream {
         return true;
     }
 
-
-    @Override
-    public synchronized void reset()  {
-        //in.reset();
+       @Override
+    public long skip(long byteCount) {
+           Log.d(TAG, "skip called: " + byteCount);
+           getSize();
+           long skip;
+           skip=Math.min(Math.max(0, (objlen- remoteoffset+byteCount)),byteCount);
+           remoteoffset+=skip;
+           return skip;
     }
 
 
+
+
     @Override
-    public long skip(long byteCount) {
-        return 0l;
-    }*/
+    public synchronized void reset() throws IOException {
+        if (marked>0)
+            remoteoffset=marked;
+        else
+            remoteoffset=0;
+        Log.d(TAG,"reset called set remoteoffset= "+marked);
+
+    }
+
+
+
 }
