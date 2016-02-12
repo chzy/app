@@ -30,6 +30,7 @@ import android.webkit.MimeTypeMap;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ContentLengthInputStream;
+import com.nostra13.universalimageloader.core.inputstream.RecyclableBufferedInputStream;
 import com.nostra13.universalimageloader.core.inputstream.TrpcInpustream;
 import com.nostra13.universalimageloader.utils.IoUtils;
 
@@ -151,7 +152,7 @@ public class BaseImageDownloader implements ImageDownloader {
 		}
 		try {
 			imageStream= new TrpcInpustream(objid,savefile);
-			length=imageStream.available();
+			length=(int)imageStream.getSize();
 		} catch (Exception ex)
 		{
 			Log.e("Baseimageloader", ex.getMessage());
@@ -169,7 +170,8 @@ public class BaseImageDownloader implements ImageDownloader {
 					Log.d("BaseImageDownloader", " local file not completed");
 			}
 		}
-		return new ContentLengthInputStream(new BufferedInputStream(imageStream, BUFFER_SIZE),length);
+		//return new ContentLengthInputStream(new BufferedInputStream(imageStream, BUFFER_SIZE),length);
+		return new ContentLengthInputStream(new RecyclableBufferedInputStream(imageStream,BUFFER_SIZE),length);
 	}
 
 	/**
