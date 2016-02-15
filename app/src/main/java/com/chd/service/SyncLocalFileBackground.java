@@ -227,6 +227,8 @@ public class SyncLocalFileBackground implements Runnable {
         try {
             //os.flush();
             os.close();
+            if (offset!=total)
+                f.deleteOnExit();
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
             f.deleteOnExit();
@@ -284,7 +286,8 @@ public class SyncLocalFileBackground implements Runnable {
         //fileInfo=null;
         if (replace) {
             Log.d(TAG, "del remote exist obj :" + entity.getObjid());
-            tClient.delObj(entity.getObjid(), entity.getFtype());
+            if (!tClient.delObj(entity.getObjid(), entity.getFtype()))
+                Log.d(TAG, "del remote obj :" + "fail !!!");
         }
         su.open();
         FileInfo fileInfo = tClient.queryFile(entity);

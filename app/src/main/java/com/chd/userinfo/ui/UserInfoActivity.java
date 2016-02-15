@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.chd.TClient;
 import com.chd.base.Ui.ActiveProcess;
+import com.chd.base.backend.SyncTask;
 import com.chd.contacts.vcard.StringUtils;
 import com.chd.proto.Errcode;
 import com.chd.proto.FTYPE;
@@ -264,14 +265,13 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
                             if (userInfo == null) {
                                 userInfo = new UserInfo();
                             }
-//                            final FileInfo0 info = TClient.getinstance().queryFile(FTYPE.PICTURE, "netdiskportrait");
-//                            if(info!=null){
-                            runOnUiThread(new Runnable() {
+
+                          /*  runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     imageLoader.displayImage("trpc://netdiskportrait", mImgHead);
                                 }
-                            });
+                            });*/
 
 //                            }
                             mHandler.sendEmptyMessage(0);
@@ -287,6 +287,7 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
     private void initData() {
 
 
+        imageLoader.displayImage("trpc://netdiskportrait", mImgHead);
     }
 
     private void initListener() {

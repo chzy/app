@@ -69,6 +69,17 @@ public class ShareUtils {
 		return dir;
 	}
 
+	public String getNotepadDir()
+	{
+		String dir;
+		dir=getStorePathStr()+File.separator+getUserid();
+		File f=new File(dir);
+		if(!f.exists()){
+			f.mkdirs();
+		}
+		return dir;
+	}
+
 
 
 	public File getStorePath()

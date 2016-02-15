@@ -396,31 +396,15 @@ private  String verName;
             Message msg = new Message();
             LoginResult entity = null;
             try {
-                //new TClient();
                 String username = et_pwd.getText().toString();
                 String pwd = et_name.getText().toString();
                 TClient th = TClient.getinstance();
-                //th.addurl(new String[]{"http://210.7.13.207:8080/chdserver.php"});
                 if (shareUtils.isAutoLogin()) {
                     username = shareUtils.getUsername();
                     pwd = shareUtils.getPwd();
-
                 }
                 entity = th.loginAuth(username, pwd, 1);
 
-								/*
-                                获取登录成功后的状态数据
-								* */
-//								LoginEntity entity = new LoginEntity();
-//								entity.setName("account_name");
-//								entity.setId("1000001");
-//								entity.setToken("token");
-//								entity.setSpace(loginResult.getSpace());
-//								entity.setUspace(loginResult.getUspace());
-//								entity.setFlow(1);
-//								entity.setUflow(1);
-//								entity.setState(true);
-                //LoginEntity entity = new  LoginParse().parse(result);
                 if (entity.isSetToken()) {
                     msg.what = 0;
                     msg.obj = entity;

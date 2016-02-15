@@ -228,6 +228,15 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                                 });
                             }
                         } catch (Exception e) {
+                            Log.e("register ","注册调用失败 "+e.getMessage());
+						runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        dialog.dismiss();
+                            			Toast.makeText(RegisterActivity.this, "开小差了，请重试", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            
                         }
                     }
                 }).start();
