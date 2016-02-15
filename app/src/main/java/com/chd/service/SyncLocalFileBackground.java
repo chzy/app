@@ -298,6 +298,7 @@ public class SyncLocalFileBackground implements Runnable {
         su.open();
         FileInfo fileInfo = tClient.queryFile(entity);
         TClient.TFilebuilder filebuilder = null;
+        long oft=0l;
         if (fileInfo != null) {
             Log.e(TAG, "upload file exist !!");
             if (replace) {
@@ -310,7 +311,7 @@ public class SyncLocalFileBackground implements Runnable {
             else
                 return false;
         } else {
-            long oft = tClient.queryUpObjOffset(entity);
+            oft = tClient.queryUpObjOffset(entity);
             if ((oft > 0)) {
 
                 if (size==oft)
@@ -333,9 +334,6 @@ public class SyncLocalFileBackground implements Runnable {
                     return false;
                 }
                 start =/*entity.getOffset()*/oft;
-
-
-
             }
             else {
                 if (oft < 0) {
@@ -359,7 +357,7 @@ public class SyncLocalFileBackground implements Runnable {
             String fname = entity.getObjid() == null ? MediaFileUtil.getFnameformPath(entity.getFilePath()) : entity.getObjid();
             filebuilder = tClient.new TFilebuilder(fname, entity.getFtype(),(int)size);
             String objid = null;
-            if (start == 0) {
+            if (start == 0 ) {
                 objid = filebuilder.ApplyObj();
                 if (objid == null) {
                     Log.e(TAG, "alloc obj failed ");
