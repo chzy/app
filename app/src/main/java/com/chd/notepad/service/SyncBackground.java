@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.chd.TClient;
 import com.chd.base.backend.SyncTask;
-import com.chd.notepad.ui.activity.NotepadActivity;
 import com.chd.notepad.ui.db.DatabaseManage;
 import com.chd.notepad.ui.db.FileDBmager;
 import com.chd.notepad.ui.item.NoteItemtag;
@@ -129,6 +128,7 @@ public class SyncBackground extends Thread {
 		{
 			fname=iterator.next();
 			if (!contains(fname ))
+				//需要上传的云端
 				tasks.add(fname);
 
 		}

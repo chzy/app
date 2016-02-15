@@ -36,11 +36,15 @@ public class NoteItemtag implements Serializable {
             return 0;
         return  Integer.valueOf(_fname.substring(0, idx - 1))*1000;
         */
+        try{
         if(fname==null){
             Log.e("noteitem","fname is null");
             return (int) System.currentTimeMillis()/1000;
         }
         return (int) (Long.valueOf(fname)/1000);
+        }catch (Exception e){
+            return (int) System.currentTimeMillis()/1000;
+        }
     }
 
     public int getStamp()
