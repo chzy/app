@@ -393,8 +393,8 @@ private  String verName;
             Message msg = new Message();
             LoginResult entity = null;
             try {
-                String username = et_pwd.getText().toString();
-                String pwd = et_name.getText().toString();
+                String username =et_name .getText().toString();
+                String pwd = et_pwd.getText().toString();
                 TClient th = TClient.getinstance();
                 if (shareUtils.isAutoLogin()) {
                     username = shareUtils.getUsername();

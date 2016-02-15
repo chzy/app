@@ -269,8 +269,14 @@ public class SyncLocalFileBackground implements Runnable {
             return false;
         }
         file = new File(entity.getFilePath());
-        if (!file.exists() || !file.isFile())
+        if (!file.exists() ) {
+            Log.d(TAG,entity.getFilePath()+" not exsits");
             return false;
+        }
+        if (!file.isFile()) {
+            Log.d(TAG,entity.getFilePath()+" not a file");
+            return false;
+        }
         if (size < 1) {
             size = file.length();
             entity.setFilesize(size);
@@ -313,7 +319,7 @@ public class SyncLocalFileBackground implements Runnable {
                     boolean ret = false;
                     try {
 
-                        ret= tClient.CommitObj(entity.objid,entity.ftype,null);
+                        ret= tClient.CommitObj(entity.objid, entity.ftype,null);
 //                        ret= tClient.delObj(entity.getObjid(),entity.ftype);
                     } catch (TException e) {
                         e.printStackTrace();
@@ -365,7 +371,8 @@ public class SyncLocalFileBackground implements Runnable {
                 objid = entity.getObjid();
             }
             RandomAccessFile rf = new RandomAccessFile(entity.getFilePath(), "r");
-            byte[] buffer = new byte[1024 * 5];
+            int bufflen=  Math.min(1024*512,(int)(size/50));
+            byte[] buffer = new byte[/*1024 * 5*/bufflen];
             rf.seek(start);
             long pz = 0;
             while ((len = rf.read(buffer, 0, buffer.length)) != -1) {
