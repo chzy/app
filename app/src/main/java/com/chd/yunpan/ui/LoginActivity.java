@@ -70,7 +70,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
                 case 0://sucess
                     Logs.log(msg.obj.toString());
-                    ShareUtils shareUtils = new ShareUtils(LoginActivity.this);
+
                     shareUtils.setLoginEntity((LoginResult) (msg.obj));
                     //shareUtils.setURL(et_url.getText().toString());
                     shareUtils.setAutoLogin(switcherState);
@@ -127,7 +127,7 @@ private  String verName;
                 }
             }
         }).start();
-
+        shareUtils = new ShareUtils(LoginActivity.this);
 
 
 
@@ -151,9 +151,6 @@ private  String verName;
             et_pwd.setText(intent.getStringExtra("pass"));
             ExecRunable.execRun(new LoginThread());
         } else {
-
-            shareUtils = new ShareUtils(this);
-
             if (!StringUtils.isNullOrEmpty(shareUtils.getUsername())) {
                 et_name.setText(shareUtils.getUsername());
                 et_pwd.setText(shareUtils.getPwd());
