@@ -369,9 +369,10 @@ public class SyncLocalFileBackground implements Runnable {
                 su.setUploadStatus(entity);
             } else {
                 objid = entity.getObjid();
+                filebuilder.setObj(objid);
             }
             RandomAccessFile rf = new RandomAccessFile(entity.getFilePath(), "r");
-            int bufflen=  Math.min(1024*512,(int)(size/50));
+            int bufflen=  Math.min(1024*512,(int)(size-start/50));
             byte[] buffer = new byte[/*1024 * 5*/bufflen];
             rf.seek(start);
             long pz = 0;
