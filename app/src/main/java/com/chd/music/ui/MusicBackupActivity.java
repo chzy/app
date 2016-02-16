@@ -74,7 +74,7 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 				SyncTask syncTask =new SyncTask(MusicBackupActivity.this, FTYPE.MUSIC);
 				//未备份文件 ==  backedlist . removeAll(localist);
 
-				final List<FileInfo0> cloudUnits=syncTask.getCloudUnits(0, 1000);
+				final List<FileInfo0> cloudUnits=syncTask.getCloudUnits(0, 10000);
 				runOnUiThread(new Runnable() {
 					public void run() {
 						initData(cloudUnits);

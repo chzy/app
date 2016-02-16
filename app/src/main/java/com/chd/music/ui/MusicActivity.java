@@ -67,7 +67,7 @@ public class MusicActivity extends Activity implements OnClickListener, OnItemCl
             @Override
             public void run() {
 
-                final List<FileInfo0> cloudUnits = syncTask.getCloudUnits(0, 1000);
+                final List<FileInfo0> cloudUnits = syncTask.getCloudUnits(0, 10000);
                 runOnUiThread(new Runnable() {
                     public void run() {
                         initData(cloudUnits);
