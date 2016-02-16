@@ -28,7 +28,7 @@ public class SyncLocalFileBackground implements Runnable {
 
 
     private final String TAG = "SyncLocal";
-    private final int readbuflen = 1024 * 7;
+    private final int Maxbuflen = 1024 * 7;
     List<FileInfo0> files = new ArrayList<FileInfo0>();
     private MediaMgr su = null;
     private Context context = null;
@@ -195,8 +195,8 @@ public class SyncLocalFileBackground implements Runnable {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
         }
-
-        byte[] buffer = new byte[readbuflen];
+        int buflen=Math.min((int) (total - offset), Maxbuflen);
+        byte[] buffer = new byte[buflen];
 
         if (pb != null) {
             pb.setMaxProgress(100);
@@ -207,7 +207,7 @@ public class SyncLocalFileBackground implements Runnable {
             return false;
         }
         su.open();
-        while ((readlen = inputTrasnport.read(buffer, offset, readbuflen)) > -1) {
+        while ((readlen = inputTrasnport.read(buffer, offset, buflen)) > -1) {
             try {
                 os.write(buffer, 0, readlen);
                 offset += readlen;
@@ -370,7 +370,7 @@ public class SyncLocalFileBackground implements Runnable {
                 filebuilder.setObj(objid);
             }
             RandomAccessFile rf = new RandomAccessFile(entity.getFilePath(), "r");
-            int bufflen=  Math.min(1024*512,(int)(size-start/50));
+            int bufflen=  Math.min(Maxbuflen,(int)(size - start));
             byte[] buffer = new byte[/*1024 * 5*/bufflen];
             rf.seek(start);
             long pz = 0;
