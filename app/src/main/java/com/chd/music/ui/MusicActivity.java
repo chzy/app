@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chd.base.Entity.FilelistEntity;
+import com.chd.base.Entity.MessageEvent;
 import com.chd.base.backend.SyncTask;
 import com.chd.music.adapter.MusicAdapter;
 import com.chd.music.entity.MusicBean;
@@ -20,6 +21,9 @@ import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +38,7 @@ public class MusicActivity extends Activity implements OnClickListener, OnItemCl
     private GridView mGvMusic;
     private View mViewNumber;
     private MusicAdapter adapter;
+    private String musicPath;
     private List<MusicBean> mMusicList = new ArrayList<MusicBean>();
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
@@ -47,7 +52,7 @@ public class MusicActivity extends Activity implements OnClickListener, OnItemCl
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_music);
-
+        musicPath=new ShareUtils(this).getMusicFile().getPath();
         initTitle();
         initResourceId();
         initListener();
@@ -56,6 +61,8 @@ public class MusicActivity extends Activity implements OnClickListener, OnItemCl
         mGvMusic.setAdapter(adapter);
         syncTask = new SyncTask(MusicActivity.this, FTYPE.MUSIC);
         onNewThreadRequest();
+        EventBus.getDefault().register(this);
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -77,6 +84,13 @@ public class MusicActivity extends Activity implements OnClickListener, OnItemCl
         });
         thread.start();
     }
+    @Subscribe
+    public void onEventMainThread(MessageEvent event) {
+        if(event.type==FTYPE.MUSIC){
+//            onNewThreadRequest();
+        }
+    }
+
 
     private void initData(List<FileInfo0> cloudUnits) {
 
@@ -101,7 +115,7 @@ public class MusicActivity extends Activity implements OnClickListener, OnItemCl
                 if(item.getSysid()>0){
                     item =syncTask.queryLocalInfo(item.getSysid());
                 }else{
-                    item.setFilePath(new ShareUtils(this).getMusicFile().getPath()+ "/"+item.getObjid());
+                    item.setFilePath(musicPath+ "/"+item.getObjid());
                 }
             }
             /*if (syncTask.haveLocalCopy(item)) {
@@ -141,7 +155,7 @@ public class MusicActivity extends Activity implements OnClickListener, OnItemCl
         mTvRight = (TextView) findViewById(R.id.tv_right);
 
         mTvCenter.setText("音乐");
-        mTvRight.setText("编辑");
+//        mTvRight.setText("编辑");
     }
 
     @Override
@@ -155,7 +169,7 @@ public class MusicActivity extends Activity implements OnClickListener, OnItemCl
                 break;
             case R.id.iv_music_num_layout:
                 Intent intent = new Intent(this, MusicBackupActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 0x02);
                 break;
         }
     }
@@ -177,7 +191,18 @@ public class MusicActivity extends Activity implements OnClickListener, OnItemCl
                     mMusicList.remove(pos);
                     adapter.notifyDataSetChanged();
                     break;
+                case 0x02:
+                    //有备份问题
+                    mMusicList.clear();
+                    onNewThreadRequest();
+                    break;
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

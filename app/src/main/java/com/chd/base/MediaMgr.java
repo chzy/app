@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -211,7 +210,7 @@ public class MediaMgr  {
 		if (LocalUnits!=null && !LocalUnits.isEmpty())
 			return;
 		setCustomCategory(exts, include);
-		Cursor c =query(/*MediaFileUtil.FileCategory.File*/fc, MediaFileUtil.FileCategory.All, MediaFileUtil.SortMethod.date);
+		Cursor c =query(fc, MediaFileUtil.FileCategory.All, MediaFileUtil.SortMethod.date);
 
 		while (c.moveToNext())
 		{
@@ -494,7 +493,6 @@ public class MediaMgr  {
 		Uri uri = getContentUriByCategory(fc);
 		String selection = buildSelectionByCategory(cond);
 		String sortOrder = buildSortOrder(sort);
-		String where=null;
 
 		if (uri == null) {
 			Log.e("", "invalid uri, category:" + fc.name());

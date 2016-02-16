@@ -6,13 +6,16 @@ import android.util.Log;
 import com.chd.MediaMgr.utils.MediaFileUtil;
 import com.chd.TClient;
 import com.chd.Transform.InputTrasnport;
+import com.chd.base.Entity.MessageEvent;
 import com.chd.base.MediaMgr;
 import com.chd.base.Ui.ActiveProcess;
+import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.net.NetworkUtils;
 
 import org.apache.thrift.TException;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -321,7 +324,6 @@ public class SyncLocalFileBackground implements Runnable {
                     try {
 
                         ret= tClient.CommitObj(entity.objid, entity.ftype,null);
-//                        ret= tClient.delObj(entity.getObjid(),entity.ftype);
                     } catch (TException e) {
                         e.printStackTrace();
                     }
@@ -403,8 +405,12 @@ public class SyncLocalFileBackground implements Runnable {
             Log.w(TAG, e.getMessage());
         } finally {
             if (activeProcess != null) {
-                if (succed)
+                if (succed){
+                    if(entity.getFtype()== FTYPE.MUSIC){
+                        EventBus.getDefault().post(new MessageEvent(FTYPE.MUSIC,""));
+                    }
                     activeProcess.toastMain("上传成功");
+                }
                 else
                     activeProcess.toastMain("上传失败");
                 activeProcess.finishProgress();

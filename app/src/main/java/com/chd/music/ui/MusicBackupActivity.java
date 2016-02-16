@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
+import com.chd.base.Entity.MessageEvent;
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.Ui.DownListActivity;
 import com.chd.base.backend.SyncTask;
@@ -23,6 +24,9 @@ import com.chd.music.entity.MusicBackupBean;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +57,9 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_music_backup);
-		
+		EventBus.getDefault().register(this);
+
+
 		initTitle();
 		initResourceId();
 		initListener();
@@ -63,7 +69,27 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 		// See https://g.co/AppIndexing/AndroidStudio for more information.
 		//client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 	}
-	
+
+	private boolean isUpdate=false;
+
+	@Subscribe
+	public void onEventMainThread(MessageEvent event) {
+		if(event.type==FTYPE.MUSIC){
+			mMusicBackupList.clear();
+			onNewThreadRequest();
+			isUpdate=true;
+		}
+	}
+
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if(isUpdate){
+			setResult(RESULT_OK);
+		}
+	}
+
 	private void onNewThreadRequest()
 	{
 
@@ -214,6 +240,9 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 	}
 
 
-
-	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		EventBus.getDefault().unregister(this);
+	}
 }
