@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
@@ -173,7 +174,10 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 	
 	private void goBackUpMusic()
 	{
-
+		if(mMusicBackupList.size()<=0){
+			Toast.makeText(MusicBackupActivity.this, "请选择需要上传的文件", Toast.LENGTH_SHORT).show();
+			return;
+		}
 		for (final MusicBackupBean musicBackupBean : mMusicBackupList)
 		{
 			if (musicBackupBean.isSelect())
@@ -186,7 +190,6 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 
 					}
 				}).start();
-
 			}
 		}
 	}
