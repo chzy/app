@@ -160,12 +160,9 @@ public class FindPwdActivity extends Activity implements View.OnClickListener {
 									@Override
 									public void run() {
 										dialog.dismiss();
-										Toast.makeText(FindPwdActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+										Toast.makeText(FindPwdActivity.this, "重置密码成功", Toast.LENGTH_SHORT).show();
 										Intent intent=new Intent();
 										intent.setClass(FindPwdActivity.this,LoginActivity.class);
-										intent.putExtra("phone",name);
-										intent.putExtra("isReg",true);
-										intent.putExtra("pass",pass1);
 										startActivity(intent);
 
 									}
