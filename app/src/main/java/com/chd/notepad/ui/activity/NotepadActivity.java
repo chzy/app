@@ -324,7 +324,12 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                     adapter.removeListItem(menuInfo.position);//删除数据
                     adapter.notifyDataSetChanged();//通知数据源，数据已经改变，刷新界面
                     dialog.show();
+                    //if (syncBackground==null) {
+                   //     syncBackground=new SyncBackground(this, mHandler,cloudUnits);
+                   //     syncBackground.start();
+                   // }
                     syncBackground.wakeup(1);
+                    //needsyc = false;
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -375,6 +380,12 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
         if (item.isHead)
             return;
         Intent intent = new Intent();
+        //intent.putExtra("state", CHECK_STATE);
+        //intent.putExtra("hashcode", item.hashcode);
+        //intent.putExtra("id", item.id);
+        //intent.putExtra("time", item.time + "");
+        //intent.putExtra("content", item.content);
+        //intent.putExtra("fname", item.get_fname());
         intent.putExtra("item", item);
 
         intent.setClass(NotepadActivity.this, NotepadCheckActivity.class);
@@ -389,6 +400,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
             switch (requestCode) {
                 case MODIFY_NOTPAD:
                     dialog.show();
+
                     syncBackground.wakeup(1);
                     break;
 
