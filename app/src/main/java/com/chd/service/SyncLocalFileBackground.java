@@ -31,7 +31,7 @@ public class SyncLocalFileBackground implements Runnable {
 
 
     private final String TAG = "SyncLocal";
-    private final int Maxbuflen = 1024 * 7;
+    private final int Maxbuflen = 1024 * 1024;
     List<FileInfo0> files = new ArrayList<FileInfo0>();
     private MediaMgr su = null;
     private Context context = null;
