@@ -1,6 +1,5 @@
 package com.chd.music.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,8 +11,10 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.Entity.MessageEvent;
+import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.backend.SyncTask;
 import com.chd.music.adapter.MusicAdapter;
 import com.chd.music.entity.MusicBean;
@@ -28,7 +29,7 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MusicActivity extends Activity implements OnClickListener, OnItemClickListener {
+public class MusicActivity extends ActiveProcess implements OnClickListener, OnItemClickListener {
 
     SyncTask syncTask;
     private ImageView mIvLeft;
@@ -42,6 +43,7 @@ public class MusicActivity extends Activity implements OnClickListener, OnItemCl
     private List<MusicBean> mMusicList = new ArrayList<MusicBean>();
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
+            dismissDialog();
             adapter.notifyDataSetChanged();
         }
     };
@@ -69,7 +71,7 @@ public class MusicActivity extends Activity implements OnClickListener, OnItemCl
     }
 
     private void onNewThreadRequest() {
-
+        showDialog("正在获取");
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -91,14 +93,14 @@ public class MusicActivity extends Activity implements OnClickListener, OnItemCl
         }
     }
 
-
+    FilelistEntity filelistEntity;
     private void initData(List<FileInfo0> cloudUnits) {
 
 
         if (cloudUnits == null) {
             System.out.print("query remote failed");
         }
-        FilelistEntity filelistEntity = syncTask.analyMusicUnits(cloudUnits);
+       filelistEntity = syncTask.analyMusicUnits(cloudUnits);
         cloudUnits.clear();
         cloudUnits = null;
         cloudUnits = filelistEntity.getBklist();
@@ -169,6 +171,8 @@ public class MusicActivity extends Activity implements OnClickListener, OnItemCl
                 break;
             case R.id.iv_music_num_layout:
                 Intent intent = new Intent(this, MusicBackupActivity.class);
+                ArrayList<FileLocal> fileLocals=new ArrayList<>(filelistEntity.getLocallist());
+                intent.putExtra("locallist",fileLocals);
                 startActivityForResult(intent, 0x02);
                 break;
         }
@@ -188,12 +192,14 @@ public class MusicActivity extends Activity implements OnClickListener, OnItemCl
             switch (requestCode) {
                 case 0x11:
                     //删除成功了
-                    mMusicList.remove(pos);
-                    adapter.notifyDataSetChanged();
+                    mMusicList.clear();
+                    mTvNumber.setText("未备份音乐0首");
+                    onNewThreadRequest();
                     break;
                 case 0x02:
                     //有备份问题
                     mMusicList.clear();
+                    mTvNumber.setText("未备份音乐0首");
                     onNewThreadRequest();
                     break;
             }

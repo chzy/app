@@ -37,7 +37,7 @@
         </activity>
         <activity
             android:name="com.chd.yunpan.ui.MainFragmentActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name="com.chd.yunpan.ui.MyspaceActivity"
@@ -56,16 +56,16 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.chd.contacts.ui.ContactActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.chd.music.ui.MusicActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.chd.music.ui.MusicBackupActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.chd.music.ui.MusicDetailActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.chd.smsbackup.ui.SmsBackActivity"
             android:screenOrientation="portrait"></activity>

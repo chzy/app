@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,7 +47,6 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
     private SyncTask syncTask;
     private MusicBean bean;
     private Handler mHandler = new Handler();
-    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +57,6 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
         initTitle();
         initResourceId();
         initListener();
-        mediaPlayer = new MediaPlayer();
         syncTask = new SyncTask(this, FTYPE.MUSIC);
         options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.pic_test1)
@@ -71,9 +68,6 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
                 .build();
         initData();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void initData() {
@@ -96,40 +90,6 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
             mRoundImageView.setImageDrawable(bmpDraw);
         }
 
-//		if (url != null)
-//		{
-//			/*if (!syncTask.haveLocalCopy(fileInfo0))
-//			{
-//				//url = ThumUtil.getThumid(fileInfo0.getObjid()); //缩略图地址
-//			}*/
-//			imageLoader.displayImage(albumArt, mRoundImageView,
-//					options, new SimpleImageLoadingListener() {
-//						@Override
-//						public void onLoadingStarted(String imageUri, View view) {
-//							/*vh.progressBar.setProgress(0);
-//							vh.progressBar.setVisibility(View.VISIBLE);*/
-//						}
-//
-//						@Override
-//						public void onLoadingFailed(String imageUri, View view,
-//								FailReason failReason) {
-//							/*vh.progressBar.setVisibility(View.GONE);*/
-//						}
-//
-//						@Override
-//						public void onLoadingComplete(String imageUri, View view,
-//								Bitmap loadedImage) {
-//							/*vh.progressBar.setVisibility(View.GONE);*/
-//						}
-//					}, new ImageLoadingProgressListener() {
-//						@Override
-//						public void onProgressUpdate(String imageUri, View view,
-//								int current, int total) {
-//							/*vh.progressBar.setProgress(Math.round(100.0f * current
-//									/ total));*/
-//						}
-//					});
-//		}
     }
 
     private void initListener() {
@@ -187,7 +147,7 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
                     if(!f.exists()){
                         throw new FileNotFoundException("文件未找到");
                     }
-                    Uri uri = Uri.parse(fileInfo0.getFilePath());
+                    Uri uri = Uri.parse("file://"+fileInfo0.getFilePath());
                     //调用系统自带的播放器
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setDataAndType(uri, "video/mp4");
@@ -203,7 +163,6 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
                         public void run() {
                             boolean delS = syncTask.DelRemoteObj(fileInfo0);
                             if (delS) {
-
                                 mHandler.post(new Runnable() {
                                     @Override
 
