@@ -26,7 +26,6 @@ import android.widget.Toast;
 
 import com.chd.TClient;
 import com.chd.base.Ui.ActiveProcess;
-import com.chd.base.backend.SyncTask;
 import com.chd.contacts.vcard.StringUtils;
 import com.chd.proto.Errcode;
 import com.chd.proto.FTYPE;
@@ -333,6 +332,9 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
         int edit_type = -1;
         String edit_value = "";
         switch (v.getId()) {
+            case R.id.iv_left:
+                onBackPressed();
+                break;
             case R.id.userinfo_head_layout: {
                 iconWindow.showPopupWindow(root_view);
             }
@@ -376,7 +378,6 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
             default:
                 break;
         }
-
         if (edit_type != -1) {
             intent.putExtra(UserInfoFlag.FLAG_EDIT_TYPE, edit_type);
             intent.putExtra(UserInfoFlag.FLAG_EDIT_VALUE, edit_value);

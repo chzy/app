@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.chd.TClient;
 import com.chd.base.backend.SyncTask;
+import com.chd.notepad.ui.db.DatabaseManage;
 import com.chd.notepad.ui.db.FileDBmager;
 import com.chd.notepad.ui.item.NoteItemtag;
 import com.chd.proto.FTYPE;
@@ -21,10 +22,17 @@ import java.util.List;
 import java.util.Set;
 
 
-public class SyncBackground implements Runnable {
+public class SyncBackground extends Thread {
 
 	private List<String> tasks ;
 
+	private DatabaseManage su = null;
+
+	private Context context = null;
+
+	private boolean runing=true;
+
+	private File file=null;
 	private SyncTask syncTask;
 
 	private FileDBmager fdb;
@@ -43,9 +51,12 @@ public class SyncBackground implements Runnable {
 
 	 * */
 	public SyncBackground(Context context,Handler mHandler, List<FileInfo0> baklist,String workpath) {
+		this.context = context;
+		this.syncType = syncType;
 		this.mHandler=mHandler;
 		syncTask=new SyncTask(context, FTYPE.NOTEPAD);
 		fdb=new FileDBmager(context);
+
 		ShareUtils shareUtils = new ShareUtils(context);
 		//_workpath=shareUtils.getStorePathStr();
 		tasks=new ArrayList<>();
@@ -56,11 +67,47 @@ public class SyncBackground implements Runnable {
 		if(!new File(_workpath).exists()){
 			new File(_workpath).mkdir();
 		}
+		//su.open();
 	}
 
-	@Override
+
+//	public String getWorkPath(){
+//		return this._workpath;
+//	}
+
+    public void safeshutdown()
+	{
+
+		wakeup(1);
+		this.runing=false;
+
+	}
+	public void wakeup(int type)
+	{
+
+		synchronized (this)
+		{
+			Log.d(TAG," notidy thread ....");
+			this.notify();
+		}
+	}
 	public void run() {
-		sync();
+
+
+		while (runing) {
+			Log.d(TAG,"notepad sync thread start!!!");
+			synchronized (this) {
+				try {
+					this.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			Log.d(TAG," sync() begin ....");
+			sync();
+			Log.d(TAG, " sync() end ....");
+
+		}
 	}
 
 	// 找到所有需要上传的列表
@@ -205,4 +252,7 @@ public class SyncBackground implements Runnable {
 		return true;
 	}
 
+	public void setFile(File file) {
+		this.file = file;
+	}
 }

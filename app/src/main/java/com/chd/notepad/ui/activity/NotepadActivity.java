@@ -74,11 +74,22 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
+                case 1:
+                    dialog.dismiss();
+                    initData();
+                    break;
+
                 case SyncBackground.SUCESS:
                     //同步成功
                     Log.d("liumj", "执行完毕");
-                    dialog.dismiss();
-                    initData();
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialog.dismiss();
+                            initData();
+                        }
+                    },500);
+
                     break;
             }
         }
@@ -98,8 +109,12 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                 if (cloudUnits == null || cloudUnits.isEmpty())
                     // 0-100 分批取文件
                     cloudUnits = syncTask.getCloudUnits(0, 10000);
-                syncBackground = new SyncBackground(NotepadActivity.this, mHandler, cloudUnits, savepath);
-                new Thread(syncBackground).start();
+
+                if (syncBackground==null) {
+                    syncBackground = new SyncBackground(NotepadActivity.this, mHandler, cloudUnits, savepath);
+                    syncBackground.start();
+                }
+
                 String file;
                 for (FileInfo fileInfo : cloudUnits) {
                     FileInfo0 fileInfo0 = new FileInfo0(fileInfo);
@@ -121,7 +136,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                         Log.d("NotepadActivity", "download note :" + fileInfo0.getObjid());
                     }
                 }
-                mHandler.sendEmptyMessage(SyncBackground.SUCESS);
+                mHandler.sendEmptyMessage(1);
             }
 
         });
@@ -131,9 +146,9 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         savepath = new ShareUtils(this).getNotepadDir();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notepad_main);
-
         if (UILApplication.getInstance().getLockPatternUtils().savedPatternExists()) {
             if (!getIntent().getBooleanExtra("unlock", false)) {
                 Intent i = new Intent(this, UnlockGesturePasswordActivity.class);
@@ -309,12 +324,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                     adapter.removeListItem(menuInfo.position);//删除数据
                     adapter.notifyDataSetChanged();//通知数据源，数据已经改变，刷新界面
                     dialog.show();
-                    //if (syncBackground==null) {
-                   //     syncBackground=new SyncBackground(this, mHandler,cloudUnits);
-                   //     syncBackground.start();
-                   // }
-                    new Thread(syncBackground).start();
-                    //needsyc = false;
+                    syncBackground.wakeup(1);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -365,12 +375,6 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
         if (item.isHead)
             return;
         Intent intent = new Intent();
-        //intent.putExtra("state", CHECK_STATE);
-        //intent.putExtra("hashcode", item.hashcode);
-        //intent.putExtra("id", item.id);
-        //intent.putExtra("time", item.time + "");
-        //intent.putExtra("content", item.content);
-        //intent.putExtra("fname", item.get_fname());
         intent.putExtra("item", item);
 
         intent.setClass(NotepadActivity.this, NotepadCheckActivity.class);
@@ -385,12 +389,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
             switch (requestCode) {
                 case MODIFY_NOTPAD:
                     dialog.show();
-                    /*if (syncBackground==null)
-                    {
-                        syncBackground=new SyncBackground(this,mHandler,cloudUnits);
-						syncBackground.start();
-                    }*/
-                    new Thread(syncBackground).start();
+                    syncBackground.wakeup(1);
                     break;
 
 
