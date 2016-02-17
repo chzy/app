@@ -287,7 +287,9 @@ public class SyncLocalFileBackground implements Runnable {
         System.out.println("开始上传喽");
         //先检查 云端是否 有同名文件
         long start = 0;
+        if(activeProcess!=null){
         activeProcess.updateProgress(0);
+        }
         //是否 需要查询 服务器端是否有同名的 未传完的 文件
 
         //fileInfo=null;

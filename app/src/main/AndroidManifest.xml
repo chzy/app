@@ -68,14 +68,14 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name="com.chd.smsbackup.ui.SmsBackActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.chd.contacts.ui.Contacts"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <!-- 注册页面-->
         <activity
             android:name=".ui.RegisterActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
 
         <!-- 锁屏的activity -->
         <activity

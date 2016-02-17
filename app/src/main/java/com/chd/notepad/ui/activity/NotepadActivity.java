@@ -98,12 +98,8 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                 if (cloudUnits == null || cloudUnits.isEmpty())
                     // 0-100 分批取文件
                     cloudUnits = syncTask.getCloudUnits(0, 10000);
-
-                if (syncBackground==null) {
-                    syncBackground = new SyncBackground(NotepadActivity.this, mHandler, cloudUnits, savepath);
-                    syncBackground.start();
-                }
-
+                syncBackground = new SyncBackground(NotepadActivity.this, mHandler, cloudUnits, savepath);
+                new Thread(syncBackground).start();
                 String file;
                 for (FileInfo fileInfo : cloudUnits) {
                     FileInfo0 fileInfo0 = new FileInfo0(fileInfo);
@@ -135,9 +131,9 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         savepath = new ShareUtils(this).getNotepadDir();
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notepad_main);
+
         if (UILApplication.getInstance().getLockPatternUtils().savedPatternExists()) {
             if (!getIntent().getBooleanExtra("unlock", false)) {
                 Intent i = new Intent(this, UnlockGesturePasswordActivity.class);
@@ -317,7 +313,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                    //     syncBackground=new SyncBackground(this, mHandler,cloudUnits);
                    //     syncBackground.start();
                    // }
-                    syncBackground.wakeup(1);
+                    new Thread(syncBackground).start();
                     //needsyc = false;
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -394,7 +390,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                         syncBackground=new SyncBackground(this,mHandler,cloudUnits);
 						syncBackground.start();
                     }*/
-                    syncBackground.wakeup(1);
+                    new Thread(syncBackground).start();
                     break;
 
 

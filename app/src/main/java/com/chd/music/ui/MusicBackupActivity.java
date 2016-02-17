@@ -71,10 +71,6 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 
 		initData(fileLocals);
 
-
-		// ATTENTION: This was auto-generated to implement the App Indexing API.
-		// See https://g.co/AppIndexing/AndroidStudio for more information.
-		//client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 	}
 
 	private boolean isUpdate=false;
@@ -190,7 +186,6 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 					@Override
 					public void run() {
 						uploadBean=musicBackupBean;
-						SyncTask syncTask = new SyncTask(MusicBackupActivity.this, FTYPE.MUSIC);
 						syncTask.upload(musicBackupBean.getFileInfo0(), MusicBackupActivity.this, false);
 
 					}

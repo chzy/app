@@ -47,7 +47,6 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
             adapter.notifyDataSetChanged();
         }
     };
-    private int pos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,15 +181,14 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
         Intent intent = new Intent(this, MusicDetailActivity.class);
         intent.putExtra("file", mMusicList.get(arg2));
-        pos = arg2;
-        startActivityForResult(intent, 0x11);
+        startActivityForResult(intent, 0x99);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case 0x11:
+                case 0x99:
                     //删除成功了
                     mMusicList.clear();
                     mTvNumber.setText("未备份音乐0首");

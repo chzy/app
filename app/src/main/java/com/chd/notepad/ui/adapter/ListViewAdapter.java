@@ -119,33 +119,34 @@ public class ListViewAdapter extends BaseAdapter {
 	 */
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-
+		ViewHolder vh=null;
 		if(convertView == null ){
+			vh=new ViewHolder();
 			convertView = inflater.inflate(R.layout.notepad_list_item,null);
+			vh.txt_day = (TextView) convertView.findViewById(R.id.note_date_day);
+			vh.txt_hour = (TextView) convertView.findViewById(R.id.note_date_hour);
+			vh.text = (TextView) convertView.findViewById(R.id.note_txt);
+			vh.line = convertView.findViewById(R.id.note_line);
+			vh.view = (ImageView) convertView.findViewById(R.id.notepad_title_bg);
+			convertView.setTag(vh);
+		}else{
+			vh= (ViewHolder) convertView.getTag();
 		}
 		NoteItemtag tag=listItems.get(position);
 		if (tag==null)
 			return convertView ;
-		//if (tag.syncstate== DatabaseManage.SYNC_STAT.DEF)
-		//	return convertView ;
-
-		TextView txt_day = (TextView) convertView.findViewById(R.id.note_date_day);
-		TextView txt_hour = (TextView) convertView.findViewById(R.id.note_date_hour);
-		TextView text = (TextView) convertView.findViewById(R.id.note_txt);
-		View line = convertView.findViewById(R.id.note_line);
 
 		if (position == 0)
 		{
-			RelativeLayout.LayoutParams lparams = (RelativeLayout.LayoutParams) line.getLayoutParams();
+			RelativeLayout.LayoutParams lparams = (RelativeLayout.LayoutParams) vh.line.getLayoutParams();
 			lparams.addRule(RelativeLayout.BELOW,R.id.notepad_title_shap);
-			
-			line.setLayoutParams(lparams);
+			vh.line.setLayoutParams(lparams);
 		}
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(tag.getStamp()*1000L);
 		if (tag.isHead )
 		{
-			ImageView view = (ImageView) convertView.findViewById(R.id.notepad_title_bg);
+
 
 			TextView head = new TextView(convertView.getContext());
 			RelativeLayout rv= (RelativeLayout) convertView.findViewById(R.id.note_top_tile);
@@ -157,30 +158,37 @@ public class ListViewAdapter extends BaseAdapter {
 			head.setTextColor(Color.rgb(51, 51, 51));
 			head.setText("  " + tag.getDateStr());
 
-			hidenView(view);
-			hidenView(txt_day);
-			hidenView(txt_hour);
-			hidenLinerView(text);
+			hidenView(vh.view);
+			hidenView(vh.txt_day);
+			hidenView(vh.txt_hour);
+			hidenLinerView(vh.text);
 			return convertView;
 		}
 		
-		txt_day = (TextView) convertView.findViewById(R.id.note_date_day);
-		txt_hour = (TextView) convertView.findViewById(R.id.note_date_hour);
-		txt_day.setText((cal.get(Calendar.MONTH)+1)+"月"+cal.get(Calendar.DAY_OF_MONTH) + "日");
-		txt_hour.setText("" + cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE) + " " + (cal.get(Calendar.AM_PM) > 0 ? "PM" : "AM"));
+		vh.txt_day.setText((cal.get(Calendar.MONTH)+1)+"月"+cal.get(Calendar.DAY_OF_MONTH) + "日");
+		vh.txt_hour.setText("" + cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE) + " " + (cal.get(Calendar.AM_PM) > 0 ? "PM" : "AM"));
 		//time1=TimeUtils.getTimeTxt(tag.time,"kk:mm");
 		String content=fileDBmager.readFile(tag.get_fname());
 		try{
 			NoteItem noteItem = gson.fromJson(content, NoteItem.class);
-			text.setText(noteItem.getContent());
+			vh.text.setText(noteItem.getContent());
 		}catch (Exception e){
 			if (e!=null)
 				Log.e("noteListview", e.toString());
-			text.setText(content);
+			vh.text.setText(content);
 		}
 		
 		return convertView;
 	}
 
+
+	class ViewHolder{
+		TextView txt_day;
+		TextView txt_hour;
+		TextView text;
+		View line ;
+		ImageView view;
+
+	}
 }
 
