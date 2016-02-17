@@ -164,6 +164,7 @@ public class FindPwdActivity extends Activity implements View.OnClickListener {
 										Intent intent=new Intent();
 										intent.setClass(FindPwdActivity.this,LoginActivity.class);
 										startActivity(intent);
+										finish();
 
 									}
 								});

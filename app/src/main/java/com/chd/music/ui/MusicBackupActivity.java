@@ -3,6 +3,7 @@ package com.chd.music.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -14,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chd.base.Entity.FileLocal;
-import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.Entity.MessageEvent;
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.Ui.DownListActivity;
@@ -45,12 +45,14 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 	
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
+			dismissDialog();
 			mGvMusic.setAdapter(new MusicBackupAdapter(MusicBackupActivity.this, mMusicBackupList));
 			mTvNumber.setText(String.format("共：%d首", mMusicBackupList.size()));
 		}
 	};
 	private Button mBtnDown;
 
+	private SyncTask syncTask;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -59,12 +61,17 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 		setContentView(R.layout.activity_music_backup);
 		EventBus.getDefault().register(this);
 
-
+syncTask=new SyncTask(this,FTYPE.MUSIC);
 		initTitle();
 		initResourceId();
 		initListener();
 
-		onNewThreadRequest();
+
+		ArrayList<FileLocal> fileLocals= (ArrayList<FileLocal>) getIntent().getSerializableExtra("locallist");
+
+		initData(fileLocals);
+
+
 		// ATTENTION: This was auto-generated to implement the App Indexing API.
 		// See https://g.co/AppIndexing/AndroidStudio for more information.
 		//client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -75,9 +82,9 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 	@Subscribe
 	public void onEventMainThread(MessageEvent event) {
 		if(event.type==FTYPE.MUSIC){
-			mMusicBackupList.clear();
-			onNewThreadRequest();
 			isUpdate=true;
+		mMusicBackupList.remove(uploadBean);
+			handler.sendEmptyMessage(0);
 		}
 	}
 
@@ -85,45 +92,12 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if(isUpdate){
-			setResult(RESULT_OK);
-		}
+
 	}
 
-	private void onNewThreadRequest()
-	{
+	private void initData(ArrayList<FileLocal> fileLocals) {
 
-		Thread thread = new Thread(new Runnable() 
-		{
-			@Override
-			public void run() 
-			{
-				SyncTask syncTask =new SyncTask(MusicBackupActivity.this, FTYPE.MUSIC);
-				//未备份文件 ==  backedlist . removeAll(localist);
 
-				final List<FileInfo0> cloudUnits=syncTask.getCloudUnits(0, 10000);
-				runOnUiThread(new Runnable() {
-					public void run() {
-						initData(cloudUnits);
-					}
-				});
-			}
-		});
-		thread.start();
-	}
-	
-	private void initData(List<FileInfo0> cloudUnits) {
-		SyncTask syncTask =new SyncTask(this, FTYPE.MUSIC);
-
-		if (cloudUnits==null)
-		{
-			System.out.print("query remote failed");
-		}
-		FilelistEntity filelistEntity=syncTask.analyMusicUnits(cloudUnits);
-		cloudUnits.clear();
-		cloudUnits=null;
-		List<FileLocal> fileLocals=filelistEntity.getLocallist();
-		
 		for (FileLocal fileLocal : fileLocals)
 		{
 			if (fileLocal.bakuped)
@@ -168,6 +142,7 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 		mTvRight.setVisibility(View.GONE);
 		mTvRight.setTag(false);
 	}
+	private MusicBackupBean uploadBean;
 
 	@Override
 	public void onClick(View v) 
@@ -180,6 +155,9 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 				break;
 
 		case R.id.iv_left:
+				if(isUpdate){
+					setResult(RESULT_OK);
+				}
 			finish();
 			break;
 		case R.id.tv_right: //全选
@@ -211,6 +189,7 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 				new Thread(new Runnable(){
 					@Override
 					public void run() {
+						uploadBean=musicBackupBean;
 						SyncTask syncTask = new SyncTask(MusicBackupActivity.this, FTYPE.MUSIC);
 						syncTask.upload(musicBackupBean.getFileInfo0(), MusicBackupActivity.this, false);
 
@@ -244,5 +223,16 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 	protected void onDestroy() {
 		super.onDestroy();
 		EventBus.getDefault().unregister(this);
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode==KeyEvent.KEYCODE_BACK){
+			if(isUpdate){
+				setResult(RESULT_OK);
+			}
+		}
+
+		return super.onKeyDown(keyCode, event);
 	}
 }

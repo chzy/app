@@ -1,6 +1,7 @@
 package com.chd.base.Ui;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -16,16 +17,27 @@ public abstract class ActiveProcess extends Activity {
     protected  CustomProgressDialog dialog;
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onCreate(Bundle savedInstanceState) {
         if(dialog==null){
-        dialog = CustomProgressDialog.createDialog(this);
+            dialog = CustomProgressDialog.createDialog(this);
             dialog.setCanceledOnTouchOutside(false);
             dialog.setCancelable(false);
         }
+        super.onCreate(savedInstanceState);
     }
 
-    private  int progress;
+    protected void showDialog(String msg){
+        dialog.setMessage(msg);
+        dialog.show();
+    }
+
+    protected void dismissDialog(){
+        dialog.setMessage("");
+        dialog.dismiss();
+    }
+
+
+    private  int progress=-1;
     private int max;
     private String msg;
     public synchronized void updateProgress( int progress)
@@ -75,8 +87,9 @@ public abstract class ActiveProcess extends Activity {
             Log.d("lmj", msg+":" + progress);
             if (progress < 100 && dialog.isShowing()) {
                 dialog.setMessage( msg+ progress + "%");
-            } else if (progress > 0 && !dialog.isShowing()) {
+            } else if (progress >= 0 && !dialog.isShowing()) {
                 dialog.show();
+            }else if(progress==0){
             } else {
                 dialog.dismiss();
             }

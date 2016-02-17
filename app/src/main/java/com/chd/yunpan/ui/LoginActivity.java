@@ -310,7 +310,7 @@ private  String verName;
                 break;
             case R.id.ll_head_help:
                 //TODO 帮助
-                startIntent.setClass(LoginActivity.this, AboutActivity.class);
+                startIntent.setClass(LoginActivity.this, HelpActivity.class);
                 break;
         }
         startActivity(startIntent);

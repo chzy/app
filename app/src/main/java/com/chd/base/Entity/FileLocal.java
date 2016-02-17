@@ -1,9 +1,11 @@
 package com.chd.base.Entity;
 
+import java.io.Serializable;
+
 /**
  * Created by lxp1 on 2015/12/17.
  */
-public class FileLocal {
+public class FileLocal implements Serializable{
     public int sysid;
     public String fname;
     public boolean bakuped =false;
