@@ -61,7 +61,7 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 		setContentView(R.layout.activity_music_backup);
 		EventBus.getDefault().register(this);
 
-syncTask=new SyncTask(this,FTYPE.MUSIC);
+		syncTask=new SyncTask(this,FTYPE.MUSIC);
 		initTitle();
 		initResourceId();
 		initListener();
