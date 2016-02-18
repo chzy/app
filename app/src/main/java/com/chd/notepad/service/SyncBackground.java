@@ -63,17 +63,12 @@ public class SyncBackground extends Thread {
 		LoginResult loginEntity = shareUtils.getLoginEntity();
 		//_workpath=_workpath+"/"+loginEntity.getUserid();
 		_workpath=workpath;
-		cloudlist	= baklist;
+		//cloudlist	= baklist;
 		if(!new File(_workpath).exists()){
 			new File(_workpath).mkdir();
 		}
 		//su.open();
 	}
-
-
-//	public String getWorkPath(){
-//		return this._workpath;
-//	}
 
     public void safeshutdown()
 	{
@@ -113,15 +108,7 @@ public class SyncBackground extends Thread {
 	// 找到所有需要上传的列表
 	private void getTasks() {
 
-		//cloudlist=syncTask.getCloudUnits(0,10000);
-		/*int total=cloudlist.size();
-		for(int i=0;i<total;i++) {
-			FileInfo info=cloudlist.get(i);
-			FileInfo0 fileInfo0 = new FileInfo0(cloudlist.get(i));
-			cloudlist.set(i,fileInfo0);
-			info=null;
 
-		}*/
 		Iterator<String> iterator=fdb.getLocallist();
 		String fname;
 		while (iterator.hasNext())
@@ -132,8 +119,7 @@ public class SyncBackground extends Thread {
 				tasks.add(fname);
 
 		}
-		//su.open();
-		//tasks = su.getSyncTasks();
+
 
 
 	}
@@ -141,16 +127,6 @@ public class SyncBackground extends Thread {
 	boolean contains(String fname)
 	{
 
-		/*for(FileInfo0 fileInfo0:cloudlist)
-		{
-			if (fileInfo0.getSysid()>0)
-				continue;
-			if (fname.compareToIgnoreCase(fileInfo0.getObjid())==0) {
-				//cloudlist.remove(fileInfo0);
-				fileInfo0.setSysid(1);
-				return true;
-			}
-		}*/
 		for(FileInfo fileInfo:cloudlist)
 		{
 			if (fileInfo.getFtype()!=FTYPE.NOTEPAD)
@@ -166,7 +142,10 @@ public class SyncBackground extends Thread {
 
 
 	private void sync() {
+				if (cloudlist==null )
+					cloudlist=syncTask.getCloudUnits(0, 10000);
 				getTasks();
+				boolean cl=false;
 				if(tasks.size()==0)
 				{
 					Log.d(TAG,"no taks to sync");
@@ -177,6 +156,7 @@ public class SyncBackground extends Thread {
 					fileInfo0.setFilePath(_workpath+File.separator+fname);
 					fileInfo0.setObjid(fname);
 					syncTask.upload(fileInfo0,null,false);
+					cl=true;
 				}
 				tasks.clear();
 				for (FileInfo fileInfo:cloudlist)
@@ -185,24 +165,22 @@ public class SyncBackground extends Thread {
 					if (fileInfo.getFtype()==FTYPE.NOTEPAD)
 						try {
 							TClient.getinstance().delObj(fileInfo.getObjid(),fileInfo.getFtype());
+							cl=true;
 						} catch (Exception e) {
 							e.printStackTrace();
 							Log.e(TAG,e.getMessage());
 						}
 
 				}
+		if (cl) {
+			cloudlist.clear();
+			cloudlist = null;
+		}
 		Log.d(TAG,"all task finished ");
 		mHandler.sendEmptyMessage(SUCESS);
 
 
 	}
-
-
-	private void work() {
-
-
-	}
-
 
 	private boolean SyncSingle(NoteItemtag itemtag) {
 

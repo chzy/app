@@ -135,7 +135,7 @@ public class FileDBmager {
     }
 
     //写文件
-    public synchronized  boolean writeFile(String fileName, String write_str){
+    public   boolean writeFile(String fileName, String write_str){
         File file = new File(_path+File.separator+fileName+file_ext);
                             //_path + File.separator + fname+file_ext;
         FileOutputStream fos = null;

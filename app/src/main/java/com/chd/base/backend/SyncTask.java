@@ -96,7 +96,7 @@ public class SyncTask {
 		filelistEntity = null;
 	}
 
-	public List<FileInfo0> getCloudUnits(int begin, int max) {
+	public synchronized List<FileInfo0> getCloudUnits(int begin, int max) {
 		/*if (filelistEntity!=null && filelistEntity.getBklist()!=null)
 			return filelistEntity.getBklist();*/
 		List<FileInfo0> flist=new ArrayList<>();

@@ -329,7 +329,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                    //     syncBackground.start();
                    // }
                     syncBackground.wakeup(1);
-                    //needsyc = false;
+                    cloudUnits.clear();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
