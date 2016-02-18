@@ -82,7 +82,7 @@ public class SyncBackground extends Thread {
 
 		synchronized (this)
 		{
-			Log.d(TAG," notidy thread ....");
+			Log.d(TAG," notify thread ....");
 			this.notify();
 		}
 	}
@@ -90,17 +90,19 @@ public class SyncBackground extends Thread {
 
 
 		while (runing) {
-			Log.d(TAG,"notepad sync thread start!!!");
-			synchronized (this) {
+
+			synchronized (this){
+				Log.d(TAG,"notepad sync thread start!!!");
 				try {
 					this.wait();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+
+				Log.d(TAG," sync() begin ....");
+				sync();
+				Log.d(TAG, " sync() end ....");
 			}
-			Log.d(TAG," sync() begin ....");
-			sync();
-			Log.d(TAG, " sync() end ....");
 
 		}
 	}

@@ -88,7 +88,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                             dialog.dismiss();
                             initData();
                         }
-                    },500);
+                    }, 500);
 
                     break;
             }
@@ -161,6 +161,14 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
             finish();
         }
 
+        dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("正在加载");
+        dialog.show();
+        runfrist();
+        initTitle();
+        initResourceId();
+        initListener();
 
     }
 
@@ -252,14 +260,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
         super.onResume();
         //gson = new Gson();
        // syncBackground = new SyncBackground(this, mHandler);
-        dialog = new ProgressDialog(this);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setMessage("正在加载");
-        dialog.show();
-        runfrist();
-        initTitle();
-        initResourceId();
-        initListener();
+
         //if (syncBackground==null)
         //    syncBackground = new SyncBackground(this, mHandler,cloudUnits,savepath);
 
@@ -320,7 +321,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                     //int i = dm.delete(adapter.getItemId(menuInfo.position));
                     //dm.close();
                     if (fileDBmager.delFile(nt.get_fname()))
-                        Log.d("notepad",nt.get_fname()+"删除文件失败！");
+                        Log.d("notepad",nt.get_fname()+"删除文件成功！");
                     adapter.removeListItem(menuInfo.position);//删除数据
                     adapter.notifyDataSetChanged();//通知数据源，数据已经改变，刷新界面
                     dialog.show();
@@ -380,12 +381,6 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
         if (item.isHead)
             return;
         Intent intent = new Intent();
-        //intent.putExtra("state", CHECK_STATE);
-        //intent.putExtra("hashcode", item.hashcode);
-        //intent.putExtra("id", item.id);
-        //intent.putExtra("time", item.time + "");
-        //intent.putExtra("content", item.content);
-        //intent.putExtra("fname", item.get_fname());
         intent.putExtra("item", item);
 
         intent.setClass(NotepadActivity.this, NotepadCheckActivity.class);
@@ -400,7 +395,6 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
             switch (requestCode) {
                 case MODIFY_NOTPAD:
                     dialog.show();
-
                     syncBackground.wakeup(1);
                     break;
 
