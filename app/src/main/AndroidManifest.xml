@@ -26,6 +26,9 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+
+        <meta-data android:value="4aa7f252c9e0f4fe47624a26d3a5825c" android:name="BUG_HD_SDK_GENERAL_KEY" />
+
         <activity
             android:name="com.chd.yunpan.ui.LoginActivity"
             android:screenOrientation="portrait">

@@ -134,32 +134,32 @@ public class SyncTask {
 	public FilelistEntity analyPhotoUnits(List<FileInfo0> remotelist) {
 		filelistEntity = new FilelistEntity();
 		dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Picture, new String[]{"jpg", "png", "gif"}, true);
-		dbManager.anlayLocalUnits(remotelist, filelistEntity);
 		filelistEntity.setLocallist(dbManager.getLocalUnits());
+		dbManager.anlayLocalUnits(remotelist, filelistEntity);
 		return filelistEntity;
 	}
 
 	public FilelistEntity analyMusicUnits(List<FileInfo0> remotelist) {
 		filelistEntity = new FilelistEntity();
 		dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Music, new String[]{"mp3", "wav","m4a","flac","ape" }, true);
-		dbManager.anlayLocalUnits(remotelist, filelistEntity);
 		filelistEntity.setLocallist(dbManager.getLocalUnits());
+		dbManager.anlayLocalUnits(remotelist, filelistEntity);
 		return filelistEntity;
 	}
 
 	public FilelistEntity analyOtherUnits(List<FileInfo0> remotelist) {
 		filelistEntity = new FilelistEntity();
 		dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Other, new String[]{"pdf", "xls", "doc","docx"}, true);
-		dbManager.anlayLocalUnits(remotelist, filelistEntity);
 		filelistEntity.setLocallist(dbManager.getLocalUnits());
+		dbManager.anlayLocalUnits(remotelist, filelistEntity);
 		return filelistEntity;
 	}
 
 	public FilelistEntity analyUnits(List<FileInfo0> remotelist) {
 		filelistEntity = new FilelistEntity();
 		//dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Music, new String[]{"mp3", "wav" }, true);
-		dbManager.anlayLocalUnits(remotelist, filelistEntity);
 		//filelistEntity.setLocallist(dbManager.getLocalUnits());
+		dbManager.anlayLocalUnits(remotelist, filelistEntity);
 		return filelistEntity;
 	}
 

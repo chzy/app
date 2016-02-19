@@ -3,6 +3,7 @@ package com.chd.music.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -63,10 +64,6 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
         syncTask = new SyncTask(MusicActivity.this, FTYPE.MUSIC);
         onNewThreadRequest();
         EventBus.getDefault().register(this);
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void onNewThreadRequest() {
@@ -76,6 +73,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
             public void run() {
 
                 final List<FileInfo0> cloudUnits = syncTask.getCloudUnits(0, 10000);
+                Log.d("lmj","获取到了数据");
                 runOnUiThread(new Runnable() {
                     public void run() {
                         initData(cloudUnits);
@@ -88,7 +86,6 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
     @Subscribe
     public void onEventMainThread(MessageEvent event) {
         if(event.type==FTYPE.MUSIC){
-//            onNewThreadRequest();
         }
     }
 
@@ -103,12 +100,8 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
         cloudUnits.clear();
         cloudUnits = null;
         cloudUnits = filelistEntity.getBklist();
-	
-
         for (FileInfo0 item : cloudUnits) {
             //FileInfo0 item=new FileInfo0(finfo);
-
-
             //已备份文件
             String path = item.getFilePath();
             String name = item.getFilename();

@@ -143,6 +143,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
         thread.start();
     }
 
+    private boolean isShow=true;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         savepath = new ShareUtils(this).getNotepadDir();
@@ -153,13 +154,18 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
             if (!getIntent().getBooleanExtra("unlock", false)) {
                 Intent i = new Intent(this, UnlockGesturePasswordActivity.class);
                 startActivity(i);
+                isShow=false;
                 finish();
+
             }
         }else{
             Intent i = new Intent(this, GuideGesturePasswordActivity.class);
             startActivity(i);
+            isShow=false;
             finish();
         }
+
+        if(isShow){
 
         dialog = new ProgressDialog(this);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -169,7 +175,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
         initTitle();
         initResourceId();
         initListener();
-
+        }
     }
 
 

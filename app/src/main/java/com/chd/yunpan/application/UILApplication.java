@@ -33,6 +33,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
 import cn.smssdk.SMSSDK;
+import im.fir.sdk.FIR;
 
 /**
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
@@ -48,6 +49,7 @@ public class UILApplication extends Application {
 		}
 
 		super.onCreate();
+		FIR.init(this);
 		mInstance = this;
 		mLockPatternUtils = new LockPatternUtils(this);
 		initImageLoader(getApplicationContext());
