@@ -31,7 +31,7 @@ public class SyncLocalFileBackground implements Runnable {
 
 
     private final String TAG = "SyncLocal";
-    private final int Maxbuflen = 512 * 1024;
+    private final int Maxbuflen = (int)256 * 1024;
     List<FileInfo0> files = new ArrayList<FileInfo0>();
     private MediaMgr su = null;
     private Context context = null;
@@ -86,7 +86,7 @@ public class SyncLocalFileBackground implements Runnable {
     private void download() {
         if (files.isEmpty()) {
             su.open();
-            files = su.getDlLoadTask(100);
+            files=su.getDlLoadTask(100);
             su.close();
         }
         if (files.size() == 0) {
@@ -101,7 +101,7 @@ public class SyncLocalFileBackground implements Runnable {
                 //su.deleteUpLoadingFile(item.getObjid());
                 //su.addUpLoadedFile(item);
             } else {
-                Log.e(TAG, "下载失败");
+               Log.e(TAG,"下载失败");
             }
             su.close();
         }
@@ -127,7 +127,7 @@ public class SyncLocalFileBackground implements Runnable {
                 //su.deleteUpLoadingFile(item.getObjid());
                 //su.addUpLoadedFile(item);
             } else {
-                Log.e(TAG, "下载失败");
+                Log.e(TAG,"下载失败");
             }
             su.close();
         }
@@ -149,7 +149,7 @@ public class SyncLocalFileBackground implements Runnable {
         FileInputStream fis = null;
         RandomAccessFile os = null;
         //TODO 下载注释掉了文件大小判断
-        /*if (fileInfo0.getFilesize()<1) {
+		/*if (fileInfo0.getFilesize()<1) {
 			Log.e(TAG,"invalid remote obj size 0");
 			return false;
 		}*/
@@ -197,7 +197,7 @@ public class SyncLocalFileBackground implements Runnable {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
         }
-        int buflen = Math.min((int) (total - offset), Maxbuflen);
+        int buflen=Math.min((int) (total - offset), Maxbuflen);
         byte[] buffer = new byte[buflen];
 
         if (pb != null) {
@@ -229,7 +229,7 @@ public class SyncLocalFileBackground implements Runnable {
         try {
             //os.flush();
             os.close();
-            if (offset != total)
+            if (offset!=total)
                 f.deleteOnExit();
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
@@ -253,28 +253,28 @@ public class SyncLocalFileBackground implements Runnable {
         return uploadBigFile0(entity, activeProcess, desc, true);
     }
 
-    public synchronized boolean uploadBigFile0(FileInfo0 entity, final ActiveProcess activeProcess, Map<String, String> desc, boolean replace) {
+    public synchronized  boolean uploadBigFile0(FileInfo0 entity, final ActiveProcess activeProcess,Map<String, String> desc,boolean replace) {
 
         TClient tClient = null;
         File file;
-        long size = entity.getFilesize();
+        long size =entity.getFilesize();
         if (!NetworkUtils.isNetworkAvailable(context)) {
             return false;
         }
         try {
             //tClient = new TClient(false); 创建新的实列
-            tClient = TClient.getinstance();
+			tClient = TClient.getinstance();
         } catch (Exception e) {
             Log.w(TAG, e.getLocalizedMessage());
             return false;
         }
         file = new File(entity.getFilePath());
-        if (!file.exists()) {
-            Log.d(TAG, entity.getFilePath() + " not exsits");
+        if (!file.exists() ) {
+            Log.d(TAG,entity.getFilePath()+" not exsits");
             return false;
         }
         if (!file.isFile()) {
-            Log.d(TAG, entity.getFilePath() + " not a file");
+            Log.d(TAG,entity.getFilePath()+" not a file");
             return false;
         }
         if (size < 1) {
@@ -301,17 +301,19 @@ public class SyncLocalFileBackground implements Runnable {
         su.open();
         FileInfo fileInfo = tClient.queryFile(entity);
         TClient.TFilebuilder filebuilder = null;
-        long oft = 0l;
+        long oft=0l;
         if (fileInfo != null) {
             Log.e(TAG, "upload file exist !!");
             if (replace) {
                 Log.d(TAG, "del remote exist obj :" + entity.getObjid());
-                if (!tClient.delObj(entity.getObjid(), entity.getFtype())) {
-                    Log.e(TAG, "del remote exist obj :" + entity.getObjid() + " failed !!");
-                    return false;
-                }
-            } else
+               if (! tClient.delObj(entity.getObjid(), entity.getFtype())) {
+                   Log.e(TAG, "del remote exist obj :" + entity.getObjid()+ " failed !!");
+                  // return  false;
+               }
+            } else {
+                activeProcess.finishProgress();
                 return false;
+            }
         } else {
             oft = tClient.queryUpObjOffset(entity);
             if ((oft > 0)) {
@@ -320,13 +322,15 @@ public class SyncLocalFileBackground implements Runnable {
                     Log.e(TAG, "remote obj exist!!");
                     boolean ret = false;
                     try {
+                            ret=tClient.CommitObj(entity.objid, entity.ftype,null);
+                            activeProcess.finishProgress();
+                            return ret;
 
-                        ret = tClient.CommitObj(entity.objid, entity.ftype, null);
                     } catch (TException e) {
                         e.printStackTrace();
                     }
 
-                    return ret;
+                   // return ret;
                 }
                 if (size < oft) {
                     Log.e(TAG, "remote file size > local");
@@ -353,9 +357,9 @@ public class SyncLocalFileBackground implements Runnable {
 
         try {
             String fname = entity.getObjid() == null ? MediaFileUtil.getFnameformPath(entity.getFilePath()) : entity.getObjid();
-            filebuilder = tClient.new TFilebuilder(fname, entity.getFtype(), (int) size);
+            filebuilder = tClient.new TFilebuilder(fname, entity.getFtype(),(int)size);
             String objid = null;
-            if (start == 0) {
+            if (start == 0 ) {
                 objid = filebuilder.ApplyObj();
                 if (objid == null) {
                     Log.e(TAG, "alloc obj failed ");
@@ -368,18 +372,20 @@ public class SyncLocalFileBackground implements Runnable {
                 filebuilder.setObj(objid);
             }
             RandomAccessFile rf = new RandomAccessFile(entity.getFilePath(), "r");
-            int bufflen = Math.min(Maxbuflen, (int) (size - start));
+            int bufflen=  Math.min(Maxbuflen,(int)(size - start));
             byte[] buffer = new byte[/*1024 * 5*/bufflen];
             rf.seek(start);
             long pz = 0;
+            int proc=0,proc1=0;
             while ((len = rf.read(buffer, 0, buffer.length)) != -1) {
                 pz = pz + len;
-                if (filebuilder.Append(/*pz,*/buffer, len)) {
+                if (filebuilder.Append(/*pz,*/buffer,len)) {
                     entity.setOffset(pz);
-                    if (activeProcess != null) {
-                        activeProcess.updateProgress((int) ((pz * 100 / size)));
+                    proc1=(int)(pz * 100 / size);
+                    if (activeProcess != null && proc!=(proc1)) {
+                        activeProcess.updateProgress(proc1);
                     }
-                    Log.d("synclocalupload", "progress:" + (int) ((pz * 100 / size)));
+                    //Log.d("synclocalupload", "progress:" + (int) ((pz * 100 / size)));
                     su.setUploadStatus(entity);
                     succed = true;
                 } else {
@@ -401,9 +407,9 @@ public class SyncLocalFileBackground implements Runnable {
             Log.w(TAG, e.getMessage());
         } finally {
             if (activeProcess != null) {
-                if (succed) {
-                    if (entity.getFtype() == FTYPE.MUSIC) {
-                        EventBus.getDefault().post(new MessageEvent(FTYPE.MUSIC, ""));
+                if (succed){
+                    if(entity.getFtype()== FTYPE.MUSIC){
+                        EventBus.getDefault().post(new MessageEvent(FTYPE.MUSIC,""));
                     }
                     activeProcess.toastMain("上传成功");
                 } else
