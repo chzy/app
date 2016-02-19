@@ -157,7 +157,7 @@ public class SyncTask {
 
 	public FilelistEntity analyUnits(List<FileInfo0> remotelist) {
 		filelistEntity = new FilelistEntity();
-		//dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Music, new String[]{"mp3", "wav" }, true);
+		//dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Music, new String[]{"mp3", "wav}, true);
 		//filelistEntity.setLocallist(dbManager.getLocalUnits());
 		dbManager.anlayLocalUnits(remotelist, filelistEntity);
 		return filelistEntity;
