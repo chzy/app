@@ -171,7 +171,9 @@ public class BaseImageDownloader implements ImageDownloader {
 			}
 		}
 		//return new ContentLengthInputStream(new BufferedInputStream(imageStream, BUFFER_SIZE),length);
-		return new ContentLengthInputStream(new RecyclableBufferedInputStream(imageStream,BUFFER_SIZE),length);
+		return new ContentLengthInputStream(new RecyclableBufferedInputStream(imageStream,/*BUFFER_SIZE*/256*1024),length);
+		//return new ContentLengthInputStream(imageStream,length);
+
 	}
 
 	/**

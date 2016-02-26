@@ -20,6 +20,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.util.Log;
+
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.download.ImageDownloader.Scheme;
@@ -68,8 +70,8 @@ public class BaseImageDecoder implements ImageDecoder {
 	 */
 	@Override
 	public Bitmap decode(ImageDecodingInfo decodingInfo) throws IOException {
-		Bitmap decodedBitmap;
-		ImageFileInfo imageInfo;
+		Bitmap decodedBitmap = null;
+		ImageFileInfo imageInfo = null;
 
 		InputStream imageStream = getImageStream(decodingInfo);
 		if (imageStream == null) {
@@ -81,7 +83,11 @@ public class BaseImageDecoder implements ImageDecoder {
 			imageStream = resetStream(imageStream, decodingInfo);
 			Options decodingOptions = prepareDecodingOptions(imageInfo.imageSize, decodingInfo);
 			decodedBitmap = BitmapFactory.decodeStream(imageStream, null, decodingOptions);
-		} finally {
+		}/*catch (Exception e)
+		{
+			Log.e("BaseImageDecoder", e.toString());
+		}*/
+		finally {
 			IoUtils.closeSilently(imageStream);
 		}
 
@@ -178,7 +184,8 @@ public class BaseImageDecoder implements ImageDecoder {
 			try {
 				imageStream.reset();
 				return imageStream;
-			} catch (IOException ignored) {
+			} catch (Exception ignored) {
+				//ignored.printStackTrace();
 			}
 		}
 		IoUtils.closeSilently(imageStream);
