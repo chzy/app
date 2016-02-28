@@ -16,6 +16,7 @@ import com.chd.MediaMgr.utils.MediaFileUtil;
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.Ui.DownListActivity;
 import com.chd.base.backend.SyncTask;
+import com.chd.contacts.vcard.StringUtils;
 import com.chd.photo.adapter.PicEditAdapter;
 import com.chd.photo.entity.PicEditBean;
 import com.chd.photo.entity.PicEditItemBean;
@@ -23,6 +24,7 @@ import com.chd.photo.entity.PicInfoBean;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
+import com.chd.yunpan.share.ShareUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +48,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 	private List<PicInfoBean> mPicList0;//数组对象传递到 这个变量里面了
 	private PicEditAdapter picEditAdapter;
 	private boolean bIsUbkList;
+	private String path;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			if(msg.what==998){
@@ -106,6 +109,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 		bIsUbkList = getIntent().getBooleanExtra("ubklist", false);
 		month = getIntent().getIntExtra("month", -1);
 		mPicList0 = (List) getIntent().getSerializableExtra("listUnits");
+		path=new ShareUtils(this).getPhotoFile().getPath();
 		initTitle();
 		initResourceId();
 		initListener();
@@ -315,6 +319,9 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 						fileInfo0.setFilePath(uri);
 						fileInfo0.setObjid(MediaFileUtil.getFnameformPath(uri));
 					} else {
+						if(StringUtils.isNullOrEmpty(fileInfo0.getFilePath())){
+							fileInfo0.setFilePath(path+"/"+uri);
+						}
 						fileInfo0.setObjid(uri);
 					}
 					info0s.add(fileInfo0);

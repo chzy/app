@@ -153,6 +153,7 @@ public class SyncLocalFileBackground implements Runnable {
 			Log.e(TAG,"invalid remote obj size 0");
 			return false;
 		}*/
+
         File f = new File(fileInfo0.getFilePath());
         if (f.isDirectory()) {
             return false;
