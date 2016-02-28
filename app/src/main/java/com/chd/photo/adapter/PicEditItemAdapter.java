@@ -2,6 +2,7 @@ package com.chd.photo.adapter;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -26,10 +27,13 @@ public class PicEditItemAdapter extends BaseAdapter {
     DisplayImageOptions options;
     private Activity context;
     private List<PicEditItemBean> list;
+	private LayoutInflater mInflater;
 
-    public PicEditItemAdapter(Activity context, List<PicEditItemBean> list,ImageLoader imageLoader) {
+    public PicEditItemAdapter(Activity context, List<PicEditItemBean> list) {
         this.context = context;
         this.list = list;
+	    this.mInflater=LayoutInflater.from(context);
+	    this.imageLoader=ImageLoader.getInstance();
         options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.pic_test1)
                 .imageScaleType(ImageScaleType.EXACTLY)
@@ -39,29 +43,28 @@ public class PicEditItemAdapter extends BaseAdapter {
                 .considerExifParams(true)
                 .extraForDownloader(new ShareUtils(context).getStorePathStr()) // imageload 加载图片时 会在程序目录下载对应的原文件
                 .build();
-        this.imageLoader=imageLoader;
     }
 
 	@Override
 	public int getCount() {
-		return list.size();
+		return list==null?0:list.size();
 	}
 
 	@Override
 	public Object getItem(int arg0) {
-		return null;
+		return arg0;
 	}
 
 	@Override
 	public long getItemId(int arg0) {
-		return 0;
+		return arg0;
 	}
 
 	@Override
 	public View getView(final int position, View converView, ViewGroup parent) {
 		final ViewHolder holder;
 		if (converView == null) {
-			converView = View.inflate(context, R.layout.item_pic_edit_item_adapter, null);
+			converView = mInflater.inflate(R.layout.item_pic_edit_item_adapter, parent,false);
 			holder = new ViewHolder();
 			holder.iv_pic_info_photo = (ImageView) converView.findViewById(R.id.iv_pic_edit_item_photo);
 			holder.iv_pic_edit_check = (ImageView) converView.findViewById(R.id.iv_pic_edit_item_photo_check);
@@ -80,27 +83,21 @@ public class PicEditItemAdapter extends BaseAdapter {
 					options, new SimpleImageLoadingListener() {
 						@Override
 						public void onLoadingStarted(String imageUri, View view) {
-							/*vh.progressBar.setProgress(0);
-							vh.progressBar.setVisibility(View.VISIBLE);*/
 						}
 
 						@Override
 						public void onLoadingFailed(String imageUri, View view,
 								FailReason failReason) {
-							/*vh.progressBar.setVisibility(View.GONE);*/
 						}
 
 						@Override
 						public void onLoadingComplete(String imageUri, View view,
 								Bitmap loadedImage) {
-							/*vh.progressBar.setVisibility(View.GONE);*/
 						}
 					}, new ImageLoadingProgressListener() {
 						@Override
 						public void onProgressUpdate(String imageUri, View view,
 								int current, int total) {
-							/*vh.progressBar.setProgress(Math.round(100.0f * current
-									/ total));*/
 						}
 					});
 		}

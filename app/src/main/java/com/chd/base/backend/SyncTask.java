@@ -3,6 +3,8 @@ package com.chd.base.backend;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -208,6 +210,7 @@ public class SyncTask {
 				for (FileInfo0 item :
 						files) {
 					boolean result = upload(item, null, false);
+					Log.d("lmj","第"+i+"个上传状态:"+result);
 					if(!result){
 						upload.add(i);
 					}
@@ -217,8 +220,8 @@ public class SyncTask {
 					activeProcess.runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							dialog.setTitle("正在上传"+ finalI +"/"+files.size());
 							dialog.setMessage(name);
+							dialog.setTitle("正在上传"+ finalI +"/"+files.size());
 						}
 					});
 				}
@@ -321,9 +324,9 @@ public class SyncTask {
 				for (FileInfo0 item :
 						files) {
 					boolean result = download(item, null, false);
-					if(!result){
-						download.add(i);
-					}
+//					if(!result){
+//						download.add(i);
+//					}
 					final String name=item.getFilename();
 					i++;
 					final int finalI = i;
@@ -433,18 +436,24 @@ public class SyncTask {
 			@Override
 			public void run() {
 				int i=0;
-				ArrayList<Integer> download=new ArrayList<>();
+				ArrayList<Integer> del=new ArrayList<>();
 				for (FileInfo0 item :
 						files) {
 					boolean result;
 					if(bIsUbkList){
 						//是未备份
-						result = new File(item.getFilePath()).delete();
+						File f=new File(item.getFilePath());
+						result =f.delete();
+						if(result){
+						Intent media = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(f));
+						activeProcess.sendBroadcast(media);
+						}
 					}else{
 						result=DelRemoteObj(item);
 					}
+					Log.d("lmj","第"+i+"删除状态:"+result);
 					if(!result){
-						download.add(i);
+						del.add(i);
 					}
 					final String name=item.getFilename();
 					i++;
@@ -452,8 +461,8 @@ public class SyncTask {
 					activeProcess.runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							dialog.setTitle("正在删除"+ finalI +"/"+files.size());
 							dialog.setMessage(name);
+							dialog.setTitle("正在删除"+ finalI +"/"+files.size());
 						}
 					});
 				}
@@ -465,10 +474,9 @@ public class SyncTask {
 				});
 				Message msg=new Message();
 				msg.what=996;
-				msg.obj=download;
+				msg.obj=del;
 				mHandler.sendMessage(msg);
 				netThread=null;
-
 			}
 		};
 		netThread.start();

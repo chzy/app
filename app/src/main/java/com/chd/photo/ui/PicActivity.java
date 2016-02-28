@@ -131,9 +131,7 @@ public class PicActivity extends Activity implements OnClickListener {
 		else
 		{
 			 tmpMonthMap = new HashMap();
-			 YearMap.put(year,tmpMonthMap);
 		}
-
 		PicInfoBean picInfoBean = new PicInfoBean();
 			String uri=info.getUri();
 			picInfoBean.setUrl(uri);
@@ -152,8 +150,8 @@ public class PicActivity extends Activity implements OnClickListener {
 			List<PicInfoBean> monthPicInfoBeans = new ArrayList<PicInfoBean>();
 			monthPicInfoBeans.add(picInfoBean);
 			tmpMonthMap.put(month, monthPicInfoBeans);
-			YearMap.put(year, tmpMonthMap);
 		}
+		YearMap.put(year, tmpMonthMap);
 
 	}
 
@@ -187,7 +185,6 @@ public class PicActivity extends Activity implements OnClickListener {
 		if (filelistEntity != null) {
 			YearMap=new HashMap<Integer, Map<Integer, List<PicInfoBean>>>();
 
-			Map<Integer, List<PicInfoBean>> tmpMonthMap=null;
 
 				for (FileLocal fileLocal : fileLocals)
 				{
@@ -202,7 +199,7 @@ public class PicActivity extends Activity implements OnClickListener {
 					add2YearMap(info);
 				}
 				localList=initData(localList);
-			YearMap.clear();
+				YearMap.clear();
 
 
 				for (FileInfo0 info0:cloudUnits)
@@ -210,6 +207,7 @@ public class PicActivity extends Activity implements OnClickListener {
 					add2YearMap(info0);
 				}
 				mPicList=initData(mPicList);
+			YearMap.clear();
 			}
 		//要有提示用户等待的画面
 		handler.sendEmptyMessage(0);

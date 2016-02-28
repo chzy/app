@@ -76,17 +76,23 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 	private void processMsg(Message msg){
 		//删除
 		ArrayList<Integer> posList= (ArrayList<Integer>) msg.obj;
+		int i=0;
 		for (Integer index:
 				posList) {
-			selectItem.remove(index);
+			int pos=index-i;
+			selectItem.remove(pos);
+
 		}
 		for (PicEditBean bean:
 				mPicList) {
 			if(bean.getList()!=null){
 				bean.getList().removeAll(selectItem);
+				if(bean.getList().size()==0){
+					mPicList.remove(bean);
+					break;
+				}
 			}
 		}
-		mPicList.removeAll(selectItem);
 		picEditAdapter.notifyDataSetChanged();
 	}
 
@@ -253,7 +259,6 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 			//多选删除
 				selectItem= new ArrayList<>();
 				for (PicEditBean picEditBean : mPicList) {
-
 					for (PicEditItemBean picEditItemBean : picEditBean.getList()) {
 						if (!picEditItemBean.isSelect()) {
 							continue;

@@ -161,40 +161,6 @@ public class netdiskActivity extends Activity implements OnClickListener {
 	
 	private  void bgtask()
 	{
-		/*
-		ExecRunable.execRun(new Thread() {
-			@Override
-			public void run() {
-				//String url = et_url.getText().toString()+"/a1/login?uid="+et_name.getText()+"&passwd="+et_pwd.getText()+"";
-				Message msg = new Message();
-				//String  result = HttpUtils.GetStringForHttpGet(null, null, url, 1);
-				try {
-
-					LoginEntity entity = new LoginEntity();
-					entity.setName("account_name");
-					entity.setId("1000001");
-					entity.setToken("token");
-					entity.setSpace(5000l);
-					entity.setUspace(0l);
-					entity.setState(true);
-					//LoginEntity entity = new  LoginParse().parse(result);
-					if (entity.isState()) {
-						msg.what = 0;
-						msg.obj = entity;
-					} else {
-						msg.what = -1;
-						msg.obj = "�˺Ż��������";
-					}
-
-				} catch (Exception e) {
-					msg.what = -1;
-					msg.obj = "登录异常,请稍候再试";
-				}
-
-			}
-		});
-		*/
-
 		ShareUtils shareUtils = new ShareUtils(this);
 		entity = shareUtils.getLoginEntity();
 		if (entity==null)
@@ -203,7 +169,6 @@ public class netdiskActivity extends Activity implements OnClickListener {
 			Intent i = new Intent(this,LoginActivity.class);
 			startActivity(i);
 		}
-
 	}
 
 	@Override

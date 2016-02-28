@@ -314,6 +314,7 @@ public class SyncLocalFileBackground implements Runnable {
                 if(activeProcess!=null){
                     activeProcess.finishProgress();
                 }
+                su.close();
                 return false;
             }
         } else {
@@ -328,6 +329,7 @@ public class SyncLocalFileBackground implements Runnable {
                         if(activeProcess!=null){
                         activeProcess.finishProgress();
                         }
+                        su.close();
                             return ret;
 
                     } catch (TException e) {
@@ -337,6 +339,7 @@ public class SyncLocalFileBackground implements Runnable {
                    // return ret;
                 }
                 if (size < oft) {
+                    su.close();
                     Log.e(TAG, "remote file size > local");
                     return false;
                 }
@@ -355,6 +358,7 @@ public class SyncLocalFileBackground implements Runnable {
                 activeProcess.setProgress((int) (start / size * 100));
             }
         }
+
         int len = 0;
 
         boolean succed = false;

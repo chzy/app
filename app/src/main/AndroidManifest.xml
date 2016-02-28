@@ -184,11 +184,6 @@
             android:name="com.chd.notepad.ui.activity.PhotoBrowseActivity"
             android:screenOrientation="portrait" />
 
-        <service android:name="com.chd.notepad.service.SyncService">
-        
-
-
-        </service>
 
         <service android:name="com.chd.service.SyncFileService"></service>
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
