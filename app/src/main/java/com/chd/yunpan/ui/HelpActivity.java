@@ -29,9 +29,13 @@ public class HelpActivity extends Activity implements View.OnClickListener {
 
         tv_center = (TextView) findViewById(R.id.tv_center);
         iv_left = (ImageView) findViewById(R.id.iv_left);
+        boolean isHelp = getIntent().getBooleanExtra("isHelp", false);
+        if(isHelp){
+            tv_center.setText("帮助");
+        }else{
 
-
-        tv_center.setText("关于沃空间");
+            tv_center.setText("关于沃空间");
+        }
         iv_left.setOnClickListener(this);
     }
 

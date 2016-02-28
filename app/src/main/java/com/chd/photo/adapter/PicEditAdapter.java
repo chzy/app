@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -69,7 +70,15 @@ public class PicEditAdapter extends BaseAdapter implements OnItemClickListener, 
 		}
 		holder.tv_pic_edit_date.setText(list.get(position).getDate());
 		holder.tv_pic_edit_group_check.setImageResource(list.get(position).isSelect() ? R.drawable.pic_edit_photo_checked : R.drawable.pic_edit_photo_group_check);
-		holder.mlv_pic_edit_gridview.setAdapter(new PicEditItemAdapter(context, list.get(position).getList(), imageLoader));
+		Adapter adapter = holder.mlv_pic_edit_gridview.getAdapter();
+		if(adapter==null) {
+			holder.mlv_pic_edit_gridview.setAdapter(new PicEditItemAdapter(context, list.get(position).getList(), imageLoader));
+		}else{
+			if(adapter instanceof PicEditItemAdapter){
+				PicEditItemAdapter itemAdapter= (PicEditItemAdapter) adapter;
+				itemAdapter.notifyDataSetChanged();
+			}
+		}
 		holder.mlv_pic_edit_gridview.setOnScrollListener(new PauseOnScrollListener(imageLoader,true,true));
 		holder.mlv_pic_edit_gridview.setTag(position);
 		holder.tv_pic_edit_group_check.setTag(position);
@@ -99,13 +108,10 @@ public class PicEditAdapter extends BaseAdapter implements OnItemClickListener, 
 		else
 		{
 			Intent intent = new Intent(context, PicDetailActivity.class);
-			//intent.putExtra("picid", list.get(position).getList().get(arg2).getPicid());
 			intent.putExtra("ubklist", list.get(position).getList().get(arg2).isbIsUbkList());
 			intent.putExtra("bean",list.get(position).getList().get(arg2));
 			intent.putExtra("pos",position);
 			intent.putExtra("pos2",arg2);
-			//intent.putExtra("filepath", list.get(position).getList().get(arg2).getPicpath());
-			//intent.putExtra("fileinfo0", list.get(position).getList().get(arg2).getFileInfo0());
 			context.startActivityForResult(intent, 0x12);
 		}
 	}

@@ -14,8 +14,7 @@ public abstract class ActiveProcess extends Activity {
 
 
     //public abstract void updateProgress(final int progress);
-    protected  CustomProgressDialog dialog;
-
+    protected CustomProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if(dialog==null){
@@ -26,14 +25,26 @@ public abstract class ActiveProcess extends Activity {
         super.onCreate(savedInstanceState);
     }
 
-    protected void showDialog(String msg){
-        dialog.setMessage(msg);
-        dialog.show();
+    protected void showDialog(final String msg){
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                dialog.setMessage(msg);
+                dialog.show();
+            }
+        });
     }
 
     protected void dismissDialog(){
-        dialog.setMessage("");
-        dialog.dismiss();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                dialog.setMessage("");
+                dialog.dismiss();
+            }
+        });
+
     }
 
 

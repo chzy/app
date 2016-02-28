@@ -136,13 +136,6 @@ private  String verName;
         setListener();
         dialog = new ProgressDialog(LoginActivity.this);
 
-//        if (UILApplication.getInstance().getLockPatternUtils().savedPatternExists()) {
-//            if (!getIntent().getBooleanExtra("unlock", false)) {
-//                Intent i = new Intent(this, UnlockGesturePasswordActivity.class);
-//                startActivity(i);
-//                finish();
-//            }
-//        }
         Intent intent = getIntent();
         isUnlock=intent.getBooleanExtra("Unlock",false);
 
@@ -155,7 +148,6 @@ private  String verName;
                 et_name.setText(shareUtils.getUsername());
                 et_pwd.setText(shareUtils.getPwd());
             }
-
             if (shareUtils.isAutoLogin()) {
                 //gotoMain();
                 if (shareUtils.getUsername().length() > 3 && shareUtils.getPwd().length() > 2) {

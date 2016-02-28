@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.chd.photo.entity.PicBean;
 import com.chd.photo.entity.PicInfoBeanMonth;
 import com.chd.yunpan.R;
-import com.chd.yunpan.share.ShareUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -47,7 +46,7 @@ public class PicInfoAdapter extends BaseAdapter {
 				.cacheOnDisk(true)
 				.bitmapConfig(Bitmap.Config.RGB_565)
 				.considerExifParams(true)
-		.extraForDownloader(new ShareUtils(context).getStorePathStr())  //增加保存路径
+//		.extraForDownloader(new ShareUtils(context).getStorePathStr())  //增加保存路径
 		.build();
 	}
 

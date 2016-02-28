@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chd.TClient;
+import com.chd.contacts.vcard.StringUtils;
 import com.chd.proto.Errcode;
 import com.chd.proto.RetHead;
 import com.chd.yunpan.R;
@@ -188,10 +189,29 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                 onBackPressed();
                 break;
             case R.id.log_btn_log:
+
+
+
                 //登陆
                 final String name = mEdAccountEditText.getText().toString();
                 final String pass1 = mEdPwdEditText.getText().toString();
                 final String code = mEdConfirmPwdEditText.getText().toString();
+                if(StringUtils.isNullOrEmpty(name)||!(name.length()==11)){
+                    Toast.makeText(RegisterActivity.this, "请输入正确的手机号", Toast.LENGTH_SHORT).show();
+                    return ;
+                }
+                if(StringUtils.isNullOrEmpty(pass1)||pass1.length()<6||pass1.length()>18){
+                    Toast.makeText(RegisterActivity.this, "请输入正确的密码格式", Toast.LENGTH_SHORT).show();
+                    return ;
+                }
+                if(StringUtils.isNullOrEmpty(code)||!(code.length()==4)){
+                    Toast.makeText(RegisterActivity.this, "请输入正确的验证码", Toast.LENGTH_SHORT).show();
+                    return ;
+                }
+
+
+
+
                 final ProgressDialog dialog=new ProgressDialog(this);
                 dialog.setMessage("正在加载");
                 dialog.show();

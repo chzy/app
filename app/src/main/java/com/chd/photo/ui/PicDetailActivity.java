@@ -44,7 +44,7 @@ public class PicDetailActivity extends ActiveProcess implements OnClickListener
 	private final String TAG=this.getClass().getName();
 	private int pos;
 	private int pos2;
-	private TextView mTvRight;
+//	private TextView mTvRight;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -59,9 +59,6 @@ public class PicDetailActivity extends ActiveProcess implements OnClickListener
 		if (bIsUbkList)
 		{
 			findViewById(R.id.pic_detail_btm_layout).setVisibility(View.GONE);
-			mTvRight = (TextView) findViewById(R.id.tv_right);
-			mTvRight.setText("上传");
-			mTvRight.setOnClickListener(this);
 		}
 
 		options = new DisplayImageOptions.Builder()
@@ -120,7 +117,6 @@ public class PicDetailActivity extends ActiveProcess implements OnClickListener
 
 		if (url != null)
 		{
-
 			imageLoader.displayImage(url, mImgView,
 					options, new SimpleImageLoadingListener() {
 						@Override
@@ -181,17 +177,6 @@ public class PicDetailActivity extends ActiveProcess implements OnClickListener
 	{
 		switch (v.getId()) 
 		{
-			case R.id.tv_right:
-				//本地文件 上传云端
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						syncTask.upload(fileInfo0, PicDetailActivity.this, false);
-					}
-				}).start();
-
-				break;
-
 		case R.id.iv_left:
 		case R.id.pic_detail_cancel:
 		{
@@ -200,7 +185,7 @@ public class PicDetailActivity extends ActiveProcess implements OnClickListener
 			break;
 		case R.id.pic_detail_delete:
 		{
-			Thread thread = new Thread(new Runnable() 
+			Thread thread = new Thread(new Runnable()
 			{
 				@Override
 				public void run() 

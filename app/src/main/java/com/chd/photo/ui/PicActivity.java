@@ -44,12 +44,29 @@ public class PicActivity extends Activity implements OnClickListener {
 	private boolean bIsUbkList;
 	private  List<FileInfo0> cloudUnits;
 	private SyncTask syncTask;
-	private final String TAG=this.getClass().getName();
+	private List<PicBean<PicInfoBeanMonth>> localList = new ArrayList();
 
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
-			Collections.sort(mPicList);
-			mLvPic.setAdapter(new PicAdapter(PicActivity.this, mPicList, bIsUbkList));
+			if(bIsUbkList){
+				Collections.sort(localList);
+				findViewById(R.id.rl_pic_ubk_layout).setVisibility(View.GONE);
+				mTvCenter.setText("未备份照片");
+				mLvPic.setAdapter(new PicAdapter(PicActivity.this, localList, bIsUbkList));
+			}else{
+				Collections.sort(mPicList);
+				if (localList != null) {
+					int size=0;
+
+					for (PicBean<PicInfoBeanMonth> bean:
+						 localList) {
+						size+=bean.getList().getPicunits().size();
+					}
+
+					mTvNumber.setText(String.format("未备份照片%d张",size));
+				}
+				mLvPic.setAdapter(new PicAdapter(PicActivity.this, mPicList, bIsUbkList));
+			}
 		}
 
 	};
@@ -117,23 +134,12 @@ public class PicActivity extends Activity implements OnClickListener {
 			 YearMap.put(year,tmpMonthMap);
 		}
 
-		/*if (uri==null)
-		{
-			Log.e(TAG, "unknow file sysid:" + info.getSysid());
-			return;
-		}*/
 		PicInfoBean picInfoBean = new PicInfoBean();
-		if (info.getSysid()==0 ) {
-			/*if (!syncTask.haveLocalCopy(info)) {
-				Log.e(TAG, "unknow file sysid:" + info.getSysid());
-				//return;
-			}*/
 			String uri=info.getUri();
 			picInfoBean.setUrl(uri);
-		}
-		else
-			picInfoBean.setSysid(info.getSysid());
-
+		if(info.getSysid()>0) {
+		picInfoBean.setSysid(info.getSysid());
+	}
 		//picInfoBean.setUrl(uri);
 
 		picInfoBean.setDay(TimeUtils.getTime(info.getLastModified()* 1000L, new SimpleDateFormat("MM月dd日")));
@@ -180,24 +186,14 @@ public class PicActivity extends Activity implements OnClickListener {
 
 		if (filelistEntity != null) {
 			YearMap=new HashMap<Integer, Map<Integer, List<PicInfoBean>>>();
-			if (bIsUbkList) {
-				findViewById(R.id.rl_pic_ubk_layout).setVisibility(View.GONE);
-				mTvCenter.setText("未备份照片");
-			} else {
-				if (filelistEntity.getLocallist() != null) {
-					mTvNumber.setText(String.format("未备份照片%d张", filelistEntity.getUnbakNumber()));
-				}
-			}
 
 			Map<Integer, List<PicInfoBean>> tmpMonthMap=null;
-
-			if (bIsUbkList) {
 
 				for (FileLocal fileLocal : fileLocals)
 				{
 					if (fileLocal.bakuped)
 						continue;
-					FileInfo0 	info = syncTask.queryLocalInfo(fileLocal.sysid);    /*getUnitinfo(id)*/
+					FileInfo0 	info = syncTask.queryLocalInfo(fileLocal.sysid);
 					if (info==null)
 					{
 						Log.d("PicActity", fileLocal.fname + " not found in mediaStore");
@@ -205,37 +201,42 @@ public class PicActivity extends Activity implements OnClickListener {
 					}
 					add2YearMap(info);
 				}
-			}
-			else
-			{
+				localList=initData(localList);
+			YearMap.clear();
+
+
 				for (FileInfo0 info0:cloudUnits)
 				{
 					add2YearMap(info0);
 				}
-			}
-
-				if (!YearMap.isEmpty()) {
-					mPicList.clear();
-					for (Map.Entry<Integer, Map<Integer, List<PicInfoBean>>> entryYear : YearMap.entrySet()) {
-						PicInfoBeanMonth<PicInfoBean> monthInfoBean = new PicInfoBeanMonth();
-						int midx=0;
-						for (Map.Entry<Integer, List<PicInfoBean>> entryMonth : entryYear.getValue().entrySet()) {
-							midx=entryMonth.getKey();
-							monthInfoBean.setUrl(entryMonth.getValue().get(0).getUrl());//第一张图片
-							monthInfoBean.setPicunits(entryMonth.getValue());
-						}
-						if (monthInfoBean.getPicunits().isEmpty()==false) {
-							PicBean<PicInfoBeanMonth> picBean = new PicBean(String.valueOf(entryYear.getKey()), monthInfoBean);
-							picBean.setMonth(midx);
-							mPicList.add(picBean);
-						}
-					}
-				}
+				mPicList=initData(mPicList);
 			}
 		//要有提示用户等待的画面
 		handler.sendEmptyMessage(0);
 	}
 
+
+	private List<PicBean<PicInfoBeanMonth>> initData(List<PicBean<PicInfoBeanMonth>> data){
+		if (!YearMap.isEmpty()) {
+			data.clear();
+			for (Map.Entry<Integer, Map<Integer, List<PicInfoBean>>> entryYear : YearMap.entrySet()) {
+				PicInfoBeanMonth<PicInfoBean> monthInfoBean = new PicInfoBeanMonth();
+				int midx=0;
+				for (Map.Entry<Integer, List<PicInfoBean>> entryMonth : entryYear.getValue().entrySet()) {
+					midx=entryMonth.getKey();
+					monthInfoBean.setUrl(entryMonth.getValue().get(0).getUrl());//第一张图片
+					monthInfoBean.setPicunits(entryMonth.getValue());
+				}
+				if (monthInfoBean.getPicunits().isEmpty()==false) {
+					PicBean<PicInfoBeanMonth> picBean = new PicBean(String.valueOf(entryYear.getKey()), monthInfoBean);
+					picBean.setMonth(midx);
+					data.add(picBean);
+				}
+			}
+		}
+		return data;
+
+	}
 	private void initResourceId() {
 		mTvNumber = (TextView) findViewById(R.id.tv_pic_number);
 		mLvPic = (ListView) findViewById(R.id.lv_pic);
@@ -245,7 +246,7 @@ public class PicActivity extends Activity implements OnClickListener {
 
 	private void initListener() {
 		mIvLeft.setOnClickListener(this);
-		//mTvRight.setOnClickListener(this);
+		mTvRight.setOnClickListener(this);
 		mTvNumber.setOnClickListener(this);
 	}
 
@@ -255,7 +256,7 @@ public class PicActivity extends Activity implements OnClickListener {
 		mTvRight = (TextView) findViewById(R.id.tv_right);
 
 		mTvCenter.setText("照片");
-		//mTvRight.setText("编辑");
+//		mTvRight.setText("编辑");
 	}
 
 	@Override
@@ -268,8 +269,7 @@ public class PicActivity extends Activity implements OnClickListener {
 				break;
 			case R.id.tv_pic_number:
 				bIsUbkList = true;
-				mPicList.clear();
-				onNewThreadRequest();
+				handler.sendEmptyMessage(0);
 				break;
 		}
 	}
@@ -292,39 +292,11 @@ public class PicActivity extends Activity implements OnClickListener {
 	public void onStart() {
 		super.onStart();
 
-		// ATTENTION: This was auto-generated to implement the App Indexing API.
-		// See https://g.co/AppIndexing/AndroidStudio for more information.
-		/*client.connect();
-		Action viewAction = Action.newAction(
-				Action.TYPE_VIEW, // TODO: choose an action type.
-				"Pic Page", // TODO: Define a title for the content shown.
-				// TODO: If you have web page content that matches this app activity's content,
-				// make sure this auto-generated web page URL is correct.
-				// Otherwise, set the URL to null.
-				Uri.parse("http://host/path"),
-				// TODO: Make sure this auto-generated app deep link URI is correct.
-				Uri.parse("android-app://com.chd.photo.ui/http/host/path")
-		);
-		AppIndex.AppIndexApi.start(client, viewAction);*/
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-
-		// ATTENTION: This was auto-generated to implement the App Indexing API.
-		// See https://g.co/AppIndexing/AndroidStudio for more information.
-		/*Action viewAction = Action.newAction(
-				Action.TYPE_VIEW, // TODO: choose an action type.
-				"Pic Page", // TODO: Define a title for the content shown.
-				// TODO: If you have web page content that matches this app activity's content,
-				// make sure this auto-generated web page URL is correct.
-				// Otherwise, set the URL to null.
-				Uri.parse("http://host/path"),
-				// TODO: Make sure this auto-generated app deep link URI is correct.
-				Uri.parse("android-app://com.chd.photo.ui/http/host/path")
-		);
-		AppIndex.AppIndexApi.end(client, viewAction);
-		client.disconnect();*/
 	}
+
 }

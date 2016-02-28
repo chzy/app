@@ -14,7 +14,6 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
@@ -34,7 +33,6 @@ public class PicEditItemAdapter extends BaseAdapter {
         options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.pic_test1)
                 .imageScaleType(ImageScaleType.EXACTLY)
-                .displayer(new RoundedBitmapDisplayer(20))
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .cacheInMemory(false)
                 .cacheOnDisk(true)
@@ -77,31 +75,6 @@ public class PicEditItemAdapter extends BaseAdapter {
 		
 
 		final String url = list.get(position).getUrl();
-		/*if (  ThumUtil.isStartWithTrpc(url))
-		{
-			Thread thread = new Thread(new Runnable() 
-			{
-				@Override
-				public void run() 
-				{
-					final Bitmap bitmap = imageLoader.loadImageSync(url);
-					if (bitmap == null)
-					{
-						return;
-					}
-					context.runOnUiThread(new Runnable() 
-					{
-						@Override
-						public void run() 
-						{
-							holder.iv_pic_info_photo.setImageBitmap(bitmap);
-						}
-					});
-				}
-			});
-			thread.start();
-		}
-		else*/
 		{
 			imageLoader.displayImage(url, holder.iv_pic_info_photo,
 					options, new SimpleImageLoadingListener() {

@@ -323,7 +323,7 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
         mIvLeft = (ImageView) findViewById(R.id.iv_left);
         mTvCenter = (TextView) findViewById(R.id.tv_center);
 
-        mTvCenter.setText("个人信息");
+        mTvCenter.setText("个人中心");
     }
 
     @Override
@@ -468,6 +468,8 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
+                                            ShareUtils shareUtils = new ShareUtils(UserInfoActivity.this);
+                                            shareUtils.setPwd(finalEdit_value);
                                             Toast.makeText(UserInfoActivity.this, "修改密码成功", Toast.LENGTH_SHORT).show();
 
                                         }

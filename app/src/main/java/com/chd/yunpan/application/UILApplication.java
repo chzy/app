@@ -47,7 +47,6 @@ public class UILApplication extends Application {
 		/*	StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyDialog().build());
 			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyDeath().build());*/
 		}
-
 		super.onCreate();
 		FIR.init(this);
 		mInstance = this;

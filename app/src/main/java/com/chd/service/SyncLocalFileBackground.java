@@ -311,7 +311,9 @@ public class SyncLocalFileBackground implements Runnable {
                   // return  false;
                }
             } else {
-                activeProcess.finishProgress();
+                if(activeProcess!=null){
+                    activeProcess.finishProgress();
+                }
                 return false;
             }
         } else {
@@ -323,7 +325,9 @@ public class SyncLocalFileBackground implements Runnable {
                     boolean ret = false;
                     try {
                             ret=tClient.CommitObj(entity.objid, entity.ftype,null);
-                            activeProcess.finishProgress();
+                        if(activeProcess!=null){
+                        activeProcess.finishProgress();
+                        }
                             return ret;
 
                     } catch (TException e) {
@@ -423,7 +427,7 @@ public class SyncLocalFileBackground implements Runnable {
                 return false;
             }
         }
-        return true;
+        return succed;
     }
 
 

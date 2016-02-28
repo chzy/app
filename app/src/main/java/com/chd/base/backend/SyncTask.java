@@ -1,6 +1,10 @@
 package com.chd.base.backend;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.chd.Entity.FilesListEntity;
@@ -29,19 +33,16 @@ public class SyncTask {
 	public List<FileInfo> _CloudList;
 	private FilelistEntity filelistEntity;
 	private final FTYPE _ftype;
-	private final String TAG=this.getClass().getName();
+	private final String TAG = this.getClass().getName();
 	private SyncLocalFileBackground syncLocalFileBackground;
-	//private MediaFileUtil.FileCategory;
+	private Thread netThread;
 
-
-
-	public SyncTask(Context context,FTYPE tp) {
+	public SyncTask(Context context, FTYPE tp) {
 		this.context = context;
-		_ftype=tp;
-		_CloudList=new ArrayList<FileInfo>();
-		dbManager = new MediaMgr(context,_ftype);
-		syncLocalFileBackground =new SyncLocalFileBackground(context);
-		//dbManager.open();
+		_ftype = tp;
+		_CloudList = new ArrayList<FileInfo>();
+		dbManager = new MediaMgr(context, _ftype);
+		syncLocalFileBackground = new SyncLocalFileBackground(context);
 	}
 
 	public FileInfo0 getUnitinfo(int id) {
@@ -50,22 +51,20 @@ public class SyncTask {
 
 	//查询远程对象是否有本地副本. 根据文件名匹配
 	public boolean haveLocalCopy(FileInfo0 info0) {
-		boolean ret=false;
-		if (info0.getObjid()==null)
-		{
+		boolean ret = false;
+		if (info0.getObjid() == null) {
 			Log.d(TAG, "not remote file obj");
 			return false;
 		}
-		if (info0.getSysid() > 0)
-		{
-			if (info0.getFilePath()!=null && info0.getFilePath().indexOf(".")>1 ) {
-					File file=new File(info0.getFilePath());
-				   return  (file.exists() && file.isFile());
+		if (info0.getSysid() > 0) {
+			if (info0.getFilePath() != null && info0.getFilePath().indexOf(".") > 1) {
+				File file = new File(info0.getFilePath());
+				return (file.exists() && file.isFile());
 			}
-			if (info0.getFtype()==null)
+			if (info0.getFtype() == null)
 				info0.setFtype(_ftype);
-			int time=info0.getLastModified();
-			ret=   dbManager.queryLocalInfo(info0.getSysid(),info0);
+			int time = info0.getLastModified();
+			ret = dbManager.queryLocalInfo(info0.getSysid(), info0);
 			/*
 			临时方案 恢复成远程的上传时间
 			* */
@@ -88,8 +87,6 @@ public class SyncTask {
 	}
 
 
-
-
 	public void flush() {
 		filelistEntity.getBklist().clear();
 		//filelistEntity.getUbklist().clear();
@@ -99,32 +96,30 @@ public class SyncTask {
 	public synchronized List<FileInfo0> getCloudUnits(int begin, int max) {
 		/*if (filelistEntity!=null && filelistEntity.getBklist()!=null)
 			return filelistEntity.getBklist();*/
-		List<FileInfo0> flist=new ArrayList<>();
+		List<FileInfo0> flist = new ArrayList<>();
 		try {
 			final FilesListEntity filesListEntity = TClient.getinstance().queryFileList(_ftype, begin, max);
-			flist=filesListEntity.getList();
-			if (flist!=null)
+			flist = filesListEntity.getList();
+			if (flist != null)
 				Collections.sort(flist, new SortBydesc());
 			else
 				return new ArrayList<FileInfo0>();
-		
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			flist=new ArrayList<FileInfo0>();
+			flist = new ArrayList<FileInfo0>();
 		}
-		return  flist;
+		return flist;
 	}
 
-	public FileInfo0 queryLocalInfo(int sysid)
-	{
-		FileInfo0 fileInfo0=new FileInfo0();
+	public FileInfo0 queryLocalInfo(int sysid) {
+		FileInfo0 fileInfo0 = new FileInfo0();
 		fileInfo0.setSysid(sysid);
 		fileInfo0.setFtype(_ftype);
-		if ( dbManager.queryLocalInfo(sysid,fileInfo0))
+		if (dbManager.queryLocalInfo(sysid, fileInfo0))
 			return fileInfo0;
-		return  null;
+		return null;
 	}
-
 
 
 	public List<FileLocal> getLocalUnits(int begin, int max) {
@@ -141,7 +136,7 @@ public class SyncTask {
 
 	public FilelistEntity analyMusicUnits(List<FileInfo0> remotelist) {
 		filelistEntity = new FilelistEntity();
-		dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Music, new String[]{"mp3", "wav","m4a","flac","ape" }, true);
+		dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Music, new String[]{"mp3", "wav", "m4a", "flac", "ape"}, true);
 		filelistEntity.setLocallist(dbManager.getLocalUnits());
 		dbManager.anlayLocalUnits(remotelist, filelistEntity);
 		return filelistEntity;
@@ -149,7 +144,7 @@ public class SyncTask {
 
 	public FilelistEntity analyOtherUnits(List<FileInfo0> remotelist) {
 		filelistEntity = new FilelistEntity();
-		dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Other, new String[]{"pdf", "xls", "doc","docx"}, true);
+		dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Other, new String[]{"pdf", "xls", "doc", "docx"}, true);
 		filelistEntity.setLocallist(dbManager.getLocalUnits());
 		dbManager.anlayLocalUnits(remotelist, filelistEntity);
 		return filelistEntity;
@@ -163,12 +158,13 @@ public class SyncTask {
 		return filelistEntity;
 	}
 
-	public List<FileInfo0> getDownList(int max){
+	public List<FileInfo0> getDownList(int max) {
 		dbManager.open();
-		List<FileInfo0> lst= dbManager.getUpLoadTask(max);
+		List<FileInfo0> lst = dbManager.getUpLoadTask(max);
 		dbManager.close();
 		return lst;
 	}
+
 	protected class SortBydesc implements Comparator<Object> {
 		@Override
 		public int compare(Object o1, Object o2) {
@@ -180,57 +176,105 @@ public class SyncTask {
 		}
 	}
 
+	AlertDialog dialog;
 	/*
 	activeProcess 对象 实现进度条展现
 	beeque  放入数据库 做队列 通过服务方式后台下载
 	* */
+	public void uploadList(final List<FileInfo0> files, final ActiveProcess activeProcess, final Handler mHandler) {
+		dialog=new AlertDialog.Builder(activeProcess)
+		.setTitle("正在上传")
+		.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i) {
+					dialogInterface.dismiss();
+			}
+		})
+		.setPositiveButton("停止", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i) {
+				if(netThread!=null){
+					netThread.interrupt();
+					dialogInterface.dismiss();
+				}
+			}
+		}).create();
+		dialog.show();
+		netThread=new Thread(){
+			@Override
+			public void run() {
+				int i=0;
+				ArrayList<Integer> upload=new ArrayList<>();
+				for (FileInfo0 item :
+						files) {
+					boolean result = upload(item, null, false);
+					if(!result){
+						upload.add(i);
+					}
+					final String name=item.getFilename();
+					i++;
+					final int finalI = i;
+					activeProcess.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							dialog.setTitle("正在上传"+ finalI +"/"+files.size());
+							dialog.setMessage(name);
+						}
+					});
+				}
+				activeProcess.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						dialog.dismiss();
+					}
+				});
+				Message msg=new Message();
+				msg.what=998;
+				msg.obj=upload;
+				mHandler.sendMessage(msg);
+				netThread=null;
+
+			}
+		};
+		netThread.start();
 
 
-	public void upload( final FileInfo0 item, final ActiveProcess activeProcess,boolean beeque) {
+	}
+
+
+
+	/*
+	activeProcess 对象 实现进度条展现
+	beeque  放入数据库 做队列 通过服务方式后台下载
+	* */
+	public boolean upload(final FileInfo0 item, final ActiveProcess activeProcess, boolean beeque) {
 
 		if (!item.isSetFtype())
 			item.setFtype(_ftype);
-		/*if (beeque)
-		{
-			dbManager.addUpLoadingFile(item);
-			return;
-		}*/
-		try
-		{
-				dbManager.open();
-				dbManager.addUpLoadingFile(item);
-				dbManager.close();
-				//	return;
 
-		}catch (Exception e)
-		{
+		try {
+			dbManager.open();
+			dbManager.addUpLoadingFile(item);
+			dbManager.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log.e(TAG, "upload fail " + e.getMessage());
 			activeProcess.setParMessage("上传失败");
 			activeProcess.finishProgress();
 		}
-		/*Thread thread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				new SyncLocalFileBackground(context).uploadBigFile(item, activeProcess);
-			}
-		});
-		thread.start();*/
-		syncLocalFileBackground.uploadBigFile(item, activeProcess);
+		return syncLocalFileBackground.uploadBigFile(item, activeProcess);
 	}
 
-	public void uploadFileOvWrite( final FileInfo0 item, final ActiveProcess activeProcess,boolean beeque) {
+	public void uploadFileOvWrite(final FileInfo0 item, final ActiveProcess activeProcess, boolean beeque) {
 
 		if (!item.isSetFtype())
 			item.setFtype(_ftype);
 
-		try
-		{
+		try {
 			dbManager.open();
 			dbManager.addUpLoadingFile(item);
 			dbManager.close();
-		}catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log.e(TAG, "upload fail " + e.getMessage());
 			activeProcess.setParMessage("上传失败");
@@ -239,13 +283,83 @@ public class SyncTask {
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				new SyncLocalFileBackground(context).uploadFileOvWrite(item, activeProcess,null);
+				new SyncLocalFileBackground(context).uploadFileOvWrite(item, activeProcess, null);
 			}
 		});
 		thread.start();
 	}
 
-	public void download(final FileInfo0 item, final ActiveProcess activeProcess,boolean beeque) {
+
+	/*
+	activeProcess 对象 实现进度条展现
+	beeque  放入数据库 做队列 通过服务方式后台下载
+	* */
+	public void downloadList(final List<FileInfo0> files, final ActiveProcess activeProcess, final Handler mHandler) {
+		dialog=new AlertDialog.Builder(activeProcess)
+				.setTitle("正在下载")
+				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						dialogInterface.dismiss();
+					}
+				})
+				.setPositiveButton("停止", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						if(netThread!=null){
+							netThread.interrupt();
+							dialogInterface.dismiss();
+						}
+					}
+				}).create();
+		dialog.show();
+		netThread=new Thread(){
+			@Override
+			public void run() {
+				int i=0;
+				ArrayList<Integer> download=new ArrayList<>();
+				for (FileInfo0 item :
+						files) {
+					boolean result = download(item, null, false);
+					if(!result){
+						download.add(i);
+					}
+					final String name=item.getFilename();
+					i++;
+					final int finalI = i;
+					activeProcess.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							dialog.setTitle("正在下载"+ finalI +"/"+files.size());
+							dialog.setMessage(name);
+						}
+					});
+				}
+				activeProcess.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						dialog.dismiss();
+					}
+				});
+				Message msg=new Message();
+				msg.what=997;
+				msg.obj=download;
+				mHandler.sendMessage(msg);
+				netThread=null;
+
+			}
+		};
+		netThread.start();
+
+
+	}
+
+
+
+
+
+
+	public boolean download(final FileInfo0 item, final ActiveProcess activeProcess, boolean beeque) {
 
 		//ProgressBar bar = activity.getProgressBar();
 		if (!item.isSetFtype())
@@ -255,17 +369,15 @@ public class SyncTask {
 			dbManager.addDownloadingFile(item);
 			return;
 		}*/
-		try
-		{
+		try {
 			dbManager.open();
 			dbManager.addUpLoadingFile(item);
 			dbManager.close();
 			//	return;
 
-		}catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
-			Log.e(TAG,"upload fail "+e.getMessage());
+			Log.e(TAG, "upload fail " + e.getMessage());
 			activeProcess.setParMessage("下载失败");
 			activeProcess.finishProgress();
 		}
@@ -279,17 +391,89 @@ public class SyncTask {
 			}
 		});
 		thread.start();*/
-		syncLocalFileBackground.downloadBigFile(item, activeProcess);
+		return syncLocalFileBackground.downloadBigFile(item, activeProcess);
 	}
 
 
-	public boolean DelRemoteObj(FileInfo0 fileInfo0)
-	{
-		 try {
-			return  TClient.getinstance().delObj(fileInfo0.getObjid(),fileInfo0.getFtype());
+	public boolean DelRemoteObj(FileInfo0 fileInfo0) {
+		try {
+			return TClient.getinstance().delObj(fileInfo0.getObjid(), fileInfo0.getFtype());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	return false;
+		return false;
 	}
+
+
+
+	/*
+	activeProcess 对象 实现进度条展现
+	beeque  放入数据库 做队列 通过服务方式后台下载
+	* */
+	public void delList(final List<FileInfo0> files, final ActiveProcess activeProcess, final Handler mHandler, final boolean bIsUbkList) {
+		dialog=new AlertDialog.Builder(activeProcess)
+				.setTitle("正在删除")
+				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						dialogInterface.dismiss();
+					}
+				})
+				.setPositiveButton("停止", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						if(netThread!=null){
+							netThread.interrupt();
+							dialogInterface.dismiss();
+						}
+					}
+				}).create();
+		dialog.show();
+		netThread=new Thread(){
+			@Override
+			public void run() {
+				int i=0;
+				ArrayList<Integer> download=new ArrayList<>();
+				for (FileInfo0 item :
+						files) {
+					boolean result;
+					if(bIsUbkList){
+						//是未备份
+						result = new File(item.getFilePath()).delete();
+					}else{
+						result=DelRemoteObj(item);
+					}
+					if(!result){
+						download.add(i);
+					}
+					final String name=item.getFilename();
+					i++;
+					final int finalI = i;
+					activeProcess.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							dialog.setTitle("正在删除"+ finalI +"/"+files.size());
+							dialog.setMessage(name);
+						}
+					});
+				}
+				activeProcess.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						dialog.dismiss();
+					}
+				});
+				Message msg=new Message();
+				msg.what=996;
+				msg.obj=download;
+				mHandler.sendMessage(msg);
+				netThread=null;
+
+			}
+		};
+		netThread.start();
+
+
+	}
+
 }
