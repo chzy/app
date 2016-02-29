@@ -183,7 +183,7 @@ public class PicActivity extends Activity implements OnClickListener {
 		//显示未备份文件
 
 		if (filelistEntity != null) {
-			YearMap=new HashMap<Integer, Map<Integer, List<PicInfoBean>>>();
+			YearMap=new HashMap<>();
 
 
 				for (FileLocal fileLocal : fileLocals)
@@ -200,8 +200,6 @@ public class PicActivity extends Activity implements OnClickListener {
 				}
 				localList=initData(localList);
 				YearMap.clear();
-
-
 				for (FileInfo0 info0:cloudUnits)
 				{
 					add2YearMap(info0);
@@ -218,17 +216,20 @@ public class PicActivity extends Activity implements OnClickListener {
 		if (!YearMap.isEmpty()) {
 			data.clear();
 			for (Map.Entry<Integer, Map<Integer, List<PicInfoBean>>> entryYear : YearMap.entrySet()) {
-				PicInfoBeanMonth<PicInfoBean> monthInfoBean = new PicInfoBeanMonth();
+
 				int midx=0;
-				for (Map.Entry<Integer, List<PicInfoBean>> entryMonth : entryYear.getValue().entrySet()) {
+				int year=entryYear.getKey();
+				for (Map.Entry<Integer,List<PicInfoBean>> entryMonth:
+				 entryYear.getValue().entrySet() ){
+					PicInfoBeanMonth<PicInfoBean> monthInfoBean = new PicInfoBeanMonth();
 					midx=entryMonth.getKey();
 					monthInfoBean.setUrl(entryMonth.getValue().get(0).getUrl());//第一张图片
 					monthInfoBean.setPicunits(entryMonth.getValue());
-				}
-				if (monthInfoBean.getPicunits().isEmpty()==false) {
-					PicBean<PicInfoBeanMonth> picBean = new PicBean(String.valueOf(entryYear.getKey()), monthInfoBean);
-					picBean.setMonth(midx);
-					data.add(picBean);
+					if (!monthInfoBean.getPicunits().isEmpty()) {
+						PicBean<PicInfoBeanMonth> picBean = new PicBean(String.valueOf(year), monthInfoBean);
+						picBean.setMonth(midx);
+						data.add(picBean);
+					}
 				}
 			}
 		}

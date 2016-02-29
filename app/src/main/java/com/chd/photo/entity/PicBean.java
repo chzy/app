@@ -47,7 +47,15 @@ public class PicBean  <T> implements Serializable,Comparable<PicBean>{
 		if(year<picYear){
 			return 1;
 		}else if(year==picYear){
-			return 0;
+			int month=this.getMonth();
+			int picMonth=picBean.getMonth();
+			if(month<picMonth){
+				return 1;
+			}else if(month==picMonth){
+				return 0;
+			}else{
+				return -1;
+			}
 		}else{
 			return -1;
 		}

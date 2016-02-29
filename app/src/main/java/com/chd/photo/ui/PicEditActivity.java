@@ -115,26 +115,11 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 		initListener();
 		picEditAdapter = new PicEditAdapter(PicEditActivity.this, mPicList);
 		mLvPic.setAdapter(picEditAdapter);
-		onNewThreadRequest();
+//		onNewThreadRequest();
+		syncTask=new SyncTask(this,FTYPE.PICTURE);
+		initData();
 	}
 
-	private void onNewThreadRequest() {
-
-		Thread thread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				if (syncTask == null)
-					syncTask = new SyncTask(PicEditActivity.this, FTYPE.PICTURE);
-
-				runOnUiThread(new Runnable() {
-					public void run() {
-						initData();
-					}
-				});
-			}
-		});
-		thread.start();
-	}
 
 	private void initData() {
 
@@ -277,15 +262,18 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 					int idx = bean.getUrl().indexOf("://");
 					if (idx < 0) {
 						Log.e(TAG, "error file path fail!!!!");
-						continue;
 					}
 					idx += 3;
 					String uri = bean.getUrl().substring(idx);
-					if (bean.isbIsUbkList()) {
+//					if (bean.isbIsUbkList()) {
+						//是备份的
 						fileInfo0.setFilePath(uri);
 						fileInfo0.setObjid(MediaFileUtil.getFnameformPath(uri));
-					} else {
-						fileInfo0.setObjid(uri);
+//					} else {
+//						fileInfo0.setObjid(MediaFileUtil.getFnameformPath(uri));
+//					}
+					if(fileInfo0.getFtype()==null){
+						fileInfo0.setFtype(FTYPE.PICTURE);
 					}
 					info0s.add(fileInfo0);
 				}
@@ -311,20 +299,24 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 					int idx = bean.getUrl().indexOf("://");
 					if (idx < 0) {
 						Log.e(TAG, "error file path fail!!!!");
-						continue;
+//						continue;
 					}
 					idx += 3;
 					String uri = bean.getUrl().substring(idx);
 					if (bean.isbIsUbkList()) {
+						//是未备份的
 						fileInfo0.setFilePath(uri);
-						fileInfo0.setObjid(MediaFileUtil.getFnameformPath(uri));
 					} else {
 						if(StringUtils.isNullOrEmpty(fileInfo0.getFilePath())){
 							fileInfo0.setFilePath(path+"/"+uri);
 						}
-						fileInfo0.setObjid(uri);
+					}
+					fileInfo0.setObjid(MediaFileUtil.getFnameformPath(uri));
+					if(fileInfo0.getFtype()==null){
+						fileInfo0.setFtype(FTYPE.PICTURE);
 					}
 					info0s.add(fileInfo0);
+
 				}
 				if (bIsUbkList) {
 					syncTask.uploadList(info0s, this, handler);

@@ -209,13 +209,8 @@ public class SyncTask {
 				ArrayList<Integer> upload=new ArrayList<>();
 				for (FileInfo0 item :
 						files) {
-					boolean result = upload(item, null, false);
-					Log.d("lmj","第"+i+"个上传状态:"+result);
-					if(!result){
-						upload.add(i);
-					}
-					final String name=item.getFilename();
 					i++;
+					final String name=item.getFilename();
 					final int finalI = i;
 					activeProcess.runOnUiThread(new Runnable() {
 						@Override
@@ -224,6 +219,11 @@ public class SyncTask {
 							dialog.setTitle("正在上传"+ finalI +"/"+files.size());
 						}
 					});
+					boolean result = upload(item, null, false);
+					Log.d("lmj","第"+i+"个上传状态:"+result);
+					if(!result){
+						upload.add(i-1);
+					}
 				}
 				activeProcess.runOnUiThread(new Runnable() {
 					@Override
@@ -323,10 +323,6 @@ public class SyncTask {
 				ArrayList<Integer> download=new ArrayList<>();
 				for (FileInfo0 item :
 						files) {
-					boolean result = download(item, null, false);
-//					if(!result){
-//						download.add(i);
-//					}
 					final String name=item.getFilename();
 					i++;
 					final int finalI = i;
@@ -337,6 +333,11 @@ public class SyncTask {
 							dialog.setMessage(name);
 						}
 					});
+					boolean result = download(item, null, false);
+//					if(!result){
+//						download.add(i);
+//					}
+
 				}
 				activeProcess.runOnUiThread(new Runnable() {
 					@Override
@@ -440,6 +441,16 @@ public class SyncTask {
 				for (FileInfo0 item :
 						files) {
 					boolean result;
+					final String name=item.getFilename();
+					i++;
+					final int finalI = i;
+					activeProcess.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							dialog.setMessage(name);
+							dialog.setTitle("正在删除"+ finalI +"/"+files.size());
+						}
+					});
 					if(bIsUbkList){
 						//是未备份
 						File f=new File(item.getFilePath());
@@ -453,18 +464,9 @@ public class SyncTask {
 					}
 					Log.d("lmj","第"+i+"删除状态:"+result);
 					if(!result){
-						del.add(i);
+						del.add(i-1);
 					}
-					final String name=item.getFilename();
-					i++;
-					final int finalI = i;
-					activeProcess.runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							dialog.setMessage(name);
-							dialog.setTitle("正在删除"+ finalI +"/"+files.size());
-						}
-					});
+
 				}
 				activeProcess.runOnUiThread(new Runnable() {
 					@Override
