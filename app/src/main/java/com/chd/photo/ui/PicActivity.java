@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.backend.SyncTask;
+import com.chd.contacts.vcard.StringUtils;
 import com.chd.photo.adapter.PicAdapter;
 import com.chd.photo.entity.PicBean;
 import com.chd.photo.entity.PicInfoBean;
@@ -191,10 +192,14 @@ public class PicActivity extends Activity implements OnClickListener {
 					if (fileLocal.bakuped)
 						continue;
 					FileInfo0 	info = syncTask.queryLocalInfo(fileLocal.sysid);
+
 					if (info==null)
 					{
 						Log.d("PicActity", fileLocal.fname + " not found in mediaStore");
 						continue;
+					}
+					if(StringUtils.isNullOrEmpty(info.getFilename())){
+						info.setFilename(fileLocal.fname);
 					}
 					add2YearMap(info);
 				}

@@ -186,6 +186,7 @@ public class SyncTask {
 	public void uploadList(final List<FileInfo0> files, final ActiveProcess activeProcess, final Handler mHandler) {
 		dialog=new AlertDialog.Builder(activeProcess)
 		.setTitle("正在上传")
+				.setMessage("")
 		.setNegativeButton("取消", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
@@ -215,6 +216,7 @@ public class SyncTask {
 					activeProcess.runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
+							Log.d("liumj","文件名:"+name);
 							dialog.setMessage(name);
 							dialog.setTitle("正在上传"+ finalI +"/"+files.size());
 						}
@@ -300,6 +302,7 @@ public class SyncTask {
 	public void downloadList(final List<FileInfo0> files, final ActiveProcess activeProcess, final Handler mHandler) {
 		dialog=new AlertDialog.Builder(activeProcess)
 				.setTitle("正在下载")
+				.setMessage("")
 				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int i) {
@@ -329,8 +332,9 @@ public class SyncTask {
 					activeProcess.runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							dialog.setTitle("正在下载"+ finalI +"/"+files.size());
+							Log.d("lmj","文件名:"+name);
 							dialog.setMessage(name);
+							dialog.setTitle("正在下载"+ finalI +"/"+files.size());
 						}
 					});
 					boolean result = download(item, null, false);
@@ -417,6 +421,7 @@ public class SyncTask {
 	public void delList(final List<FileInfo0> files, final ActiveProcess activeProcess, final Handler mHandler, final boolean bIsUbkList) {
 		dialog=new AlertDialog.Builder(activeProcess)
 				.setTitle("正在删除")
+				.setMessage("")
 				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int i) {
@@ -447,6 +452,7 @@ public class SyncTask {
 					activeProcess.runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
+							Log.d("lmj","文件名:"+name);
 							dialog.setMessage(name);
 							dialog.setTitle("正在删除"+ finalI +"/"+files.size());
 						}

@@ -174,6 +174,7 @@ public class MediaMgr  {
 		{
 			FileInfo fileInfo= couldlist.get(j);
 			item=new FileInfo0(fileInfo);
+			item.setFilename(item.getObjid());
 			for (FileLocal fileLocal: locallist)
 			{
 				if (item.getObjid().equals(fileLocal.fname)) {

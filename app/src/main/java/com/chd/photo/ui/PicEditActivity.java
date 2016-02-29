@@ -272,6 +272,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 //					} else {
 //						fileInfo0.setObjid(MediaFileUtil.getFnameformPath(uri));
 //					}
+					fileInfo0.setFilename(MediaFileUtil.getFnameformPath(uri));
 					if(fileInfo0.getFtype()==null){
 						fileInfo0.setFtype(FTYPE.PICTURE);
 					}
@@ -311,6 +312,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 							fileInfo0.setFilePath(path+"/"+uri);
 						}
 					}
+						fileInfo0.setFilename(MediaFileUtil.getFnameformPath(uri));
 					fileInfo0.setObjid(MediaFileUtil.getFnameformPath(uri));
 					if(fileInfo0.getFtype()==null){
 						fileInfo0.setFtype(FTYPE.PICTURE);
