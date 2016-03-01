@@ -13,10 +13,10 @@ import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import java.util.List;
 
@@ -28,21 +28,43 @@ public class PicEditItemAdapter extends BaseAdapter {
     private Activity context;
     private List<PicEditItemBean> list;
 	private LayoutInflater mInflater;
+	private boolean isEdit;
 
-    public PicEditItemAdapter(Activity context, List<PicEditItemBean> list) {
+    public PicEditItemAdapter(Activity context, List<PicEditItemBean> list,boolean isEdit) {
         this.context = context;
         this.list = list;
+	    this.isEdit=isEdit;
 	    this.mInflater=LayoutInflater.from(context);
 	    this.imageLoader=ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.pic_test1)
-                .imageScaleType(ImageScaleType.EXACTLY)
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .cacheInMemory(false)
-                .cacheOnDisk(true)
-                .considerExifParams(true)
-                .extraForDownloader(new ShareUtils(context).getStorePathStr()) // imageload 加载图片时 会在程序目录下载对应的原文件
-                .build();
+//        options = new DisplayImageOptions.Builder()
+//                .imageScaleType(ImageScaleType.EXACTLY)
+//                .bitmapConfig(Bitmap.Config.RGB_565)
+//                .cacheInMemory(false)
+//                .cacheOnDisk(true)
+//                .considerExifParams(true)
+//                 // imageload 加载图片时 会在程序目录下载对应的原文件
+//                .build();
+
+	    options = new DisplayImageOptions.Builder()
+			    .resetViewBeforeLoading(true)
+			    .cacheOnDisk(true).cacheInMemory(true)
+			    .cacheOnDisc(true).imageScaleType(ImageScaleType.EXACTLY)
+			    .bitmapConfig(Bitmap.Config.RGB_565)
+			    .considerExifParams(true)
+
+			    .displayer(new SimpleBitmapDisplayer()).build();
+
+
+	   options= new DisplayImageOptions.Builder()
+			    .cacheInMemory(true).cacheOnDisk(true)
+			    .considerExifParams(true)
+			    .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+			    .bitmapConfig(Bitmap.Config.RGB_565)
+			    .resetViewBeforeLoading(false)
+			   .extraForDownloader(new ShareUtils(context).getStorePathStr())
+			    .displayer(new RoundedBitmapDisplayer(20))
+			    .displayer(new FadeInBitmapDisplayer(0)).build();
+
     }
 
 	@Override
@@ -72,35 +94,27 @@ public class PicEditItemAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) converView.getTag();
 		}
+		if(isEdit){
 
-		holder.iv_pic_edit_check.setVisibility(list.get(position).isEdit() ? View.VISIBLE : View.GONE);
-		holder.iv_pic_edit_check.setImageResource(list.get(position).isSelect() ? R.drawable.pic_edit_photo_checked : R.drawable.pic_edit_photo_check);
-		
+			holder.iv_pic_edit_check.setVisibility(View.VISIBLE);
+		}else{
+			holder.iv_pic_edit_check.setVisibility(View.GONE);
 
-		final String url = list.get(position).getUrl();
-		{
-			imageLoader.displayImage(url, holder.iv_pic_info_photo,
-					options, new SimpleImageLoadingListener() {
-						@Override
-						public void onLoadingStarted(String imageUri, View view) {
-						}
-
-						@Override
-						public void onLoadingFailed(String imageUri, View view,
-								FailReason failReason) {
-						}
-
-						@Override
-						public void onLoadingComplete(String imageUri, View view,
-								Bitmap loadedImage) {
-						}
-					}, new ImageLoadingProgressListener() {
-						@Override
-						public void onProgressUpdate(String imageUri, View view,
-								int current, int total) {
-						}
-					});
 		}
+
+		holder.iv_pic_edit_check.setImageResource(list.get(position).isSelect() ? R.drawable.pic_edit_photo_checked : R.drawable.pic_edit_photo_check);
+
+			String url = list.get(position).getUrl();
+			{
+				imageLoader.displayImage(url, holder.iv_pic_info_photo,
+						options);
+
+				holder.iv_pic_info_photo.setTag(url);
+			}
+
+
+
+
 		
 		return converView;
 	}

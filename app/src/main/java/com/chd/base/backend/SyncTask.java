@@ -206,19 +206,26 @@ public class SyncTask {
 		netThread=new Thread(){
 			@Override
 			public void run() {
+
 				int i=0;
 				ArrayList<Integer> upload=new ArrayList<>();
+				try{
 				for (FileInfo0 item :
 						files) {
+
+					if(Thread.currentThread().isInterrupted()){
+						throw new InterruptedException();
+					}
 					i++;
 					final String name=item.getFilename();
 					final int finalI = i;
+					final int process= (int) ((float)i/files.size()*100);
 					activeProcess.runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
 							Log.d("liumj","文件名:"+name);
 							dialog.setMessage(name);
-							dialog.setTitle("正在上传"+ finalI +"/"+files.size());
+							dialog.setTitle("正在上传:"+ finalI +"/"+files.size()+"  "+process+"%");
 						}
 					});
 					boolean result = upload(item, null, false);
@@ -227,17 +234,24 @@ public class SyncTask {
 						upload.add(i-1);
 					}
 				}
-				activeProcess.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						dialog.dismiss();
-					}
-				});
-				Message msg=new Message();
-				msg.what=998;
-				msg.obj=upload;
-				mHandler.sendMessage(msg);
-				netThread=null;
+
+				}catch (Exception e){
+					//中断线程
+					Log.e("lmj","上传中断");
+					return ;
+				}finally {
+					activeProcess.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							dialog.dismiss();
+						}
+					});
+					Message msg=new Message();
+					msg.what=998;
+					msg.obj=upload;
+					mHandler.sendMessage(msg);
+					netThread=null;
+				}
 
 			}
 		};
@@ -322,19 +336,25 @@ public class SyncTask {
 		netThread=new Thread(){
 			@Override
 			public void run() {
+
 				int i=0;
 				ArrayList<Integer> download=new ArrayList<>();
+				try{
 				for (FileInfo0 item :
 						files) {
+					if(Thread.currentThread().isInterrupted()){
+						throw new InterruptedException();
+					}
 					final String name=item.getFilename();
 					i++;
 					final int finalI = i;
+					final int process= (int) ((float)i/files.size()*100);
 					activeProcess.runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
 							Log.d("lmj","文件名:"+name);
 							dialog.setMessage(name);
-							dialog.setTitle("正在下载"+ finalI +"/"+files.size());
+							dialog.setTitle("正在下载:"+ finalI +"/"+files.size()+"  "+process+"%");
 						}
 					});
 					boolean result = download(item, null, false);
@@ -343,18 +363,23 @@ public class SyncTask {
 //					}
 
 				}
-				activeProcess.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						dialog.dismiss();
-					}
-				});
-				Message msg=new Message();
-				msg.what=997;
-				msg.obj=download;
-				mHandler.sendMessage(msg);
-				netThread=null;
-
+				}catch (Exception e){
+					//中断线程
+					Log.e("lmj","下载中断");
+					return ;
+				}finally {
+					activeProcess.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							dialog.dismiss();
+						}
+					});
+					Message msg=new Message();
+					msg.what=997;
+					msg.obj=download;
+					mHandler.sendMessage(msg);
+					netThread=null;
+				}
 			}
 		};
 		netThread.start();
@@ -443,48 +468,56 @@ public class SyncTask {
 			public void run() {
 				int i=0;
 				ArrayList<Integer> del=new ArrayList<>();
-				for (FileInfo0 item :
-						files) {
-					boolean result;
-					final String name=item.getFilename();
-					i++;
-					final int finalI = i;
+				try {
+					for (FileInfo0 item :
+							files) {
+						boolean result;
+						final String name = item.getFilename();
+						i++;
+						final int finalI = i;
+						final int process = (int) ((float) i / files.size() * 100);
+						activeProcess.runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								Log.d("lmj", "文件名:" + name);
+								dialog.setMessage(name);
+								dialog.setTitle("正在删除" + finalI + "/" + files.size() + "  " + process + "%");
+							}
+						});
+						if (bIsUbkList) {
+							//是未备份
+							File f = new File(item.getFilePath());
+							result = f.delete();
+							if (result) {
+								Intent media = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(f));
+								activeProcess.sendBroadcast(media);
+							}
+						} else {
+							result = DelRemoteObj(item);
+						}
+						Log.d("lmj", "第" + i + "删除状态:" + result);
+						if (!result) {
+							del.add(i - 1);
+						}
+					}
+				}catch (Exception E){
+					//中断线程
+					Log.e("lmj","删除中断");
+					return ;
+				}finally {
 					activeProcess.runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							Log.d("lmj","文件名:"+name);
-							dialog.setMessage(name);
-							dialog.setTitle("正在删除"+ finalI +"/"+files.size());
+							dialog.dismiss();
 						}
 					});
-					if(bIsUbkList){
-						//是未备份
-						File f=new File(item.getFilePath());
-						result =f.delete();
-						if(result){
-						Intent media = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(f));
-						activeProcess.sendBroadcast(media);
-						}
-					}else{
-						result=DelRemoteObj(item);
-					}
-					Log.d("lmj","第"+i+"删除状态:"+result);
-					if(!result){
-						del.add(i-1);
-					}
-
+					Message msg=new Message();
+					msg.what=996;
+					msg.obj=del;
+					mHandler.sendMessage(msg);
+					netThread=null;
 				}
-				activeProcess.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						dialog.dismiss();
-					}
-				});
-				Message msg=new Message();
-				msg.what=996;
-				msg.obj=del;
-				mHandler.sendMessage(msg);
-				netThread=null;
+
 			}
 		};
 		netThread.start();

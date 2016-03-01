@@ -41,11 +41,11 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="center"
-        android:background="#ffffff"
         android:columnWidth="80dp"
         android:listSelector="@null"
+        android:background="@android:color/transparent"
         android:horizontalSpacing="1dp"
-        android:numColumns="auto_fit"
+        android:numColumns="4"
         android:stretchMode="columnWidth"
         android:verticalSpacing="1dp" >
     </com.chd.yunpan.utils.MyGridView>

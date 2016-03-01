@@ -234,15 +234,13 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 				mLvPicEditView.setVisibility(bTag ? View.GONE : View.VISIBLE);
 				mTvRight.setText(bTag ? "编辑" : "取消");
 				mTvRight.setTag(!bTag);
-				for (PicEditBean picEditBean : mPicList) {
-					picEditBean.setEdit(!bTag);
-					picEditBean.setSelect(false);
-					for (PicEditItemBean picEditItemBean : picEditBean.getList()) {
-						picEditItemBean.setEdit(!bTag);
-						picEditBean.setSelect(false);
-					}
+				if(!bTag){
+				picEditAdapter.setEdit(true);
+				}else{
+					picEditAdapter.setEdit(false);
 				}
-				handler.sendEmptyMessage(0);
+
+//				handler.sendEmptyMessage(0);
 				break;
 			case R.id.lv_pic_edit_del: {
 			//多选删除

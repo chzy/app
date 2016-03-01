@@ -17,8 +17,6 @@ import com.chd.photo.entity.PicEditItemBean;
 import com.chd.photo.ui.PicDetailActivity;
 import com.chd.yunpan.R;
 import com.chd.yunpan.utils.MyGridView;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
 import java.util.List;
 
@@ -27,19 +25,23 @@ public class PicEditAdapter extends BaseAdapter {
 
 	private Activity context;
 	private List<PicEditBean> list;
-	private ImageLoader imageLoader;
 	private LayoutInflater mInflater;
+	private boolean isEdit;
 
 	public PicEditAdapter(Activity context, List<PicEditBean> list) {
 		this.context = context;
 		this.list = list;
-		imageLoader=ImageLoader.getInstance();
 		mInflater=LayoutInflater.from(context);
 	}
 
 	public void setData(List<PicEditBean> data){
 		this.list=data;
 		this.notifyDataSetChanged();
+	}
+
+	public void setEdit(boolean isEdit){
+		this.isEdit=isEdit;
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -70,34 +72,38 @@ public class PicEditAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) converView.getTag();
 		}
-		holder.tv_pic_edit_date.setText(list.get(position).getDate());
-		holder.tv_pic_edit_group_check.setImageResource(list.get(position).isSelect() ? R.drawable.pic_edit_photo_checked : R.drawable.pic_edit_photo_group_check);
-		if (holder.mlv_pic_edit_gridview != null) {
-			List<PicEditItemBean> list = this.list.get(position).getList();
-			holder.mlv_pic_edit_gridview.setAdapter(new PicEditItemAdapter(context, list));
-		}
+		PicEditBean picEditBean = list.get(position);
+		holder.tv_pic_edit_date.setText(picEditBean.getDate());
+		holder.tv_pic_edit_group_check.setImageResource(picEditBean.isSelect() ? R.drawable.pic_edit_photo_checked : R.drawable.pic_edit_photo_group_check);
+//		holder.mlv_pic_edit_gridview.setVisibility(View.GONE);
+//		if(picEditBean.getList()!=null&&picEditBean.getList().size()>0){
+//			holder.mlv_pic_edit_gridview.setVisibility(View.VISIBLE);
+			List<PicEditItemBean> data = picEditBean.getList();
+			holder.mlv_pic_edit_gridview.setAdapter(new PicEditItemAdapter(context, data,isEdit));
 
-		holder.mlv_pic_edit_gridview.setOnScrollListener(new PauseOnScrollListener(imageLoader,true,true));
-		holder.mlv_pic_edit_gridview.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-				if (list.get(position).isEdit())
-				{
-					boolean bSel = list.get(position).getList().get(i).isSelect();
-					list.get(position).getList().get(i).setSelect(!bSel);
-					((PicEditItemAdapter)adapterView.getAdapter()).notifyDataSetChanged();
+//		holder.mlv_pic_edit_gridview.setOnScrollListener(new PauseOnScrollListener(true,true));
+			holder.mlv_pic_edit_gridview.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+					if (isEdit)
+					{
+						boolean bSel = list.get(position).getList().get(i).isSelect();
+						list.get(position).getList().get(i).setSelect(!bSel);
+						((PicEditItemAdapter)adapterView.getAdapter()).notifyDataSetChanged();
+					}
+					else
+					{
+						Intent intent = new Intent(context, PicDetailActivity.class);
+						intent.putExtra("ubklist", list.get(position).getList().get(i).isbIsUbkList());
+						intent.putExtra("bean",list.get(position).getList().get(i));
+						intent.putExtra("pos",position);
+						intent.putExtra("pos2",i);
+						context.startActivityForResult(intent, 0x12);
+					}
 				}
-				else
-				{
-					Intent intent = new Intent(context, PicDetailActivity.class);
-					intent.putExtra("ubklist", list.get(position).getList().get(i).isbIsUbkList());
-					intent.putExtra("bean",list.get(position).getList().get(i));
-					intent.putExtra("pos",position);
-					intent.putExtra("pos2",i);
-					context.startActivityForResult(intent, 0x12);
-				}
-			}
-		});
+			});
+//		}
+
 		holder.tv_pic_edit_group_check.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -111,7 +117,13 @@ public class PicEditAdapter extends BaseAdapter {
 				notifyDataSetChanged();
 			}
 		});
-		holder.tv_pic_edit_group_check.setVisibility(list.get(position).isEdit() ? View.VISIBLE : View.GONE);
+		if(isEdit){
+			//是编辑状态
+			holder.tv_pic_edit_group_check.setVisibility(View.VISIBLE);
+		}else{
+			//不是编辑状态
+			holder.tv_pic_edit_group_check.setVisibility(View.GONE);
+		}
 
 		return converView;
 	}

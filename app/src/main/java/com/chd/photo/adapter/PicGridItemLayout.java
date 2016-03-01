@@ -30,7 +30,6 @@ public class PicGridItemLayout extends RelativeLayout
         //高度和宽度一样
         heightMeasureSpec = widthMeasureSpec = MeasureSpec.makeMeasureSpec(childWidthSize, MeasureSpec.EXACTLY);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
 	}
 
 }
