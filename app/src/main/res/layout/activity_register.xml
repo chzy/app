@@ -28,7 +28,7 @@
             android:id="@+id/reg_ed_account"
             style="@style/accountEditText"
             android:hint="@string/et_account_hint"
-            android:inputType="phone"
+            android:inputType="number"
             android:layout_height="fill_parent" />
     </LinearLayout>
     <LinearLayout

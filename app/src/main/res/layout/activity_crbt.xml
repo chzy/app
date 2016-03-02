@@ -7,16 +7,11 @@
 
     <include layout="@layout/title_bar" />
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="103dp"
-        android:layout_marginLeft="33dp"
-        android:layout_marginRight="33dp"
-        android:layout_marginTop="110dp"
-        android:background="@drawable/btn_pic_cancel"
-        android:gravity="center"
-        android:text="接口预留"
-        android:textColor="#666666"
-        android:textSize="20sp" />
+    <WebView
+        android:id="@+id/crbt_webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </WebView>
 
 </LinearLayout>

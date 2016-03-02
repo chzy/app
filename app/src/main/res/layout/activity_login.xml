@@ -52,7 +52,7 @@
         <EditText
             android:id="@+id/log_name"
             style="@style/accountEditText"
-            android:inputType="phone"
+            android:inputType="number"
             android:layout_height="fill_parent"
             android:hint="@string/et_account_hint" />
     </LinearLayout>
