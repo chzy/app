@@ -68,9 +68,10 @@ public class MusicBackupActivity extends ActiveProcess implements OnClickListene
 
 
 		ArrayList<FileLocal> fileLocals= (ArrayList<FileLocal>) getIntent().getSerializableExtra("locallist");
-
 		initData(fileLocals);
-
+		// ATTENTION: This was auto-generated to implement the App Indexing API.
+		// See https://g.co/AppIndexing/AndroidStudio for more information.
+		//client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 	}
 
 	private boolean isUpdate=false;

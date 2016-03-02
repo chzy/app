@@ -118,10 +118,8 @@ public class PicEditAdapter extends BaseAdapter {
 			}
 		});
 		if(isEdit){
-			//是编辑状态
 			holder.tv_pic_edit_group_check.setVisibility(View.VISIBLE);
 		}else{
-			//不是编辑状态
 			holder.tv_pic_edit_group_check.setVisibility(View.GONE);
 		}
 

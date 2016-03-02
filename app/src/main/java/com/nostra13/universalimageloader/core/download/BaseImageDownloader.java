@@ -142,7 +142,7 @@ public class BaseImageDownloader implements ImageDownloader {
 	}
 
 	protected InputStream getStreamFromTRPC(String imageUri, Object extra)  throws IOException {
-
+		//Log.d("BaseImageDownloader",imageUri);
 		TrpcInpustream imageStream = null;
 		int length=0;
 		String savefile=null;
@@ -158,7 +158,9 @@ public class BaseImageDownloader implements ImageDownloader {
 			Log.e("Baseimageloader", ex.getMessage());
 			throw new IOException();
 		}
-		if (savefile!=null) {
+		//if (1==0 && savefile!=null )
+		if (savefile!=null )
+		{
 			File file = new File(savefile);
 			if (file.isFile() && file.exists()) {
 				length = imageStream.available();

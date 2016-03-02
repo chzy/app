@@ -124,7 +124,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 	private void initData() {
 
 		if (cloudUnits == null) {
-			System.out.print("query remote failed");
+			System.out.print("query remote failed cloudunits is null ");
 		}
 
 		/*FilelistEntity filelistEntity=syncTask.analyPhotoUnits(cloudUnits);
@@ -152,11 +152,8 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 				if (info0 != null)
 					picInfoBean.setUrl("file://" + info0.getFilePath());
 			} else
-				picInfoBean.setUrl(item.getUrl());
-			//////////////////////////////////////////////
+					picInfoBean.setUrl(item.getUrl());
 
-
-			//////////////////////////////////////////
 			picInfoBean.setSelect(false);
 			picInfoBean.setbIsUbkList(bIsUbkList);
 			//picInfoBean.setFileInfo0(info);
@@ -260,20 +257,17 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 					int idx = bean.getUrl().indexOf("://");
 					if (idx < 0) {
 						Log.e(TAG, "error file path fail!!!!");
+						continue;
 					}
 					idx += 3;
 					String uri = bean.getUrl().substring(idx);
-//					if (bean.isbIsUbkList()) {
-						//是备份的
+					if (bean.isbIsUbkList()) {
 						fileInfo0.setFilePath(uri);
-						fileInfo0.setObjid(MediaFileUtil.getFnameformPath(uri));
-//					} else {
-//						fileInfo0.setObjid(MediaFileUtil.getFnameformPath(uri));
-//					}
-					fileInfo0.setFilename(MediaFileUtil.getFnameformPath(uri));
-					if(fileInfo0.getFtype()==null){
-						fileInfo0.setFtype(FTYPE.PICTURE);
-					}
+						//fileInfo0.setObjid(MediaFileUtil.getFnameformPath(uri));
+					}/*else {
+						fileInfo0.setObjid(uri);
+					}*/
+					fileInfo0.setObjid(MediaFileUtil.getFnameformPath(uri));
 					info0s.add(fileInfo0);
 				}
 				syncTask.delList(info0s,this,handler,bIsUbkList);
@@ -298,25 +292,20 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 					int idx = bean.getUrl().indexOf("://");
 					if (idx < 0) {
 						Log.e(TAG, "error file path fail!!!!");
-//						continue;
+						continue;
 					}
 					idx += 3;
 					String uri = bean.getUrl().substring(idx);
 					if (bean.isbIsUbkList()) {
-						//是未备份的
 						fileInfo0.setFilePath(uri);
+						fileInfo0.setObjid(MediaFileUtil.getFnameformPath(uri));
 					} else {
 						if(StringUtils.isNullOrEmpty(fileInfo0.getFilePath())){
 							fileInfo0.setFilePath(path+"/"+uri);
 						}
-					}
-						fileInfo0.setFilename(MediaFileUtil.getFnameformPath(uri));
-					fileInfo0.setObjid(MediaFileUtil.getFnameformPath(uri));
-					if(fileInfo0.getFtype()==null){
-						fileInfo0.setFtype(FTYPE.PICTURE);
+						fileInfo0.setObjid(uri);
 					}
 					info0s.add(fileInfo0);
-
 				}
 				if (bIsUbkList) {
 					syncTask.uploadList(info0s, this, handler);

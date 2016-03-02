@@ -117,6 +117,7 @@ public class PicDetailActivity extends ActiveProcess implements OnClickListener
 
 		if (url != null)
 		{
+
 			imageLoader.displayImage(url, mImgView,
 					options, new SimpleImageLoadingListener() {
 						@Override
@@ -185,7 +186,7 @@ public class PicDetailActivity extends ActiveProcess implements OnClickListener
 			break;
 		case R.id.pic_detail_delete:
 		{
-			Thread thread = new Thread(new Runnable()
+			Thread thread = new Thread(new Runnable() 
 			{
 				@Override
 				public void run() 

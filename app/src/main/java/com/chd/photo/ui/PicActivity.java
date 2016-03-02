@@ -133,18 +133,31 @@ public class PicActivity extends Activity implements OnClickListener {
 		{
 			 tmpMonthMap = new HashMap();
 		}
+		List list=tmpMonthMap.get(month);
+		boolean hasfrist=false;
+		if (list==null || list.isEmpty())
+		{
+			hasfrist=true;
+		}
 		PicInfoBean picInfoBean = new PicInfoBean();
-			String uri=info.getUri();
-			picInfoBean.setUrl(uri);
-		if(info.getSysid()>0) {
-		picInfoBean.setSysid(info.getSysid());
-	}
-		//picInfoBean.setUrl(uri);
+		//if (hasfrist)
+		{
 
+			if (info.getSysid() > 0 ) {
+				picInfoBean.setSysid(info.getSysid());
+				if ( hasfrist) {
+					String uri = info.getUri();
+					picInfoBean.setUrl(uri);
+					if (uri == null && syncTask.haveLocalCopy(info))
+						picInfoBean.setUrl("file://" + info.getFilePath());
+				}
+			} else
+				picInfoBean.setUrl("trpc://" + info.getObjid());
+		}
 		picInfoBean.setDay(TimeUtils.getTime(info.getLastModified()* 1000L, new SimpleDateFormat("MM月dd日")));
 
-		if (tmpMonthMap==null)
-			tmpMonthMap = new HashMap<Integer, List<PicInfoBean>>();
+		//if (tmpMonthMap==null)
+		//	tmpMonthMap = new HashMap<Integer, List<PicInfoBean>>();
 		if (tmpMonthMap.get(month) != null) {
 			tmpMonthMap.get(month).add(picInfoBean);
 		} else {
@@ -168,7 +181,8 @@ public class PicActivity extends Activity implements OnClickListener {
 		
 		if (cloudUnits==null)
 		{
-			System.out.print("query remote failed");
+			System.out.print("query cloudUnits remote failed");
+			return;
 		}
 		FilelistEntity filelistEntity=syncTask.analyPhotoUnits(cloudUnits);
 		cloudUnits.clear();
@@ -184,9 +198,8 @@ public class PicActivity extends Activity implements OnClickListener {
 		//显示未备份文件
 
 		if (filelistEntity != null) {
-			YearMap=new HashMap<>();
-
-
+			if (YearMap==null)
+				YearMap=new HashMap<>();
 				for (FileLocal fileLocal : fileLocals)
 				{
 					if (fileLocal.bakuped)

@@ -68,6 +68,9 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
                 .build();
         initData();
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void initData() {
@@ -163,6 +166,7 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
                         public void run() {
                             boolean delS = syncTask.DelRemoteObj(fileInfo0);
                             if (delS) {
+
                                 mHandler.post(new Runnable() {
                                     @Override
 

@@ -345,7 +345,7 @@ public class MediaUtil {
         String album_art = null;
         if(cursor != null && cursor.getCount() > 0){
             int trackId=cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
-            cursor.close();;
+            cursor.close();
             cursor=null;
             Cursor cur = context.getContentResolver().query(
                     Uri.parse(albumArtUri + "/" + Integer.toString(trackId)),
@@ -359,6 +359,8 @@ public class MediaUtil {
             cur = null;
             return album_art;
         }
+        if (cursor != null)
+            cursor.close();
         return album_art;
     }
 

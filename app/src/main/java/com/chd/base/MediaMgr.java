@@ -164,31 +164,43 @@ public class MediaMgr  {
 	}
 
 
-	public void anlayLocalUnits(List<FileInfo0> couldlist,FilelistEntity filelistEntity) {
-		List<FileLocal> locallist = filelistEntity.getLocallist();
+	public void   anlayLocalUnits(List<FileInfo0> couldlist,FilelistEntity filelistEntity) {
+		int count= LocalUnits.size();
 		int count2=couldlist.size();
+		
 		ArrayList<FileInfo0> baklist=new ArrayList(count2);
-		int j=0;
+		int idx=0;
+		int j=0,i=0;
 		FileInfo0 item = null;
-		for(j=0;j<count2;j++)
+		for(j=0;idx<count2;j++)
 		{
 			FileInfo fileInfo= couldlist.get(j);
-			item=new FileInfo0(fileInfo);
-			item.setFilename(item.getObjid());
-			for (FileLocal fileLocal: locallist)
+			if (idx==j) {
+				item=new FileInfo0(fileInfo);
+				baklist.add(item);
+				idx++;
+			}
+
+
+			for (FileLocal fileLocal: LocalUnits)
 			{
-				if (item.getObjid().equals(fileLocal.fname)) {
+				if (fileLocal.bakuped )
+					continue;
+				if (fileLocal.fname.equalsIgnoreCase(fileInfo.getObjid())) {
 					item.setSysid(fileLocal.sysid);
 					fileLocal.bakuped = true;
-					filelistEntity.addbakNumber();
+					if (filelistEntity != null)
+						filelistEntity.addbakNumber();
 					break;
 				}
 			}
-			baklist.add(item);
 
 		}
+	
+
 		couldlist.clear();
 		filelistEntity.setBklist(baklist);
+		//return  null;
 	}
 
 

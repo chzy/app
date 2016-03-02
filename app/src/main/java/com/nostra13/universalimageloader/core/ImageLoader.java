@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011-2014 Sergey Tarasevich
- * <p/>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -179,7 +179,7 @@ public class ImageLoader {
 	 * @throws IllegalArgumentException if passed <b>imageAware</b> is null
 	 */
 	public void displayImage(String uri, ImageAware imageAware, DisplayImageOptions options,
-	                         ImageLoadingListener listener) {
+			ImageLoadingListener listener) {
 		displayImage(uri, imageAware, options, listener, null);
 	}
 
@@ -205,7 +205,7 @@ public class ImageLoader {
 	 * @throws IllegalArgumentException if passed <b>imageAware</b> is null
 	 */
 	public void displayImage(String uri, ImageAware imageAware, DisplayImageOptions options,
-	                         ImageLoadingListener listener, ImageLoadingProgressListener progressListener) {
+			ImageLoadingListener listener, ImageLoadingProgressListener progressListener) {
 		displayImage(uri, imageAware, options, null, listener, progressListener);
 	}
 
@@ -232,7 +232,7 @@ public class ImageLoader {
 	 * @throws IllegalArgumentException if passed <b>imageAware</b> is null
 	 */
 	public void displayImage(String uri, ImageAware imageAware, DisplayImageOptions options,
-	                         ImageSize targetSize, ImageLoadingListener listener, ImageLoadingProgressListener progressListener) {
+			ImageSize targetSize, ImageLoadingListener listener, ImageLoadingProgressListener progressListener) {
 		checkConfiguration();
 		if (imageAware == null) {
 			throw new IllegalArgumentException(ERROR_WRONG_ARGUMENTS);
@@ -382,7 +382,7 @@ public class ImageLoader {
 	 * @throws IllegalArgumentException if passed <b>imageView</b> is null
 	 */
 	public void displayImage(String uri, ImageView imageView, DisplayImageOptions options,
-	                         ImageLoadingListener listener) {
+			ImageLoadingListener listener) {
 		displayImage(uri, imageView, options, listener, null);
 	}
 
@@ -407,7 +407,7 @@ public class ImageLoader {
 	 * @throws IllegalArgumentException if passed <b>imageView</b> is null
 	 */
 	public void displayImage(String uri, ImageView imageView, DisplayImageOptions options,
-	                         ImageLoadingListener listener, ImageLoadingProgressListener progressListener) {
+			ImageLoadingListener listener, ImageLoadingProgressListener progressListener) {
 		displayImage(uri, new ImageViewAware(imageView), options, listener, progressListener);
 	}
 
@@ -486,7 +486,7 @@ public class ImageLoader {
 	 * @throws IllegalStateException if {@link #init(ImageLoaderConfiguration)} method wasn't called before
 	 */
 	public void loadImage(String uri, ImageSize targetImageSize, DisplayImageOptions options,
-	                      ImageLoadingListener listener) {
+			ImageLoadingListener listener) {
 		loadImage(uri, targetImageSize, options, listener, null);
 	}
 
@@ -516,7 +516,7 @@ public class ImageLoader {
 	 * @throws IllegalStateException if {@link #init(ImageLoaderConfiguration)} method wasn't called before
 	 */
 	public void loadImage(String uri, ImageSize targetImageSize, DisplayImageOptions options,
-	                      ImageLoadingListener listener, ImageLoadingProgressListener progressListener) {
+			ImageLoadingListener listener, ImageLoadingProgressListener progressListener) {
 		checkConfiguration();
 		if (targetImageSize == null) {
 			targetImageSize = configuration.getMaxImageSize();

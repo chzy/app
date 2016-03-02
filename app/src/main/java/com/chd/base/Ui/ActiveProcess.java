@@ -14,7 +14,8 @@ public abstract class ActiveProcess extends Activity {
 
 
     //public abstract void updateProgress(final int progress);
-    protected CustomProgressDialog dialog;
+    protected  CustomProgressDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if(dialog==null){
