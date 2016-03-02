@@ -31,7 +31,6 @@ import java.util.List;
 public class SyncTask {
 	private Context context;
 	MediaMgr dbManager;
-	private boolean mExitTasksEarly;// 用户终止
 	public List<FileInfo> _CloudList;
 	private FilelistEntity filelistEntity;
 	private final FTYPE _ftype;
@@ -226,7 +225,7 @@ public class SyncTask {
 					i++;
 					final String name=item.getFilename();
 					final int finalI = i;
-					final int process= (int) ((float)i/files.size()*100);
+					final int process= (int) ((float)(i-1)/files.size()*100);
 					activeProcess.runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
@@ -365,7 +364,7 @@ public class SyncTask {
 					final String name=item.getFilename();
 					i++;
 					final int finalI = i;
-					final int process= (int) ((float)i/files.size()*100);
+					final int process= (int) ((float)(i-1)/files.size()*100);
 					activeProcess.runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
@@ -433,16 +432,6 @@ public class SyncTask {
 			activeProcess.setParMessage("下载失败");
 			activeProcess.finishProgress();
 		}
-		//new Runnable{}
-		/*Thread thread = new Thread(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				new SyncLocalFileBackground(context).downloadBigFile(item, activeProcess);
-			}
-		});
-		thread.start();*/
 		return syncLocalFileBackground.downloadBigFile(item, activeProcess);
 	}
 
@@ -495,7 +484,7 @@ public class SyncTask {
 						final String name = item.getFilename();
 						i++;
 						final int finalI = i;
-						final int process = (int) ((float) i / files.size() * 100);
+						final int process = (int) ((float) (i-1) / files.size() * 100);
 						activeProcess.runOnUiThread(new Runnable() {
 							@Override
 							public void run() {

@@ -13,15 +13,14 @@
 
         <TextView
             android:id="@+id/myspace_space_textview"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:background="@drawable/myspace_space_tv_bg"
             android:gravity="center"
-            android:text="16G"
             android:textColor="@color/orange"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
     </RelativeLayout>
 

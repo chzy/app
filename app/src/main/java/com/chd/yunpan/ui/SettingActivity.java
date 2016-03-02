@@ -1,10 +1,7 @@
 package com.chd.yunpan.ui;
 
-import java.io.File;
-
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -21,13 +18,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import com.chd.TClient;
 import com.chd.yunpan.R;
 import com.chd.yunpan.ui.dialog.DialogPopupFromBottom2;
 import com.chd.yunpan.ui.dialog.DialogPopupFromBottom2.OnConfirmListener;
 import com.chd.yunpan.utils.TimeAndSizeUtil;
 import com.nostra13.universalimageloader.utils.StorageUtils;
+
+import java.io.File;
 
 public class SettingActivity extends Activity implements OnClickListener {
 	private ImageView mIvLeft;
@@ -221,7 +218,7 @@ public class SettingActivity extends Activity implements OnClickListener {
 				size = 0;
 				getFileSize(file);
 				settingROM.setText(TimeAndSizeUtil.getSize(size + ""));
-				Toast.makeText(SettingActivity.this, "清理完成", 0).show();
+				Toast.makeText(SettingActivity.this, "清理完成", Toast.LENGTH_SHORT).show();
 			}
 		});
 		bottom.showMyDialog();

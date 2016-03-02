@@ -86,16 +86,21 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 			selectItem.remove(pos);
 
 		}
-		for (PicEditBean bean:
-				mPicList) {
+		int count=mPicList.size();
+		ArrayList<PicEditBean> items=new ArrayList<>();
+		for (int j = 0; j <count ; j++) {
+
+			PicEditBean bean = mPicList.get(j);
 			if(bean.getList()!=null){
 				bean.getList().removeAll(selectItem);
 				if(bean.getList().size()==0){
-					mPicList.remove(bean);
-					break;
+					items.add(bean);
 				}
 			}
 		}
+
+		mPicList.removeAll(items);
+		setResult(RESULT_OK);
 		picEditAdapter.notifyDataSetChanged();
 	}
 

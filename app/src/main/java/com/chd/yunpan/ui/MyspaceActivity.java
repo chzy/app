@@ -19,10 +19,8 @@ import com.chd.other.ui.OtherActivity;
 import com.chd.photo.ui.PicActivity;
 import com.chd.smsbackup.ui.SmsBackActivity;
 import com.chd.yunpan.R;
-import com.chd.yunpan.share.ShareUtils;
 import com.chd.yunpan.ui.adapter.MenuGridAdapter;
 import com.chd.yunpan.ui.entity.MySpaceBean;
-import com.chd.yunpan.utils.TimeAndSizeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +38,8 @@ public class MyspaceActivity extends Activity implements OnClickListener, OnItem
 	private TextView mTvRight;
 	private TextView mTvSpaceNumber;
 	private GridView mGvSpace;
-	
+
+	private String space;
     List<MySpaceBean> meumList = new ArrayList<MySpaceBean>();
 	
 	private Handler handler = new Handler() {
@@ -53,7 +52,8 @@ public class MyspaceActivity extends Activity implements OnClickListener, OnItem
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myspace_grid);
-        
+	    space=getIntent().getStringExtra("space");
+
         initTitle();
 		initResourceId();
 		initListener();
@@ -79,7 +79,7 @@ public class MyspaceActivity extends Activity implements OnClickListener, OnItem
         
 		handler.sendEmptyMessage(0);
 		
-		mTvSpaceNumber.setText(TimeAndSizeUtil.getSize(""+new ShareUtils(this).getLoginEntity().getSpace()));
+		mTvSpaceNumber.setText(space);
 	}
 
 	private void initListener() {

@@ -296,6 +296,10 @@ public class PicActivity extends Activity implements OnClickListener {
 		if(RESULT_OK==resultCode){
 			switch (requestCode){
 				case 0x11:
+					Log.i("lmj","返回执行了");
+					cloudUnits=null;
+					mPicList.clear();
+					localList.clear();
 					onNewThreadRequest();
 					break;
 			}

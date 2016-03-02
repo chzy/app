@@ -4,12 +4,23 @@
     android:layout_height="50dp"
     android:background="#ffa500" >
 
+    <!--<ImageView-->
+        <!--android:id="@+id/iv_left"-->
+        <!--android:layout_width="15dp"-->
+        <!--android:layout_height="20dp"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginLeft="15dp"-->
+        <!--android:src="@drawable/back" />-->
+
     <ImageView
         android:id="@+id/iv_left"
-        android:layout_width="15dp"
-        android:layout_height="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="15dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:src="@drawable/back" />
 
     <TextView

@@ -234,6 +234,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                                         intent.putExtra("isReg",true);
                                         intent.putExtra("pass",pass1);
                                         startActivity(intent);
+                                        finish();
 
                                     }
                                 });

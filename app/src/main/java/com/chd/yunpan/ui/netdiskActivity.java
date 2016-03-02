@@ -55,6 +55,7 @@ public class netdiskActivity extends Activity implements OnClickListener {
 		initResourceId();
 		initListener();
 	}
+	private String spaceStr;
 
 	private void initData() {
 		int flow = entity.getFlow();//免费流量
@@ -64,7 +65,7 @@ public class netdiskActivity extends Activity implements OnClickListener {
 
 
 		int spacePro = (int) (uspace*100l/space);
-		String spaceStr = TimeAndSizeUtil.getSize((space - uspace) + "");
+		spaceStr = TimeAndSizeUtil.getSize((space - uspace) + "");
 		mProSpace.setTxt(spaceStr );
 		mProSpace.setProgress(spacePro);
 		mTextUserSpace.setText(String.format("%d%%", spacePro));
@@ -145,6 +146,7 @@ public class netdiskActivity extends Activity implements OnClickListener {
 		case R.id.netdisk_space_layout:
 		{
 			Intent i = new Intent(netdiskActivity.this, MyspaceActivity.class);
+			i.putExtra("space",spaceStr);
 			startActivity(i);
 		}
 			break;
