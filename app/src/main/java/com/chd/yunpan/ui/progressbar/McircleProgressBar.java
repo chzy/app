@@ -39,6 +39,7 @@ public class McircleProgressBar extends View {
         this.text = txt;
     }
 
+
     @Override
     protected void onDraw(Canvas canvas) {
         // TODO 自动生成的方法存根
@@ -65,7 +66,6 @@ public class McircleProgressBar extends View {
         oval.bottom = height - progressStrokeWidth / 2; // 右下角y
 
         canvas.drawArc(oval, -90, 360, false, paint); // 绘制白色圆圈，即进度条背景
-        //paint.setColor(Color.rgb(0x57, 0x87, 0xb6));
         paint.setColor(linecolor);
         canvas.drawArc(oval, -90, ((float) progress / maxProgress) * 360, false, paint); // 绘制进度圆弧，这里是蓝色
 
@@ -73,7 +73,7 @@ public class McircleProgressBar extends View {
         if (text==null)
              text = progress + "%";
 
-        int textHeight = height / 4;
+        int textHeight = height / 6;
         paint.setTextSize(textHeight);
         int textWidth = (int) paint.measureText(text, 0, text.length());
         paint.setStyle(Style.FILL);
