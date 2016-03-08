@@ -1,6 +1,5 @@
 package com.chd.photo.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
+import com.chd.base.UILActivity;
 import com.chd.base.backend.SyncTask;
 import com.chd.contacts.vcard.StringUtils;
 import com.chd.photo.adapter.PicAdapter;
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class PicActivity extends Activity implements OnClickListener {
+public class PicActivity extends UILActivity implements OnClickListener {
 
 	private ImageView mIvLeft;
 	private TextView mTvCenter;
@@ -50,11 +50,13 @@ public class PicActivity extends Activity implements OnClickListener {
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			if(bIsUbkList){
+				waitDialog.dismiss();
 				Collections.sort(localList);
 				findViewById(R.id.rl_pic_ubk_layout).setVisibility(View.GONE);
 				mTvCenter.setText("未备份照片");
 				mLvPic.setAdapter(new PicAdapter(PicActivity.this, localList, bIsUbkList));
 			}else{
+				waitDialog.dismiss();
 				Collections.sort(mPicList);
 				if (localList != null) {
 					int size=0;
@@ -71,6 +73,8 @@ public class PicActivity extends Activity implements OnClickListener {
 		}
 
 	};
+	private FilelistEntity filelistEntity;
+
 	/**
 	 * ATTENTION: This was auto-generated to implement the App Indexing API.
 	 * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -90,14 +94,12 @@ public class PicActivity extends Activity implements OnClickListener {
 		initResourceId();
 		initListener();
 		onNewThreadRequest();
-		// ATTENTION: This was auto-generated to implement the App Indexing API.
-		// See https://g.co/AppIndexing/AndroidStudio for more information.
-		//client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 	}
 	
 	private void onNewThreadRequest()
 	{
 
+		waitDialog.show();
 		Thread thread = new Thread(new Runnable() 
 		{
 			@Override
@@ -107,9 +109,16 @@ public class PicActivity extends Activity implements OnClickListener {
 				if (syncTask==null)
 					syncTask =new SyncTask(PicActivity.this, FTYPE.PICTURE);
 				//未备份文件 ==  backedlist . removeAll(localist);
-				if (cloudUnits==null || cloudUnits.isEmpty())
+				if (cloudUnits==null || cloudUnits.isEmpty()){
 					// 0-100 分批取文件
 					cloudUnits=syncTask.getCloudUnits(0, 10000);
+					if (cloudUnits==null)
+					{
+						System.out.print("query cloudUnits remote failed");
+						return;
+					}
+					filelistEntity=syncTask.analyPhotoUnits(cloudUnits);
+				}
 				runOnUiThread(new Runnable() {
 					public void run() {
 						initData();
@@ -179,12 +188,7 @@ public class PicActivity extends Activity implements OnClickListener {
 		// localfiles 调用系统方法得到本地所有文件库. 文件对象需要用 fileinfo0 类封装 构造后 要set filepath, size , 变成list .构造成 FilesListEntity locallist
 	
 		
-		if (cloudUnits==null)
-		{
-			System.out.print("query cloudUnits remote failed");
-			return;
-		}
-		FilelistEntity filelistEntity=syncTask.analyPhotoUnits(cloudUnits);
+
 		cloudUnits.clear();
 		cloudUnits=null;
 		List<FileLocal> fileLocals=filelistEntity.getLocallist();

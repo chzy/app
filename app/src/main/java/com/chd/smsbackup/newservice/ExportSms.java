@@ -24,7 +24,6 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.HashMap;
-import java.util.Map;
 
 public class ExportSms {
 
@@ -54,24 +53,14 @@ public class ExportSms {
 
     }
 
-    public boolean ExpSMS(final String fpath) {
-        Thread thread=new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    boolean b = ExpSMS0(fpath);
-                    if(b){
-                        //本地文件写入成功,上传服务器
+    public void ExpSMS(final String fpath) {
+        boolean b = false;
+        try {
+            b = ExpSMS0(fpath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-        });
-        thread.start();
-        return true;
     }
 
     public void getCount(final Handler handler){
@@ -267,18 +256,7 @@ public class ExportSms {
             if (successed){
                 boolean upload = upload(fpath, context,lines);
                 if(upload){
-                   /* TClient tClient =TClient.getinstance();
-                    TClient.TFilebuilder filebuilder;
-                    filebuilder = tClient.new TFilebuilder(fout.getName(), FTYPE.SMS);
-                    String objid=null;
-                        objid = filebuilder.ApplyObj();
-                        if (objid == null) {
-                            Log.e("smsexport","alloc obj failed ");
-                            return false;
-                        }
-                    Map<String, String> desc = new HashMap<String, String>();
-                desc.put("lines", lines+"");
-                filebuilder.Commit(desc);*/
+
                 }
             }else{
                     return false;

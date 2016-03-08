@@ -66,7 +66,6 @@ public class NineAdapter extends NineGridAdapter {
                     viewHolder.img.setVisibility(View.GONE);
                 } else {
                     viewHolder.img.setVisibility(View.VISIBLE);
-//					imageLoader.displayImage("drawable://"+R.drawable.add_photo,viewHolder.img);
                     Picasso.with(context)
                             .load(R.drawable.add_photo)
                             .resize(150, 150)

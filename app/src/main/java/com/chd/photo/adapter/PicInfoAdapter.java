@@ -42,6 +42,7 @@ public class PicInfoAdapter extends BaseAdapter {
 		options = new DisplayImageOptions.Builder()
 		.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
 		.cacheInMemory(false)
+				.showImageOnLoading(R.drawable.pic_test1).showImageOnFail(R.drawable.pic_test1)
 				.displayer(new RoundedBitmapDisplayer(20))
 				.cacheOnDisk(true)
 				.bitmapConfig(Bitmap.Config.RGB_565)

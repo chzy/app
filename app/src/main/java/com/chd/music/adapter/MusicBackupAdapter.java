@@ -10,13 +10,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chd.contacts.vcard.StringUtils;
 import com.chd.music.backend.MediaUtil;
 import com.chd.music.entity.MusicBackupBean;
 import com.chd.photo.adapter.RoundImageView;
 import com.chd.yunpan.R;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 import java.util.List;
 
@@ -24,19 +22,10 @@ public class MusicBackupAdapter extends BaseAdapter {
 
 	private Context context;
 	private List<MusicBackupBean> mMusiclist;
-	protected ImageLoader imageLoader = ImageLoader.getInstance();
-	DisplayImageOptions options;
 
 	public MusicBackupAdapter(Context context, List<MusicBackupBean> list) {
 		this.context = context;
 		this.mMusiclist = list;
-		options = new DisplayImageOptions.Builder()
-		.showImageOnLoading(R.drawable.pic_test1)
-		.cacheInMemory(true)
-		.cacheOnDisk(true)
-		.considerExifParams(true)
-		.displayer(new RoundedBitmapDisplayer(20))
-		.build();
 	}
 
 	@Override
@@ -67,47 +56,22 @@ public class MusicBackupAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) converView.getTag();
 		}
-
-		holder.gv_title.setText(mMusiclist.get(position).getTitle());
-		holder.gv_check.setImageResource(mMusiclist.get(position).isSelect() ? R.drawable.pic_edit_photo_checked : R.drawable.pic_edit_photo_group_check);
-		String albumArt = MediaUtil.getAlbumArt(context, mMusiclist.get(position).getPic());
-
-		if (albumArt == null) {
-//			albumImage.setBackgroundResource(R.drawable.audio_default_bg);
+		MusicBackupBean bean = mMusiclist.get(position);
+		holder.gv_title.setText(StringUtils.isNullStr(bean.getTitle()));
+		holder.gv_check.setImageResource(bean.isSelect() ? R.drawable.pic_edit_photo_checked : R.drawable.pic_edit_photo_group_check);
+		String albumArt=null;
+		try {
+			albumArt = MediaUtil.getAlbumArt(context, bean.getPic());
+		}catch (Exception e){
+			albumArt="";
+		}
+		if (StringUtils.isNullOrEmpty(albumArt)) {
+			holder.gv_pic.setImageResource(R.drawable.pic_test1);
 		} else {
 			Bitmap bm = BitmapFactory.decodeFile(albumArt);
 			BitmapDrawable bmpDraw = new BitmapDrawable(bm);
 			holder.gv_pic.setImageDrawable(bmpDraw);
 		}
-
-
-//		imageLoader.displayImage(mMusiclist.get(position).getFileInfo0().getFilePath(), holder.gv_pic,
-//				options, new SimpleImageLoadingListener() {
-//					@Override
-//					public void onLoadingStarted(String imageUri, View view) {
-//						/*vh.progressBar.setProgress(0);
-//						vh.progressBar.setVisibility(View.VISIBLE);*/
-//					}
-//
-//					@Override
-//					public void onLoadingFailed(String imageUri, View view,
-//							FailReason failReason) {
-//						/*vh.progressBar.setVisibility(View.GONE);*/
-//					}
-//
-//					@Override
-//					public void onLoadingComplete(String imageUri, View view,
-//							Bitmap loadedImage) {
-//						/*vh.progressBar.setVisibility(View.GONE);*/
-//					}
-//				}, new ImageLoadingProgressListener() {
-//					@Override
-//					public void onProgressUpdate(String imageUri, View view,
-//							int current, int total) {
-//						/*vh.progressBar.setProgress(Math.round(100.0f * current
-//								/ total));*/
-//					}
-//				});
 		return converView;
 	}
 

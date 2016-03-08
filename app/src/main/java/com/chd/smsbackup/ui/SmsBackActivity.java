@@ -114,8 +114,15 @@ public class SmsBackActivity extends ActiveProcess implements OnClickListener {
             case R.id.iv_select: // 一键备份
                 // TODO
                 setParMessage("正在上传");
-                exportSms.ExpSMS(smsPath);
-                exportSms.getRemontCount(smsPath, handler);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        exportSms.ExpSMS(smsPath);
+                        exportSms.getRemontCount(smsPath, handler);
+                    }
+                }).start();
+
+
 
                 break;
         }

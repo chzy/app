@@ -19,6 +19,7 @@
             android:background="@drawable/contact_icon2" >
 
             <ImageView
+                android:id="@+id/contact_center"
                 android:layout_width="78dp"
                 android:layout_height="35dp"
                 android:layout_centerHorizontal="true"
@@ -29,7 +30,8 @@
                 android:id="@+id/iv_sms"
                 android:layout_width="50dp"
                 android:layout_height="40dp"
-                android:layout_marginLeft="55dp"
+                android:layout_toLeftOf="@id/contact_center"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="40dp"
                 android:src="@drawable/contact_icon4" />
 
@@ -38,8 +40,7 @@
                 android:layout_width="wrap_content"
                 android:singleLine="true"
                 android:layout_height="40dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="55dp"
+                android:layout_toRightOf="@id/contact_center"
                 android:layout_marginTop="40dp"
                 android:src="@drawable/contact_icon3" />
 

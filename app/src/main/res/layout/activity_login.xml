@@ -61,6 +61,7 @@
     <LinearLayout
         android:id="@+id/ll_password"
         style="@style/accountInputBorder"
+        android:layout_marginTop="10dp"
         android:layout_height="50dp"
         android:layout_below="@id/ll_account2" >
 

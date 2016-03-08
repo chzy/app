@@ -16,7 +16,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import java.util.List;
 
@@ -36,28 +35,11 @@ public class PicEditItemAdapter extends BaseAdapter {
 	    this.isEdit=isEdit;
 	    this.mInflater=LayoutInflater.from(context);
 	    this.imageLoader=ImageLoader.getInstance();
-//        options = new DisplayImageOptions.Builder()
-//                .imageScaleType(ImageScaleType.EXACTLY)
-//                .bitmapConfig(Bitmap.Config.RGB_565)
-//                .cacheInMemory(false)
-//                .cacheOnDisk(true)
-//                .considerExifParams(true)
-//                 // imageload 加载图片时 会在程序目录下载对应的原文件
-//                .build();
-
-	    options = new DisplayImageOptions.Builder()
-			    .resetViewBeforeLoading(true)
-			    .cacheOnDisk(true).cacheInMemory(true)
-			    .cacheOnDisc(true).imageScaleType(ImageScaleType.EXACTLY)
-			    .bitmapConfig(Bitmap.Config.RGB_565)
-			    .considerExifParams(true)
-
-			    .displayer(new SimpleBitmapDisplayer()).build();
-
 
 	   options= new DisplayImageOptions.Builder()
 			    .cacheInMemory(true).cacheOnDisk(true)
 			    .considerExifParams(true)
+			   .showImageOnFail(R.drawable.pic_test1).showImageOnLoading(R.drawable.pic_test1)
 			    .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
 			    .bitmapConfig(Bitmap.Config.RGB_565)
 			    .resetViewBeforeLoading(false)

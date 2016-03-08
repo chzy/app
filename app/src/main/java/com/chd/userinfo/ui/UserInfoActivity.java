@@ -40,7 +40,10 @@ import com.chd.yunpan.ui.LoginActivity;
 import com.chd.yunpan.ui.dialog.IconSelectWindow;
 import com.chd.yunpan.utils.PictureUtil;
 import com.chd.yunpan.view.CircleImageView;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -98,14 +101,14 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-//                        Toast.makeText(UserInfoActivity.this, "上传头像成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UserInfoActivity.this, "上传头像成功", Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-//                        Toast.makeText(UserInfoActivity.this, "上传头像失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UserInfoActivity.this, "上传头像失败", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -283,10 +286,20 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
         initData();
     }
 
+
     private void initData() {
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true).cacheOnDisk(true)
+                .considerExifParams(true)
+                .showImageOnLoading(R.drawable.pic_test1).showImageOnFail(R.drawable.pic_test1)
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .resetViewBeforeLoading(false)
+                .extraForDownloader(new ShareUtils(UserInfoActivity.this).getStorePathStr())
+                .displayer(new FadeInBitmapDisplayer(0)).build();
 
 
-        imageLoader.displayImage("trpc://netdiskportrait", mImgHead);
+        imageLoader.displayImage("trpc://netdiskportrait", mImgHead,options);
     }
 
     private void initListener() {
