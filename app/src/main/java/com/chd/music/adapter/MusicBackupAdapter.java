@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chd.contacts.vcard.StringUtils;
-import com.chd.music.backend.MediaUtil;
 import com.chd.music.entity.MusicBackupBean;
 import com.chd.photo.adapter.RoundImageView;
 import com.chd.yunpan.R;
@@ -59,12 +58,8 @@ public class MusicBackupAdapter extends BaseAdapter {
 		MusicBackupBean bean = mMusiclist.get(position);
 		holder.gv_title.setText(StringUtils.isNullStr(bean.getTitle()));
 		holder.gv_check.setImageResource(bean.isSelect() ? R.drawable.pic_edit_photo_checked : R.drawable.pic_edit_photo_group_check);
-		String albumArt=null;
-		try {
-			albumArt = MediaUtil.getAlbumArt(context, bean.getPic());
-		}catch (Exception e){
-			albumArt="";
-		}
+		String albumArt=bean.getAlbumArt();
+
 		if (StringUtils.isNullOrEmpty(albumArt)) {
 			holder.gv_pic.setImageResource(R.drawable.pic_test1);
 		} else {

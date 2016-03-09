@@ -355,7 +355,7 @@ public class SyncLocalFileBackground implements Runnable {
             if (activeProcess != null) {
                 activeProcess.setParMessage("正在上传");
                 activeProcess.setMaxProgress(100);
-                activeProcess.setProgress((int) (start / size * 100));
+                activeProcess.setProgress((int) (start*100 / size));
             }
         }
         int len = 0;
@@ -392,7 +392,6 @@ public class SyncLocalFileBackground implements Runnable {
                     if (activeProcess != null && proc!=(proc1)) {
                         activeProcess.updateProgress(proc1);
                     }
-                    //Log.d("synclocalupload", "progress:" + (int) ((pz * 100 / size)));
                     su.setUploadStatus(entity);
                     succed = true;
                 } else {

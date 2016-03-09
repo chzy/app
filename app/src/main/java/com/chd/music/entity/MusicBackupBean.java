@@ -1,7 +1,7 @@
 package com.chd.music.entity;
-import java.io.Serializable;
-
 import com.chd.proto.FileInfo0;
+
+import java.io.Serializable;
 
 public class MusicBackupBean /*extends FileInfo*/ implements Serializable {
 
@@ -9,12 +9,22 @@ public class MusicBackupBean /*extends FileInfo*/ implements Serializable {
 	private String pic;
 	private boolean select;
 	private FileInfo0 fileInfo0;
+	private String albumArt;
+
 
 	public MusicBackupBean(String title, String pic, boolean select) {
 		super();
 		this.title = title;
 		this.pic = pic;
 		this.select = select;
+	}
+
+	public String getAlbumArt() {
+		return albumArt;
+	}
+
+	public void setAlbumArt(String albumArt) {
+		this.albumArt = albumArt;
 	}
 
 	public String getTitle() {

@@ -50,13 +50,13 @@ public class PicActivity extends UILActivity implements OnClickListener {
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			if(bIsUbkList){
-				waitDialog.dismiss();
+				dismissDialog();
 				Collections.sort(localList);
 				findViewById(R.id.rl_pic_ubk_layout).setVisibility(View.GONE);
 				mTvCenter.setText("未备份照片");
 				mLvPic.setAdapter(new PicAdapter(PicActivity.this, localList, bIsUbkList));
 			}else{
-				waitDialog.dismiss();
+				dismissWaitDialog();
 				Collections.sort(mPicList);
 				if (localList != null) {
 					int size=0;
@@ -99,7 +99,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 	private void onNewThreadRequest()
 	{
 
-		waitDialog.show();
+		showWaitDialog();
 		Thread thread = new Thread(new Runnable() 
 		{
 			@Override
@@ -119,11 +119,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 					}
 					filelistEntity=syncTask.analyPhotoUnits(cloudUnits);
 				}
-				runOnUiThread(new Runnable() {
-					public void run() {
 						initData();
-					}
-				});
 			}
 		});
 		thread.start();

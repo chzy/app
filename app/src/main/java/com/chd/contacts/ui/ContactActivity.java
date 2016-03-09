@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chd.MediaMgr.utils.MediaFileUtil;
-import com.chd.base.Ui.ActiveProcess;
+import com.chd.base.UILActivity;
 import com.chd.base.backend.SyncTask;
 import com.chd.contacts.entity.ContactBean;
 import com.chd.contacts.vcard.VCardIO;
@@ -20,7 +20,7 @@ import com.chd.yunpan.share.ShareUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactActivity extends ActiveProcess implements OnClickListener{
+public class ContactActivity extends UILActivity implements OnClickListener{
 
     private ImageView mIvLeft;
     private TextView mTvCenter;
@@ -36,6 +36,7 @@ public class ContactActivity extends ActiveProcess implements OnClickListener{
 
     private List<ContactBean> mContactList = new ArrayList<ContactBean>();
     private VCardIO vcarIO;
+    private int netSize;
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
@@ -46,16 +47,22 @@ public class ContactActivity extends ActiveProcess implements OnClickListener{
                     break;
                 case 999:
                     //网络通讯录数量
-                    int length = (Integer) msg.obj;
-                    mCloudNumber.setText(length + "");
+                    dismissWaitDialog();
+                    netSize= (Integer) msg.obj;
+                    mCloudNumber.setText(netSize + "");
                     break;
                 case 0:
                     vcarIO.getLocalSize(handler);
                     if (cloudUnits.isEmpty())
                         mCloudNumber.setText("尚未备份");
                     else{
-                        FileInfo0 info0 = new FileInfo0(cloudUnits.get(0));
-                        vcarIO.getNetSize(info0.getObjid(), handler);
+                        new Thread(){
+                            @Override
+                            public void run() {
+                                FileInfo0 info0 = new FileInfo0(cloudUnits.get(0));
+                                vcarIO.getNetSize(info0.getObjid(), handler);
+                            }
+                        }.start();
 
                     }
                     break;
@@ -85,7 +92,7 @@ public class ContactActivity extends ActiveProcess implements OnClickListener{
 
         if (syncTask==null)
             syncTask=new SyncTask(this,FTYPE.ADDRESS);
-
+        showWaitDialog();
         new Thread(
                 new Runnable() {
                     @Override
@@ -133,9 +140,8 @@ public class ContactActivity extends ActiveProcess implements OnClickListener{
                 if (vcarIO != null) {
                     // 更新进度
                     setParMessage("正在导入,请稍候...");
-                    updateProgress(0);
                     vcarIO.doImport(contactPath, false,
-                            ContactActivity.this);
+                            ContactActivity.this,netSize);
                 }
 
                 break;
@@ -144,14 +150,12 @@ public class ContactActivity extends ActiveProcess implements OnClickListener{
                 if (vcarIO != null) {
                     // 更新进度
                     setParMessage("正在上传,请稍候...");
-                    updateProgress(0);
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
                             vcarIO.doExport(contactPath, ContactActivity.this);
                             String name = MediaFileUtil.getNameFromFilepath(contactPath);
                             vcarIO.getNetSize(name,handler);
-
                         }
                     }).start();
 

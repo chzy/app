@@ -1,8 +1,9 @@
 package com.chd.base;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+
+import com.chd.base.Ui.ActiveProcess;
 
 /**
  * @version _ooOoo_
@@ -33,7 +34,7 @@ import android.os.Bundle;
  * Developer Kits:AndroidStudio 1.3
  */
 
-public class UILActivity extends Activity{
+public class UILActivity extends ActiveProcess{
 
 	protected ProgressDialog waitDialog;
 
@@ -44,6 +45,26 @@ public class UILActivity extends Activity{
 		waitDialog=new ProgressDialog(this);
 		waitDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		waitDialog.setMessage("正在加载");
+	}
+
+
+	public void showWaitDialog(){
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				waitDialog.show();
+			}
+		});
+	}
+
+
+	public void dismissWaitDialog(){
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				waitDialog.dismiss();
+			}
+		});
 	}
 
 	@Override
