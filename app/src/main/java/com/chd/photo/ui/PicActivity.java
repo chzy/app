@@ -129,39 +129,45 @@ public class PicActivity extends UILActivity implements OnClickListener {
 
 	void add2YearMap(FileInfo0 info)
 	{
+
 		int year = TimeUtils.getYearWithTimeMillis(info.getLastModified() * 1000L);
 		int month = TimeUtils.getMonthWithTimeMillis(info.getLastModified() * 1000L);
 		Map<Integer, List<PicInfoBean>> tmpMonthMap;
-		if (YearMap.get(year) != null) {
+
+		if (YearMap.containsKey(year)) {
 			tmpMonthMap = YearMap.get(year);
 		}
 		else
 		{
 			 tmpMonthMap = new HashMap();
 		}
-		List list=tmpMonthMap.get(month);
-		boolean hasfrist=false;
-		if (list==null || list.isEmpty())
+		//List list=tmpMonthMap.get(month);
+		boolean fillfrist=false;
+		//if (list==null || list.isEmpty())
+		if (tmpMonthMap.isEmpty()|| tmpMonthMap.containsKey(month)==false|| tmpMonthMap.get(month).isEmpty())
 		{
-			hasfrist=true;
+			fillfrist=true;
 		}
 		PicInfoBean picInfoBean = new PicInfoBean();
-		//if (hasfrist)
-		{
+
 
 			if (info.getSysid() > 0 ) {
 				picInfoBean.setSysid(info.getSysid());
-				if ( hasfrist) {
+				if ( fillfrist) {
 					String uri = info.getUri();
 					picInfoBean.setUrl(uri);
-					if (uri == null && syncTask.haveLocalCopy(info))
+					if (uri == null /*&& syncTask.haveLocalCopy(info)*/)
 						picInfoBean.setUrl("file://" + info.getFilePath());
 				}
-			} else
-				picInfoBean.setUrl("trpc://" + info.getObjid());
-		}
+			} else {
+				if (fillfrist)
+					picInfoBean.setUrl("trpc://" + info.getObjid());
+			}
+
 		picInfoBean.setDay(TimeUtils.getTime(info.getLastModified()* 1000L, new SimpleDateFormat("MM月dd日")));
-		if (tmpMonthMap.get(month) != null) {
+
+		if (tmpMonthMap.containsKey(month))
+		{
 			tmpMonthMap.get(month).add(picInfoBean);
 		} else {
 			List<PicInfoBean> monthPicInfoBeans = new ArrayList<PicInfoBean>();
@@ -169,7 +175,6 @@ public class PicActivity extends UILActivity implements OnClickListener {
 			tmpMonthMap.put(month, monthPicInfoBeans);
 		}
 		YearMap.put(year, tmpMonthMap);
-
 	}
 
 	private void initData() {
