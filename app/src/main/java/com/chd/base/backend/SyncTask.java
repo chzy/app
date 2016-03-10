@@ -23,7 +23,6 @@ import com.chd.service.SyncLocalFileBackground;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -42,6 +41,7 @@ public class SyncTask {
 	public SyncTask(Context context,FTYPE tp) {
 		this.context = context;
 		_ftype=tp;
+
 		_CloudList=new ArrayList<FileInfo>();
 		dbManager = new MediaMgr(context,_ftype);
 		syncLocalFileBackground =new SyncLocalFileBackground(context);
@@ -401,8 +401,6 @@ public class SyncTask {
 			}
 		};
 		netThread.start();
-
-
 	}
 
 
@@ -532,8 +530,6 @@ public class SyncTask {
 			}
 		};
 		netThread.start();
-
-
 	}
 
 }

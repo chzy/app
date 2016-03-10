@@ -85,18 +85,11 @@ public class PicDetailActivity extends ActiveProcess implements OnClickListener
 		}*/
 		if (syncTask == null)
 			syncTask=new SyncTask(this, FTYPE.PICTURE);
-		/*syncTask.analyPhotoUnits(cloudUnits);
-		cloudUnits.clear();
-		cloudUnits = null;
-		fileInfo0 = (FileInfo0) getIntent().getSerializableExtra("fileinfo0");
-		if (fileInfo0 == null)
-		{
-			fileInfo0 = bIsUbkList ? syncTask.queryLocalInfo(nPicId) : syncTask.getUnitinfo(nPicId);
-		}
-		String url = ThumUtil.getThumid(fileInfo0.getObjid());
-		String filepath = getIntent().getStringExtra("filepath");*/
 		PicEditItemBean editItemBean= (PicEditItemBean) getIntent().getSerializableExtra("bean");
 		String url =editItemBean.getUrl();
+		if(StringUtils.isNullOrEmpty(url)){
+			return;
+		}
 		int idx=url.indexOf("://");
 		if (idx<0) {
 			Log.e(TAG, "error file path fail!!!!");
@@ -117,6 +110,8 @@ public class PicDetailActivity extends ActiveProcess implements OnClickListener
 
 		if (url != null)
 		{
+
+
 
 			imageLoader.displayImage(url, mImgView,
 					options, new SimpleImageLoadingListener() {

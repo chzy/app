@@ -24,6 +24,8 @@ import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.utils.TimeUtils;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,48 +42,44 @@ public class PicActivity extends UILActivity implements OnClickListener {
 	private TextView mTvRight;
 	private TextView mTvNumber;
 	private ListView mLvPic;
-	private  Map<Integer, Map<Integer, List<PicInfoBean>>> YearMap ;
+	private Map<Integer, Map<Integer, List<PicInfoBean>>> YearMap;
 	private List<PicBean<PicInfoBeanMonth>> mPicList = new ArrayList();
 	private boolean bIsUbkList;
-	private  List<FileInfo0> cloudUnits;
+	private List<FileInfo0> cloudUnits;
+	private ImageLoader imageLoader;
 	private SyncTask syncTask;
 	private List<PicBean<PicInfoBeanMonth>> localList = new ArrayList();
 
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
-			if(bIsUbkList){
+			if (bIsUbkList) {
 				dismissDialog();
 				dismissWaitDialog();
 				Collections.sort(localList);
 				findViewById(R.id.rl_pic_ubk_layout).setVisibility(View.GONE);
 				mTvCenter.setText("未备份照片");
-				mLvPic.setAdapter(new PicAdapter(PicActivity.this, localList, bIsUbkList));
-			}else{
+				mLvPic.setAdapter(new PicAdapter(PicActivity.this, localList, bIsUbkList,imageLoader));
+			} else {
 				dismissWaitDialog();
 				dismissDialog();
 				Collections.sort(mPicList);
-				if (localList != null) {
-					int size=0;
-
-					for (PicBean<PicInfoBeanMonth> bean:
-						 localList) {
-						size+=bean.getList().getPicunits().size();
+				int size = 0;
+				if (localList != null&&localList.size()>0) {
+					for (PicBean<PicInfoBeanMonth> bean :
+							localList) {
+						size += bean.getList().getPicunits().size();
 					}
-
-					mTvNumber.setText(String.format("未备份照片%d张",size));
+				} else {
+					size = filelistEntity.getUnbakNumber();
 				}
-				mLvPic.setAdapter(new PicAdapter(PicActivity.this, mPicList, bIsUbkList));
+				Log.d("liumj", "数量" + size);
+				mTvNumber.setText(String.format("未备份照片%d张", size));
+				mLvPic.setAdapter(new PicAdapter(PicActivity.this, mPicList, bIsUbkList,imageLoader));
 			}
 		}
 
 	};
 	private FilelistEntity filelistEntity;
-
-	/**
-	 * ATTENTION: This was auto-generated to implement the App Indexing API.
-	 * See https://g.co/AppIndexing/AndroidStudio for more information.
-	 */
-	//private GoogleApiClient client;
 
 
 	@Override
@@ -91,44 +89,44 @@ public class PicActivity extends UILActivity implements OnClickListener {
 		setContentView(R.layout.activity_pic);
 
 		bIsUbkList = false;
-
+		imageLoader=ImageLoader.getInstance();
 		initTitle();
 		initResourceId();
 		initListener();
-		onNewThreadRequest();
+		onNewThreadRequest(false);
 	}
-	
-	private void onNewThreadRequest()
-	{
+
+	private void onNewThreadRequest(final boolean bIsUbkList) {
 
 		showWaitDialog();
-		Thread thread = new Thread(new Runnable() 
-		{
+		Thread thread = new Thread(new Runnable() {
 			@Override
-			public void run() 
-			{
-			
-				if (syncTask==null)
-					syncTask =new SyncTask(PicActivity.this, FTYPE.PICTURE);
+			public void run() {
+
+				if (syncTask == null)
+					syncTask = new SyncTask(PicActivity.this, FTYPE.PICTURE);
 				//未备份文件 ==  backedlist . removeAll(localist);
-				if (cloudUnits==null || cloudUnits.isEmpty()){
+				if (cloudUnits == null || cloudUnits.isEmpty()) {
 					// 0-100 分批取文件
-					cloudUnits=syncTask.getCloudUnits(0, 10000);
-					if (cloudUnits==null)
-					{
+					cloudUnits = syncTask.getCloudUnits(0, 10000);
+					if (cloudUnits == null) {
 						System.out.print("query cloudUnits remote failed");
 						return;
 					}
-					filelistEntity=syncTask.analyPhotoUnits(cloudUnits);
+					filelistEntity = syncTask.analyPhotoUnits(cloudUnits);
 				}
-						initData();
+				if(bIsUbkList){
+					initLocal();
+				}else{
+					initData();
+
+				}
 			}
 		});
 		thread.start();
 	}
 
-	void add2YearMap(FileInfo0 info)
-	{
+	void add2YearMap(FileInfo0 info) {
 
 		int year = TimeUtils.getYearWithTimeMillis(info.getLastModified() * 1000L);
 		int month = TimeUtils.getMonthWithTimeMillis(info.getLastModified() * 1000L);
@@ -136,38 +134,34 @@ public class PicActivity extends UILActivity implements OnClickListener {
 
 		if (YearMap.containsKey(year)) {
 			tmpMonthMap = YearMap.get(year);
-		}
-		else
-		{
-			 tmpMonthMap = new HashMap();
+		} else {
+			tmpMonthMap = new HashMap();
 		}
 		//List list=tmpMonthMap.get(month);
-		boolean fillfrist=false;
+		boolean fillfrist = false;
 		//if (list==null || list.isEmpty())
-		if (tmpMonthMap.isEmpty()|| tmpMonthMap.containsKey(month)==false|| tmpMonthMap.get(month).isEmpty())
-		{
-			fillfrist=true;
+		if (tmpMonthMap.isEmpty() || tmpMonthMap.containsKey(month) == false || tmpMonthMap.get(month).isEmpty()) {
+			fillfrist = true;
 		}
 		PicInfoBean picInfoBean = new PicInfoBean();
 
 
-			if (info.getSysid() > 0 ) {
-				picInfoBean.setSysid(info.getSysid());
-				if ( fillfrist) {
-					String uri = info.getUri();
-					picInfoBean.setUrl(uri);
-					if (uri == null /*&& syncTask.haveLocalCopy(info)*/)
-						picInfoBean.setUrl("file://" + info.getFilePath());
-				}
-			} else {
-				if (fillfrist)
-					picInfoBean.setUrl("trpc://" + info.getObjid());
+		if (info.getSysid() > 0) {
+			picInfoBean.setSysid(info.getSysid());
+			if (fillfrist) {
+				String uri = info.getUri();
+				picInfoBean.setUrl(uri);
+				if (uri == null /*&& syncTask.haveLocalCopy(info)*/)
+					picInfoBean.setUrl("file://" + info.getFilePath());
 			}
+		} else {
+			if (fillfrist)
+				picInfoBean.setUrl("trpc://" + info.getObjid());
+		}
 
-		picInfoBean.setDay(TimeUtils.getTime(info.getLastModified()* 1000L, new SimpleDateFormat("MM月dd日")));
+		picInfoBean.setDay(TimeUtils.getTime(info.getLastModified() * 1000L, new SimpleDateFormat("MM月dd日")));
 
-		if (tmpMonthMap.containsKey(month))
-		{
+		if (tmpMonthMap.containsKey(month)) {
 			tmpMonthMap.get(month).add(picInfoBean);
 		} else {
 			List<PicInfoBean> monthPicInfoBeans = new ArrayList<PicInfoBean>();
@@ -185,13 +179,12 @@ public class PicActivity extends UILActivity implements OnClickListener {
 		//本地已经备份的文件 list 对象名 FilesListEntity 从sqlite里面取出   可以调用 dbmanger.getUploadeFiles 得到本地已备份文件  backedlist
 
 		// localfiles 调用系统方法得到本地所有文件库. 文件对象需要用 fileinfo0 类封装 构造后 要set filepath, size , 变成list .构造成 FilesListEntity locallist
-	
-		
+
 
 		cloudUnits.clear();
-		cloudUnits=null;
-		List<FileLocal> fileLocals=filelistEntity.getLocallist();
-		cloudUnits=filelistEntity.getBklist();
+		cloudUnits = null;
+		List<FileLocal> fileLocals = filelistEntity.getLocallist();
+		cloudUnits = filelistEntity.getBklist();
 
 
 		//未备份的列表  LIST<int>
@@ -201,32 +194,30 @@ public class PicActivity extends UILActivity implements OnClickListener {
 		//显示未备份文件
 
 		if (filelistEntity != null) {
-			if (YearMap==null)
-				YearMap=new HashMap<>();
-
-				for (FileInfo0 info0:cloudUnits)
-				{
-					add2YearMap(info0);
-				}
-				mPicList=initData(mPicList);
-				YearMap.clear();
+			if (YearMap == null)
+				YearMap = new HashMap<>();
+			for (FileInfo0 info0 : cloudUnits) {
+				add2YearMap(info0);
 			}
+			mPicList = initData(mPicList);
+			YearMap.clear();
+		}
 		//要有提示用户等待的画面
 		handler.sendEmptyMessage(0);
 	}
 
 
-	private List<PicBean<PicInfoBeanMonth>> initData(List<PicBean<PicInfoBeanMonth>> data){
+	private List<PicBean<PicInfoBeanMonth>> initData(List<PicBean<PicInfoBeanMonth>> data) {
 		if (!YearMap.isEmpty()) {
 			data.clear();
 			for (Map.Entry<Integer, Map<Integer, List<PicInfoBean>>> entryYear : YearMap.entrySet()) {
 
-				int midx=0;
-				int year=entryYear.getKey();
-				for (Map.Entry<Integer,List<PicInfoBean>> entryMonth:
-				 entryYear.getValue().entrySet() ){
+				int midx = 0;
+				int year = entryYear.getKey();
+				for (Map.Entry<Integer, List<PicInfoBean>> entryMonth :
+						entryYear.getValue().entrySet()) {
 					PicInfoBeanMonth<PicInfoBean> monthInfoBean = new PicInfoBeanMonth();
-					midx=entryMonth.getKey();
+					midx = entryMonth.getKey();
 					monthInfoBean.setUrl(entryMonth.getValue().get(0).getUrl());//第一张图片
 					monthInfoBean.setPicunits(entryMonth.getValue());
 					if (!monthInfoBean.getPicunits().isEmpty()) {
@@ -240,6 +231,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 		return data;
 
 	}
+
 	private void initResourceId() {
 		mTvNumber = (TextView) findViewById(R.id.tv_pic_number);
 		mLvPic = (ListView) findViewById(R.id.lv_pic);
@@ -251,6 +243,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 		mIvLeft.setOnClickListener(this);
 		mTvRight.setOnClickListener(this);
 		mTvNumber.setOnClickListener(this);
+		mLvPic.setOnScrollListener(new PauseOnScrollListener(imageLoader,true,true));
 	}
 
 	private void initTitle() {
@@ -271,52 +264,52 @@ public class PicActivity extends UILActivity implements OnClickListener {
 			case R.id.tv_right: // 编辑
 				break;
 			case R.id.tv_pic_number:
-				waitDialog.show();
-				new Thread(){
-					@Override
-					public void run() {
-						List<FileLocal> locallist = filelistEntity.getLocallist();
-						for (FileLocal fileLocal : locallist)
-						{
-							if (fileLocal.bakuped)
-								continue;
-							FileInfo0 	info = syncTask.queryLocalInfo(fileLocal.sysid);
-
-							if (info==null)
-							{
-								Log.d("PicActity", fileLocal.fname + " not found in mediaStore");
-								continue;
-							}
-							if(StringUtils.isNullOrEmpty(info.getFilename())){
-								info.setFilename(fileLocal.fname);
-							}
-							add2YearMap(info);
-						}
-						localList=initData(localList);
-						YearMap.clear();
-
-						bIsUbkList = true;
-						handler.sendEmptyMessage(0);
-					}
-				}.start();
+				initLocal();
 				break;
 		}
 	}
 
+	private void initLocal() {
+		waitDialog.show();
+		localList.clear();
+		new Thread() {
+			@Override
+			public void run() {
+				List<FileLocal> locallist = filelistEntity.getLocallist();
+				for (FileLocal fileLocal : locallist) {
+					if (fileLocal.bakuped)
+						continue;
+					FileInfo0 info = syncTask.queryLocalInfo(fileLocal.sysid);
+
+					if (info == null) {
+						Log.d("PicActity", fileLocal.fname + " not found in mediaStore");
+						continue;
+					}
+					if (StringUtils.isNullOrEmpty(info.getFilename())) {
+						info.setFilename(fileLocal.fname);
+					}
+					add2YearMap(info);
+				}
+				localList = initData(localList);
+				YearMap.clear();
+
+				bIsUbkList = true;
+				handler.sendEmptyMessage(0);
+			}
+		}.start();
+	}
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(RESULT_OK==resultCode){
-			switch (requestCode){
+		if (RESULT_OK == resultCode) {
+			switch (requestCode) {
 				case 0x11:
-					Log.i("lmj","返回执行了");
-					cloudUnits=null;
-					mPicList.clear();
-					localList.clear();
-					onNewThreadRequest();
+					Log.i("lmj", "返回执行了");
+					cloudUnits = null;
+					onNewThreadRequest(bIsUbkList);
 					break;
 			}
 		}
-
 
 
 	}

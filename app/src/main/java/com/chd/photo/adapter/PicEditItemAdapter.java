@@ -22,36 +22,36 @@ import java.util.List;
 
 public class PicEditItemAdapter extends BaseAdapter {
 
-    protected ImageLoader imageLoader;
-    DisplayImageOptions options;
-    private Activity context;
-    private List<PicEditItemBean> list;
+	protected ImageLoader imageLoader;
+	DisplayImageOptions options;
+	private Activity context;
+	private List<PicEditItemBean> list;
 	private LayoutInflater mInflater;
 	private boolean isEdit;
 
-    public PicEditItemAdapter(Activity context, List<PicEditItemBean> list,boolean isEdit) {
-        this.context = context;
-        this.list = list;
-	    this.isEdit=isEdit;
-	    this.mInflater=LayoutInflater.from(context);
-	    this.imageLoader=ImageLoader.getInstance();
+	public PicEditItemAdapter(Activity context, List<PicEditItemBean> list, boolean isEdit) {
+		this.context = context;
+		this.list = list;
+		this.isEdit = isEdit;
+		this.mInflater = LayoutInflater.from(context);
+		this.imageLoader = ImageLoader.getInstance();
 
-	   options= new DisplayImageOptions.Builder()
-			    .cacheInMemory(true).cacheOnDisk(true)
-			    .considerExifParams(true)
-			   .showImageOnFail(R.drawable.pic_test1).showImageOnLoading(R.drawable.pic_test1)
-			    .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-			    .bitmapConfig(Bitmap.Config.RGB_565)
-			    .resetViewBeforeLoading(false)
-			   .extraForDownloader(new ShareUtils(context).getStorePathStr())
-			    .displayer(new RoundedBitmapDisplayer(20))
-			    .displayer(new FadeInBitmapDisplayer(0)).build();
+		options = new DisplayImageOptions.Builder()
+				.cacheInMemory(false).cacheOnDisk(false)
+				.considerExifParams(true)
+				.showImageOnFail(R.drawable.pic_test1).showImageOnLoading(R.drawable.pic_test1)
+				.imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+				.bitmapConfig(Bitmap.Config.RGB_565)
+				.resetViewBeforeLoading(false)
+				.extraForDownloader(new ShareUtils(context).getStorePathStr())
+				.displayer(new RoundedBitmapDisplayer(20))
+				.displayer(new FadeInBitmapDisplayer(0)).build();
 
-    }
+	}
 
 	@Override
 	public int getCount() {
-		return list==null?0:list.size();
+		return list == null ? 0 : list.size();
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class PicEditItemAdapter extends BaseAdapter {
 	public View getView(final int position, View converView, ViewGroup parent) {
 		final ViewHolder holder;
 		if (converView == null) {
-			converView = mInflater.inflate(R.layout.item_pic_edit_item_adapter, parent,false);
+			converView = mInflater.inflate(R.layout.item_pic_edit_item_adapter, parent, false);
 			holder = new ViewHolder();
 			holder.iv_pic_info_photo = (ImageView) converView.findViewById(R.id.iv_pic_edit_item_photo);
 			holder.iv_pic_edit_check = (ImageView) converView.findViewById(R.id.iv_pic_edit_item_photo_check);
@@ -76,28 +76,30 @@ public class PicEditItemAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) converView.getTag();
 		}
-		if(isEdit){
-
+		if (isEdit) {
 			holder.iv_pic_edit_check.setVisibility(View.VISIBLE);
-		}else{
+		} else {
 			holder.iv_pic_edit_check.setVisibility(View.GONE);
-
 		}
 
 		holder.iv_pic_edit_check.setImageResource(list.get(position).isSelect() ? R.drawable.pic_edit_photo_checked : R.drawable.pic_edit_photo_check);
 
-			String url = list.get(position).getUrl();
-			{
+		String url = list.get(position).getUrl();
+		{
 				imageLoader.displayImage(url, holder.iv_pic_info_photo,
 						options);
+//			imageLoader.loadImage(url, options, new SimpleImageLoadingListener() {
+//						public void onLoadingComplete(String imageUri, android.view.View view, android.graphics.Bitmap loadedImage) {
+//							holder.iv_pic_info_photo.setImageBitmap(loadedImage);   //imageView，你要显示的imageview控件对象，布局文件里面//配置的
+//						}
+//
+//						;
+//					}
+//			);
+//				holder.iv_pic_info_photo.setTag(url);
+		}
 
-				holder.iv_pic_info_photo.setTag(url);
-			}
 
-
-
-
-		
 		return converView;
 	}
 
