@@ -31,7 +31,7 @@ public class SyncLocalFileBackground implements Runnable {
 
 
     private final String TAG = "SyncLocal";
-    private final int Maxbuflen = (int)64 * 1024;
+    private final int Maxbuflen = (int)128 * 1024;
     List<FileInfo0> files = new ArrayList<FileInfo0>();
     private MediaMgr su = null;
     private Context context = null;
@@ -358,7 +358,7 @@ public class SyncLocalFileBackground implements Runnable {
             if (activeProcess != null) {
                 activeProcess.setParMessage("正在上传");
                 activeProcess.setMaxProgress(100);
-                activeProcess.setProgress((int) (start*100 / size));
+                activeProcess.setProgress((int) ((Math.max(1,start))*100 / size));
             }
         }
         int len = 0;
