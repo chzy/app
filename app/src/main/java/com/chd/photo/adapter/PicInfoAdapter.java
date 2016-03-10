@@ -27,17 +27,18 @@ public class PicInfoAdapter extends BaseAdapter {
 
 	private Context context;
 	private List<PicInfoBeanMonth> list;
-	protected ImageLoader imageLoader = ImageLoader.getInstance();
+	protected ImageLoader imageLoader;
 	DisplayImageOptions options;
 	private  int _month;
 
-	public PicInfoAdapter(Context context,  PicBean<PicInfoBeanMonth> picbean) {
+	public PicInfoAdapter(Context context,  PicBean<PicInfoBeanMonth> picbean,ImageLoader imageLoader) {
 
 		/*imageLoader.clearDiskCache();
 		imageLoader.clearMemoryCache();*/
 		_month=picbean.getMonth();
 		this.context = context;
 		this.list =new ArrayList<PicInfoBeanMonth>();
+		this.imageLoader=imageLoader;
 		list.add( picbean.getList());
 		options = new DisplayImageOptions.Builder()
 		.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
@@ -91,6 +92,7 @@ public class PicInfoAdapter extends BaseAdapter {
 		holder.tv_pic_info_number.setText("(" + /*list.get(position).getMonth()*/list.get(position).getPicunits().size()
 				+ ")");
 		//String url="";
+
 		imageLoader.displayImage(list.get(position).getUrl(), holder.iv_pic_info_photo,
 				options, new SimpleImageLoadingListener() {
 					@Override

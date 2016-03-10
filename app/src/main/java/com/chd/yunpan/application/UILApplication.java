@@ -83,7 +83,7 @@ public class UILApplication extends Application {
 		// method.
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
 				.threadPriority(Thread.NORM_PRIORITY - 2)
-				.threadPoolSize(3)
+				.threadPoolSize(5)
 				.memoryCache(new WeakMemoryCache())
 				.denyCacheImageMultipleSizesInMemory()
 				.diskCacheFileNameGenerator(new HashCodeFileNameGenerator())

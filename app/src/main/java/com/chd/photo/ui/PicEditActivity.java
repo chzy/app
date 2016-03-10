@@ -79,12 +79,18 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 	private void processMsg(Message msg){
 		//删除
 		ArrayList<Integer> posList= (ArrayList<Integer>) msg.obj;
+		if(posList.size()==selectItem.size()){
+			toastMain("上传成功");
+		}else{
+			toastMain("上传失败");
+
+		}
 		int i=0;
 		for (Integer index:
 				posList) {
 			int pos=index-i;
 			selectItem.remove(pos);
-
+			i++;
 		}
 		int count=mPicList.size();
 		ArrayList<PicEditBean> items=new ArrayList<>();

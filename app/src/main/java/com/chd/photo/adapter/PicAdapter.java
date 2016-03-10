@@ -14,6 +14,8 @@ import com.chd.photo.entity.PicInfoBean;
 import com.chd.photo.entity.PicInfoBeanMonth;
 import com.chd.photo.ui.PicEditActivity;
 import com.chd.yunpan.R;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
 import java.io.Serializable;
 import java.util.List;
@@ -24,10 +26,11 @@ public class PicAdapter extends BaseAdapter{
 	private Activity context;
 	private List<PicBean<PicInfoBeanMonth>> list;
 	private boolean bIsUbkList;
-
-	public PicAdapter(Activity context,  List<PicBean<PicInfoBeanMonth>> list, boolean bIsUbkList) {
+	private ImageLoader imageLoader;
+	public PicAdapter(Activity context,  List<PicBean<PicInfoBeanMonth>> list, boolean bIsUbkList,ImageLoader imageLoader) {
 		this.context = context;
 		this.list = list;
+		this.imageLoader=imageLoader;
 		this.bIsUbkList = bIsUbkList;
 	}
 
@@ -61,7 +64,8 @@ public class PicAdapter extends BaseAdapter{
 		}
 		holder.tv_pic_date.setText(list.get(position).getYear());
 		holder.mlv_pic.setAdapter(new PicInfoAdapter(context, list.get(position)
-				));
+				,imageLoader));
+		holder.mlv_pic.setOnScrollListener(new PauseOnScrollListener(imageLoader,true,true));
 		holder.mlv_pic.setOnItemClickListener(new OnItemClickListener() 
 		{
 

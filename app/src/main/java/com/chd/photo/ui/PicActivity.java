@@ -24,6 +24,8 @@ import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.utils.TimeUtils;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,6 +46,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 	private List<PicBean<PicInfoBeanMonth>> mPicList = new ArrayList();
 	private boolean bIsUbkList;
 	private List<FileInfo0> cloudUnits;
+	private ImageLoader imageLoader;
 	private SyncTask syncTask;
 	private List<PicBean<PicInfoBeanMonth>> localList = new ArrayList();
 
@@ -55,7 +58,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 				Collections.sort(localList);
 				findViewById(R.id.rl_pic_ubk_layout).setVisibility(View.GONE);
 				mTvCenter.setText("未备份照片");
-				mLvPic.setAdapter(new PicAdapter(PicActivity.this, localList, bIsUbkList));
+				mLvPic.setAdapter(new PicAdapter(PicActivity.this, localList, bIsUbkList,imageLoader));
 			} else {
 				dismissWaitDialog();
 				dismissDialog();
@@ -71,7 +74,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 				}
 				Log.d("liumj", "数量" + size);
 				mTvNumber.setText(String.format("未备份照片%d张", size));
-				mLvPic.setAdapter(new PicAdapter(PicActivity.this, mPicList, bIsUbkList));
+				mLvPic.setAdapter(new PicAdapter(PicActivity.this, mPicList, bIsUbkList,imageLoader));
 			}
 		}
 
@@ -86,14 +89,14 @@ public class PicActivity extends UILActivity implements OnClickListener {
 		setContentView(R.layout.activity_pic);
 
 		bIsUbkList = false;
-
+		imageLoader=ImageLoader.getInstance();
 		initTitle();
 		initResourceId();
 		initListener();
-		onNewThreadRequest();
+		onNewThreadRequest(false);
 	}
 
-	private void onNewThreadRequest() {
+	private void onNewThreadRequest(final boolean bIsUbkList) {
 
 		showWaitDialog();
 		Thread thread = new Thread(new Runnable() {
@@ -112,7 +115,12 @@ public class PicActivity extends UILActivity implements OnClickListener {
 					}
 					filelistEntity = syncTask.analyPhotoUnits(cloudUnits);
 				}
-				initData();
+				if(bIsUbkList){
+					initLocal();
+				}else{
+					initData();
+
+				}
 			}
 		});
 		thread.start();
@@ -235,6 +243,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 		mIvLeft.setOnClickListener(this);
 		mTvRight.setOnClickListener(this);
 		mTvNumber.setOnClickListener(this);
+		mLvPic.setOnScrollListener(new PauseOnScrollListener(imageLoader,true,true));
 	}
 
 	private void initTitle() {
@@ -255,35 +264,39 @@ public class PicActivity extends UILActivity implements OnClickListener {
 			case R.id.tv_right: // 编辑
 				break;
 			case R.id.tv_pic_number:
-				waitDialog.show();
-				localList.clear();
-				new Thread() {
-					@Override
-					public void run() {
-						List<FileLocal> locallist = filelistEntity.getLocallist();
-						for (FileLocal fileLocal : locallist) {
-							if (fileLocal.bakuped)
-								continue;
-							FileInfo0 info = syncTask.queryLocalInfo(fileLocal.sysid);
-
-							if (info == null) {
-								Log.d("PicActity", fileLocal.fname + " not found in mediaStore");
-								continue;
-							}
-							if (StringUtils.isNullOrEmpty(info.getFilename())) {
-								info.setFilename(fileLocal.fname);
-							}
-							add2YearMap(info);
-						}
-						localList = initData(localList);
-						YearMap.clear();
-
-						bIsUbkList = true;
-						handler.sendEmptyMessage(0);
-					}
-				}.start();
+				initLocal();
 				break;
 		}
+	}
+
+	private void initLocal() {
+		waitDialog.show();
+		localList.clear();
+		new Thread() {
+			@Override
+			public void run() {
+				List<FileLocal> locallist = filelistEntity.getLocallist();
+				for (FileLocal fileLocal : locallist) {
+					if (fileLocal.bakuped)
+						continue;
+					FileInfo0 info = syncTask.queryLocalInfo(fileLocal.sysid);
+
+					if (info == null) {
+						Log.d("PicActity", fileLocal.fname + " not found in mediaStore");
+						continue;
+					}
+					if (StringUtils.isNullOrEmpty(info.getFilename())) {
+						info.setFilename(fileLocal.fname);
+					}
+					add2YearMap(info);
+				}
+				localList = initData(localList);
+				YearMap.clear();
+
+				bIsUbkList = true;
+				handler.sendEmptyMessage(0);
+			}
+		}.start();
 	}
 
 	@Override
@@ -293,9 +306,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 				case 0x11:
 					Log.i("lmj", "返回执行了");
 					cloudUnits = null;
-					mPicList.clear();
-					localList.clear();
-					onNewThreadRequest();
+					onNewThreadRequest(bIsUbkList);
 					break;
 			}
 		}
