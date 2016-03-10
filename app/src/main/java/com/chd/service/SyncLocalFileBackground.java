@@ -31,7 +31,7 @@ public class SyncLocalFileBackground implements Runnable {
 
 
     private final String TAG = "SyncLocal";
-    private final int Maxbuflen = (int)256 * 1024;
+    private final int Maxbuflen = (int)64 * 1024;
     List<FileInfo0> files = new ArrayList<FileInfo0>();
     private MediaMgr su = null;
     private Context context = null;
@@ -209,15 +209,18 @@ public class SyncLocalFileBackground implements Runnable {
             return false;
         }
         su.open();
+        long t0=System.currentTimeMillis();
+        long t1=0;
         while ((readlen = inputTrasnport.read(buffer, offset, buflen)) > -1) {
             try {
                 os.write(buffer, 0, readlen);
                 offset += readlen;
                 //Log.d(TAG,"read:"+offset+" bytes");
                 int progress = (offset * 100 / total);
-                Log.d(TAG, "progress :" + progress);
-                fileInfo0.setOffset(offset);
-                su.setDownloadStatus(fileInfo0);
+                t1=System.currentTimeMillis();
+                Log.d(TAG, "progress :" + progress + " " +(int) (offset/1024 / ((t1 - t0)/1000))  + " k/s");
+                //fileInfo0.setOffset(offset);
+                //su.setDownloadStatus(fileInfo0);
                 if (pb != null)
                     pb.updateProgress(progress);
             } catch (Exception e) {
@@ -382,17 +385,19 @@ public class SyncLocalFileBackground implements Runnable {
             int bufflen=  Math.min(Maxbuflen,(int)(size - start));
             byte[] buffer = new byte[/*1024 * 5*/bufflen];
             rf.seek(start);
-            long pz = 0;
             int proc=0,proc1=0;
+			long pz = 0,t0=System.currentTimeMillis(),t1=0;
             while ((len = rf.read(buffer, 0, buffer.length)) != -1) {
                 pz = pz + len;
                 if (filebuilder.Append(/*pz,*/buffer,len)) {
+                    t1=System.currentTimeMillis();
+                    Log.d(TAG,"upload speed:"+ (int) (pz/1024 / ((t1 - t0)/1000))+" k/s");
                     entity.setOffset(pz);
                     proc1=(int)(pz * 100 / size);
                     if (activeProcess != null && proc!=(proc1)) {
                         activeProcess.updateProgress(proc1);
                     }
-                    su.setUploadStatus(entity);
+                    //su.setUploadStatus(entity);
                     succed = true;
                 } else {
                     break;
