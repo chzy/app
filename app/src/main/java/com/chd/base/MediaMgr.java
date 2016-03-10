@@ -165,7 +165,6 @@ public class MediaMgr  {
 
 
 	public void   anlayLocalUnits(List<FileInfo0> couldlist,FilelistEntity filelistEntity) {
-		int count= LocalUnits.size();
 		int count2=couldlist.size();
 		
 		ArrayList<FileInfo0> baklist=new ArrayList(count2);
@@ -184,8 +183,9 @@ public class MediaMgr  {
 
 			for (FileLocal fileLocal: LocalUnits)
 			{
-				if (fileLocal.bakuped )
+				if (fileLocal.bakuped ){
 					continue;
+				}
 				if (fileLocal.fname.equalsIgnoreCase(fileInfo.getObjid())) {
 					item.setSysid(fileLocal.sysid);
 					fileLocal.bakuped = true;
@@ -199,6 +199,7 @@ public class MediaMgr  {
 	
 
 		couldlist.clear();
+		filelistEntity.setLocallist(LocalUnits);
 		filelistEntity.setBklist(baklist);
 		//return  null;
 	}
