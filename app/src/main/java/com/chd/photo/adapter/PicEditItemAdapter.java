@@ -14,6 +14,7 @@ import com.chd.yunpan.share.ShareUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
@@ -28,6 +29,7 @@ public class PicEditItemAdapter extends BaseAdapter {
 	private List<PicEditItemBean> list;
 	private LayoutInflater mInflater;
 	private boolean isEdit;
+	private ImageSize imageSize;
 
 	public PicEditItemAdapter(Activity context, List<PicEditItemBean> list, boolean isEdit) {
 		this.context = context;
@@ -35,12 +37,12 @@ public class PicEditItemAdapter extends BaseAdapter {
 		this.isEdit = isEdit;
 		this.mInflater = LayoutInflater.from(context);
 		this.imageLoader = ImageLoader.getInstance();
-
+		this.imageSize=new ImageSize(100,100);
 		options = new DisplayImageOptions.Builder()
-				.cacheInMemory(false).cacheOnDisk(false)
+				.cacheInMemory(true).cacheOnDisk(true)
 				.considerExifParams(true)
 				.showImageOnFail(R.drawable.pic_test1).showImageOnLoading(R.drawable.pic_test1)
-				.imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+				.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
 				.bitmapConfig(Bitmap.Config.RGB_565)
 				.resetViewBeforeLoading(false)
 				.extraForDownloader(new ShareUtils(context).getStorePathStr())
@@ -81,22 +83,21 @@ public class PicEditItemAdapter extends BaseAdapter {
 		} else {
 			holder.iv_pic_edit_check.setVisibility(View.GONE);
 		}
-
 		holder.iv_pic_edit_check.setImageResource(list.get(position).isSelect() ? R.drawable.pic_edit_photo_checked : R.drawable.pic_edit_photo_check);
-
 		String url = list.get(position).getUrl();
 		{
-				imageLoader.displayImage(url, holder.iv_pic_info_photo,
-						options);
+//			imageLoader.displayImage(url,holder.iv_pic_info_photo,
+//					options);
+			imageLoader.displayImage(url,holder.iv_pic_info_photo,
+					options);
 //			imageLoader.loadImage(url, options, new SimpleImageLoadingListener() {
-//						public void onLoadingComplete(String imageUri, android.view.View view, android.graphics.Bitmap loadedImage) {
+//						public void onLoadingComplete(String imageUri,View view, Bitmap loadedImage) {
 //							holder.iv_pic_info_photo.setImageBitmap(loadedImage);   //imageView，你要显示的imageview控件对象，布局文件里面//配置的
 //						}
-//
 //						;
 //					}
 //			);
-//				holder.iv_pic_info_photo.setTag(url);
+//			holder.iv_pic_info_photo.setTag(url);
 		}
 
 

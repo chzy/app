@@ -265,6 +265,9 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 				for (PicEditItemBean bean :
 						selectItem) {
 					FileInfo0 fileInfo0 = new FileInfo0();
+					if(StringUtils.isNullOrEmpty(bean.getUrl())){
+						continue;
+					}
 					int idx = bean.getUrl().indexOf("://");
 					if (idx < 0) {
 						Log.e(TAG, "error file path fail!!!!");
@@ -300,6 +303,10 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 				for (PicEditItemBean bean :
 						selectItem) {
 					FileInfo0 fileInfo0 = new FileInfo0();
+					if(StringUtils.isNullOrEmpty(bean.getUrl())){
+						Log.e(TAG, "empty path fail!!!!");
+						continue;
+					}
 					int idx = bean.getUrl().indexOf("://");
 					if (idx < 0) {
 						Log.e(TAG, "error file path fail!!!!");
