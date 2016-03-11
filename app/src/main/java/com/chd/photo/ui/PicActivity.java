@@ -138,24 +138,22 @@ public class PicActivity extends UILActivity implements OnClickListener {
 			tmpMonthMap = new HashMap();
 		}
 		//List list=tmpMonthMap.get(month);
-		boolean fillfrist = false;
+//		boolean fillfrist = false;
 		//if (list==null || list.isEmpty())
-		if (tmpMonthMap.isEmpty() || tmpMonthMap.containsKey(month) == false || tmpMonthMap.get(month).isEmpty()) {
-			fillfrist = true;
-		}
+//		if (tmpMonthMap.isEmpty() || tmpMonthMap.containsKey(month) == false || tmpMonthMap.get(month).isEmpty()) {
+//			fillfrist = true;
+//		}
 		PicInfoBean picInfoBean = new PicInfoBean();
 
 
 		if (info.getSysid() > 0) {
 			picInfoBean.setSysid(info.getSysid());
-			if (fillfrist) {
 				String uri = info.getUri();
 				picInfoBean.setUrl(uri);
 				if (uri == null /*&& syncTask.haveLocalCopy(info)*/)
 					picInfoBean.setUrl("file://" + info.getFilePath());
-			}
+
 		} else {
-			if (fillfrist)
 				picInfoBean.setUrl("trpc://" + info.getObjid());
 		}
 

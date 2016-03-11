@@ -79,12 +79,12 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 	private void processMsg(Message msg){
 		//删除
 		ArrayList<Integer> posList= (ArrayList<Integer>) msg.obj;
-		if(posList.size()==selectItem.size()){
+		if(posList.size()==0){
 			toastMain("上传成功");
 		}else{
 			toastMain("上传失败");
-
 		}
+		if(!(posList.size()==selectItem.size())){
 		int i=0;
 		for (Integer index:
 				posList) {
@@ -104,10 +104,10 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 				}
 			}
 		}
-
 		mPicList.removeAll(items);
 		setResult(RESULT_OK);
 		picEditAdapter.notifyDataSetChanged();
+		}
 	}
 
 
@@ -265,6 +265,9 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 				for (PicEditItemBean bean :
 						selectItem) {
 					FileInfo0 fileInfo0 = new FileInfo0();
+					if(StringUtils.isNullOrEmpty(bean.getUrl())){
+						continue;
+					}
 					int idx = bean.getUrl().indexOf("://");
 					if (idx < 0) {
 						Log.e(TAG, "error file path fail!!!!");
@@ -300,6 +303,10 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 				for (PicEditItemBean bean :
 						selectItem) {
 					FileInfo0 fileInfo0 = new FileInfo0();
+					if(StringUtils.isNullOrEmpty(bean.getUrl())){
+						Log.e(TAG, "empty path fail!!!!");
+						continue;
+					}
 					int idx = bean.getUrl().indexOf("://");
 					if (idx < 0) {
 						Log.e(TAG, "error file path fail!!!!");
