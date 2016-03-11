@@ -209,7 +209,7 @@ public class SyncTask {
 					dialogInterface.dismiss();
 				}
 			}
-		}).create();
+		}).setCancelable(false).create();
 		dialog.show();
 		netThread=new Thread(){
 			@Override
@@ -349,7 +349,7 @@ public class SyncTask {
 							dialogInterface.dismiss();
 						}
 					}
-				}).create();
+				}).setCancelable(false).create();
 		dialog.show();
 		netThread=new Thread(){
 			@Override
@@ -470,7 +470,7 @@ public class SyncTask {
 							dialogInterface.dismiss();
 						}
 					}
-				}).create();
+				}).setCancelable(false).create();
 		dialog.show();
 		netThread=new Thread(){
 			@Override
