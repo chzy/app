@@ -401,7 +401,7 @@ public class SyncLocalFileBackground implements Runnable {
                             speed1 = speed;
                             bflen +=(1024*3);
                         }
-                        Log.d(TAG, "upload speed:" + speed*unit + " k/s"+ "  pklen:"+bflen);
+                        Log.i(TAG, "upload speed:" + speed*unit + " k/s"+ "  pklen:"+bflen);
                         entity.setOffset(pz);
                         proc1 = (int) (pz * 100 / size);
                         if (activeProcess != null && proc != (proc1)) {

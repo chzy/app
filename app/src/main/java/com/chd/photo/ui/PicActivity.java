@@ -114,12 +114,14 @@ public class PicActivity extends UILActivity implements OnClickListener {
 						return;
 					}
 					filelistEntity = syncTask.analyPhotoUnits(cloudUnits);
+					cloudUnits.clear();
+					cloudUnits = null;
+					cloudUnits = filelistEntity.getBklist();
 				}
 				if(bIsUbkList){
 					initLocal();
 				}else{
 					initData();
-
 				}
 			}
 		});
@@ -179,10 +181,6 @@ public class PicActivity extends UILActivity implements OnClickListener {
 		// localfiles 调用系统方法得到本地所有文件库. 文件对象需要用 fileinfo0 类封装 构造后 要set filepath, size , 变成list .构造成 FilesListEntity locallist
 
 
-		cloudUnits.clear();
-		cloudUnits = null;
-		List<FileLocal> fileLocals = filelistEntity.getLocallist();
-		cloudUnits = filelistEntity.getBklist();
 
 
 		//未备份的列表  LIST<int>
