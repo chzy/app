@@ -31,7 +31,7 @@ public class SyncLocalFileBackground implements Runnable {
 
 
     private final String TAG = "SyncLocal";
-    private final int Maxbuflen = (int)128 * 1024;
+    private final int Maxbuflen = (int)256 * 1024;
     List<FileInfo0> files = new ArrayList<FileInfo0>();
     private MediaMgr su = null;
     private Context context = null;
@@ -383,22 +383,33 @@ public class SyncLocalFileBackground implements Runnable {
             }
             RandomAccessFile rf = new RandomAccessFile(entity.getFilePath(), "r");
             int bufflen=  Math.min(Maxbuflen,(int)(size - start));
-            byte[] buffer = new byte[/*1024 * 5*/bufflen];
+            byte[] buffer = new byte[bufflen];
             rf.seek(start);
             int proc=0,proc1=0;
-			long pz = 0,t0=System.currentTimeMillis(),t1=0;
-            while ((len = rf.read(buffer, 0, buffer.length)) != -1) {
+            float speed=0f,speed1=0f;
+			long pz = 1,t1=0;
+            int bflen=Math.min(1024*64, buffer.length);
+            float unit=1000f/1024f;
+            while ((len = rf.read(buffer, 0, bflen)) != -1) {
                 pz = pz + len;
+                long t0=System.currentTimeMillis();
+
                 if (filebuilder.Append(/*pz,*/buffer,len)) {
-                    t1=System.currentTimeMillis();
-                    Log.d(TAG,"upload speed:"+ (int) (pz/1024 / ((t1 - t0)/1000))+" k/s");
-                    entity.setOffset(pz);
-                    proc1=(int)(pz * 100 / size);
-                    if (activeProcess != null && proc!=(proc1)) {
-                        activeProcess.updateProgress(proc1);
-                    }
-                    //su.setUploadStatus(entity);
-                    succed = true;
+                        t1 = System.currentTimeMillis();
+                        speed = (len  / ((t1 - t0)));
+                        if (speed > speed1) {
+                            speed1 = speed;
+                            bflen +=(1024*3);
+                        }
+                        Log.d(TAG, "upload speed:" + speed*unit + " k/s"+ "  pklen:"+bflen);
+                        entity.setOffset(pz);
+                        proc1 = (int) (pz * 100 / size);
+                        if (activeProcess != null && proc != (proc1)) {
+                            activeProcess.updateProgress(proc1);
+                        }
+                        //su.setUploadStatus(entity);
+                        succed = true;
+
                 } else {
                     break;
                 }
