@@ -31,8 +31,10 @@ public abstract class ActiveProcess extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if(dialog!=null){
                 dialog.setMessage(msg);
                 dialog.show();
+                }
             }
         });
     }
@@ -41,8 +43,10 @@ public abstract class ActiveProcess extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if(dialog!=null){
                 dialog.setMessage("");
                 dialog.dismiss();
+                }
             }
         });
 

@@ -52,6 +52,7 @@ public class UILActivity extends ActiveProcess{
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
+				if(waitDialog!=null)
 				waitDialog.show();
 			}
 		});
@@ -62,6 +63,7 @@ public class UILActivity extends ActiveProcess{
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
+				if(waitDialog!=null)
 				waitDialog.dismiss();
 			}
 		});

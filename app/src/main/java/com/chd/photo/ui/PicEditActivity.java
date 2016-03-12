@@ -80,9 +80,17 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 		//删除
 		ArrayList<Integer> posList= (ArrayList<Integer>) msg.obj;
 		if(posList.size()==0){
+			if(msg.what==998)
 			toastMain("上传成功");
+			else if(msg.what==996){
+				toastMain("删除成功");
+			}
 		}else{
-			toastMain("上传失败");
+			if(msg.what==998)
+				toastMain("上传失败");
+			else if(msg.what==996){
+				toastMain("删除失败");
+			}
 		}
 		if(!(posList.size()==selectItem.size())){
 		int i=0;

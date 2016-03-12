@@ -209,7 +209,7 @@ public class SyncTask {
 					dialogInterface.dismiss();
 				}
 			}
-		}).create();
+		}).setCancelable(false).create();
 		dialog.show();
 		netThread=new Thread(){
 			@Override
@@ -237,7 +237,7 @@ public class SyncTask {
 						}
 					});
 					boolean result = upload(item, null, false);
-					Log.d("lmj","第"+i+"个上传状态:"+result);
+					Log.i("lmj","第"+i+"个上传状态:"+result);
 					if(!result){
 						upload.add(i-1);
 					}
@@ -349,7 +349,7 @@ public class SyncTask {
 							dialogInterface.dismiss();
 						}
 					}
-				}).create();
+				}).setCancelable(false).create();
 		dialog.show();
 		netThread=new Thread(){
 			@Override
@@ -470,7 +470,7 @@ public class SyncTask {
 							dialogInterface.dismiss();
 						}
 					}
-				}).create();
+				}).setCancelable(false).create();
 		dialog.show();
 		netThread=new Thread(){
 			@Override
