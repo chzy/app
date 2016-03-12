@@ -14,11 +14,11 @@ public abstract class ActiveProcess extends Activity {
 
 
     //public abstract void updateProgress(final int progress);
-    protected  CustomProgressDialog dialog;
+    protected CustomProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if(dialog==null){
+        if (dialog == null) {
             dialog = CustomProgressDialog.createDialog(this);
             dialog.setCanceledOnTouchOutside(false);
             dialog.setCancelable(false);
@@ -26,26 +26,26 @@ public abstract class ActiveProcess extends Activity {
         super.onCreate(savedInstanceState);
     }
 
-    protected void showDialog(final String msg){
+    protected void showDialog(final String msg) {
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(dialog!=null){
-                dialog.setMessage(msg);
-                dialog.show();
+                if (dialog != null) {
+                    dialog.setMessage(msg);
+                    dialog.show();
                 }
             }
         });
     }
 
-    protected void dismissDialog(){
+    protected void dismissDialog() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(dialog!=null){
-                dialog.setMessage("");
-                dialog.dismiss();
+                if (dialog != null) {
+                    dialog.setMessage("");
+                    dialog.dismiss();
                 }
             }
         });
@@ -53,23 +53,22 @@ public abstract class ActiveProcess extends Activity {
     }
 
 
-    private  int progress=-1;
+    private int progress = -1;
     private int max;
     private String msg;
-    public synchronized void updateProgress( int progress)
-    {
-        this.progress=progress;
+
+    public synchronized void updateProgress(int progress) {
+        this.progress = progress;
         runOnUiThread(updata);
     }
 
-    public synchronized void updateProgress( int progress,int max)
-    {
-        this.progress=progress;
-        this.max=max;
+    public synchronized void updateProgress(int progress, int max) {
+        this.progress = progress;
+        this.max = max;
         runOnUiThread(updata2);
     }
 
-    public void toastMain(final String msg){
+    public void toastMain(final String msg) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -78,61 +77,61 @@ public abstract class ActiveProcess extends Activity {
         });
     }
 
-    public Runnable updata2=new Runnable(){
+    public Runnable updata2 = new Runnable() {
 
         @Override
         public void run() {
-            Log.d("lmj", msg+":" + progress);
+            if(dialog!=null){
+            Log.d("lmj", msg + ":" + progress);
             if (progress < max && dialog.isShowing()) {
-                dialog.setMessage( msg+ progress+"/"+max);
+                dialog.setMessage(msg + progress + "/" + max);
             } else if (progress > 0 && !dialog.isShowing()) {
                 dialog.show();
             } else {
                 dialog.dismiss();
             }
-        }
-    };
-
-
-
-
-    public Runnable updata=new Runnable(){
-
-        @Override
-        public void run() {
-            Log.d("lmj", msg+":" + progress);
-            if (progress < 100 && dialog.isShowing()) {
-                dialog.setMessage( msg+ progress + "%");
-            } else if (progress >= 0 && !dialog.isShowing()) {
-                dialog.show();
-            }else if(progress==0){
-            } else {
-                dialog.dismiss();
             }
         }
     };
 
-    public  void setMaxProgress(int max)
-    {
-        this.max=max;
+
+    public Runnable updata = new Runnable() {
+
+        @Override
+        public void run() {
+            if(dialog!=null){
+            Log.d("lmj", msg + ":" + progress);
+            if (progress < 100 && dialog.isShowing()) {
+                dialog.setMessage(msg + progress + "%");
+            } else if (progress >= 0 && !dialog.isShowing()) {
+                dialog.show();
+            } else if (progress == 0) {
+            } else {
+                dialog.dismiss();
+            }
+            }
+        }
+    };
+
+    public void setMaxProgress(int max) {
+        this.max = max;
     }
 
-    public synchronized  void finishProgress(){
-        if(dialog!=null){
-        dialog.dismiss();
+    public synchronized void finishProgress() {
+        if (dialog != null) {
+            dialog.dismiss();
         }
     }
 
 
     //设置progressbar上的提示信息
-    public void setParMessage(String message)
-    {
-        msg=message;
+    public void setParMessage(String message) {
+        msg = message;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        dialog=null;
+        dialog = null;
     }
 }
