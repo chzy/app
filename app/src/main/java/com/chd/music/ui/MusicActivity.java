@@ -44,6 +44,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             dismissDialog();
+            mTvNumber.setText(String.format("未备份音乐%d首", filelistEntity.getUnbakNumber()));
             adapter.notifyDataSetChanged();
         }
     };
@@ -53,7 +54,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_music);
-        musicPath=new ShareUtils(this).getMusicFile().getPath();
+        musicPath = new ShareUtils(this).getMusicFile().getPath();
         initTitle();
         initResourceId();
         initListener();
@@ -76,34 +77,32 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
             public void run() {
 
                 final List<FileInfo0> cloudUnits = syncTask.getCloudUnits(0, 10000);
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        initData(cloudUnits);
-                    }
-                });
+                initData(cloudUnits);
             }
         });
         thread.start();
     }
+
     @Subscribe
     public void onEventMainThread(MessageEvent event) {
-        if(event.type==FTYPE.MUSIC){
+        if (event.type == FTYPE.MUSIC) {
 //            onNewThreadRequest();
         }
     }
 
     FilelistEntity filelistEntity;
+
     private void initData(List<FileInfo0> cloudUnits) {
 
 
         if (cloudUnits == null) {
             System.out.print("query remote failed");
         }
-       filelistEntity = syncTask.analyMusicUnits(cloudUnits);
+        filelistEntity = syncTask.analyMusicUnits(cloudUnits);
         cloudUnits.clear();
         cloudUnits = null;
         cloudUnits = filelistEntity.getBklist();
-	
+
 
         for (FileInfo0 item : cloudUnits) {
             //FileInfo0 item=new FileInfo0(finfo);
@@ -112,11 +111,11 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
             //已备份文件
             String path = item.getFilePath();
             String name = item.getFilename();
-            if(item.getFilePath()==null){
-                if(item.getSysid()>0){
-                    item =syncTask.queryLocalInfo(item.getSysid());
-                }else{
-                    item.setFilePath(musicPath+ "/"+item.getObjid());
+            if (item.getFilePath() == null) {
+                if (item.getSysid() > 0) {
+                    item = syncTask.queryLocalInfo(item.getSysid());
+                } else {
+                    item.setFilePath(musicPath + "/" + item.getObjid());
                 }
             }
             /*if (syncTask.haveLocalCopy(item)) {
@@ -129,7 +128,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
             mMusicList.add(musicBean);
         }
 
-        mTvNumber.setText(String.format("未备份音乐%d首", filelistEntity.getUnbakNumber()));
+
 
         handler.sendEmptyMessage(0);
 
@@ -170,8 +169,8 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
                 break;
             case R.id.iv_music_num_layout:
                 Intent intent = new Intent(this, MusicBackupActivity.class);
-                ArrayList<FileLocal> fileLocals=new ArrayList<>(filelistEntity.getLocallist());
-                intent.putExtra("locallist",fileLocals);
+                ArrayList<FileLocal> fileLocals = new ArrayList<>(filelistEntity.getLocallist());
+                intent.putExtra("locallist", fileLocals);
                 startActivityForResult(intent, 0x02);
                 break;
         }
