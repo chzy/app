@@ -3,6 +3,7 @@
     xmlns:zhy="http://schemas.android.com/apk/res-auto"
     android:layout_width="114dp"
     android:layout_height="148dp"
+    android:gravity="center"
     android:orientation="vertical" >
     
     <com.chd.photo.adapter.RoundImageView
