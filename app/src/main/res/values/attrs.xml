@@ -149,21 +149,17 @@
     </declare-styleable>
 
 
-    
-  
+
     <declare-styleable name="RoundImageView">
-
-       <attr name="mtype" >
-            <enum name="circle" value="0" />
-            <enum name="round" value="1" />
-        </attr>
-        <attr name="borderRadius" format="dimension" />
-
-<!--
-        <attr name="borderRadius" />
-        <attr name="type" /> -->
+        <attr name="sriv_left_top_corner_radius" format="dimension" />
+        <attr name="sriv_right_top_corner_radius" format="dimension" />
+        <attr name="sriv_left_bottom_corner_radius" format="dimension" />
+        <attr name="sriv_right_bottom_corner_radius" format="dimension" />
+        <attr name="sriv_border_width" format="dimension" />
+        <attr name="sriv_border_color" format="color" />
+        <attr name="sriv_oval" format="boolean" />
+        <attr name="android:scaleType" />
     </declare-styleable>
-
 
 
 </resources>

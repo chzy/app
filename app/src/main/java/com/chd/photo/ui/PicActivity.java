@@ -58,13 +58,13 @@ public class PicActivity extends UILActivity implements OnClickListener {
 				Collections.sort(localList);
 				findViewById(R.id.rl_pic_ubk_layout).setVisibility(View.GONE);
 				mTvCenter.setText("未备份照片");
-				mLvPic.setAdapter(new PicAdapter(PicActivity.this, localList, bIsUbkList,imageLoader));
+				mLvPic.setAdapter(new PicAdapter(PicActivity.this, localList, bIsUbkList, imageLoader));
 			} else {
 				dismissWaitDialog();
 				dismissDialog();
 				Collections.sort(mPicList);
 				int size = 0;
-				if (localList != null&&localList.size()>0) {
+				if (localList != null && localList.size() > 0) {
 					for (PicBean<PicInfoBeanMonth> bean :
 							localList) {
 						size += bean.getList().getPicunits().size();
@@ -74,7 +74,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 				}
 				Log.d("liumj", "数量" + size);
 				mTvNumber.setText(String.format("未备份照片%d张", size));
-				mLvPic.setAdapter(new PicAdapter(PicActivity.this, mPicList, bIsUbkList,imageLoader));
+				mLvPic.setAdapter(new PicAdapter(PicActivity.this, mPicList, bIsUbkList, imageLoader));
 			}
 		}
 
@@ -89,7 +89,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 		setContentView(R.layout.activity_pic);
 
 		bIsUbkList = false;
-		imageLoader=ImageLoader.getInstance();
+		imageLoader = ImageLoader.getInstance();
 		initTitle();
 		initResourceId();
 		initListener();
@@ -118,9 +118,9 @@ public class PicActivity extends UILActivity implements OnClickListener {
 					cloudUnits = null;
 					cloudUnits = filelistEntity.getBklist();
 				}
-				if(bIsUbkList){
+				if (bIsUbkList) {
 					initLocal();
-				}else{
+				} else {
 					initData();
 				}
 			}
@@ -150,15 +150,15 @@ public class PicActivity extends UILActivity implements OnClickListener {
 
 		if (info.getSysid() > 0) {
 			picInfoBean.setSysid(info.getSysid());
-				String uri = info.getUri();
-				picInfoBean.setUrl(uri);
-				if (uri == null /*&& syncTask.haveLocalCopy(info)*/)
-					picInfoBean.setUrl("file://" + info.getFilePath());
+			String uri = info.getUri();
+			picInfoBean.setUrl(uri);
+			if (uri == null /*&& syncTask.haveLocalCopy(info)*/)
+				picInfoBean.setUrl("file://" + info.getFilePath());
 
 		} else {
-				picInfoBean.setUrl("trpc://" + info.getObjid());
+			picInfoBean.setUrl("trpc://" + info.getObjid());
 		}
-
+		picInfoBean.setTimeStamp(info.getLastModified());
 		picInfoBean.setDay(TimeUtils.getTime(info.getLastModified() * 1000L, new SimpleDateFormat("MM月dd日")));
 
 		if (tmpMonthMap.containsKey(month)) {
@@ -171,6 +171,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 		YearMap.put(year, tmpMonthMap);
 	}
 
+
 	private void initData() {
 
 		//产生1 个 已备份的本地文件  list
@@ -179,8 +180,6 @@ public class PicActivity extends UILActivity implements OnClickListener {
 		//本地已经备份的文件 list 对象名 FilesListEntity 从sqlite里面取出   可以调用 dbmanger.getUploadeFiles 得到本地已备份文件  backedlist
 
 		// localfiles 调用系统方法得到本地所有文件库. 文件对象需要用 fileinfo0 类封装 构造后 要set filepath, size , 变成list .构造成 FilesListEntity locallist
-
-
 
 
 		//未备份的列表  LIST<int>
@@ -192,9 +191,12 @@ public class PicActivity extends UILActivity implements OnClickListener {
 		if (filelistEntity != null) {
 			if (YearMap == null)
 				YearMap = new HashMap<>();
-			for (FileInfo0 info0 : cloudUnits) {
-				add2YearMap(info0);
+			for (FileInfo0 info : cloudUnits) {
+
+				add2YearMap(info);
 			}
+
+
 			mPicList = initData(mPicList);
 			YearMap.clear();
 		}
@@ -214,8 +216,11 @@ public class PicActivity extends UILActivity implements OnClickListener {
 						entryYear.getValue().entrySet()) {
 					PicInfoBeanMonth<PicInfoBean> monthInfoBean = new PicInfoBeanMonth();
 					midx = entryMonth.getKey();
-					monthInfoBean.setUrl(entryMonth.getValue().get(0).getUrl());//第一张图片
-					monthInfoBean.setPicunits(entryMonth.getValue());
+					List<PicInfoBean> value = entryMonth.getValue();
+					Collections.sort(value);
+					int index = value.size() - 1;
+					monthInfoBean.setUrl(value.get(index).getUrl());//第一张图片
+					monthInfoBean.setPicunits(value);
 					if (!monthInfoBean.getPicunits().isEmpty()) {
 						PicBean<PicInfoBeanMonth> picBean = new PicBean(String.valueOf(year), monthInfoBean);
 						picBean.setMonth(midx);
@@ -239,7 +244,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 		mIvLeft.setOnClickListener(this);
 		mTvRight.setOnClickListener(this);
 		mTvNumber.setOnClickListener(this);
-		mLvPic.setOnScrollListener(new PauseOnScrollListener(imageLoader,true,true));
+		mLvPic.setOnScrollListener(new PauseOnScrollListener(imageLoader, true, true));
 	}
 
 	private void initTitle() {

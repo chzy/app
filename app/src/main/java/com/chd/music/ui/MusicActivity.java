@@ -45,6 +45,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             dismissDialog();
+            mTvNumber.setText("未备份音乐"+filelistEntity.getUnbakNumber()+"首");
             adapter.notifyDataSetChanged();
         }
     };
@@ -98,7 +99,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
         if (cloudUnits == null) {
             System.out.print("query remote failed");
         }
-       filelistEntity = syncTask.analyMusicUnits(cloudUnits);
+        filelistEntity = syncTask.analyMusicUnits(cloudUnits);
         cloudUnits.clear();
         cloudUnits = null;
         cloudUnits = filelistEntity.getBklist();

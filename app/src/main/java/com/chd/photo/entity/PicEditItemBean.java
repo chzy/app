@@ -2,7 +2,7 @@ package com.chd.photo.entity;
 
 import java.io.Serializable;
 
-public class PicEditItemBean implements Serializable {
+public class PicEditItemBean implements Serializable,Comparable<PicEditItemBean>{
 
 	//private int picUrl;
 	private boolean select;
@@ -12,6 +12,7 @@ public class PicEditItemBean implements Serializable {
 	private boolean bIsUbkList;
 	//private FileInfo0 fileInfo0;
 	private  String url;
+	private long timeStamp;
 	
 	public PicEditItemBean() {
 	}
@@ -24,6 +25,13 @@ public class PicEditItemBean implements Serializable {
 	}
 
 
+	public long getTimeStamp() {
+		return timeStamp;
+	}
+
+	public void setTimeStamp(long timeStamp) {
+		this.timeStamp = timeStamp;
+	}
 
 	public boolean isSelect() {
 		return select;
@@ -73,4 +81,14 @@ public class PicEditItemBean implements Serializable {
 		this.url = url;
 	}
 
+	@Override
+	public int compareTo(PicEditItemBean picEditItemBean) {
+		if(this.timeStamp<picEditItemBean.timeStamp){
+			return 1;
+		}else if(this.timeStamp>picEditItemBean.timeStamp){
+			return -1;
+		}
+
+		return 0;
+	}
 }

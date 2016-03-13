@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 public class PicBean  <T> implements Serializable,Comparable<PicBean>{
 	
-	private String date;
-	private int _month;
+	private String date;//年
+	private int _month;//月
 	//PicBean<PicInfoBeanMonth>
 	private T _list;
 	

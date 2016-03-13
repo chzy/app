@@ -21,4 +21,6 @@ public class PicInfoBeanMonth <T>  extends PicInfoBean {
     public void setPicunits(List<T> Picunits) {
         this._Picunits = Picunits;
     }
+
+
 }

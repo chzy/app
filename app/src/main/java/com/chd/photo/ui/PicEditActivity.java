@@ -27,6 +27,7 @@ import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +68,9 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 				processMsg(msg);
 			}
 			else{
+				if(mPicList!=null){
+					Collections.sort(mPicList);
+				}
 			if (picEditAdapter == null) {
 				picEditAdapter.setData(mPicList);
 			} else {
@@ -114,6 +118,9 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 		}
 		mPicList.removeAll(items);
 		setResult(RESULT_OK);
+			if(mPicList!=null){
+				Collections.sort(mPicList);
+			}
 		picEditAdapter.notifyDataSetChanged();
 		}
 	}
@@ -142,9 +149,9 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 
 	private void initData() {
 
-		if (cloudUnits == null) {
-			System.out.print("query remote failed cloudunits is null ");
-		}
+//		if (ifcloudUnits == null) {
+//		null	System.out.print("query remote failed cloudunits is null ");
+//		}
 
 		/*FilelistEntity filelistEntity=syncTask.analyPhotoUnits(cloudUnits);
 		cloudUnits.clear();
