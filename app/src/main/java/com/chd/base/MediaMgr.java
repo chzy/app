@@ -24,6 +24,7 @@ import com.chd.yunpan.share.ShareUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -165,12 +166,16 @@ public class MediaMgr  {
 
 
 	public void   anlayLocalUnits(List<FileInfo0> couldlist,FilelistEntity filelistEntity) {
+		int count= LocalUnits.size();
 		int count2=couldlist.size();
 		
 		ArrayList<FileInfo0> baklist=new ArrayList(count2);
 		int idx=0;
 		int j=0,i=0;
 		FileInfo0 item = null;
+		BitSet bm=new BitSet(count);
+		for(i=0;i<bm.size();i++)
+	    		bm.set(i,false);
 		for(j=0;idx<count2;j++)
 		{
 			FileInfo fileInfo= couldlist.get(j);
@@ -181,9 +186,17 @@ public class MediaMgr  {
 			}
 
 
-			for (FileLocal fileLocal: LocalUnits)
+			for (i=0;i<count;i++)
 			{
-				if (fileLocal.bakuped ){
+				FileLocal fileLocal=LocalUnits.get(i);
+				if (fileLocal.bakuped ) {
+					if (!bm.get(i))
+					{
+						bm.set(i,true);
+						if (filelistEntity != null)
+							filelistEntity.addbakNumber();
+					}
+
 					continue;
 				}
 				if (fileLocal.fname.equalsIgnoreCase(fileInfo.getObjid())) {
@@ -199,7 +212,8 @@ public class MediaMgr  {
 	
 
 		couldlist.clear();
-		filelistEntity.setLocallist(LocalUnits);
+		bm.clear();
+		bm=null;
 		filelistEntity.setBklist(baklist);
 		//return  null;
 	}
@@ -211,7 +225,7 @@ public class MediaMgr  {
 		if (LocalUnits!=null && !LocalUnits.isEmpty())
 			return;
 		setCustomCategory(exts, include);
-		Cursor c =query(fc, MediaFileUtil.FileCategory.All, MediaFileUtil.SortMethod.date);
+		Cursor c =query(fc, MediaFileUtil.FileCategory.All, /*MediaFileUtil.SortMethod.date*/null);
 
 		while (c.moveToNext())
 		{
@@ -435,6 +449,8 @@ public class MediaMgr  {
 	}
 
 	private String buildSortOrder(MediaFileUtil.SortMethod sort) {
+		if (sort==null)
+			return  null;
 		String sortOrder = null;
 		switch (sort) {
 			case name:
@@ -449,6 +465,7 @@ public class MediaMgr  {
 			case type:
 				sortOrder = MediaStore.Files.FileColumns.MIME_TYPE + " asc, " + MediaStore.Files.FileColumns.TITLE + " asc";
 				break;
+
 		}
 		return sortOrder;
 	}
