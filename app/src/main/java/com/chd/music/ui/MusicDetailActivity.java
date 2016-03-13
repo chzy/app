@@ -17,11 +17,11 @@ import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.backend.SyncTask;
 import com.chd.music.backend.MediaUtil;
 import com.chd.music.entity.MusicBean;
-import com.chd.photo.adapter.RoundImageView;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
+import com.chd.yunpan.view.CircleImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
@@ -43,7 +43,7 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
     private ImageView mBtnDownload;
     private ImageView mBtnPlay;
     private ImageView mBtnDelete;
-    private RoundImageView mRoundImageView;
+    private CircleImageView mRoundImageView;
     private SyncTask syncTask;
     private MusicBean bean;
     private Handler mHandler = new Handler();
@@ -110,7 +110,7 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
         mTvTotalTime = (TextView) findViewById(R.id.music_detail_totaltime);
         mTvMusicName = (TextView) findViewById(R.id.music_detail_musicname);
         mTvMusicDestrip = (TextView) findViewById(R.id.music_detail_musicdestrip);
-        mRoundImageView = (RoundImageView) findViewById(R.id.music_detail_pic);
+        mRoundImageView = (CircleImageView) findViewById(R.id.music_detail_pic);
 
 
     }
