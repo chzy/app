@@ -288,7 +288,6 @@ public class PicActivity extends UILActivity implements OnClickListener {
 				}
 				localList = initData(localList);
 				YearMap.clear();
-
 				bIsUbkList = true;
 				handler.sendEmptyMessage(0);
 			}
@@ -302,6 +301,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 				case 0x11:
 					Log.i("lmj", "返回执行了");
 					cloudUnits = null;
+					localList.clear();
 					onNewThreadRequest(bIsUbkList);
 					break;
 			}
