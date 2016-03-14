@@ -52,11 +52,12 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 	private String path;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
-			if(msg.what==998){
-				//多文件上传
-				processMsg(msg);
-			}else if(msg.what==997){
-				//多文件下载
+			try {
+				if (msg.what == 998) {
+					//多文件上传
+					processMsg(msg);
+				} else if (msg.what == 997) {
+					//多文件下载
 //				ArrayList<Integer> posList= (ArrayList<Integer>) msg.obj;
 //				for (Integer index:
 //						posList) {
@@ -64,64 +65,66 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 //				}
 //				mPicList.removeAll(selectItem);
 //				picEditAdapter.notifyDataSetChanged();
-			}else if(msg.what==996){
-				processMsg(msg);
-			}
-			else{
-				if(mPicList!=null){
-					Collections.sort(mPicList);
+				} else if (msg.what == 996) {
+					processMsg(msg);
+				} else {
+					if (mPicList != null) {
+						Collections.sort(mPicList);
+					}
+					if (picEditAdapter == null) {
+						picEditAdapter.setData(mPicList);
+					} else {
+						picEditAdapter.notifyDataSetChanged();
+					}
 				}
-			if (picEditAdapter == null) {
-				picEditAdapter.setData(mPicList);
-			} else {
-				picEditAdapter.notifyDataSetChanged();
-			}
+			} catch (Exception E) {
+				Log.e(getClass().getName(), "退出页面空指针");
 			}
 		}
 	};
 
-	private void processMsg(Message msg){
+	private void processMsg(Message msg) {
 		//删除
-		ArrayList<Integer> posList= (ArrayList<Integer>) msg.obj;
-		if(posList.size()==0){
-			if(msg.what==998)
-			toastMain("上传成功");
-			else if(msg.what==996){
+		ArrayList<Integer> posList = (ArrayList<Integer>) msg.obj;
+		if (posList.size() == 0) {
+			if (msg.what == 998)
+				toastMain("上传成功");
+			else if (msg.what == 996) {
 				toastMain("删除成功");
 			}
-		}else{
-			if(msg.what==998)
+		} else {
+			if (msg.what == 998)
 				toastMain("上传失败");
-			else if(msg.what==996){
+			else if (msg.what == 996) {
 				toastMain("删除失败");
 			}
 		}
-		if(!(posList.size()==selectItem.size())){
-		int i=0;
-		for (Integer index:
-				posList) {
-			int pos=index-i;
-			selectItem.remove(pos);
-			i++;
-		}
-		int count=mPicList.size();
-		ArrayList<PicEditBean> items=new ArrayList<>();
-		for (int j = 0; j <count ; j++) {
+		if (!(posList.size() == selectItem.size())) {
+			int i = 0;
+			for (Integer index :
+					posList) {
+				int pos = index - i;
+				selectItem.remove(pos);
+				i++;
+			}
+			int count = mPicList.size();
+			ArrayList<PicEditBean> items = new ArrayList<>();
+			for (int j = 0; j < count; j++) {
 
-			PicEditBean bean = mPicList.get(j);
-			if(bean.getList()!=null){
-				bean.getList().removeAll(selectItem);
-				if(bean.getList().size()==0){
-					items.add(bean);
+				PicEditBean bean = mPicList.get(j);
+				if (bean.getList() != null) {
+					bean.getList().removeAll(selectItem);
+					if (bean.getList().size() == 0) {
+						items.add(bean);
+					}
 				}
 			}
-		}
-		mPicList.removeAll(items);
-		setResult(RESULT_OK);
-			if(mPicList!=null){
+			mPicList.removeAll(items);
+			setResult(RESULT_OK);
+			if (mPicList != null) {
 				Collections.sort(mPicList);
 			}
-		picEditAdapter.notifyDataSetChanged();
+			picEditAdapter.notifyDataSetChanged();
 		}
 	}
 
@@ -135,14 +138,14 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 		bIsUbkList = getIntent().getBooleanExtra("ubklist", false);
 		month = getIntent().getIntExtra("month", -1);
 		mPicList0 = (List) getIntent().getSerializableExtra("listUnits");
-		path=new ShareUtils(this).getPhotoFile().getPath();
+		path = new ShareUtils(this).getPhotoFile().getPath();
 		initTitle();
 		initResourceId();
 		initListener();
 		picEditAdapter = new PicEditAdapter(PicEditActivity.this, mPicList);
 		mLvPic.setAdapter(picEditAdapter);
 //		onNewThreadRequest();
-		syncTask=new SyncTask(this,FTYPE.PICTURE);
+		syncTask = new SyncTask(this, FTYPE.PICTURE);
 		initData();
 	}
 
@@ -178,7 +181,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 				if (info0 != null)
 					picInfoBean.setUrl("file://" + info0.getFilePath());
 			} else
-					picInfoBean.setUrl(item.getUrl());
+				picInfoBean.setUrl(item.getUrl());
 
 			picInfoBean.setSelect(false);
 			picInfoBean.setbIsUbkList(bIsUbkList);
@@ -240,6 +243,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 	}
 
 	List<PicEditItemBean> selectItem;
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -257,17 +261,17 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 				mLvPicEditView.setVisibility(bTag ? View.GONE : View.VISIBLE);
 				mTvRight.setText(bTag ? "编辑" : "取消");
 				mTvRight.setTag(!bTag);
-				if(!bTag){
-				picEditAdapter.setEdit(true);
-				}else{
+				if (!bTag) {
+					picEditAdapter.setEdit(true);
+				} else {
 					picEditAdapter.setEdit(false);
 				}
 
 //				handler.sendEmptyMessage(0);
 				break;
 			case R.id.lv_pic_edit_del: {
-			//多选删除
-				selectItem= new ArrayList<>();
+				//多选删除
+				selectItem = new ArrayList<>();
 				for (PicEditBean picEditBean : mPicList) {
 					for (PicEditItemBean picEditItemBean : picEditBean.getList()) {
 						if (!picEditItemBean.isSelect()) {
@@ -280,7 +284,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 				for (PicEditItemBean bean :
 						selectItem) {
 					FileInfo0 fileInfo0 = new FileInfo0();
-					if(StringUtils.isNullOrEmpty(bean.getUrl())){
+					if (StringUtils.isNullOrEmpty(bean.getUrl())) {
 						continue;
 					}
 					int idx = bean.getUrl().indexOf("://");
@@ -299,12 +303,12 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 					fileInfo0.setObjid(MediaFileUtil.getFnameformPath(uri));
 					info0s.add(fileInfo0);
 				}
-				syncTask.delList(info0s,this,handler,bIsUbkList);
+				syncTask.delList(info0s, this, handler, bIsUbkList);
 			}
 			break;
 			case R.id.lv_pic_edit_updown: {
 
-				selectItem= new ArrayList<>();
+				selectItem = new ArrayList<>();
 				for (PicEditBean picEditBean : mPicList) {
 
 					for (PicEditItemBean picEditItemBean : picEditBean.getList()) {
@@ -318,7 +322,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 				for (PicEditItemBean bean :
 						selectItem) {
 					FileInfo0 fileInfo0 = new FileInfo0();
-					if(StringUtils.isNullOrEmpty(bean.getUrl())){
+					if (StringUtils.isNullOrEmpty(bean.getUrl())) {
 						Log.e(TAG, "empty path fail!!!!");
 						continue;
 					}
@@ -333,8 +337,8 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 						fileInfo0.setFilePath(uri);
 						fileInfo0.setObjid(MediaFileUtil.getFnameformPath(uri));
 					} else {
-						if(StringUtils.isNullOrEmpty(fileInfo0.getFilePath())){
-							fileInfo0.setFilePath(path+"/"+uri);
+						if (StringUtils.isNullOrEmpty(fileInfo0.getFilePath())) {
+							fileInfo0.setFilePath(path + "/" + uri);
 						}
 						fileInfo0.setObjid(uri);
 					}

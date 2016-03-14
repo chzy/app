@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,11 +21,9 @@ import com.chd.base.Entity.MessageEvent;
 import com.chd.base.UILActivity;
 import com.chd.base.Ui.DownListActivity;
 import com.chd.base.backend.SyncTask;
-import com.chd.music.adapter.MusicAdapter;
 import com.chd.music.adapter.MusicBackupAdapter;
 import com.chd.music.backend.MediaUtil;
 import com.chd.music.entity.MusicBackupBean;
-import com.chd.photo.entity.PicEditBean;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
@@ -49,11 +48,12 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
 
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
-            if (msg.what == 998) {
-                //多文件上传
-                processMsg(msg);
-            } else if (msg.what == 997) {
-                //多文件下载
+           try {
+               if (msg.what == 998) {
+                   //多文件上传
+                   processMsg(msg);
+               } else if (msg.what == 997) {
+                   //多文件下载
 //				ArrayList<Integer> posList= (ArrayList<Integer>) msg.obj;
 //				for (Integer index:
 //						posList) {
@@ -61,15 +61,17 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
 //				}
 //				mPicList.removeAll(selectItem);
 //				picEditAdapter.notifyDataSetChanged();
-            } else if (msg.what == 996) {
-                processMsg(msg);
-            } else {
-                dismissDialog();
-                dismissWaitDialog();
-                mGvMusic.setAdapter(new MusicBackupAdapter(MusicBackupActivity.this, mMusicBackupList));
-                mTvNumber.setText(String.format("共：%d首", mMusicBackupList.size()));
-            }
-
+               } else if (msg.what == 996) {
+                   processMsg(msg);
+               } else {
+                   dismissDialog();
+                   dismissWaitDialog();
+                   mGvMusic.setAdapter(new MusicBackupAdapter(MusicBackupActivity.this, mMusicBackupList));
+                   mTvNumber.setText(String.format("共：%d首", mMusicBackupList.size()));
+               }
+           }catch (Exception e){
+               Log.e(getClass().getName(),"退出页面空指针");
+           }
 
         }
     };
