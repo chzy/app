@@ -215,7 +215,7 @@ public class VCardIO {
 		info.setFtype(FTYPE.ADDRESS);
 		HashMap<String, String> desc = new HashMap<String, String>();
 		desc.put("lines", "" + lines);
-		return new SyncLocalFileBackground(context).uploadFileOvWrite(info, activity, desc);
+		return new SyncLocalFileBackground(context).uploadFileOvWrite(info, activity, desc,null);
 		//}
 		//}).start();
 	}
@@ -233,7 +233,7 @@ public class VCardIO {
 		info.setObjid(MediaFileUtil.getNameFromFilepath(filePath));
 		info.setFilePath(filePath);
 		info.setFtype(FTYPE.ADDRESS);
-		return new SyncLocalFileBackground(context).downloadBigFile(info, activity);
+		return new SyncLocalFileBackground(context).downloadBigFile(info, activity, null);
 
 	}
 

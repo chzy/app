@@ -225,7 +225,7 @@ public class PicDetailActivity extends ActiveProcess implements OnClickListener
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
-							syncTask.download(fileInfo0, null, false);
+							syncTask.download(fileInfo0, null, false, null);
 						}
 					}).start();
 

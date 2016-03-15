@@ -3,6 +3,7 @@ package com.chd.photo.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
@@ -50,7 +51,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 	private SyncTask syncTask;
 	private List<PicBean<PicInfoBeanMonth>> localList = new ArrayList();
 
-	private Handler handler = new Handler() {
+	private Handler handler = new Handler(Looper.getMainLooper()) {
 		public void handleMessage(Message msg) {
 			if (bIsUbkList) {
 				dismissDialog();

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -47,7 +48,7 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
     private String filetype = "";
     private boolean isLocal = false;
     private OtherListAdapter adapter;
-    private Handler handler = new Handler() {
+    private Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(android.os.Message msg) {
 
             tmpFileInfo.clear();
@@ -302,7 +303,7 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
                                 }
 
                                 if (syncTask != null && info != null) {
-                                    syncTask.upload(info, OtherActivity.this, true);
+                                    syncTask.upload(info, OtherActivity.this, true, null);
                                 }
                             }
 
@@ -322,7 +323,7 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
                                 }
 
                                 if (syncTask != null && info != null) {
-                                    syncTask.download(info, OtherActivity.this, true);
+                                    syncTask.download(info, OtherActivity.this, true, null);
                                 }
                             }
                         }

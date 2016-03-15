@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -70,7 +71,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
     private SyncBackground syncBackground;
     private ProgressDialog dialog;
     private  String  savepath;
-    private Handler mHandler= new Handler() {
+    private Handler mHandler= new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -132,7 +133,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                     }
                     if (new File(file).exists() == false) {
                         fileInfo0.setFilePath(file);
-                        syncTask.download(fileInfo0, null, false);
+                        syncTask.download(fileInfo0, null, false, dialog);
                         Log.d("NotepadActivity", "download note :" + fileInfo0.getObjid());
                     }
                 }

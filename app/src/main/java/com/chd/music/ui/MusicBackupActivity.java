@@ -3,6 +3,7 @@ package com.chd.music.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -46,7 +47,7 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
     private MusicBackupAdapter adapter = null;
     private List<MusicBackupBean> mMusicBackupList = new ArrayList<MusicBackupBean>();
 
-    private Handler handler = new Handler() {
+    private Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(android.os.Message msg) {
            try {
                if (msg.what == 998) {

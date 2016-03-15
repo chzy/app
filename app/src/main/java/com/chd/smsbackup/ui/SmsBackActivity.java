@@ -2,6 +2,7 @@ package com.chd.smsbackup.ui;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,9 +28,10 @@ public class SmsBackActivity extends ActiveProcess implements OnClickListener {
 	private ImportSms importSms;
 
 
-	private Handler handler = new Handler() {
+	private Handler handler = new Handler(Looper.getMainLooper()) {
 		public void handleMessage(android.os.Message msg) {
 			dialog.dismiss();
+			dismissDialog();
 			try {
 				switch (msg.what) {
 					case 0:
@@ -70,7 +72,7 @@ public class SmsBackActivity extends ActiveProcess implements OnClickListener {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				exportSms.download(smsPath, SmsBackActivity.this);
+				exportSms.download(smsPath,null);
 				handler.sendEmptyMessage(0);
 			}
 		}).start();

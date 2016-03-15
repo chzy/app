@@ -3,6 +3,7 @@ package com.chd.music.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -42,7 +43,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
     private String musicPath;
     private List<MusicBean> mMusicList = new ArrayList<MusicBean>();
     private List<FileInfo0> cloudUnits;
-    private Handler handler = new Handler() {
+    private Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(android.os.Message msg) {
             dismissDialog();
             mTvNumber.setText("未备份音乐"+filelistEntity.getUnbakNumber()+"首");

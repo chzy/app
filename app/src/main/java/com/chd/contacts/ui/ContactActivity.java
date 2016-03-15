@@ -2,6 +2,7 @@ package com.chd.contacts.ui;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -10,14 +11,12 @@ import android.widget.TextView;
 import com.chd.MediaMgr.utils.MediaFileUtil;
 import com.chd.base.UILActivity;
 import com.chd.base.backend.SyncTask;
-import com.chd.contacts.entity.ContactBean;
 import com.chd.contacts.vcard.VCardIO;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ContactActivity extends UILActivity implements OnClickListener{
@@ -34,20 +33,22 @@ public class ContactActivity extends UILActivity implements OnClickListener{
     private SyncTask syncTask=null;
 
 
-    private List<ContactBean> mContactList = new ArrayList<ContactBean>();
     private VCardIO vcarIO;
     private int netSize;
-    private Handler handler = new Handler() {
+    private Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
                 case 998:
                     //本地通讯里数量
+                    dismissWaitDialog();
+                    dismissDialog();
                     int size = (Integer) msg.obj;
                     mSmsNumber.setText(size + "");
                     break;
                 case 999:
                     //网络通讯录数量
                     dismissWaitDialog();
+                    dismissDialog();
                     netSize= (Integer) msg.obj;
                     mCloudNumber.setText(netSize + "");
                     break;

@@ -49,7 +49,7 @@ public class ExportSms {
         info.setObjid(MediaFileUtil.getNameFromFilepath(filePath));
         info.setFilePath(filePath);
         info.setFtype(FTYPE.SMS);
-        return new SyncLocalFileBackground(activity).downloadBigFile(info, activity);
+        return new SyncLocalFileBackground(activity).downloadBigFile(info, activity, null);
 
     }
 
@@ -314,7 +314,7 @@ public class ExportSms {
         info.setFtype(FTYPE.SMS);
         HashMap<String,String> desc=new HashMap<String, String>();
         desc.put("lines",""+lines);
-        return new SyncLocalFileBackground(activity).uploadFileOvWrite(info, activity,desc);
+        return new SyncLocalFileBackground(activity).uploadFileOvWrite(info, activity,desc,null);
     }
 
 

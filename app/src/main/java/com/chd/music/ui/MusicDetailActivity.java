@@ -136,7 +136,7 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            syncTask.download(fileInfo0, MusicDetailActivity.this, false);
+                            syncTask.download(fileInfo0, MusicDetailActivity.this, false, null);
                         }
                     }).start();
 

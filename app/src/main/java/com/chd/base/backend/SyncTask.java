@@ -236,7 +236,7 @@ public class SyncTask {
 							dialog.setTitle("正在上传:"+ finalI +"/"+files.size()+"  "+process+"%");
 						}
 					});
-					boolean result = upload(item, null, false);
+					boolean result = upload(item, activeProcess, false,dialog);
 					Log.i("lmj","第"+i+"个上传状态:"+result);
 					if(!result){
 						upload.add(i-1);
@@ -274,7 +274,7 @@ public class SyncTask {
 	activeProcess 对象 实现进度条展现
 	beeque  放入数据库 做队列 通过服务方式后台下载
 	* */
-	public boolean upload(final FileInfo0 item, final ActiveProcess activeProcess, boolean beeque) {
+	public boolean upload(final FileInfo0 item, final ActiveProcess activeProcess, boolean beeque, AlertDialog dialog) {
 
 		if (!item.isSetFtype())
 			item.setFtype(_ftype);
@@ -297,7 +297,7 @@ public class SyncTask {
 			activeProcess.setParMessage("上传失败");
 			activeProcess.finishProgress();
 		}
-		return syncLocalFileBackground.uploadBigFile(item, activeProcess);
+		return syncLocalFileBackground.uploadBigFile(item, activeProcess,dialog);
 	}
 
 	public void uploadFileOvWrite( final FileInfo0 item, final ActiveProcess activeProcess,boolean beeque) {
@@ -320,7 +320,7 @@ public class SyncTask {
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				new SyncLocalFileBackground(context).uploadFileOvWrite(item, activeProcess,null);
+				new SyncLocalFileBackground(context).uploadFileOvWrite(item, activeProcess,null,null);
 			}
 		});
 		thread.start();
@@ -375,7 +375,7 @@ public class SyncTask {
 							dialog.setTitle("正在下载:"+ finalI +"/"+files.size()+"  "+process+"%");
 						}
 					});
-					boolean result = download(item, null, false);
+					boolean result = download(item, null, false,dialog);
 //					if(!result){
 //						download.add(i);
 //					}
@@ -408,7 +408,7 @@ public class SyncTask {
 
 
 
-	public boolean download(final FileInfo0 item, final ActiveProcess activeProcess, boolean beeque) {
+	public boolean download(final FileInfo0 item, final ActiveProcess activeProcess, boolean beeque, AlertDialog dialog) {
 
 		//ProgressBar bar = activity.getProgressBar();
 		if (!item.isSetFtype())
@@ -424,7 +424,6 @@ public class SyncTask {
 			dbManager.addUpLoadingFile(item);
 			dbManager.close();
 			//	return;
-
 		}catch (Exception e)
 		{
 			e.printStackTrace();
@@ -432,7 +431,7 @@ public class SyncTask {
 			activeProcess.setParMessage("下载失败");
 			activeProcess.finishProgress();
 		}
-		return syncLocalFileBackground.downloadBigFile(item, activeProcess);
+		return syncLocalFileBackground.downloadBigFile(item, activeProcess,dialog);
 	}
 
 

@@ -157,7 +157,7 @@ public class SyncBackground extends Thread {
 					FileInfo0 fileInfo0=new FileInfo0();
 					fileInfo0.setFilePath(_workpath+File.separator+fname);
 					fileInfo0.setObjid(fname);
-					syncTask.upload(fileInfo0,null,false);
+					syncTask.upload(fileInfo0,null,false, null);
 					cl=true;
 				}
 				tasks.clear();

@@ -1,5 +1,6 @@
 package com.chd.service;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.util.Log;
 
@@ -97,7 +98,7 @@ public class SyncLocalFileBackground implements Runnable {
             if (!NetworkUtils.isNetworkAvailable(context)) {
                 break;
             }
-            if (downloadBigFile(item, null)) {
+            if (downloadBigFile(item, null, null)) {
                 //su.deleteUpLoadingFile(item.getObjid());
                 //su.addUpLoadedFile(item);
             } else {
@@ -123,7 +124,7 @@ public class SyncLocalFileBackground implements Runnable {
             if (!NetworkUtils.isNetworkAvailable(context)) {
                 break;
             }
-            if (uploadBigFile(item, null)) {
+            if (uploadBigFile(item, null,null)) {
                 //su.deleteUpLoadingFile(item.getObjid());
                 //su.addUpLoadedFile(item);
             } else {
@@ -143,7 +144,7 @@ public class SyncLocalFileBackground implements Runnable {
     }*/
 
 
-    public boolean downloadBigFile(FileInfo0 fileInfo0, ActiveProcess pb) {
+    public boolean downloadBigFile(final FileInfo0 fileInfo0, ActiveProcess pb, final AlertDialog dialog) {
         int offset = 0;
         int readlen = 0, remain = 0, total = 0;
         FileInputStream fis = null;
@@ -200,7 +201,7 @@ public class SyncLocalFileBackground implements Runnable {
         int buflen=Math.min((int) (total - offset), Maxbuflen);
         byte[] buffer = new byte[buflen];
 
-        if (pb != null) {
+        if (pb != null&&dialog==null) {
             pb.setMaxProgress(100);
             pb.setParMessage("正在下载");
         }
@@ -216,13 +217,24 @@ public class SyncLocalFileBackground implements Runnable {
                 os.write(buffer, 0, readlen);
                 offset += readlen;
                 //Log.d(TAG,"read:"+offset+" bytes");
-                int progress = (offset * 100 / total);
+                final int progress = (offset * 100 / total);
                 t1=System.currentTimeMillis();
                 Log.d(TAG, "progress :" + progress + " " +(int) (offset/1024 / ((t1 - t0)/1000))  + " k/s");
                 //fileInfo0.setOffset(offset);
                 //su.setDownloadStatus(fileInfo0);
-                if (pb != null)
-                    pb.updateProgress(progress);
+                if(pb!=null){
+                    if(dialog==null){
+                        pb.updateProgress(progress);
+                    }else{
+                        pb.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                dialog.setMessage(fileInfo0.getObjid()+"   "+progress+"%");
+                            }
+                        });
+                    }
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.e(TAG, e.getMessage());
@@ -239,7 +251,7 @@ public class SyncLocalFileBackground implements Runnable {
             f.deleteOnExit();
             return false;
         } finally {
-            if (pb != null) {
+            if (pb != null&&dialog==null) {
                 pb.toastMain("下载完成");
             }
             su.close();
@@ -248,15 +260,15 @@ public class SyncLocalFileBackground implements Runnable {
         return true;
     }
 
-    public boolean uploadBigFile(FileInfo0 entity, final ActiveProcess activeProcess) {
-        return uploadBigFile0(entity, activeProcess, null, false);
+    public boolean uploadBigFile(FileInfo0 entity, final ActiveProcess activeProcess, AlertDialog dialog) {
+        return uploadBigFile0(entity, activeProcess, null, false,dialog);
     }
 
-    public boolean uploadFileOvWrite(FileInfo0 entity, final ActiveProcess activeProcess, HashMap<String, String> desc) {
-        return uploadBigFile0(entity, activeProcess, desc, true);
+    public boolean uploadFileOvWrite(FileInfo0 entity, final ActiveProcess activeProcess, HashMap<String, String> desc, AlertDialog dialog) {
+        return uploadBigFile0(entity, activeProcess, desc, true, dialog);
     }
 
-    public synchronized  boolean uploadBigFile0(FileInfo0 entity, final ActiveProcess activeProcess,Map<String, String> desc,boolean replace) {
+    public synchronized  boolean uploadBigFile0(final FileInfo0 entity, final ActiveProcess activeProcess, Map<String, String> desc, boolean replace, final AlertDialog dialog) {
 
         TClient tClient = null;
         File file;
@@ -290,7 +302,7 @@ public class SyncLocalFileBackground implements Runnable {
         System.out.println("开始上传喽");
         //先检查 云端是否 有同名文件
         long start = -1;
-        if (activeProcess != null) {
+        if (activeProcess != null&&dialog==null) {
             activeProcess.updateProgress(0);
         }
         //是否 需要查询 服务器端是否有同名的 未传完的 文件
@@ -332,11 +344,8 @@ public class SyncLocalFileBackground implements Runnable {
                     boolean ret = false;
                     try {
                         ret=tClient.CommitObj(entity.objid, entity.ftype,null);
-                        if(activeProcess!=null){
-                        activeProcess.finishProgress();
-                        }
                         su.close();
-                            return ret;
+                        return ret;
 
                     } catch (TException e) {
                         e.printStackTrace();
@@ -379,10 +388,25 @@ public class SyncLocalFileBackground implements Runnable {
                 }
             }
             //start=Math.max(1,start);
-            if (activeProcess != null) {
+            if(activeProcess!=null){
+            if (dialog != null) {
+                final long finalStart = start;
+                final long finalSize = size;
+                activeProcess.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                     int  pro= (int) ((Math.max(1, finalStart))*100 / finalSize);
+                        if(dialog!=null){
+                            dialog.setMessage(entity.getObjid()+"   "+pro+"%");
+                        }
+                    }
+                });
+            }else{
+
                 activeProcess.setParMessage("正在上传");
                 activeProcess.setMaxProgress(100);
                 activeProcess.setProgress((int) ((Math.max(1,start))*100 / size));
+            }
             }
         }
         int len = 0;
@@ -418,7 +442,6 @@ public class SyncLocalFileBackground implements Runnable {
             while ((len = rf.read(buffer, 0, bflen)) != -1) {
                 pz = pz + len;
                 t0=System.currentTimeMillis();
-
                 if (filebuilder.Append(/*pz,*/buffer,len)) {
                         t1 = System.currentTimeMillis();
                         speed = (len  / ((t1 - t0)));
@@ -432,7 +455,17 @@ public class SyncLocalFileBackground implements Runnable {
                         entity.setOffset(pz);
                         proc1 = (int) (pz * 100 / size);
                         if (activeProcess != null && proc != (proc1)) {
-                            activeProcess.updateProgress(proc1);
+                            if(dialog!=null){
+                            final int finalProc = proc1;
+                            activeProcess.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dialog.setMessage(entity.getObjid()+"  "+ finalProc+"%");
+                                }
+                            });
+                            }else{
+                                activeProcess.setProgress(proc1);
+                            }
                         }
                         //su.setUploadStatus(entity);
                         succed = true;
@@ -464,7 +497,7 @@ public class SyncLocalFileBackground implements Runnable {
         } catch (Exception e) {
             Log.w(TAG, e.getMessage());
         } finally {
-            if (activeProcess != null) {
+            if (activeProcess != null&&dialog==null) {
                 if (succed){
                     if(entity.getFtype()== FTYPE.MUSIC){
                         EventBus.getDefault().post(new MessageEvent(FTYPE.MUSIC,""));
@@ -472,7 +505,6 @@ public class SyncLocalFileBackground implements Runnable {
                     activeProcess.toastMain("上传成功");
                 } else
                     activeProcess.toastMain("上传失败");
-                activeProcess.finishProgress();
             }
             su.close();
             if (!succed) {
@@ -483,6 +515,7 @@ public class SyncLocalFileBackground implements Runnable {
         }
         return succed;
     }
+
 
 
 }
