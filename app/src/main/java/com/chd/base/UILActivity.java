@@ -45,6 +45,8 @@ public class UILActivity extends ActiveProcess{
 		waitDialog=new ProgressDialog(this);
 		waitDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		waitDialog.setMessage("正在加载");
+		waitDialog.setCancelable(false);
+		waitDialog.setCanceledOnTouchOutside(false);
 	}
 
 
