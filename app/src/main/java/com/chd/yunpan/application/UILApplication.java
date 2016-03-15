@@ -50,6 +50,7 @@ public class UILApplication extends Application {
 		}
 		super.onCreate();
 		FIR.init(this);
+		CrashHandler.getInstance().init(this);
 		mInstance = this;
 		mLockPatternUtils = new LockPatternUtils(this);
 		initImageLoader(getApplicationContext());

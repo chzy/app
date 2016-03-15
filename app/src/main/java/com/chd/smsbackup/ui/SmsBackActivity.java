@@ -72,7 +72,7 @@ public class SmsBackActivity extends ActiveProcess implements OnClickListener {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				exportSms.download(smsPath,null);
+				exportSms.download(smsPath,SmsBackActivity.this);
 				handler.sendEmptyMessage(0);
 			}
 		}).start();
