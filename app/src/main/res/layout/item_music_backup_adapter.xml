@@ -18,19 +18,15 @@
             android:layout_marginLeft="14dp"
             android:src="@drawable/pic_edit_photo_group_check" />
 
-        <com.chd.photo.adapter.RoundImageView
+        <ImageView
             android:id="@+id/gv_music_backup_item_pic"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:scaleType="centerCrop"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="12dp"
-            app:sriv_oval="true"
             android:src="@drawable/music_backup_logo"
-            app:sriv_left_bottom_corner_radius="10dp"
-            app:sriv_right_bottom_corner_radius="10dp"
-            app:sriv_left_top_corner_radius="10dp"
-            app:sriv_right_top_corner_radius="10dp" />
+            />
 
         <TextView
             android:id="@+id/gv_music_backup_item_txt"

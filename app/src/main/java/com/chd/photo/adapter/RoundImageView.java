@@ -193,7 +193,7 @@ public class RoundImageView extends ImageView{
         if (mDrawable == null) {
             return;
         }
-
+        if(mDrawable instanceof SelectableRoundedCornerDrawable)
         ((SelectableRoundedCornerDrawable) mDrawable).setScaleType(mScaleType);
         ((SelectableRoundedCornerDrawable) mDrawable).setCornerRadii(mRadii);
         ((SelectableRoundedCornerDrawable) mDrawable).setBorderWidth(mBorderWidth);

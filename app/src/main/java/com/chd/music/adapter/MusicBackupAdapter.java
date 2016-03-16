@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.chd.contacts.vcard.StringUtils;
 import com.chd.music.entity.MusicBackupBean;
-import com.chd.photo.adapter.RoundImageView;
 import com.chd.yunpan.R;
 
 import java.util.List;
@@ -49,7 +48,7 @@ public class MusicBackupAdapter extends BaseAdapter {
 			converView = View.inflate(context, R.layout.item_music_backup_adapter, null);
 			holder = new ViewHolder();
 			holder.gv_check = (ImageView) converView.findViewById(R.id.gv_music_backup_item_check);
-			holder.gv_pic = (RoundImageView) converView.findViewById(R.id.gv_music_backup_item_pic);
+			holder.gv_pic = (ImageView) converView.findViewById(R.id.gv_music_backup_item_pic);
 			holder.gv_title = (TextView) converView.findViewById(R.id.gv_music_backup_item_txt);
 			converView.setTag(holder);
 		} else {
@@ -72,7 +71,7 @@ public class MusicBackupAdapter extends BaseAdapter {
 
 	private class ViewHolder {
 		ImageView gv_check;
-		RoundImageView gv_pic;
+		ImageView gv_pic;
 		TextView gv_title;
 	}
 
