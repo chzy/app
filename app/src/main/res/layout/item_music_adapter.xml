@@ -7,9 +7,9 @@
               android:layout_gravity="center"
               android:orientation="vertical">
     
-    <com.chd.photo.adapter.RoundImageView
+    <com.chd.yunpan.view.CircleImageView
         android:id="@+id/iv_photo"
-        android:layout_width="match_parent"
+        android:layout_width="108dp"
         android:layout_height="108dp"
         android:layout_marginRight="7dp"
         app:sriv_left_bottom_corner_radius="10dp"
@@ -18,7 +18,7 @@
         app:sriv_oval="true"
         app:sriv_right_top_corner_radius="10dp" >
 
-    </com.chd.photo.adapter.RoundImageView>
+    </com.chd.yunpan.view.CircleImageView>
 
     <TextView
         android:id="@+id/tv_title"

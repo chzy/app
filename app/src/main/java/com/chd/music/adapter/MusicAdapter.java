@@ -7,13 +7,13 @@ import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chd.contacts.vcard.StringUtils;
 import com.chd.music.backend.MediaUtil;
 import com.chd.music.entity.MusicBean;
 import com.chd.yunpan.R;
+import com.chd.yunpan.view.CircleImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
@@ -61,7 +61,7 @@ public class MusicAdapter extends BaseAdapter {
 			converView = View.inflate(context, R.layout.item_music_adapter,
 					null);
 			holder = new ViewHolder();
-			holder.iv_photo = (ImageView) converView
+			holder.iv_photo = (CircleImageView) converView
 					.findViewById(R.id.iv_photo);
 			holder.tv_title = (TextView) converView.findViewById(R.id.tv_title);
 			converView.setTag(holder);
@@ -121,7 +121,7 @@ public class MusicAdapter extends BaseAdapter {
 	}
 
 	private class ViewHolder {
-		ImageView iv_photo;
+		CircleImageView iv_photo;
 		TextView tv_title;
 	}
 	
