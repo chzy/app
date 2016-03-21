@@ -114,7 +114,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 				PicEditBean bean = mPicList.get(j);
 				if (bean.getList() != null) {
 					bean.getList().removeAll(selectItem);
-					if (bean.getList().size() == 0) {
+				if(bean.getList().isEmpty()){
 						items.add(bean);
 					}
 				}
