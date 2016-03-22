@@ -212,7 +212,7 @@ public class MediaMgr  {
 	
 
 		couldlist.clear();
-		bm.clear();
+		//bm.clear();
 		bm=null;
 		filelistEntity.setBklist(baklist);
 		//return  null;
@@ -464,6 +464,9 @@ public class MediaMgr  {
 				break;
 			case type:
 				sortOrder = MediaStore.Files.FileColumns.MIME_TYPE + " asc, " + MediaStore.Files.FileColumns.TITLE + " asc";
+				break;
+			case id:
+				sortOrder = MediaStore.Files.FileColumns._ID + " desc ";
 				break;
 
 		}

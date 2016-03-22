@@ -30,7 +30,7 @@ public class MediaFileUtil {
     }
 
     public enum SortMethod {
-        name, size, date, type
+        name, size, date, id, type
     }
 
 

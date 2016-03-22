@@ -344,6 +344,9 @@ public class SyncLocalFileBackground implements Runnable {
                     boolean ret = false;
                     try {
                         ret=tClient.CommitObj(entity.objid, entity.ftype,null);
+                        if(activeProcess!=null){
+                        activeProcess.finishProgress();
+                        }
                         su.close();
                         return ret;
 
