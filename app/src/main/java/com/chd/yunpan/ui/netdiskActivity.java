@@ -58,8 +58,8 @@ public class netdiskActivity extends Activity implements OnClickListener {
 	private String spaceStr;
 
 	private void initData() {
-		int flow = entity.getFlow();//免费流量
-		int uflow = entity.getUflow();//已使用流量
+		long flow = entity.getFlow();//免费流量
+		long uflow = entity.getUflow();//已使用流量
 		long space = entity.getSpace();//用户空间bite
 		long uspace = entity.getUspace();//用户已经使用的空间bite
 		int spacePro=0;
