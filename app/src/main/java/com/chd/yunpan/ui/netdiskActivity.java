@@ -71,7 +71,7 @@ public class netdiskActivity extends Activity implements OnClickListener {
 		spaceStr = TimeAndSizeUtil.getSize((space - uspace) + "");
 		mProSpace.setTxt(spaceStr );
 		mProSpace.setProgress(spacePro);
-		mTextUserSpace.setText(String.format("%d%%", spacePro));
+		mTextUserSpace.setText(String.format( "%d%%", spacePro));
 
 		int freePro=uflow==00?0 : (int) (uflow*100/flow);
 		String freeStr = TimeAndSizeUtil.getSize((flow - uflow) + "");
@@ -81,7 +81,7 @@ public class netdiskActivity extends Activity implements OnClickListener {
 		String spaceS=TimeAndSizeUtil.getSize(space+"");
 		String flowS=TimeAndSizeUtil.getSize(flow+"");
 
-		mTextTitle.setText(String.format(spaceS+"空间"+flowS+"空间流量"));
+		mTextTitle.setText(String.format(spaceS+"空间"));
 
 		mTextRemainder.setText(String.format("本月剩余"+freeStr));
 	}
