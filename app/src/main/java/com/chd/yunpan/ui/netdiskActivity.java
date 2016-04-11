@@ -83,7 +83,7 @@ public class netdiskActivity extends Activity implements OnClickListener {
 
 		mTextTitle.setText(String.format(spaceS+"空间"));
 
-		mTextRemainder.setText(String.format("本月剩余"+freeStr));
+//		mTextRemainder.setText(String.format("本月剩余"+freeStr));
 	}
 
 	private void initListener() {
@@ -109,7 +109,7 @@ public class netdiskActivity extends Activity implements OnClickListener {
 		mProFreeapp.setlinecolor(Color.rgb(247, 117, 89));
 		mTextFreeapp = (TextView) findViewById(R.id.netdisk_fee_apptitle);
 		
-		mTextRemainder = (TextView) findViewById(R.id.netdisk_remainder);
+//		mTextRemainder = (TextView) findViewById(R.id.netdisk_remainder);
 		
 		mViewMenu0 = findViewById(R.id.netdisk_menu0);
 		mViewMenu1 = findViewById(R.id.netdisk_menu1);
