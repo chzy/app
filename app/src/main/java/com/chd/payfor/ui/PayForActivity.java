@@ -1,27 +1,31 @@
 package com.chd.payfor.ui;
 
-import com.chd.payfor.entity.PayForFlag;
-import com.chd.payfor.ui.dialog.PayForOpenSpaceDlg;
-import com.chd.payfor.ui.dialog.PayForOpenSpaceDlg.OnConfirmListener;
-import com.chd.yunpan.R;
-import com.chd.yunpan.share.ShareUtils;
-
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.chd.TClient;
+import com.chd.payfor.entity.PayForFlag;
+import com.chd.payfor.ui.dialog.PayForOpenSpaceDlg;
+import com.chd.payfor.ui.dialog.PayForOpenSpaceDlg.OnConfirmListener;
+import com.chd.proto.Errcode;
+import com.chd.proto.RetHead;
+import com.chd.yunpan.R;
+import com.chd.yunpan.share.ShareUtils;
 
 public class PayForActivity extends Activity implements OnClickListener, OnConfirmListener
 {
 	private ImageView mIvLeft;
 	private TextView mTvCenter;
 	
-	private EditText mEditMobile;
+	private TextView mEditMobile;
 	private TextView mTextMoney;
 	private Button mBtnPayFor;
 	
@@ -55,7 +59,7 @@ public class PayForActivity extends Activity implements OnClickListener, OnConfi
 	}
 
 	private void initResourceId() {
-		mEditMobile = (EditText) findViewById(R.id.openspace_payfor_mobile_edit);
+		mEditMobile = (TextView) findViewById(R.id.openspace_payfor_mobile_edit);
 		mTextMoney = (TextView) findViewById(R.id.openspace_payfor_money_txt);
 		mBtnPayFor = (Button) findViewById(R.id.openspace_payfor_btn);
 	}
@@ -107,9 +111,59 @@ public class PayForActivity extends Activity implements OnClickListener, OnConfi
 	@Override
 	public void confirm() 
 	{
-		Intent intent = new Intent(this, PayForResultActivity.class);
-		intent.putExtra(PayForFlag.FLAG_PAY_VALUE, getIntent().getStringExtra(PayForFlag.FLAG_PAY_VALUE));
-		startActivityForResult(intent, 1000);
+		final ProgressDialog dialog=new ProgressDialog(this);
+		dialog.setMessage("正在加载");
+		dialog.show();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					final RetHead retHead = TClient.getinstance().OrderByVac(true);
+
+					if(Errcode.SUCCESS==retHead.getRet()){
+						//成功
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								dialog.dismiss();
+								Intent intent = new Intent(PayForActivity.this, PayForResultActivity.class);
+								intent.putExtra(PayForFlag.FLAG_PAY_VALUE, getIntent().getStringExtra(PayForFlag.FLAG_PAY_VALUE));
+								intent.putExtra(PayForFlag.FLAG_PAY_RESULT, PayForFlag.FLAG_PAY_SUCCESS);
+								startActivityForResult(intent, 1000);
+							}
+						});
+
+
+					}else{
+						//失败
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								dialog.dismiss();
+								String msg=retHead.getMsg();
+								Toast.makeText(PayForActivity.this, msg, Toast.LENGTH_SHORT).show();
+								Intent intent = new Intent(PayForActivity.this, PayForResultActivity.class);
+								intent.putExtra(PayForFlag.FLAG_PAY_VALUE, getIntent().getStringExtra(PayForFlag.FLAG_PAY_VALUE));
+								intent.putExtra(PayForFlag.FLAG_PAY_RESULT, PayForFlag.FLAG_PAY_FAILED);
+								startActivityForResult(intent, 1000);
+							}
+						});
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							dialog.dismiss();
+							Toast.makeText(PayForActivity.this, "开小差了，请重试", Toast.LENGTH_SHORT).show();
+						}
+					});
+				}
+			}
+		}).start();
+
+
 	}
 
 	@Override

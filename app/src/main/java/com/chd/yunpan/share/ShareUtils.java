@@ -251,7 +251,7 @@ public class ShareUtils {
 	public void setLoginEntity(LoginResult entity){
 		if(entity!=null){
 		String json = null;
-		json=entity.getJson();
+		json=new Gson().toJson(entity);
 		editor.putString("entity", json);
 		editor.commit();
 		}

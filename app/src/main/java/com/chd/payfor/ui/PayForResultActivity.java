@@ -1,19 +1,16 @@
 package com.chd.payfor.ui;
 
-import java.util.Random;
-
-import com.chd.payfor.entity.PayForFlag;
-import com.chd.yunpan.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.chd.payfor.entity.PayForFlag;
+import com.chd.yunpan.R;
 
 public class PayForResultActivity extends Activity implements OnClickListener
 {
@@ -39,10 +36,9 @@ public class PayForResultActivity extends Activity implements OnClickListener
 	
 	private void initData()
 	{
+		String status = getIntent().getStringExtra(PayForFlag.FLAG_PAY_RESULT);
 		String strValue = getIntent().getStringExtra(PayForFlag.FLAG_PAY_VALUE);
-		Random random = new Random();
-		int nRandom = random.nextInt(2);
-		if (nRandom == 1)
+		if (PayForFlag.FLAG_PAY_SUCCESS.equals(status))
 		{
 			mTextResult.setText(String.format("尊敬的用户：你已预定%s，现在可以返回首页查看自己的流量，感谢你的使用。", strValue));
 			mBtnResult.setText("返回首页");

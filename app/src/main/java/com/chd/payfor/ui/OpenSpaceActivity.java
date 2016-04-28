@@ -1,9 +1,7 @@
 package com.chd.payfor.ui;
 
-import com.chd.payfor.entity.PayForFlag;
-import com.chd.yunpan.R;
-
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,8 +9,18 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class OpenSpaceActivity extends Activity implements OnClickListener
+import com.chd.TClient;
+import com.chd.payfor.entity.PayForFlag;
+import com.chd.payfor.ui.dialog.PayForOpenSpaceDlg;
+import com.chd.proto.Errcode;
+import com.chd.proto.LoginResult;
+import com.chd.proto.RetHead;
+import com.chd.yunpan.R;
+import com.chd.yunpan.share.ShareUtils;
+
+public class OpenSpaceActivity extends Activity implements OnClickListener,PayForOpenSpaceDlg.OnConfirmListener
 {
 	private ImageView mIvLeft;
 	private TextView mTvCenter;
@@ -36,6 +44,13 @@ public class OpenSpaceActivity extends Activity implements OnClickListener
 		
 		initTitle();
 		initResourceId();
+		ShareUtils sareUtils = new ShareUtils(this);
+		LoginResult loginEntity = sareUtils.getLoginEntity();
+		if(loginEntity.getSpace()>5*1024*1024*1024){
+			mBtnTenOpen.setText("退订");
+		}
+
+
 		initListener();
 		initData();
 	}
@@ -79,6 +94,7 @@ public class OpenSpaceActivity extends Activity implements OnClickListener
 			break;
 		case R.id.openspace_six_btn:
 		{
+
 			Intent intent = new Intent(this, PayForActivity.class);
 			intent.putExtra(PayForFlag.FLAG_PAY_TYPE, mTextSixPrice.getText().toString());
 			intent.putExtra(PayForFlag.FLAG_PAY_VALUE, mTextSixValue.getText().toString());
@@ -87,10 +103,37 @@ public class OpenSpaceActivity extends Activity implements OnClickListener
 			break;
 		case R.id.openspace_ten_btn:
 		{
-			Intent intent = new Intent(this, PayForActivity.class);
-			intent.putExtra(PayForFlag.FLAG_PAY_TYPE, mTextTenPrice.getText().toString());
-			intent.putExtra(PayForFlag.FLAG_PAY_VALUE, mTextTenValue.getText().toString());
-			startActivityForResult(intent, 1000);
+			if("退订".equals(mBtnTenOpen.getText().toString())){
+				PayForOpenSpaceDlg payForOpenSpaceDlg = new PayForOpenSpaceDlg(this);
+				payForOpenSpaceDlg.setOnConfirmListener(new PayForOpenSpaceDlg.OnConfirmListener()
+				{
+
+					@Override
+					public void confirm()
+					{
+						PayForOpenSpaceDlg payForOpenSpaceDlg = new PayForOpenSpaceDlg(OpenSpaceActivity.this);
+						payForOpenSpaceDlg.setOnConfirmListener(OpenSpaceActivity.this);
+						payForOpenSpaceDlg.showMyDialog(String.format("请再次确认退订“沃”空间业务，资费%s", "9元"));
+					}
+
+					@Override
+					public void cancel()
+					{
+
+					}
+
+				});
+				payForOpenSpaceDlg.showMyDialog(String.format("您即将退订“沃空间”业务，成功后即不再享会员空间和定向流量，资费%s，是否确认退订？", "9元"));
+
+
+
+
+			}else{
+				Intent intent = new Intent(this, PayForActivity.class);
+				intent.putExtra(PayForFlag.FLAG_PAY_TYPE, mTextTenPrice.getText().toString());
+				intent.putExtra(PayForFlag.FLAG_PAY_VALUE, mTextTenValue.getText().toString());
+				startActivityForResult(intent, 1000);
+			}
 		}
 			break;
 		default:
@@ -107,5 +150,61 @@ public class OpenSpaceActivity extends Activity implements OnClickListener
 			finish();
 		}
 	}
-	
+
+	@Override
+	public void confirm() {
+		final ProgressDialog dialog=new ProgressDialog(this);
+		dialog.setMessage("正在加载");
+		dialog.show();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					final RetHead retHead = TClient.getinstance().OrderByVac(false);
+
+					if(Errcode.SUCCESS==retHead.getRet()){
+						//成功
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								dialog.dismiss();
+								Toast.makeText(OpenSpaceActivity.this, "退订成功", Toast.LENGTH_SHORT).show();
+							}
+						});
+
+
+					}else{
+						//失败
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+
+								String msg=retHead.getMsg();
+								Toast.makeText(OpenSpaceActivity.this, msg, Toast.LENGTH_SHORT).show();
+							}
+						});
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							dialog.dismiss();
+							Toast.makeText(OpenSpaceActivity.this, "开小差了，请重试", Toast.LENGTH_SHORT).show();
+						}
+					});
+				}
+			}
+		}).start();
+
+
+
+
+	}
+
+	@Override
+	public void cancel() {
+
+	}
 }
