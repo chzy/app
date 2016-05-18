@@ -125,7 +125,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
                 android:gravity="center_vertical"
-                android:text="128G云存储空间+沃空间定向流量6G/月"
+                android:text="128G云存储空间+6G/月沃空间定向流量"
                 android:textColor="#333333"
                 android:textSize="14sp" />
 

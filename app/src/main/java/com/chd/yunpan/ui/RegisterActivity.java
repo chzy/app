@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.chd.TClient;
 import com.chd.contacts.vcard.StringUtils;
 import com.chd.proto.Errcode;
+import com.chd.proto.NetMobileNumberResult;
 import com.chd.proto.RetHead;
 import com.chd.yunpan.R;
 import com.chd.yunpan.utils.TimeCount;
@@ -38,256 +39,271 @@ import cn.smssdk.SMSSDK;
 public class RegisterActivity extends Activity implements View.OnClickListener {
 
 
-    private EditText mEdAccountEditText;
-    private LinearLayout mAccountLinearLayout;
-    private EditText mEdPwdEditText;
-    private LinearLayout mPasswordLinearLayout;
-    private EditText mEdConfirmPwdEditText;
-    private LinearLayout mConfimPasswordLinearLayout;
-    private CircularProgressButton mBtnLogCircularProgressButton;
-    private LinearLayout mLinearLayoutRegLinearLayout;
+	private EditText mEdAccountEditText;
+	private LinearLayout mAccountLinearLayout;
+	private EditText mEdPwdEditText;
+	private LinearLayout mPasswordLinearLayout;
+	private EditText mEdConfirmPwdEditText;
+	private LinearLayout mConfimPasswordLinearLayout;
+	private CircularProgressButton mBtnLogCircularProgressButton;
+	private LinearLayout mLinearLayoutRegLinearLayout;
 
-    /**
-     * 用户名
-     */
-    private String pass;
-    /**
-     * 密码
-     */
-    private String name;
-    private ImageView mIvLeft;
-    private TextView mTvTitle;
-    private CircularProgressButton mBtnCodeCircularProgressButton;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
+	/**
+	 * 用户名
+	 */
+	private String pass;
+	/**
+	 * 密码
+	 */
+	private String name;
+	private ImageView mIvLeft;
+	private TextView mTvTitle;
+	private CircularProgressButton mBtnCodeCircularProgressButton;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
-        initView();
-        initListener();
+	/**
+	 * ATTENTION: This was auto-generated to implement the App Indexing API.
+	 * See https://g.co/AppIndexing/AndroidStudio for more information.
+	 */
 
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-    }
-    private TimeCount time;
-
-    private void initListener() {
-        mIvLeft.setOnClickListener(this);
-        mBtnLogCircularProgressButton.setOnClickListener(this);
-        mBtnCodeCircularProgressButton.setOnClickListener(this);
-    }
-
-    private void initView() {
-        mEdAccountEditText = (EditText) findViewById(R.id.reg_ed_account);
-        mAccountLinearLayout = (LinearLayout) findViewById(R.id.reg_account);
-        mEdPwdEditText = (EditText) findViewById(R.id.reg_ed_pwd);
-        mPasswordLinearLayout = (LinearLayout) findViewById(R.id.reg_password);
-        mEdConfirmPwdEditText = (EditText) findViewById(R.id.reg_ed_confirm_pwd);
-        mConfimPasswordLinearLayout = (LinearLayout) findViewById(R.id.reg_confim_password);
-        mBtnLogCircularProgressButton = (CircularProgressButton) findViewById(R.id.log_btn_log);
-        mBtnCodeCircularProgressButton = (CircularProgressButton) findViewById(R.id.log_btn_code);
-        mLinearLayoutRegLinearLayout = (LinearLayout) findViewById(R.id.linearLayoutReg);
-        mIvLeft = (ImageView) findViewById(R.id.iv_left);
-        mTvTitle = (TextView) findViewById(R.id.tv_center);
-        mLinearLayoutRegLinearLayout = (LinearLayout) findViewById(R.id.linearLayoutReg);
-        mLinearLayoutRegLinearLayout = (LinearLayout) findViewById(R.id.linearLayoutReg);
-
-        mTvTitle.setText("注册");
-    time=new TimeCount(60*1000,1000,mBtnCodeCircularProgressButton);
-
-        EventHandler eh = new EventHandler() {
-            @Override
-            public void afterEvent(int event, int result, final Object data) {
-                Log.d("lmj", result + "");
-                if (result == SMSSDK.RESULT_COMPLETE) {
-                    //回调完成
-                    if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
-                        //提交验证码成功
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(RegisterActivity.this, "提交验证码成功", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-                    } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
-                        //获取验证码成功
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(RegisterActivity.this, "获取验证码成功", Toast.LENGTH_SHORT).show();
-                                time.start();
-                            }
-                        });
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_register);
+		initView();
+		initListener();
 
 
-                    } else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {
-                        //返回支持发送验证码的国家列表
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(RegisterActivity.this, "支持国家成功", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+		// ATTENTION: This was auto-generated to implement the App Indexing API.
+		// See https://g.co/AppIndexing/AndroidStudio for more information.
+	}
 
+	private TimeCount time;
 
-                    }
-                } else {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                JSONObject obj=new JSONObject(data.toString());
-                                String msg=obj.getString("detail");
-                                Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_SHORT).show();
-                            } catch (JSONException e) {
+	private void initListener() {
+		mIvLeft.setOnClickListener(this);
+		mBtnLogCircularProgressButton.setOnClickListener(this);
+		mBtnCodeCircularProgressButton.setOnClickListener(this);
+	}
 
-                            }
+	private void initView() {
+		mEdAccountEditText = (EditText) findViewById(R.id.reg_ed_account);
+		mAccountLinearLayout = (LinearLayout) findViewById(R.id.reg_account);
+		mEdPwdEditText = (EditText) findViewById(R.id.reg_ed_pwd);
+		mPasswordLinearLayout = (LinearLayout) findViewById(R.id.reg_password);
+		mEdConfirmPwdEditText = (EditText) findViewById(R.id.reg_ed_confirm_pwd);
+		mConfimPasswordLinearLayout = (LinearLayout) findViewById(R.id.reg_confim_password);
+		mBtnLogCircularProgressButton = (CircularProgressButton) findViewById(R.id.log_btn_log);
+		mBtnCodeCircularProgressButton = (CircularProgressButton) findViewById(R.id.log_btn_code);
+		mLinearLayoutRegLinearLayout = (LinearLayout) findViewById(R.id.linearLayoutReg);
+		mIvLeft = (ImageView) findViewById(R.id.iv_left);
+		mTvTitle = (TextView) findViewById(R.id.tv_center);
+		mLinearLayoutRegLinearLayout = (LinearLayout) findViewById(R.id.linearLayoutReg);
+		mLinearLayoutRegLinearLayout = (LinearLayout) findViewById(R.id.linearLayoutReg);
 
-                        }
-                    });
+		mTvTitle.setText("注册");
+		time = new TimeCount(60 * 1000, 1000, mBtnCodeCircularProgressButton);
 
-                    ((Throwable) data).printStackTrace();
-                }
-            }
-        };
-        SMSSDK.registerEventHandler(eh);
-    }
-
-
-
-
-
-
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        SMSSDK.unregisterAllEventHandler();
-    }
-
-    @Override
-    public void onClick(View view) {
-        int id = view.getId();
-        switch (id) {
-            case R.id.log_btn_code:
-                //验证码
-                String phone = mEdAccountEditText.getText().toString();
-                SMSSDK.getVerificationCode("86", phone);
-
-                break;
-
-            case R.id.iv_left:
-                //退出
-                onBackPressed();
-                break;
-            case R.id.log_btn_log:
-
-
-
-                //登陆
-                final String name = mEdAccountEditText.getText().toString();
-                final String pass1 = mEdPwdEditText.getText().toString();
-                final String code = mEdConfirmPwdEditText.getText().toString();
-                if(StringUtils.isNullOrEmpty(name)||!(name.length()==11)){
-                    Toast.makeText(RegisterActivity.this, "请输入正确的手机号", Toast.LENGTH_SHORT).show();
-                    return ;
-                }
-                if(StringUtils.isNullOrEmpty(pass1)||pass1.length()<6||pass1.length()>18){
-                    Toast.makeText(RegisterActivity.this, "请输入正确的密码格式", Toast.LENGTH_SHORT).show();
-                    return ;
-                }
-                if(StringUtils.isNullOrEmpty(code)||!(code.length()==4)){
-                    Toast.makeText(RegisterActivity.this, "请输入正确的验证码", Toast.LENGTH_SHORT).show();
-                    return ;
-                }
-
-
-
-
-                final ProgressDialog dialog=new ProgressDialog(this);
-                dialog.setMessage("正在加载");
-                dialog.show();
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            final RetHead retHead = TClient.getinstance().RegistUser(name, pass1, code);
-
-                            if(Errcode.SUCCESS==retHead.getRet()){
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        dialog.dismiss();
-                                        Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
-                                        Intent intent=new Intent();
-                                        intent.setClass(RegisterActivity.this,LoginActivity.class);
-                                        intent.putExtra("phone",name);
-                                        intent.putExtra("isReg",true);
-                                        intent.putExtra("pass",pass1);
-                                        startActivity(intent);
-                                        finish();
-
-                                    }
-                                });
-                            }else{
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        dialog.dismiss();
-                                        String msg=retHead.getMsg();
-                                        Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
-                        } catch (Exception e) {
-                            Log.e("register ","注册调用失败 "+e.getMessage());
+		EventHandler eh = new EventHandler() {
+			@Override
+			public void afterEvent(int event, int result, final Object data) {
+				Log.d("lmj", result + "");
+				if (result == SMSSDK.RESULT_COMPLETE) {
+					//回调完成
+					if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
+						//提交验证码成功
 						runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        dialog.dismiss();
-                            			Toast.makeText(RegisterActivity.this, "开小差了，请重试", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            
-                        }
-                    }
-                }).start();
+							@Override
+							public void run() {
+								Toast.makeText(RegisterActivity.this, "提交验证码成功", Toast.LENGTH_SHORT).show();
+							}
+						});
+
+					} else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
+						//获取验证码成功
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								Toast.makeText(RegisterActivity.this, "获取验证码成功", Toast.LENGTH_SHORT).show();
+								time.start();
+							}
+						});
 
 
-
-//                if(StringUtils.isNullOrEmpty(name)){
-//                    ToastUtils.toast(this,"请输入用户名");
-//                    return ;
-//                }
-//                boolean flag = StringUtils.isConfirmPass(this, pass1, pass2);
-//
-//               if(flag){
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//               }else{
-//                   return ;
-//               }
+					} else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {
+						//返回支持发送验证码的国家列表
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								Toast.makeText(RegisterActivity.this, "支持国家成功", Toast.LENGTH_SHORT).show();
+							}
+						});
 
 
-                break;
-        }
-    }
+					}
+				} else {
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								JSONObject obj = new JSONObject(data.toString());
+								String msg = obj.getString("detail");
+								Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_SHORT).show();
+							} catch (JSONException e) {
+
+							}
+
+						}
+					});
+
+					((Throwable) data).printStackTrace();
+				}
+			}
+		};
+		SMSSDK.registerEventHandler(eh);
+	}
+
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		SMSSDK.unregisterAllEventHandler();
+	}
+
+	ProgressDialog dialog;
+
+	@Override
+	public void onClick(View view) {
+		int id = view.getId();
+		switch (id) {
+			case R.id.log_btn_code:
+				//验证码
+				final String phone = mEdAccountEditText.getText().toString();
+				dialog = new ProgressDialog(this);
+				dialog.setMessage("正在发送");
+				dialog.show();
+				new Thread(
+						new Runnable() {
+							@Override
+							public void run() {
+								try {
+									final NetMobileNumberResult result = TClient.getinstance().QueryPhoneNbBy3G();
+									if (Errcode.SUCCESS == result.getResult().getRet()) {
+										runOnUiThread(new Runnable() {
+											@Override
+											public void run() {
+												dialog.dismiss();
+												String mobile = result.getMobile();
+												Toast.makeText(RegisterActivity.this, "当前手机号:" + mobile, Toast.LENGTH_SHORT).show();
+												if (phone.equals(mobile)) {
+													SMSSDK.getVerificationCode("86", phone);
+												} else {
+													Toast.makeText(RegisterActivity.this, "注册手机号与本机不符", Toast.LENGTH_SHORT).show();
+												}
+											}
+										});
+									} else {
+										runOnUiThread(new Runnable() {
+											@Override
+											public void run() {
+												dialog.dismiss();
+												String msg = result.getResult().getMsg();
+												Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_SHORT).show();
+											}
+										});
+									}
+
+								} catch (Exception e) {
+									Log.e("register ", "发送验证码调用失败 " + e.getMessage());
+									runOnUiThread(new Runnable() {
+										@Override
+										public void run() {
+											dialog.dismiss();
+											Toast.makeText(RegisterActivity.this, "开小差了，请重试", Toast.LENGTH_SHORT).show();
+										}
+									});
+								}
+							}
+						}
+				).start();
+
+
+				break;
+
+			case R.id.iv_left:
+				//退出
+				onBackPressed();
+				break;
+			case R.id.log_btn_log:
+
+
+				//登陆
+				final String name = mEdAccountEditText.getText().toString();
+				final String pass1 = mEdPwdEditText.getText().toString();
+				final String code = mEdConfirmPwdEditText.getText().toString();
+				if (StringUtils.isNullOrEmpty(name) || !(name.length() == 11)) {
+					Toast.makeText(RegisterActivity.this, "请输入正确的手机号", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				if (StringUtils.isNullOrEmpty(pass1) || pass1.length() < 6 || pass1.length() > 18) {
+					Toast.makeText(RegisterActivity.this, "请输入正确的密码格式", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				if (StringUtils.isNullOrEmpty(code) || !(code.length() == 4)) {
+					Toast.makeText(RegisterActivity.this, "请输入正确的验证码", Toast.LENGTH_SHORT).show();
+					return;
+				}
+
+
+				dialog = new ProgressDialog(this);
+				dialog.setMessage("正在加载");
+				dialog.show();
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							final RetHead retHead = TClient.getinstance().RegistUser(name, pass1, code);
+
+							if (Errcode.SUCCESS == retHead.getRet()) {
+								runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										dialog.dismiss();
+										Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+										Intent intent = new Intent();
+										intent.setClass(RegisterActivity.this, LoginActivity.class);
+										intent.putExtra("phone", name);
+										intent.putExtra("isReg", true);
+										intent.putExtra("pass", pass1);
+										startActivity(intent);
+										finish();
+
+									}
+								});
+							} else {
+								runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										dialog.dismiss();
+										String msg = retHead.getMsg();
+										Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_SHORT).show();
+									}
+								});
+							}
+						} catch (Exception e) {
+							Log.e("register ", "注册调用失败 " + e.getMessage());
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									dialog.dismiss();
+									Toast.makeText(RegisterActivity.this, "开小差了，请重试", Toast.LENGTH_SHORT).show();
+								}
+							});
+
+						}
+					}
+				}).start();
+				break;
+		}
+	}
 
 }

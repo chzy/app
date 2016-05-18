@@ -204,7 +204,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.0"
                         android:padding="5dp"
-                        android:src="@drawable/netdisk_menu1" />
+                        android:src="@drawable/netdisk_menu2" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -212,7 +212,7 @@
                         android:layout_gravity="center_horizontal"
                         android:clickable="true"
                         android:gravity="center"
-                        android:text="精彩炫铃"
+                        android:text="更多精彩"
                         android:textColor="#d78426"
                         android:textSize="13sp" />
                 </LinearLayout>
@@ -230,7 +230,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.0"
                         android:padding="5dp"
-                        android:src="@drawable/netdisk_menu2" />
+                        android:src="@drawable/netdisk_menu1" />
 
                     <TextView
                         android:layout_width="wrap_content"

@@ -40,7 +40,7 @@ public class PayForResultActivity extends Activity implements OnClickListener
 		String strValue = getIntent().getStringExtra(PayForFlag.FLAG_PAY_VALUE);
 		if (PayForFlag.FLAG_PAY_SUCCESS.equals(status))
 		{
-			mTextResult.setText(String.format("尊敬的用户：你已预定%s，现在可以返回首页查看自己的流量，感谢你的使用。", strValue));
+			mTextResult.setText(String.format("尊敬的用户：您已经成功开通沃空间，即刻享有%s，现在可以返回首页查看自己的流量，感谢你的使用。", strValue));
 			mBtnResult.setText("返回首页");
 			mBtnResult.setTag(true);
 		}

@@ -7,11 +7,20 @@
 
     <include layout="@layout/title_bar" />
 
-    <WebView
-        android:id="@+id/crbt_webview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:textColor="#000"
+        android:textSize="18sp"
+        android:text="尽请期待!"
+        />
+    <!--<WebView-->
+        <!--android:id="@+id/crbt_webview"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
 
-    </WebView>
+    <!--</WebView>-->
 
 </LinearLayout>
