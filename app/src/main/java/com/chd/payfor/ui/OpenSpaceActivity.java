@@ -19,6 +19,7 @@ import com.chd.proto.LoginResult;
 import com.chd.proto.RetHead;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
+import com.chd.yunpan.ui.LoginActivity;
 
 public class OpenSpaceActivity extends Activity implements OnClickListener,PayForOpenSpaceDlg.OnConfirmListener
 {
@@ -169,7 +170,13 @@ public class OpenSpaceActivity extends Activity implements OnClickListener,PayFo
 							public void run() {
 								dialog.dismiss();
 								Toast.makeText(OpenSpaceActivity.this, "退订成功", Toast.LENGTH_SHORT).show();
-							}
+								ShareUtils shareUtils = new ShareUtils(OpenSpaceActivity.this);
+								shareUtils.setAutoLogin(false);
+								Intent intent=new Intent(OpenSpaceActivity.this, LoginActivity.class);
+								intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+								startActivity(intent);
+								finish();
+								}
 						});
 
 
@@ -178,7 +185,6 @@ public class OpenSpaceActivity extends Activity implements OnClickListener,PayFo
 						runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
-
 								String msg=retHead.getMsg();
 								Toast.makeText(OpenSpaceActivity.this, msg, Toast.LENGTH_SHORT).show();
 							}
