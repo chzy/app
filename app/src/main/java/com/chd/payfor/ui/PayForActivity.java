@@ -141,7 +141,11 @@ public class PayForActivity extends Activity implements OnClickListener, OnConfi
 							public void run() {
 								dialog.dismiss();
 								String msg=retHead.getMsg();
-								Toast.makeText(PayForActivity.this, msg, Toast.LENGTH_SHORT).show();
+								if("User Mobile Is Not Xinjiang Number!".equals(msg)){
+									Toast.makeText(PayForActivity.this, "仅限新疆联通地区订购", Toast.LENGTH_SHORT).show();
+								}else{
+									Toast.makeText(PayForActivity.this, msg, Toast.LENGTH_SHORT).show();
+								}
 								Intent intent = new Intent(PayForActivity.this, PayForResultActivity.class);
 								intent.putExtra(PayForFlag.FLAG_PAY_VALUE, getIntent().getStringExtra(PayForFlag.FLAG_PAY_VALUE));
 								intent.putExtra(PayForFlag.FLAG_PAY_RESULT, PayForFlag.FLAG_PAY_FAILED);

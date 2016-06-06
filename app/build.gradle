@@ -56,14 +56,14 @@ dependencies {
     compile files('libs/libammsdk.jar')
     compile name: 'chdclnetapi-debug', ext: 'aar'
     compile name: 'thriftlib-debug', ext: 'aar'
-    compile name: 'SMSSDK-2.0.1', ext: 'aar'
+    compile name: 'SMSSDK-2.0.2', ext: 'aar'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.android.support:multidex:1.0.1'
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
-    compile files('libs/MobCommons.jar')
-    compile files('libs/MobTools.jar')
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.squareup.picasso:picasso:2.4.0'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'im.fir:fir-sdk:latest.integration@aar'
+    compile files('libs/MobCommons-2016.0303.1229.jar')
+    compile files('libs/MobTools-2016.0303.1229.jar')
 }

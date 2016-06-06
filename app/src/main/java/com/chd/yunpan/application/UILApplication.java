@@ -33,7 +33,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
 import cn.smssdk.SMSSDK;
-import im.fir.sdk.FIR;
 //import im.fir.sdk.FIR;
 
 /**
@@ -49,8 +48,8 @@ public class UILApplication extends Application {
 			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyDeath().build());*/
 		}
 		super.onCreate();
-		FIR.init(this);
-		CrashHandler.getInstance().init(this);
+//		FIR.init(this);
+//		CrashHandler.getInstance().init(this);
 		mInstance = this;
 		mLockPatternUtils = new LockPatternUtils(this);
 		initImageLoader(getApplicationContext());

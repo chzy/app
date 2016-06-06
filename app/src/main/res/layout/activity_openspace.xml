@@ -87,7 +87,7 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/btn_userinfo_logout"
-                    android:text="立即开通"
+                    android:text="退订"
                     android:textColor="#ffffff" />
             </LinearLayout>
         </LinearLayout>

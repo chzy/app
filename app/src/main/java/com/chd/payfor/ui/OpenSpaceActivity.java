@@ -3,11 +3,13 @@ package com.chd.payfor.ui;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +37,9 @@ public class OpenSpaceActivity extends Activity implements OnClickListener,PayFo
 	
 	private Button mBtnSixOpen;
 	private Button mBtnTenOpen;
-	
+	private LinearLayout mSixLayout;
+	private LinearLayout mNineLayout;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -45,9 +49,14 @@ public class OpenSpaceActivity extends Activity implements OnClickListener,PayFo
 		
 		initTitle();
 		initResourceId();
+
 		ShareUtils sareUtils = new ShareUtils(this);
 		LoginResult loginEntity = sareUtils.getLoginEntity();
-		if(loginEntity.getSpace()>5*1024*1024*1024){
+		if(loginEntity.getSpace()>(60*1024*1024*1024l)&&loginEntity.getSpace()<70l*1024*1024*1024){
+			mSixLayout.setVisibility(View.VISIBLE);
+			mNineLayout.setVisibility(View.GONE);
+		}
+		if((120l * 1024 * 1024 * 1024) < loginEntity.getSpace()){
 			mBtnTenOpen.setText("退订");
 		}
 
@@ -70,6 +79,9 @@ public class OpenSpaceActivity extends Activity implements OnClickListener,PayFo
 	private void initResourceId() {
 		mBtnSixOpen = (Button) findViewById(R.id.openspace_six_btn);
 		mBtnTenOpen = (Button) findViewById(R.id.openspace_ten_btn);
+		mSixLayout = (LinearLayout) findViewById(R.id.openspace_six_layout);
+		mNineLayout = (LinearLayout) findViewById(R.id.openspace_ten_layout);
+
 		mTextSixOpen = (TextView) findViewById(R.id.openspace_six_text);
 		mTextTenOpen = (TextView) findViewById(R.id.openspace_ten_text);
 		mTextSixValue = (TextView) findViewById(R.id.openspace_six_value);
@@ -96,10 +108,13 @@ public class OpenSpaceActivity extends Activity implements OnClickListener,PayFo
 		case R.id.openspace_six_btn:
 		{
 
-			Intent intent = new Intent(this, PayForActivity.class);
-			intent.putExtra(PayForFlag.FLAG_PAY_TYPE, mTextSixPrice.getText().toString());
-			intent.putExtra(PayForFlag.FLAG_PAY_VALUE, mTextSixValue.getText().toString());
-			startActivityForResult(intent, 1000);
+			Uri smsToUri = Uri.parse("smsto:106558898");
+
+			Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
+
+			intent.putExtra("sms_body", "TDZC");
+
+			startActivity(intent);
 		}
 			break;
 		case R.id.openspace_ten_btn:

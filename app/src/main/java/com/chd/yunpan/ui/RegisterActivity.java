@@ -15,11 +15,11 @@ import android.widget.Toast;
 import com.chd.TClient;
 import com.chd.contacts.vcard.StringUtils;
 import com.chd.proto.Errcode;
-import com.chd.proto.NetMobileNumberResult;
 import com.chd.proto.RetHead;
 import com.chd.yunpan.R;
 import com.chd.yunpan.utils.TimeCount;
 import com.chd.yunpan.view.CircularProgressButton;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -104,9 +104,19 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 		time = new TimeCount(60 * 1000, 1000, mBtnCodeCircularProgressButton);
 
 		EventHandler eh = new EventHandler() {
+
+
 			@Override
 			public void afterEvent(int event, int result, final Object data) {
 				Log.d("lmj", result + "");
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						if(dialog!=null&&dialog.isShowing()){
+							dialog.dismiss();
+						}
+					}
+				});
 				if (result == SMSSDK.RESULT_COMPLETE) {
 					//回调完成
 					if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
@@ -123,6 +133,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 						runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
+
 								Toast.makeText(RegisterActivity.this, "获取验证码成功", Toast.LENGTH_SHORT).show();
 								time.start();
 							}
@@ -141,11 +152,13 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
 					}
 				} else {
+//					Log.d("liumj",((Throwable)data).getLocalizedMessage());
+//					Log.d("liumj",((Throwable)data).getMessage());
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
 							try {
-								JSONObject obj = new JSONObject(data.toString());
+								JSONObject obj = new JSONObject(((Throwable)data).getLocalizedMessage());
 								String msg = obj.getString("detail");
 								Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_SHORT).show();
 							} catch (JSONException e) {
@@ -154,8 +167,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
 						}
 					});
-
-					((Throwable) data).printStackTrace();
+//					((Throwable) data).printStackTrace();
 				}
 			}
 		};
@@ -177,56 +189,16 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 		switch (id) {
 			case R.id.log_btn_code:
 				//验证码
+
+//				if (!NetUtils.isGPRS(this)) {
+//					Toast.makeText(RegisterActivity.this, "请切换为流量方式", Toast.LENGTH_SHORT).show();
+//					return;
+//				}
 				final String phone = mEdAccountEditText.getText().toString();
-				dialog = new ProgressDialog(this);
-				dialog.setMessage("正在发送");
+				dialog=new ProgressDialog(this);
+				dialog.setMessage("正在获取验证码");
 				dialog.show();
-				new Thread(
-						new Runnable() {
-							@Override
-							public void run() {
-								try {
-									final NetMobileNumberResult result = TClient.getinstance().QueryPhoneNbBy3G();
-									if (Errcode.SUCCESS == result.getResult().getRet()) {
-										runOnUiThread(new Runnable() {
-											@Override
-											public void run() {
-												dialog.dismiss();
-												String mobile = result.getMobile();
-												Toast.makeText(RegisterActivity.this, "当前手机号:" + mobile, Toast.LENGTH_SHORT).show();
-												if (phone.equals(mobile)) {
-													SMSSDK.getVerificationCode("86", phone);
-												} else {
-													Toast.makeText(RegisterActivity.this, "注册手机号与本机不符", Toast.LENGTH_SHORT).show();
-												}
-											}
-										});
-									} else {
-										runOnUiThread(new Runnable() {
-											@Override
-											public void run() {
-												dialog.dismiss();
-												String msg = result.getResult().getMsg();
-												Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_SHORT).show();
-											}
-										});
-									}
-
-								} catch (Exception e) {
-									Log.e("register ", "发送验证码调用失败 " + e.getMessage());
-									runOnUiThread(new Runnable() {
-										@Override
-										public void run() {
-											dialog.dismiss();
-											Toast.makeText(RegisterActivity.this, "开小差了，请重试", Toast.LENGTH_SHORT).show();
-										}
-									});
-								}
-							}
-						}
-				).start();
-
-
+				SMSSDK.getVerificationCode("86", phone);
 				break;
 
 			case R.id.iv_left:
@@ -252,8 +224,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 					Toast.makeText(RegisterActivity.this, "请输入正确的验证码", Toast.LENGTH_SHORT).show();
 					return;
 				}
-
-
 				dialog = new ProgressDialog(this);
 				dialog.setMessage("正在加载");
 				dialog.show();
@@ -262,7 +232,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 					public void run() {
 						try {
 							final RetHead retHead = TClient.getinstance().RegistUser(name, pass1, code);
-
+							Log.d("liumj",new Gson().toJson(retHead));
 							if (Errcode.SUCCESS == retHead.getRet()) {
 								runOnUiThread(new Runnable() {
 									@Override
@@ -276,7 +246,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 										intent.putExtra("pass", pass1);
 										startActivity(intent);
 										finish();
-
 									}
 								});
 							} else {
@@ -290,6 +259,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 								});
 							}
 						} catch (Exception e) {
+							e.printStackTrace();
 							Log.e("register ", "注册调用失败 " + e.getMessage());
 							runOnUiThread(new Runnable() {
 								@Override

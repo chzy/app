@@ -384,6 +384,7 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
                 shareUtils.setAutoLogin(false);
                 shareUtils.setPwd("");
                 Intent startIntent = new Intent(UserInfoActivity.this, LoginActivity.class);
+                startIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(startIntent);
                 finish();
             }
