@@ -214,7 +214,6 @@ public class SyncTask {
 		netThread=new Thread(){
 			@Override
 			public void run() {
-
 				int i=0;
 				ArrayList<Integer> upload=new ArrayList<>();
 				try{

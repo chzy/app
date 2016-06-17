@@ -3,12 +3,15 @@ package com.chd.photo.ui;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chd.MediaMgr.utils.MediaFileUtil;
 import com.chd.base.Ui.ActiveProcess;
@@ -26,6 +29,9 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PicDetailActivity extends ActiveProcess implements OnClickListener
 {
 
@@ -38,21 +44,33 @@ public class PicDetailActivity extends ActiveProcess implements OnClickListener
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
 	DisplayImageOptions options;
 	private boolean bIsUbkList;
-	
+
 	private SyncTask syncTask;
 	private FileInfo0 fileInfo0;
 	private final String TAG=this.getClass().getName();
 	private int pos;
 	private int pos2;
+	private Handler handler=new Handler(){
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what){
+				case 997:
+					//下载成功
+					Log.d("liumj","下载成功");
+					Toast.makeText(PicDetailActivity.this, "保存到本地成功", Toast.LENGTH_SHORT).show();
+					break;
+			}
+		}
+	};
 //	private TextView mTvRight;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) 
+	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
+
 		setContentView(R.layout.activity_pic_detail);
-		
+
 		bIsUbkList = getIntent().getBooleanExtra("ubklist", false);
 		pos=getIntent().getIntExtra("pos", -1);
 		pos2=getIntent().getIntExtra("pos2",-1);
@@ -68,15 +86,15 @@ public class PicDetailActivity extends ActiveProcess implements OnClickListener
 		.considerExifParams(true)
 //		.extraForDownloader(new ShareUtils(this).getStorePath())  //增加保存路径
 		.build();
-		
+
 		initTitle();
 		initResourceId();
 		initListener();
 		initData();
 	}
-	
 
-	
+
+
 	private void initData(){
 		/*int nPicId = getIntent().getIntExtra("picid", -1);
 		if (nPicId < 0)
@@ -146,21 +164,21 @@ public class PicDetailActivity extends ActiveProcess implements OnClickListener
 			mImgView.setImageResource(R.drawable.pic_test1);
 		}*/
 	}
-	
+
 	private void initListener() {
 		mIvLeft.setOnClickListener(this);
 		mBtnCancel.setOnClickListener(this);
 		mBtnDelete.setOnClickListener(this);
 		mBtnSaveLocal.setOnClickListener(this);
 	}
-	
+
 	private void initResourceId() {
 		mImgView = (ImageView) findViewById(R.id.pic_detail_img);
 		mBtnSaveLocal = (Button) findViewById(R.id.pic_detail_savelocal);
 		mBtnDelete = (Button) findViewById(R.id.pic_detail_delete);
 		mBtnCancel = (Button) findViewById(R.id.pic_detail_cancel);
 	}
-	
+
 	private void initTitle() {
 		mIvLeft = (ImageView) findViewById(R.id.iv_left);
 		mTvCenter = (TextView) findViewById(R.id.tv_center);
@@ -169,9 +187,9 @@ public class PicDetailActivity extends ActiveProcess implements OnClickListener
 	}
 
 	@Override
-	public void onClick(View v) 
+	public void onClick(View v)
 	{
-		switch (v.getId()) 
+		switch (v.getId())
 		{
 		case R.id.iv_left:
 		case R.id.pic_detail_cancel:
@@ -181,15 +199,15 @@ public class PicDetailActivity extends ActiveProcess implements OnClickListener
 			break;
 		case R.id.pic_detail_delete:
 		{
-			Thread thread = new Thread(new Runnable() 
+			Thread thread = new Thread(new Runnable()
 			{
 				@Override
-				public void run() 
+				public void run()
 				{
 					if (fileInfo0 != null)
 					{
 						final boolean bSucc = syncTask.DelRemoteObj(fileInfo0);
-						runOnUiThread(new Runnable() 
+						runOnUiThread(new Runnable()
 						{
 							@Override
 							public void run() {
@@ -217,21 +235,18 @@ public class PicDetailActivity extends ActiveProcess implements OnClickListener
 		{
 			if (fileInfo0 != null)
 			{
+				List<FileInfo0> info0s=new ArrayList<>();
 				if(StringUtils.isNullOrEmpty(fileInfo0.getFilePath())){
-					fileInfo0.setFilePath(new ShareUtils(this).getPhotoFile().getPath()+"/"+fileInfo0.getUri());
+					fileInfo0.setFilePath(new ShareUtils(this).getPhotoFile().getPath()+"/"+ fileInfo0.getObjid());
 				}
+				info0s.add(fileInfo0);
 				if (syncTask != null)
 				{
-					new Thread(new Runnable() {
-						@Override
-						public void run() {
-							syncTask.download(fileInfo0, null, false, null);
-						}
-					}).start();
-
+					syncTask.downloadList(info0s, PicDetailActivity.this, handler);
+//									ToastUtils.toast(PicDetailActivity.this, "保存成功!");
 				}
 			}
-			ToastUtils.toast(this, "保存成功!");
+
 		}
 			break;
 		default:

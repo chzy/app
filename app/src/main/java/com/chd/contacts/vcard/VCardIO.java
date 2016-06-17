@@ -35,22 +35,21 @@ public class VCardIO {
 	/**
 	 * 导入联系人信息
 	 *
+	 * @param handler
 	 * @param fileName 要导入的文件
 	 * @param replace  是否替换先有联系人
 	 * @param activity 主窗口
 	 * @param netSize
 	 */
-	public void doImport(final String fileName, final boolean replace,
+	public void doImport(final Handler handler, final String fileName, final boolean replace,
 	                     final ActiveProcess activity, final int netSize) {
 		new Thread() {
 			@Override
 			public void run() {
 				try {
 					File vcfFile = new File(fileName);
-
 					final BufferedReader vcfBuffer = new BufferedReader(
 							new FileReader(fileName));
-					final long maxlen = vcfFile.length();
 					// 后台执行导入过程
 					long importStatus = 0;
 					int len = 0;
@@ -65,6 +64,7 @@ public class VCardIO {
 						parseContact.addContact(
 								context.getApplicationContext(), 0,
 								replace);
+						Log.d("添加成功:",len+"");
 						importStatus += parseContact.getParseLen();
 						// 更新进度条
 						activity.updateProgress((int) (100 * len / netSize));
@@ -72,7 +72,9 @@ public class VCardIO {
 				} catch (Exception e) {
 					Log.e("lmj", "联系人出错");
 				} finally {
+					activity.toastMain("恢复完成");
 					activity.finishProgress();
+					getLocalSize(handler);
 				}
 			}
 		}.start();
@@ -162,6 +164,7 @@ public class VCardIO {
 						parseContact.getContactInfoFromPhone(id, cResolver);
 						parseContact.writeVCard(vcfBuffer);
 						++exportStatus;
+						Log.d("上传了:",""+exportStatus);
 						// 更新进度条
 						activity.updateProgress((int) (100 * exportStatus / maxlen));
 					} while (allContacts.moveToNext());

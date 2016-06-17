@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chd.MediaMgr.utils.MediaFileUtil;
 import com.chd.base.Ui.ActiveProcess;
@@ -25,6 +26,7 @@ import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
+import com.chd.yunpan.utils.DensityUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -64,6 +66,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 //					selectItem.remove(index);
 //				}
 //				mPicList.removeAll(selectItem);
+					Toast.makeText(PicEditActivity.this, "文件保存本地成功", Toast.LENGTH_SHORT).show();
 //				picEditAdapter.notifyDataSetChanged();
 				} else if (msg.what == 996) {
 					processMsg(msg);
@@ -262,8 +265,10 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 				mTvRight.setText(bTag ? "编辑" : "取消");
 				mTvRight.setTag(!bTag);
 				if (!bTag) {
+					mLvPic.setPadding(0,0,0, DensityUtil.dip2px(this,40));
 					picEditAdapter.setEdit(true);
 				} else {
+					mLvPic.setPadding(0,0,0, 0);
 					picEditAdapter.setEdit(false);
 				}
 

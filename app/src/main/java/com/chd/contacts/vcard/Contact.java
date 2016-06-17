@@ -1003,6 +1003,7 @@ public class Contact {
 	public long parseVCard(BufferedReader vCard) throws IOException {
 		reset();
 		// 读取BEGIN
+
 		String line = vCard.readLine();
 		if (line == null) {
 			return -1;
@@ -1153,7 +1154,6 @@ public class Contact {
 		String[] selParams = new String[] {StructuredName.CONTENT_ITEM_TYPE, peopleData.displayName };
 		Cursor people = cResolver.query(Data.CONTENT_URI, projection, selection,
 				selParams, null);
-
 		if (people != null && people.moveToFirst()) {
 			Log.i("people.getString(0)", people.getString(0));
 			if (replace) {

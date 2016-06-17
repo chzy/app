@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chd.MediaMgr.utils.MediaFileUtil;
 import com.chd.base.UILActivity;
@@ -140,9 +141,28 @@ public class ContactActivity extends UILActivity implements OnClickListener{
                 // TODO
                 if (vcarIO != null) {
                     // 更新进度
-                    setParMessage("正在导入,请稍候...");
-                    vcarIO.doImport(contactPath, false,
-                            ContactActivity.this,netSize);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            final boolean download = vcarIO.download(contactPath, ContactActivity.this);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(download){
+                                        setParMessage("正在导入,请稍候...");
+                                        showDialog("正在导入,请稍候...");
+                                        vcarIO.doImport(handler,contactPath, false,
+                                                ContactActivity.this,netSize);
+
+                                    }else{
+                                        Toast.makeText(ContactActivity.this, "下载失败", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+
+                        }
+                    }).start();
+
                 }
 
                 break;

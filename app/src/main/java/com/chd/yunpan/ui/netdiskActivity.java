@@ -80,7 +80,6 @@ public class netdiskActivity extends Activity implements OnClickListener {
 		mTextFreeapp.setText(String.format("%d%%", freePro));
 		String spaceS=TimeAndSizeUtil.getSize(space+"");
 		String flowS=TimeAndSizeUtil.getSize(flow+"");
-
 		mTextTitle.setText(String.format(spaceS+"空间"));
 
 //		mTextRemainder.setText(String.format("本月剩余"+freeStr));
