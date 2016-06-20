@@ -3,6 +3,7 @@ package com.nostra13.universalimageloader.core.inputstream;
 import android.util.Log;
 
 import com.chd.Transform.InputTrasnport;
+import com.chd.Transform.InputTrasnportThum;
 import com.chd.proto.FTYPE;
 
 import java.io.File;
@@ -15,7 +16,7 @@ import java.io.InputStream;
  * Created by lxp1 on 2015/12/13.
  */
 public final   class TrpcInpustream extends InputStream {
-   private InputTrasnport transport;
+   private InputTrasnportThum transport;
    private /*RandomAccessFile*/FileOutputStream outfilewrter=null;
    private String _savefile;
     private long remoteoffset=-1;
@@ -26,12 +27,11 @@ public final   class TrpcInpustream extends InputStream {
 
 
     public TrpcInpustream(String name, String savefile)    {
-        transport=new InputTrasnport(name, FTYPE.PICTURE);
+        transport=new InputTrasnportThum(name, FTYPE.PICTURE);
         if (savefile==null || savefile.indexOf('.')<0)
             Log.d(TAG,"skip save local file");
         _savefile=savefile;
         remoteoffset=0;
-
     }
 
 
@@ -61,7 +61,8 @@ public final   class TrpcInpustream extends InputStream {
         int redbytes=0;
         long offset=remoteoffset+byteOffset;
         Log.d(TAG, "offset:" + offset + " readcount:" + (/*buffer.length - byteOffset*/ byteCount));
-
+        if (byteOffset>=objlen)
+            return  -1;
         redbytes= transport.read(buffer,offset,byteCount);
 
         if (redbytes>-1 )
@@ -99,7 +100,8 @@ public final   class TrpcInpustream extends InputStream {
             Log.e(TAG,e.getMessage());
         }
         return -1;*/
-        return 0;
+        //return Math.min((int) (objlen-remoteoffset),0);
+       return 0;
     }
 
     public long getSize()  {
@@ -120,7 +122,7 @@ public final   class TrpcInpustream extends InputStream {
 
     @Override
     public void close() throws IOException {
-        Log.d(TAG,"call close()");
+        Log.d(TAG,"call Trpcinputstream close()");
         if (outfilewrter!=null) {
             outfilewrter.flush();
             outfilewrter.close();
@@ -129,6 +131,7 @@ public final   class TrpcInpustream extends InputStream {
         }
             //remoteoffset=0;
             transport.close();
+            transport=null;
     }
 
 
