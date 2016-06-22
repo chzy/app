@@ -60,7 +60,7 @@ public class BaseImageDownloader implements ImageDownloader {
 	public static final int DEFAULT_HTTP_READ_TIMEOUT = 20 * 1000; // milliseconds
 
 	/** {@value} */
-	protected static final int BUFFER_SIZE = 32 * 1024; // 32 Kb
+	protected static final int BUFFER_SIZE =256 * 1024; // 256 Kb
 	/** {@value} */
 	protected static final String ALLOWED_URI_CHARS = "@#&=*+-_.,:!?()/~'%";
 
@@ -146,12 +146,14 @@ public class BaseImageDownloader implements ImageDownloader {
 		TrpcInpustream imageStream = null;
 		int length=0;
 		String savefile=null;
+		boolean thum=false;
 		String objid = Scheme.TRPC.crop(imageUri);
 		if (extra!=null) {
-			savefile = (String) extra + File.separator + objid;
+			//savefile = (String) extra + File.separator + objid;
+			thum=true;
 		}
 		try {
-			imageStream= new TrpcInpustream(objid,savefile);
+			imageStream= new TrpcInpustream(objid/*,savefile*/,null,true);
 			length=(int)imageStream.getSize();
 		} catch (Exception ex)
 		{
@@ -173,7 +175,7 @@ public class BaseImageDownloader implements ImageDownloader {
 			}
 		}
 		//return new ContentLengthInputStream(new BufferedInputStream(imageStream, BUFFER_SIZE),length);
-		return new ContentLengthInputStream(new RecyclableBufferedInputStream(imageStream,/*BUFFER_SIZE*/256*1024),length);
+		return new ContentLengthInputStream(new RecyclableBufferedInputStream(imageStream,BUFFER_SIZE),length);
 		//return new ContentLengthInputStream(imageStream,length);
 
 	}

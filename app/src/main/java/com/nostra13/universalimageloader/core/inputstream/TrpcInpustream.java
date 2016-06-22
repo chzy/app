@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.chd.Transform.InputTrasnport;
 import com.chd.Transform.InputTrasnportThum;
+import com.chd.Transform.TrpcReadtransport;
 import com.chd.proto.FTYPE;
 
 import java.io.File;
@@ -16,7 +17,7 @@ import java.io.InputStream;
  * Created by lxp1 on 2015/12/13.
  */
 public final   class TrpcInpustream extends InputStream {
-   private InputTrasnportThum transport;
+   private TrpcReadtransport transport;
    private /*RandomAccessFile*/FileOutputStream outfilewrter=null;
    private String _savefile;
     private long remoteoffset=-1;
@@ -26,8 +27,11 @@ public final   class TrpcInpustream extends InputStream {
 
 
 
-    public TrpcInpustream(String name, String savefile)    {
-        transport=new InputTrasnportThum(name, FTYPE.PICTURE);
+    public TrpcInpustream(String name, String savefile,boolean thum)    {
+        if (thum)
+            transport=new InputTrasnportThum(name, FTYPE.PICTURE);
+        else
+            transport=new InputTrasnport(name,FTYPE.PICTURE);
         if (savefile==null || savefile.indexOf('.')<0)
             Log.d(TAG,"skip save local file");
         _savefile=savefile;
