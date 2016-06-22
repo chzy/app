@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.util.Log;
 
-import com.chd.DBhandler;
+
 import com.chd.Entity.FilesListEntity;
 import com.chd.Entity.LocalFileEntity;
 import com.chd.proto.FTYPE;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DBManager implements DBhandler {
+public class DBManager   {
 	private SQLiteDatabase db;
 	private String pfpath;
 
@@ -189,7 +189,7 @@ public class DBManager implements DBhandler {
 		Log.d("@@@","call db update updateDownloadingFile");
 	}
 
-	@Override
+
 	public void updateDownloadingFile(String Objid,long offset) throws Exception{
 		if(getDownloadingFile(Objid)==null){
 			throw new Exception();
@@ -202,7 +202,7 @@ public class DBManager implements DBhandler {
 		Log.d("@@@", "call db update updateDownloadingFile");
 	}
 
-	@Override
+
 	       //void updateDownloadingFile(String Objid,long offset)  throws Exception
 	public void updateUploadingFile(String Objid, long offset) throws Exception {
 			if(getUpLoadedFile(Objid)==null){

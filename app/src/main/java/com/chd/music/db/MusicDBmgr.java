@@ -10,7 +10,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import com.chd.DBhandler;
 import com.chd.photo.entity.PicDBitem;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
@@ -23,7 +22,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-public class MusicDBmgr implements DBhandler {
+public class MusicDBmgr  {
     private SQLiteDatabase db;
     private String pfpath;
     private final String dbname = "music";
@@ -301,7 +300,7 @@ public class MusicDBmgr implements DBhandler {
         Log.d("@@@", "call db update updateDownloadingFile");
     }
 
-    @Override
+
     public void updateDownloadingFile(String Objid, long offset) throws Exception {
         if (getDownloadingFile(Objid) == null) {
             throw new Exception();
@@ -314,7 +313,7 @@ public class MusicDBmgr implements DBhandler {
         Log.d("@@@", "call db update updateDownloadingFile");
     }
 
-    @Override
+
     public void updateUploadingFile(String Objid, long offset) throws Exception {
         if (getUpLoadedFile(Objid) == null) {
             throw new Exception();
