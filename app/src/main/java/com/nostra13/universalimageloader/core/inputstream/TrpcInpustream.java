@@ -27,7 +27,7 @@ public final   class TrpcInpustream extends InputStream {
 
 
 
-    public TrpcInpustream(String name, String savefile,boolean thum)    {
+    public TrpcInpustream(String name, String savefile,boolean thum) throws Exception   {
         if (thum)
             transport=new InputTrasnportThum(name, FTYPE.PICTURE);
         else
@@ -61,13 +61,18 @@ public final   class TrpcInpustream extends InputStream {
 
     @Override
    public int read(byte[] buffer, int byteOffset, int byteCount)  throws IOException {
-
+        if (byteOffset < 0 || byteCount < 0 ||   buffer.length < byteOffset + byteCount) {
+            Log.e(TAG, "fun read invalid param");
+            return -1;
+        }
+        if ( objlen<=remoteoffset )
+            return -1;
         int redbytes=0;
-        long offset=remoteoffset+byteOffset;
-        Log.d(TAG, "offset:" + offset + " readcount:" + (/*buffer.length - byteOffset*/ byteCount));
-        if (byteOffset>=objlen)
-            return  -1;
-        redbytes= transport.read(buffer,offset,byteCount);
+        //long offset=remoteoffset+byteOffset;
+        Log.i(TAG, Thread.currentThread().getId()+ " offset:" + remoteoffset + " readcount:" + (/*buffer.length - byteOffset*/ byteCount));
+      /*  if (byteOffset>=objlen)
+            return  -1;*/
+        redbytes= transport.read(buffer,byteOffset,remoteoffset,byteCount);
 
         if (redbytes>-1 )
         {
@@ -79,7 +84,7 @@ public final   class TrpcInpustream extends InputStream {
                     Log.e("TrpcInputstream", e.getMessage());
                 }
             }
-            remoteoffset=offset+redbytes;
+            remoteoffset+=redbytes;
             if ( outfilewrter!=null) {
                 try {
                     outfilewrter.write(buffer, byteOffset, redbytes);

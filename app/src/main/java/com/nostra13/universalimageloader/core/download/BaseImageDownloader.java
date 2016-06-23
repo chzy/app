@@ -99,6 +99,7 @@ public class BaseImageDownloader implements ImageDownloader {
 			case DRAWABLE:
 				return getStreamFromDrawable(imageUri, extra);
 			case TRPC:
+			case TTRPC:
 				return getStreamFromTRPC(imageUri, extra);
 			case UNKNOWN:
 			default:
@@ -147,18 +148,29 @@ public class BaseImageDownloader implements ImageDownloader {
 		int length=0;
 		String savefile=null;
 		boolean thum=false;
-		String objid = Scheme.TRPC.crop(imageUri);
-		if (extra!=null) {
-			//savefile = (String) extra + File.separator + objid;
-			thum=true;
+		int post=imageUri.indexOf("://");
+		String objid=null;
+		if (post<3)
+			throw  new IOException("invalid protocol prefixname");
+		else
+		{
+			if (post>4)
+				thum=true;
 		}
+		objid=imageUri.substring(post+3);
+		/*String objid = Scheme.TRPC.crop(imageUri);
+		if (objid==null)
+		{
+			objid=Scheme.TTRPC.crop(imageUri);
+		}*/
+
 		try {
-			imageStream= new TrpcInpustream(objid/*,savefile*/,null,true);
+			imageStream= new TrpcInpustream(objid,savefile,thum);
 			length=(int)imageStream.getSize();
 		} catch (Exception ex)
 		{
 			Log.e("Baseimageloader", ex.getMessage());
-			throw new IOException();
+			throw new IOException(" construct fail");
 		}
 		//if (1==0 && savefile!=null )
 		if (savefile!=null )

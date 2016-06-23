@@ -225,7 +225,7 @@ public class MediaMgr  {
 		if (LocalUnits!=null && !LocalUnits.isEmpty())
 			return;
 		setCustomCategory(exts, include);
-		Cursor c =query(fc, MediaFileUtil.FileCategory.All, /*MediaFileUtil.SortMethod.date*/null);
+		Cursor c =query(fc, MediaFileUtil.FileCategory.All, MediaFileUtil.SortMethod.date/*null*/);
 
 		while (c.moveToNext())
 		{

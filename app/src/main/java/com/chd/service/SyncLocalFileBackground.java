@@ -218,7 +218,7 @@ public class SyncLocalFileBackground implements Runnable {
         su.open();
         long t0=System.currentTimeMillis();
         long t1=0;
-        while ((readlen = inputTrasnport.read(buffer, offset, buflen)) > -1) {
+        while ((readlen = inputTrasnport.read(buffer,0, offset, buflen)) > -1) {
             try {
                 os.write(buffer, 0, readlen);
                 offset += readlen;
