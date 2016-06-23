@@ -168,13 +168,15 @@ public class SyncLocalFileBackground implements Runnable {
             return false;
         }
         offset = (int) f.length();
-        InputTrasnport inputTrasnport = new InputTrasnport(fileInfo0.getObjid(), fileInfo0.getFtype());
+        Log.d(TAG, Thread.currentThread().getId()+" new inputransport 1 ");
+        InputTrasnport inputTrasnport =null;
         try {
+            inputTrasnport = new InputTrasnport(fileInfo0.getObjid(), fileInfo0.getFtype());
             os = new RandomAccessFile(f, "rws");
             total = inputTrasnport.getobjlength().intValue();
 
             if (total <= 0) {
-                Log.e(TAG, " obj length invild");
+                Log.e(TAG, Thread.currentThread().getId()+" obj length invild");
                 return false;
             }
             remain = total - offset;
@@ -197,6 +199,10 @@ public class SyncLocalFileBackground implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(TAG,"contruct rpc inputstream fail ");
+            return false;
         }
         int buflen=Math.min((int) (total - offset), Maxbuflen);
         byte[] buffer = new byte[buflen];

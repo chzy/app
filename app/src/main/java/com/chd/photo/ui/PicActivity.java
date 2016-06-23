@@ -157,7 +157,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 				picInfoBean.setUrl("file://" + info.getFilePath());
 
 		} else {
-			picInfoBean.setUrl("trpc://" + info.getObjid());
+			picInfoBean.setUrl("ttrpc://" + info.getObjid());
 		}
 		picInfoBean.setTimeStamp(info.getLastModified());
 		picInfoBean.setDay(TimeUtils.getTime(info.getLastModified() * 1000L, new SimpleDateFormat("MM月dd日")));

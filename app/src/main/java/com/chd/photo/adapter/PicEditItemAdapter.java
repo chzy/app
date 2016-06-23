@@ -45,7 +45,7 @@ public class PicEditItemAdapter extends BaseAdapter {
 				.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
 				.bitmapConfig(Bitmap.Config.RGB_565)
 				.resetViewBeforeLoading(false)
-				.extraForDownloader(new ShareUtils(context).getStorePathStr())
+				//.extraForDownloader(new ShareUtils(context).getStorePathStr())
 				.displayer(new RoundedBitmapDisplayer(20))
 				.displayer(new FadeInBitmapDisplayer(0)).build();
 

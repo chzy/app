@@ -10,7 +10,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import com.chd.DBhandler;
+import com.chd.Loghandler;
 import com.chd.photo.entity.PicDBitem;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
@@ -22,7 +22,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-public class PicDBmgr implements DBhandler {
+public class PicDBmgr   {
 	private SQLiteDatabase db;
 /*	private String pfpath;*/
 	private  final  String dbname="photo";
@@ -463,7 +463,7 @@ public class PicDBmgr implements DBhandler {
 		Log.d("@@@", "call db update updateDownloadingFile");
 	}
 
-	@Override
+
 	public void updateDownloadingFile(String Objid,long offset) throws Exception{
 		if(getDownloadingFile(Objid)==null){
 			throw new Exception();
@@ -476,7 +476,7 @@ public class PicDBmgr implements DBhandler {
 		Log.d("@@@", "call db update updateDownloadingFile");
 	}
 
-	@Override
+
 	public void updateUploadingFile(String Objid, long offset) throws Exception {
 			if(getUpLoadedFile(Objid)==null){
 				throw new Exception();
