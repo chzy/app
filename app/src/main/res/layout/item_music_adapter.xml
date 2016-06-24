@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
               xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:gravity="center"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
               android:layout_gravity="center"
+              android:gravity="center"
               android:orientation="vertical">
-    
+
     <com.chd.yunpan.view.CircleImageView
         android:id="@+id/iv_photo"
         android:layout_width="108dp"
         android:layout_height="108dp"
-        android:layout_marginRight="7dp"
         app:sriv_left_bottom_corner_radius="10dp"
-        app:sriv_right_bottom_corner_radius="10dp"
         app:sriv_left_top_corner_radius="10dp"
         app:sriv_oval="true"
-        app:sriv_right_top_corner_radius="10dp" >
+        app:sriv_right_bottom_corner_radius="10dp"
+        app:sriv_right_top_corner_radius="10dp">
 
     </com.chd.yunpan.view.CircleImageView>
 
@@ -24,9 +23,12 @@
         android:id="@+id/tv_title"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginRight="7dp"
+        android:ellipsize="middle"
         android:gravity="center"
+        android:lines="2"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:textColor="#333333"
-        android:textSize="14sp" />
+        android:textSize="14sp"/>
 
 </LinearLayout>

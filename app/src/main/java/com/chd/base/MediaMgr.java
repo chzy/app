@@ -30,7 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class MediaMgr  {
-	
+
 	private SQLiteDatabase db;
 	private  final  String dbname="CloudStore";
 	private FTYPE _ftype;
@@ -168,13 +168,13 @@ public class MediaMgr  {
 	public void   anlayLocalUnits(List<FileInfo0> couldlist,FilelistEntity filelistEntity) {
 		int count= LocalUnits.size();
 		int count2=couldlist.size();
-		
+
 		ArrayList<FileInfo0> baklist=new ArrayList(count2);
 		int idx=0;
 		int j=0,i=0;
 		FileInfo0 item = null;
 		BitSet bm=new BitSet(count);
-		for(i=0;i<bm.size();i++)
+		for(i=0;i<bm.length();i++)
 	    		bm.set(i,false);
 		for(j=0;idx<count2;j++)
 		{
@@ -184,8 +184,6 @@ public class MediaMgr  {
 				baklist.add(item);
 				idx++;
 			}
-
-
 			for (i=0;i<count;i++)
 			{
 				FileLocal fileLocal=LocalUnits.get(i);
@@ -196,7 +194,6 @@ public class MediaMgr  {
 						if (filelistEntity != null)
 							filelistEntity.addbakNumber();
 					}
-
 					continue;
 				}
 				if (fileLocal.fname.equalsIgnoreCase(fileInfo.getObjid())) {
@@ -207,9 +204,14 @@ public class MediaMgr  {
 					break;
 				}
 			}
-
 		}
-	
+		for (i=0;i<count;i++)
+		{
+			FileLocal fileLocal=LocalUnits.get(i);
+			if (!fileLocal.bakuped ) {
+				filelistEntity.addUnBakNumber();
+			}
+		}
 
 		couldlist.clear();
 		//bm.clear();
@@ -301,7 +303,7 @@ public class MediaMgr  {
 		Uri uri = getContentUriByCategory(fc);
 		String selection = buildSelectionByCategory(MediaFileUtil.FileCategory._ID);
 		String sortOrder = null;
-	
+
 		if (uri == null) {
 			Log.e("", "invalid uri, category:" + fc.name());
 			return ret;
@@ -315,9 +317,9 @@ public class MediaMgr  {
 		{
 			fileInfo0.setFilePath( cursor.getString(COLUMN_PATH));
 			if (fileInfo0.getObjid()!=null)
-				Log.d(TAG,"is a  remote obj");	
+				Log.d(TAG,"is a  remote obj");
 		    fileInfo0.setObjid(MediaFileUtil.getNameFromFilepath(cursor.getString(COLUMN_PATH)));
-				
+
 			fileInfo0.setFilesize(cursor.getInt(COLUMN_SIZE));
 			fileInfo0.setLastModified(cursor.getInt(COLUMN_DATE));
 			fileInfo0.setSysid(sysid);
@@ -644,7 +646,7 @@ public class MediaMgr  {
 	/*public List<FileInfo0> getUpLoadedFiles(){
 		return getFileDataDBEntitiesU("upload_finish", true);
 	}*/
-	
+
 	private FileInfo0 getFileDataDBEntity(String db1,String objid,boolean finished){
 		FileInfo0 file=null;
 		Cursor cursor = db.rawQuery("select * from "+db1 +" where objid=" + objid, null);
@@ -819,17 +821,17 @@ public class MediaMgr  {
 	private void deleteUpLoadingFile(String objid){
 		deleteFileDataDBEntity("upload_inter", objid);
 	}
-	
+
 	private void deleteDownloadedFile(String objid){
 		deleteFileDataDBEntity("download_finish", objid);
-		
+
 	}
 
 	private void deleteUpLoadedFile(String objid){
 		deleteFileDataDBEntity("upload_finish", objid);
-		
+
 	}
-	
+
 	private void deleteFileDataDBEntity(String db1,String objid){
 		db.delete(db1, "objid=?", new String[]{objid + ""});
 	}

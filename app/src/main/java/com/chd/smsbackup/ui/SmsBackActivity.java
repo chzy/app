@@ -1,5 +1,6 @@
 package com.chd.smsbackup.ui;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.smsbackup.newservice.ExportSms;
@@ -30,7 +32,6 @@ public class SmsBackActivity extends ActiveProcess implements OnClickListener {
 
 	private Handler handler = new Handler(Looper.getMainLooper()) {
 		public void handleMessage(android.os.Message msg) {
-			dialog.dismiss();
 			dismissDialog();
 			try {
 				switch (msg.what) {
@@ -47,7 +48,7 @@ public class SmsBackActivity extends ActiveProcess implements OnClickListener {
 						break;
 				}
 			} catch (Exception e) {
-				Log.e(getClass().getName(),"退出页面空指针");
+				Log.e(getClass().getName(), "退出页面空指针");
 			}
 		}
 	};
@@ -72,7 +73,7 @@ public class SmsBackActivity extends ActiveProcess implements OnClickListener {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				exportSms.download(smsPath,SmsBackActivity.this);
+				exportSms.download(smsPath, SmsBackActivity.this);
 				handler.sendEmptyMessage(0);
 			}
 		}).start();
@@ -109,8 +110,12 @@ public class SmsBackActivity extends ActiveProcess implements OnClickListener {
 				break;
 			case R.id.tv_right: // 一键恢复
 				// TODO
-				setParMessage("正在恢复");
-				importSms.ImpSMS(smsPath);
+				if (Build.VERSION_CODES.LOLLIPOP <= Build.VERSION.SDK_INT) {
+					Toast.makeText(this, "暂不支持5.0以上系统恢复", Toast.LENGTH_SHORT).show();
+				} else {
+					setParMessage("正在恢复");
+					importSms.ImpSMS(smsPath);
+				}
 				break;
 			case R.id.iv_select: // 一键备份
 				// TODO

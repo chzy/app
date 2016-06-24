@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chd.MediaMgr.utils.MediaFileUtil;
-import com.chd.base.Ui.ActiveProcess;
+import com.chd.base.UILActivity;
 import com.chd.base.backend.SyncTask;
 import com.chd.contacts.vcard.StringUtils;
 import com.chd.photo.entity.PicEditItemBean;
@@ -32,7 +32,7 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 import java.util.ArrayList;
 import java.util.List;
 
-public class PicDetailActivity extends ActiveProcess implements OnClickListener
+public class PicDetailActivity extends UILActivity implements OnClickListener
 {
 
 	private ImageView mIvLeft;
@@ -80,7 +80,7 @@ public class PicDetailActivity extends ActiveProcess implements OnClickListener
 		}
 
 		options = new DisplayImageOptions.Builder()
-		.showImageOnLoading(R.drawable.pic_test1)
+//		.showImageOnLoading(R.drawable.pic_test1)
 		.cacheInMemory(false)
 		.cacheOnDisk(true)
 		.considerExifParams(true)
@@ -125,37 +125,43 @@ public class PicDetailActivity extends ActiveProcess implements OnClickListener
 		}
 		fileInfo0.setFtype(FTYPE.PICTURE);
 
-
+		Log.d("liumj","---"+url);
 		if (url != null)
 		{
 
 
-
+				url="trpc://"+uri;
+			Log.d("liumj",""+url);
 			imageLoader.displayImage(url, mImgView,
 					options, new SimpleImageLoadingListener() {
 						@Override
 						public void onLoadingStarted(String imageUri, View view) {
-							/*vh.progressBar.setProgress(0);
-							vh.progressBar.setVisibility(View.VISIBLE);*/
+								showWaitDialog();
 						}
 
 						@Override
 						public void onLoadingFailed(String imageUri, View view,
 								FailReason failReason) {
 							/*vh.progressBar.setVisibility(View.GONE);*/
+							dismissWaitDialog();
+							Toast.makeText(PicDetailActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
 						}
 
 						@Override
 						public void onLoadingComplete(String imageUri, View view,
 								Bitmap loadedImage) {
 							/*vh.progressBar.setVisibility(View.GONE);*/
+							dismissWaitDialog();
 						}
 					}, new ImageLoadingProgressListener() {
 						@Override
 						public void onProgressUpdate(String imageUri, View view,
 								int current, int total) {
-							/*vh.progressBar.setProgress(Math.round(100.0f * current
-									/ total));*/
+//							/*vh.progressBar.setProgress(Math.round(100.0f * current
+//									/ total));*/
+//							int i = (current / total) * 100;
+//							setParMessage("正在加载中");
+//							updateProgress(i);
 						}
 					});
 		}

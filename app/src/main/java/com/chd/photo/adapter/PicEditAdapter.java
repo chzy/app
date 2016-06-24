@@ -75,13 +75,9 @@ public class PicEditAdapter extends BaseAdapter {
 		PicEditBean picEditBean = list.get(position);
 		holder.tv_pic_edit_date.setText(picEditBean.getDate());
 		holder.tv_pic_edit_group_check.setImageResource(picEditBean.isSelect() ? R.drawable.pic_edit_photo_checked : R.drawable.pic_edit_photo_group_check);
-//		holder.mlv_pic_edit_gridview.setVisibility(View.GONE);
-//		if(picEditBean.getList()!=null&&picEditBean.getList().size()>0){
-//			holder.mlv_pic_edit_gridview.setVisibility(View.VISIBLE);
 			List<PicEditItemBean> data = picEditBean.getList();
 			holder.mlv_pic_edit_gridview.setAdapter(new PicEditItemAdapter(context, data,isEdit));
 
-//		holder.mlv_pic_edit_gridview.setOnScrollListener(new PauseOnScrollListener(true,true));
 			holder.mlv_pic_edit_gridview.setOnItemClickListener(new OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

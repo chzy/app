@@ -21,12 +21,11 @@ import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
+import com.chd.Loghandler;
 import com.chd.TClient;
 import com.lockscreen.view.LockPatternUtils;
-import com.nostra13.universalimageloader.cache.disc.impl.ext.LruDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
-import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
@@ -35,12 +34,13 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
 import cn.smssdk.SMSSDK;
+import im.fir.sdk.FIR;
 //import im.fir.sdk.FIR;
 
 /**
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
  */
-public class UILApplication extends Application {
+public class UILApplication extends Application implements Loghandler{
 	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 	@SuppressWarnings("unused")
 	@Override
@@ -50,7 +50,7 @@ public class UILApplication extends Application {
 			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyDeath().build());*/
 		}
 		super.onCreate();
-//		FIR.init(this);
+		FIR.init(this);
 		CrashHandler.getInstance().init(this);
 		mInstance = this;
 		mLockPatternUtils = new LockPatternUtils(this);
@@ -65,6 +65,16 @@ public class UILApplication extends Application {
 		}
 		SMSSDK.initSDK(this, "f40f0f41f1d1", "8542792ca37ec28ce85a0ce024c957b2",true);
 	}
+
+	@Override
+	public void Wlog(String tag, String msg) {
+		try {
+			throw new Exception(msg);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static class Config {
 		public static final boolean DEVELOPER_MODE = false;
 	}

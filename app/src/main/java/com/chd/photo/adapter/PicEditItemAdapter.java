@@ -10,7 +10,6 @@ import android.widget.ImageView;
 
 import com.chd.photo.entity.PicEditItemBean;
 import com.chd.yunpan.R;
-import com.chd.yunpan.share.ShareUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
@@ -45,7 +44,7 @@ public class PicEditItemAdapter extends BaseAdapter {
 				.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
 				.bitmapConfig(Bitmap.Config.RGB_565)
 				.resetViewBeforeLoading(false)
-				//.extraForDownloader(new ShareUtils(context).getStorePathStr())
+//				.extraForDownloader(new ShareUtils(context).getStorePathStr())
 				.displayer(new RoundedBitmapDisplayer(20))
 				.displayer(new FadeInBitmapDisplayer(0)).build();
 

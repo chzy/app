@@ -11,6 +11,7 @@ public class FilelistEntity {
    private  List<FileInfo0> bklist;
     private List<FileLocal> locallist;
     private int bakNumber=0;
+    private int unBakNumber=0;
 
 
 
@@ -36,11 +37,12 @@ public class FilelistEntity {
         this.bakNumber++;
     }
 
+    public void addUnBakNumber(){
+        this.unBakNumber++;
+    }
+
     public int getUnbakNumber()
     {
-        if(locallist!=null){
-        return locallist.size()-bakNumber;
-        }
-        return 0;
+        return this.unBakNumber;
     }
 }

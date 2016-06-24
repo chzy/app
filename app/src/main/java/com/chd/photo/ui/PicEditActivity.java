@@ -60,21 +60,15 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 					processMsg(msg);
 				} else if (msg.what == 997) {
 					//多文件下载
-//				ArrayList<Integer> posList= (ArrayList<Integer>) msg.obj;
-//				for (Integer index:
-//						posList) {
-//					selectItem.remove(index);
-//				}
-//				mPicList.removeAll(selectItem);
+					mTvRight.performClick();
 					Toast.makeText(PicEditActivity.this, "文件保存本地成功", Toast.LENGTH_SHORT).show();
-//				picEditAdapter.notifyDataSetChanged();
 				} else if (msg.what == 996) {
 					processMsg(msg);
 				} else {
 					if (mPicList != null) {
 						Collections.sort(mPicList);
 					}
-					if (picEditAdapter == null) {
+					if (mPicList != null) {
 						picEditAdapter.setData(mPicList);
 					} else {
 						picEditAdapter.notifyDataSetChanged();
@@ -154,25 +148,6 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 
 
 	private void initData() {
-
-//		if (ifcloudUnits == null) {
-//		null	System.out.print("query remote failed cloudunits is null ");
-//		}
-
-		/*FilelistEntity filelistEntity=syncTask.analyPhotoUnits(cloudUnits);
-		cloudUnits.clear();
-		cloudUnits=null;
-		cloudUnits=filelistEntity.getBklist();*/
-		//显示的时候过滤文件类型
-		/*MFileFilter fileFilter=new MFileFilter();
-		fileFilter.setCustomCategory(new String[]{"jpg"},true);*/
-
-		//批量加载下载任务 调用 dbmnager addUpLoadingFile 方法
-
-		//实时上传 需要 在当前 Activity 里面  增加一个 public的 updateProgress 函数 将该 Activity 传入后台的 Activity .线程里调用  setProcess 显示进度 . .
-		//调用 SyncTask 里面的 upload
-
-
 		Map<String, List<PicEditItemBean>> tmpDayMap = new HashMap<String, List<PicEditItemBean>>();
 		FileInfo0 info0 = null;
 		for (PicInfoBean item : mPicList0) {

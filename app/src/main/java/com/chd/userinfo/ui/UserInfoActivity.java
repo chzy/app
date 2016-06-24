@@ -101,6 +101,7 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        dialog.dismiss();
                         Toast.makeText(UserInfoActivity.this, "上传头像成功", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -108,6 +109,7 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        dialog.dismiss();
                         Toast.makeText(UserInfoActivity.this, "上传头像失败", Toast.LENGTH_SHORT).show();
                     }
                 });

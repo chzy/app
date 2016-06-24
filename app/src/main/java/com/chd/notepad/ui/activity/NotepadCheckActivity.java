@@ -76,7 +76,9 @@ public class NotepadCheckActivity extends Activity {
 		NoteItemtag noteItemtag= (NoteItemtag) intent.getSerializableExtra("item");
 		String path=new ShareUtils(this.getApplicationContext()).getStorePathStr();
 		FileDBmager fileDBmager=new FileDBmager(this);
-		String datetime = DateFormat.format("yyyy-MM-dd kk:mm:ss", noteItemtag.getStamp()).toString();
+//		Calendar cal = Calendar.getInstance();
+//		cal.setTimeInMillis();
+		String datetime = DateFormat.format("yyyy-MM-dd HH:mm:ss", noteItemtag.getStamp()*1000L).toString();
 		String content= "";
 		content = fileDBmager.readFile(noteItemtag.get_fname());
 		try {
