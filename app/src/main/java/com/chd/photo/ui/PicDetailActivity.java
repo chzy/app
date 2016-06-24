@@ -128,9 +128,9 @@ public class PicDetailActivity extends UILActivity implements OnClickListener
 		Log.d("liumj","---"+url);
 		if (url != null)
 		{
-
-
+			if(url.startsWith("ttrpc://")){
 				url="trpc://"+uri;
+			}
 			Log.d("liumj",""+url);
 			imageLoader.displayImage(url, mImgView,
 					options, new SimpleImageLoadingListener() {
