@@ -225,7 +225,7 @@ public class SyncLocalFileBackground implements Runnable {
                 //Log.d(TAG,"read:"+offset+" bytes");
                 final int progress = (offset * 100 / total);
                 t1=System.currentTimeMillis();
-                Log.d(TAG, "progress :" + progress + " " +(int) (offset/1024 / ((t1 - t0)/1000))  + " k/s");
+                Log.d(TAG, "progress :" + progress + " " +(int) (offset / ((t1 - t0)/**1024/1000*/))  + " k/s");
                 //fileInfo0.setOffset(offset);
                 //su.setDownloadStatus(fileInfo0);
                 if(pb!=null){
