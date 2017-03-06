@@ -81,7 +81,7 @@
         android:layout_marginTop="13dp" >
 
 
-        <com.chd.yunpan.view.CircularProgressButton
+        <com.chd.yunpan.view.circleimage.CircularProgressButton
             android:id="@+id/rset_pwd_cr"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -101,7 +101,7 @@
             android:visibility="gone"
             style="@style/accountButtonStyle"
             android:layout_marginRight="4dp"
-            android:background="@drawable/btn_add_accounts"
+            android:background="@color/grey"
             android:text="重置密码" />
     </LinearLayout>
 

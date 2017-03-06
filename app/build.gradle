@@ -1,12 +1,13 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'com.jakewharton.butterknife'
 android {
-    compileSdkVersion 21
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.chd.yunpan"
-        minSdkVersion 13
-        targetSdkVersion 21
+        minSdkVersion 15
+        targetSdkVersion 25
         multiDexEnabled true
     }
     buildTypes {
@@ -52,18 +53,26 @@ repositories {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:support-v4:23.1.1'
-    compile files('libs/libammsdk.jar')
+    //https://github.com/JakeWharton/butterknife
+    compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    //运行时权限
+    compile 'com.karumi:dexter:3.0.2'
     compile name: 'chdclnetapi-debug', ext: 'aar'
     compile name: 'thriftlib-debug', ext: 'aar'
-    compile name: 'SMSSDK-2.0.2', ext: 'aar'
+    compile name: 'SMSSDK-2.1.3', ext: 'aar'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.android.support:multidex:1.0.1'
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
-    compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.squareup.picasso:picasso:2.4.0'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'im.fir:fir-sdk:latest.integration@aar'
-    compile files('libs/MobCommons-2016.0303.1229.jar')
-    compile files('libs/MobTools-2016.0303.1229.jar')
+    compile 'com.android.support:recyclerview-v7:25.1.1'
+    //快速Adapter
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.8.0'
+    compile project(':record')
+
+
+    compile 'com.github.gturedi:stateful-layout:1.2.0'
+    compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
 }

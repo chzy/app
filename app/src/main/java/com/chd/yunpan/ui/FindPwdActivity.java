@@ -18,7 +18,7 @@ import com.chd.proto.Errcode;
 import com.chd.proto.RetHead;
 import com.chd.yunpan.R;
 import com.chd.yunpan.utils.TimeCount;
-import com.chd.yunpan.view.CircularProgressButton;
+import com.chd.yunpan.view.circleimage.CircularProgressButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;

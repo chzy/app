@@ -55,7 +55,6 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
     public static final int ALERT_STATE = 2;
     private final int MODIFY_NOTPAD = 0x1001;
     FileDBmager fileDBmager;
-    Gson gson;
     private ImageView mIvLeft;
     private TextView mTvCenter;
     private TextView mTvRight;
@@ -151,22 +150,6 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notepad_main);
-        if (UILApplication.getInstance().getLockPatternUtils().savedPatternExists()) {
-            if (!getIntent().getBooleanExtra("unlock", false)) {
-                Intent i = new Intent(this, UnlockGesturePasswordActivity.class);
-                startActivity(i);
-                isShow=false;
-                finish();
-
-            }
-        }else{
-            Intent i = new Intent(this, GuideGesturePasswordActivity.class);
-            startActivity(i);
-            isShow=false;
-            finish();
-        }
-
-        if(isShow){
 
         dialog = new ProgressDialog(this);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -176,7 +159,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
         initTitle();
         initResourceId();
         initListener();
-        }
+
     }
 
 

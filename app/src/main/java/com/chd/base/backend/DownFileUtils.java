@@ -8,7 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.chd.yunpan.share.ShareUtils;
-import com.chd.yunpan.view.CircularProgressButton;
+import com.chd.yunpan.view.circleimage.CircularProgressButton;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

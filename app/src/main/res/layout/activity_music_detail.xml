@@ -9,7 +9,7 @@
 
 
 
-        <com.chd.yunpan.view.CircleImageView
+        <com.chd.yunpan.view.circleimage.CircleImageView
             android:id="@+id/music_detail_pic"
             android:layout_width="188dp"
             android:layout_height="188dp"

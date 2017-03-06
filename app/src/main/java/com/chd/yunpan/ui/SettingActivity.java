@@ -3,7 +3,6 @@ package com.chd.yunpan.ui;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -45,28 +44,6 @@ public class SettingActivity extends Activity implements OnClickListener {
 
 	private TextView settingROM;
 
-	public Handler checkUpdateHandler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
-
-			switch (msg.what) {
-			case -1:
-				//获取更新失败
-				Toast.makeText(SettingActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
-				break;
-			case 0:
-				createUpdateDialog();
-				break;
-			case 1:
-
-				break;
-
-			default:
-				break;
-			}
-
-		}
-
-	};
 
 	private File file;
 

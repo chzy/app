@@ -39,7 +39,7 @@ import com.chd.yunpan.share.ShareUtils;
 import com.chd.yunpan.ui.LoginActivity;
 import com.chd.yunpan.ui.dialog.IconSelectWindow;
 import com.chd.yunpan.utils.PictureUtil;
-import com.chd.yunpan.view.CircleImageView;
+import com.chd.yunpan.view.circleimage.CircleImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;

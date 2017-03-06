@@ -57,7 +57,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <com.chd.yunpan.view.CircularProgressButton
+    <com.chd.yunpan.view.circleimage.CircularProgressButton
         android:id="@+id/freedown_list_item_btn"
         android:layout_width="60dp"
         android:layout_height="40dp"

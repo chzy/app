@@ -107,7 +107,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="12dp"
-            android:text="9元套餐："
+            android:text="10元套餐："
             android:textColor="#f5ad10"
             android:textSize="16sp" />
 
@@ -155,7 +155,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="15dp"
                     android:gravity="right"
-                    android:text="9元/月"
+                    android:text="10元/月"
                     android:textColor="#f21818"
                     android:textSize="14sp" />
 

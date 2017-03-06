@@ -12,7 +12,7 @@ import com.chd.base.backend.DownFileUtils;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
 import com.chd.yunpan.utils.AutoInstall;
-import com.chd.yunpan.view.CircularProgressButton;
+import com.chd.yunpan.view.circleimage.CircularProgressButton;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <include
+        android:id="@+id/reg_title"
+        layout="@layout/title_bar"/>
+
+<com.gturedi.views.StatefulLayout
+    android:id="@+id/sl_video_list_layout"
+    android:layout_width="match_parent"
+    android:layout_below="@id/reg_title"
+    app:stfAnimationEnabled="true"
+    app:stfInAnimation="@android:anim/slide_in_left"
+    app:stfOutAnimation="@android:anim/slide_out_right"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_video_list_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:background="#FFF"
+        android:layout_height="match_parent"/>
+
+</com.gturedi.views.StatefulLayout>
+
+
+
+
+</RelativeLayout>

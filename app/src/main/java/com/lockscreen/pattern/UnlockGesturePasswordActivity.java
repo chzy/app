@@ -13,7 +13,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chd.notepad.ui.activity.NotepadActivity;
+import com.chd.strongbox.StrongBoxActivity;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.share.ShareUtils;
@@ -118,7 +118,7 @@ public class UnlockGesturePasswordActivity extends Activity {
 				mLockPatternView
 						.setDisplayMode(LockPatternView.DisplayMode.Correct);
 				Intent intent = new Intent(UnlockGesturePasswordActivity.this,
-NotepadActivity.class);
+StrongBoxActivity.class);
 // 打开新的Activity
 				intent.putExtra("unlock", true);
 				startActivity(intent);

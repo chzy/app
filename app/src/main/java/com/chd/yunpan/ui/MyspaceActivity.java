@@ -1,5 +1,6 @@
 package com.chd.yunpan.ui;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,13 +15,18 @@ import android.widget.TextView;
 
 import com.chd.contacts.ui.ContactActivity;
 import com.chd.music.ui.MusicActivity;
-import com.chd.notepad.ui.activity.NotepadActivity;
 import com.chd.other.ui.OtherActivity;
 import com.chd.photo.ui.PicActivity;
 import com.chd.smsbackup.ui.SmsBackActivity;
+import com.chd.strongbox.StrongBoxActivity;
 import com.chd.yunpan.R;
 import com.chd.yunpan.ui.adapter.MenuGridAdapter;
 import com.chd.yunpan.ui.entity.MySpaceBean;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +36,7 @@ import java.util.List;
 /**
  * Created by lxp1 on 2015/10/23.
  */
-public class MyspaceActivity extends Activity implements OnClickListener, OnItemClickListener
-{
+public class MyspaceActivity extends Activity implements OnClickListener, OnItemClickListener {
 
 	private ImageView mIvLeft;
 	private TextView mTvCenter;
@@ -40,45 +45,45 @@ public class MyspaceActivity extends Activity implements OnClickListener, OnItem
 	private GridView mGvSpace;
 
 	private String space;
-    List<MySpaceBean> meumList = new ArrayList<MySpaceBean>();
-	
+	List<MySpaceBean> meumList = new ArrayList<MySpaceBean>();
+
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			mGvSpace.setAdapter(new MenuGridAdapter(MyspaceActivity.this, meumList));
 		}
 	};
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.myspace_grid);
-	    space=getIntent().getStringExtra("space");
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.myspace_grid);
+		space = getIntent().getStringExtra("space");
 
-        initTitle();
+		initTitle();
 		initResourceId();
 		initListener();
 		initData();
-    }
+	}
 
 	private void initData() {
 		//模拟数据
-        MySpaceBean mySpaceBean2 = new MySpaceBean("小心事", R.drawable.myspace_grid_notepad, NotepadActivity.class);
+		MySpaceBean mySpaceBean2 = new MySpaceBean("小心事", R.drawable.myspace_grid_notepad, StrongBoxActivity.class);
 		MySpaceBean mySpaceBean0 = new MySpaceBean("照片", R.drawable.myspace_grid_photo, PicActivity.class);
 		MySpaceBean mySpaceBean1 = new MySpaceBean("音乐", R.drawable.myspace_grid_music, MusicActivity.class);
 
-        MySpaceBean mySpaceBean3 = new MySpaceBean("联系人", R.drawable.myspace_grid_contact, ContactActivity.class);
-        MySpaceBean mySpaceBean4 = new MySpaceBean("短信", R.drawable.myspace_grid_message, SmsBackActivity.class);
-        MySpaceBean mySpaceBean5 = new MySpaceBean("其他", R.drawable.myspace_grid_other, OtherActivity.class);
+		MySpaceBean mySpaceBean3 = new MySpaceBean("联系人", R.drawable.myspace_grid_contact, ContactActivity.class);
+		MySpaceBean mySpaceBean4 = new MySpaceBean("短信", R.drawable.myspace_grid_message, SmsBackActivity.class);
+		MySpaceBean mySpaceBean5 = new MySpaceBean("其他", R.drawable.myspace_grid_other, OtherActivity.class);
 
 		meumList.add(mySpaceBean0);
-        meumList.add(mySpaceBean1);
-        meumList.add(mySpaceBean2);
-        meumList.add(mySpaceBean3);
-        meumList.add(mySpaceBean4);
-        meumList.add(mySpaceBean5);
-        
+		meumList.add(mySpaceBean1);
+		meumList.add(mySpaceBean2);
+		meumList.add(mySpaceBean3);
+		meumList.add(mySpaceBean4);
+		meumList.add(mySpaceBean5);
+
 		handler.sendEmptyMessage(0);
-		
+
 		mTvSpaceNumber.setText(space);
 	}
 
@@ -86,11 +91,11 @@ public class MyspaceActivity extends Activity implements OnClickListener, OnItem
 		mIvLeft.setOnClickListener(this);
 		mTvRight.setOnClickListener(this);
 		mTvSpaceNumber.setOnClickListener(this);
-        mGvSpace.setOnItemClickListener(this);
+		mGvSpace.setOnItemClickListener(this);
 	}
 
 	private void initResourceId() {
-        mGvSpace = (GridView) findViewById(R.id.myspace_gridview);
+		mGvSpace = (GridView) findViewById(R.id.myspace_gridview);
 		mTvSpaceNumber = (TextView) findViewById(R.id.myspace_space_textview);
 	}
 
@@ -104,24 +109,70 @@ public class MyspaceActivity extends Activity implements OnClickListener, OnItem
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-        Intent pageintent = new Intent();
-        pageintent.setClass(this, meumList.get(arg2).getCls());
-        pageintent.putExtra("callpage",arg2);
-        startActivity(pageintent);
-        //Toast用于向用户显示一些帮助/提示
+	public void onItemClick(AdapterView<?> arg0, View arg1, final int arg2, long arg3) {
+		if (arg2 == 3) {
+			//联系人
+			Dexter.withActivity(this)
+					.withPermissions(Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_CONTACTS)
+					.withListener(new MultiplePermissionsListener() {
+						@Override
+						public void onPermissionsChecked(MultiplePermissionsReport report) {
+							//权限授予
+							Intent pageintent = new Intent();
+							pageintent.setClass(MyspaceActivity.this, meumList.get(arg2).getCls());
+							pageintent.putExtra("callpage", arg2);
+							startActivity(pageintent);
+						}
+
+						@Override
+						public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+							token.continuePermissionRequest();
+						}
+					})
+					.check();
+		} else if (arg2 == 4) {
+			//短信
+			Dexter.withActivity(this)
+					.withPermissions(Manifest.permission.READ_SMS, Manifest.permission.SEND_SMS)
+					.withListener(new MultiplePermissionsListener() {
+						@Override
+						public void onPermissionsChecked(MultiplePermissionsReport report) {
+							//权限授予
+
+							Intent pageintent = new Intent();
+							pageintent.setClass(MyspaceActivity.this, meumList.get(arg2).getCls());
+							pageintent.putExtra("callpage", arg2);
+							startActivity(pageintent);
+						}
+
+						@Override
+						public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+								token.continuePermissionRequest();
+						}
+					})
+					.check();
+		}else{
+
+			Intent pageintent = new Intent();
+			pageintent.setClass(this, meumList.get(arg2).getCls());
+			pageintent.putExtra("callpage", arg2);
+			startActivity(pageintent);
+			//Toast用于向用户显示一些帮助/提示
+		}
+
+
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.iv_left:
-			finish();
-			break;
-		case R.id.tv_right:
-			break;
-		case R.id.myspace_space_textview:
-			break;
+			case R.id.iv_left:
+				finish();
+				break;
+			case R.id.tv_right:
+				break;
+			case R.id.myspace_space_textview:
+				break;
 		}
 	}
 

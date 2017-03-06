@@ -7,7 +7,7 @@
               android:gravity="center"
               android:orientation="vertical">
 
-    <com.chd.yunpan.view.CircleImageView
+    <com.chd.yunpan.view.circleimage.CircleImageView
         android:id="@+id/iv_photo"
         android:layout_width="108dp"
         android:layout_height="108dp"
@@ -17,7 +17,7 @@
         app:sriv_right_bottom_corner_radius="10dp"
         app:sriv_right_top_corner_radius="10dp">
 
-    </com.chd.yunpan.view.CircleImageView>
+    </com.chd.yunpan.view.circleimage.CircleImageView>
 
     <TextView
         android:id="@+id/tv_title"

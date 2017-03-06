@@ -129,7 +129,7 @@ public class OpenSpaceActivity extends Activity implements OnClickListener,PayFo
 					{
 						PayForOpenSpaceDlg payForOpenSpaceDlg = new PayForOpenSpaceDlg(OpenSpaceActivity.this);
 						payForOpenSpaceDlg.setOnConfirmListener(OpenSpaceActivity.this);
-						payForOpenSpaceDlg.showMyDialog(String.format("请再次确认退订“沃”空间业务，资费%s", "9元"));
+						payForOpenSpaceDlg.showMyDialog(String.format("请再次确认退订“沃”空间业务，资费%s", "10元"));
 					}
 
 					@Override
@@ -139,7 +139,7 @@ public class OpenSpaceActivity extends Activity implements OnClickListener,PayFo
 					}
 
 				});
-				payForOpenSpaceDlg.showMyDialog(String.format("您即将退订“沃空间”业务，成功后即不再享会员空间和定向流量，资费%s，是否确认退订？", "9元"));
+				payForOpenSpaceDlg.showMyDialog(String.format("您即将退订“沃空间”业务，成功后即不再享会员空间和定向流量，资费%s，是否确认退订？", "10元"));
 
 
 

@@ -13,7 +13,7 @@ import com.chd.contacts.vcard.StringUtils;
 import com.chd.music.backend.MediaUtil;
 import com.chd.music.entity.MusicBean;
 import com.chd.yunpan.R;
-import com.chd.yunpan.view.CircleImageView;
+import com.chd.yunpan.view.circleimage.CircleImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;

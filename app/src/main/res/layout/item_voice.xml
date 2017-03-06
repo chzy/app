@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+            android:padding="10dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_item_voice_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="新录音"
+        android:textSize="18sp"
+        android:textColor="#000"
+        />
+    <LinearLayout
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_item_voice_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:text="2017-03-03"
+            android:textColor="#000"
+            />
+
+        <TextView
+            android:id="@+id/tv_item_voice_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:layout_marginLeft="30dp"
+            android:textColor="#000"
+            android:text="13:47"
+            />
+
+        <TextView
+            android:id="@+id/tv_item_voice_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#000"
+            android:layout_marginLeft="30dp"
+            android:text="3s"
+
+            />
+
+
+    </LinearLayout>
+</LinearLayout>

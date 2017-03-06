@@ -1,5 +1,6 @@
 package com.chd.yunpan.ui;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -19,7 +20,13 @@ import com.chd.yunpan.share.ShareUtils;
 import com.chd.yunpan.ui.progressbar.McircleProgressBar;
 import com.chd.yunpan.utils.TimeAndSizeUtil;
 import com.chd.yunpan.utils.ToastUtils;
-import com.chd.yunpan.view.CircularProgressButton;
+import com.chd.yunpan.view.circleimage.CircularProgressButton;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 
 public class netdiskActivity extends Activity implements OnClickListener {
@@ -36,7 +43,7 @@ public class netdiskActivity extends Activity implements OnClickListener {
 	private View mViewFreeapp;
 	private McircleProgressBar mProFreeapp;
 	private TextView mTextFreeapp;
-	
+
 	private TextView mTextRemainder;
 
 	private View mViewMenu0;
@@ -46,7 +53,7 @@ public class netdiskActivity extends Activity implements OnClickListener {
 
 	private LoginResult entity;
 	private boolean isLogining=false;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -54,6 +61,27 @@ public class netdiskActivity extends Activity implements OnClickListener {
 
 		initResourceId();
 		initListener();
+		Dexter.withActivity(this)
+				.withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+				.withListener(new PermissionListener() {
+					@Override
+					public void onPermissionGranted(PermissionGrantedResponse response) {
+						//权限授予
+					}
+
+					@Override
+					public void onPermissionDenied(PermissionDeniedResponse response) {
+						//权限拒绝
+
+					}
+
+					@Override
+					public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+						token.continuePermissionRequest();
+					}
+				})
+				.check();
+
 	}
 	private String spaceStr;
 
@@ -97,19 +125,19 @@ public class netdiskActivity extends Activity implements OnClickListener {
 	private void initResourceId() {
 		mTextTitle = (TextView) findViewById(R.id.netdisk_title);
 		mImgCurves = (ImageView) findViewById(R.id.netdisk_curves);
-		
+
 		mViewSpace = findViewById(R.id.netdisk_space_layout);
 		mProSpace = (McircleProgressBar) findViewById(R.id.netdisk_myspacegbar);
 		mProSpace.setlinecolor(Color.rgb(143, 111, 242));
 		mTextUserSpace = (TextView) findViewById(R.id.netdisk_txtspace_usage);
-		
+
 		mViewFreeapp = findViewById(R.id.netdisk_freedown_layout);
 		mProFreeapp = (McircleProgressBar) findViewById(R.id.netdisk_free3gapp);
 		mProFreeapp.setlinecolor(Color.rgb(247, 117, 89));
 		mTextFreeapp = (TextView) findViewById(R.id.netdisk_fee_apptitle);
-		
+
 //		mTextRemainder = (TextView) findViewById(R.id.netdisk_remainder);
-		
+
 		mViewMenu0 = findViewById(R.id.netdisk_menu0);
 		mViewMenu1 = findViewById(R.id.netdisk_menu1);
 		mViewMenu2 = findViewById(R.id.netdisk_menu2);
@@ -117,9 +145,11 @@ public class netdiskActivity extends Activity implements OnClickListener {
 	}
 
 	@Override
-	public void onClick(View v) 
+	public void onClick(View v)
 	{
-		switch (v.getId()) 
+
+
+		switch (v.getId())
 		{
 		case R.id.netdisk_menu0:
 		{
@@ -162,7 +192,7 @@ public class netdiskActivity extends Activity implements OnClickListener {
 			break;
 		}
 	}
-	
+
 	private  void bgtask()
 	{
 		ShareUtils shareUtils = new ShareUtils(this);
@@ -184,7 +214,7 @@ public class netdiskActivity extends Activity implements OnClickListener {
 	}
 
 	private boolean canLogin = true;
-	
+
 	@Override
 	protected void onPause() {
 		canLogin = false;

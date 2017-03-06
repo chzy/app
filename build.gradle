@@ -4,14 +4,15 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
-
+        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.jakewharton:butterknife-gradle-plugin:8.5.1'
     }
 
 }
 allprojects {
     repositories {
         jcenter()
+        maven { url "https://jitpack.io" }
         maven {
             url "http://maven.bughd.com/public"
         }

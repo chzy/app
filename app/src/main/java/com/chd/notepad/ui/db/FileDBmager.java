@@ -6,12 +6,11 @@ import android.util.Log;
 import com.chd.proto.LoginResult;
 import com.chd.yunpan.share.ShareUtils;
 
-import org.apache.http.util.EncodingUtils;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -119,11 +118,11 @@ public class FileDBmager {
             fis = new FileInputStream(file);
             int length = fis.available();
 
-            byte [] buffer = new byte[length];
-            fis.read(buffer);
+            char [] buffer = new char[length];
 
-            res = EncodingUtils.getString(buffer, "UTF-8");
-
+            InputStreamReader reader=new InputStreamReader(fis,"UTF-8");
+            int len = reader.read(buffer);
+            res=new String(buffer,0,len);
             fis.close();
         } catch (Exception e) {
             e.printStackTrace();

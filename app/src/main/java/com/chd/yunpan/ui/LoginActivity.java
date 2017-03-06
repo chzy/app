@@ -34,7 +34,7 @@ import com.chd.yunpan.share.ShareUtils;
 import com.chd.yunpan.ui.dialog.UpdateDialog;
 import com.chd.yunpan.utils.Logs;
 import com.chd.yunpan.utils.ToastUtils;
-import com.chd.yunpan.view.CircularProgressButton;
+import com.chd.yunpan.view.circleimage.CircularProgressButton;
 
 
 public class LoginActivity extends Activity implements OnClickListener {

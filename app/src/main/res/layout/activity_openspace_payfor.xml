@@ -72,7 +72,7 @@
             android:layout_marginRight="15dp"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="9元/月"
+            android:text="10元/月"
             android:textColor="#999999"
             android:textSize="15sp" />
     </LinearLayout>

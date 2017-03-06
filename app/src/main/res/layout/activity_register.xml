@@ -108,7 +108,7 @@
 
         </LinearLayout>
 
-        <com.chd.yunpan.view.CircularProgressButton
+        <com.chd.yunpan.view.circleimage.CircularProgressButton
             android:id="@+id/log_btn_code"
             android:layout_width="100dp"
             android:layout_height="45dp"
@@ -136,7 +136,7 @@
         android:orientation="horizontal">
 
 
-        <com.chd.yunpan.view.CircularProgressButton
+        <com.chd.yunpan.view.circleimage.CircularProgressButton
             android:id="@+id/log_btn_log"
             android:layout_width="match_parent"
             android:layout_height="50dp"
