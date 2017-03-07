@@ -393,22 +393,22 @@ public class MediaMgr  {
 			}
 		}
 	}
-
-	private FileInfo0 getUploadeItem(String objid,FileInfo0 info){
-		FileInfo0 file=null;
-		Cursor cursor = db.rawQuery("select * from upload_finished" +" where type=? objid="+objid, /*wheresection*/null);
-		if (cursor.moveToNext()) {
-			file.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
-			//file.setFilename(getpath(cursor.getString(cursor.getColumnIndex("name"))));
-			file.setFilename(cursor.getString(cursor.getColumnIndex("name")));
-			file.setObjid(objid);
-			//if (!finished)
-				file.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
-
-		}
-		cursor.close();
-		return null;
-	}
+//
+//	private FileInfo0 getUploadeItem(String objid,FileInfo0 info){
+//		FileInfo0 file=null;
+//		Cursor cursor = db.rawQuery("select * from upload_finished" +" where type=? objid="+objid, /*wheresection*/null);
+//		if (cursor.moveToNext()) {
+//			file.setOffset(cursor.getInt(cursor.getColumnIndex("offset"))+0L);
+//			//file.setFilename(getpath(cursor.getString(cursor.getColumnIndex("name"))));
+//			file.setFilename(cursor.getString(cursor.getColumnIndex("name")));
+//			file.setObjid(objid);
+//			//if (!finished)
+//				file.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
+//
+//		}
+//		cursor.close();
+//		return null;
+//	}
 
 	//public abstract ArrayList<Integer> anlayLocalUnits(List<FileInfo0> couldlist);
 
@@ -647,21 +647,21 @@ public class MediaMgr  {
 		return getFileDataDBEntitiesU("upload_finish", true);
 	}*/
 
-	private FileInfo0 getFileDataDBEntity(String db1,String objid,boolean finished){
-		FileInfo0 file=null;
-		Cursor cursor = db.rawQuery("select * from "+db1 +" where objid=" + objid, null);
-		if (cursor.moveToNext()) {
-			file.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
-			//file.setFilename(getpath(cursor.getString(cursor.getColumnIndex("name"))));
-			file.setFilename(cursor.getString(cursor.getColumnIndex("name")));
-			file.setObjid(objid);
-			if (!finished)
-				file.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
-
-		}
-		cursor.close();
-		return null;
-	}
+//	private FileInfo0 getFileDataDBEntity(String db1,String objid,boolean finished){
+//		FileInfo0 file=null;
+//		Cursor cursor = db.rawQuery("select * from "+db1 +" where objid=" + objid, null);
+//		if (cursor.moveToNext()) {
+//			file.setOffset(cursor.getInt(cursor.getColumnIndex("offset"))+0L);
+//			//file.setFilename(getpath(cursor.getString(cursor.getColumnIndex("name"))));
+//			file.setFilename(cursor.getString(cursor.getColumnIndex("name")));
+//			file.setObjid(objid);
+//			if (!finished)
+//				file.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
+//
+//		}
+//		cursor.close();
+//		return null;
+//	}
 
 	public boolean QueryDBEntity(DBTAB dbtab,FileInfo0 info0){
 		boolean ret=false;
@@ -678,7 +678,7 @@ public class MediaMgr  {
 			if (info0.getFilePath()==null)
 				info0.setFilePath(cursor.getString(cursor.getColumnIndex("path")));
 			if (info0.getOffset()<1  && !finished )
-				info0.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
+				info0.setOffset((long)cursor.getInt(cursor.getColumnIndex("offset")));
 			if (!info0.isSetLastModified())
 				info0.setLastModified(cursor.getInt(cursor.getColumnIndex("time")));
 			if (!info0.isSetFilesize() && !finished && dbtab.equals(DBTAB.Dling))
@@ -701,7 +701,7 @@ public class MediaMgr  {
 		while (cursor.moveToNext() && max>0) {
 			FileInfo0 info0=new FileInfo0();
 			info0.setFilePath(cursor.getString(cursor.getColumnIndex("objid")));
-			info0.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
+			info0.setOffset((long)cursor.getInt(cursor.getColumnIndex("offset")));
 			info0.setLastModified(cursor.getInt(cursor.getColumnIndex("time")));
 			info0.setFilesize(cursor.getLong(cursor.getColumnIndex("size")));
 			try {

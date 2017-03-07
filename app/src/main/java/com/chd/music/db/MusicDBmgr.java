@@ -366,7 +366,7 @@ public class MusicDBmgr  {
             file.setFilePath(cursor.getString(cursor.getColumnIndex("path")));
             //file.setFilename(cursor.getString(cursor.getColumnIndex("name")));
             if (!finished)
-                file.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
+                file.setOffset((long)cursor.getInt(cursor.getColumnIndex("offset")));
             lists.add(file);
         }
         cursor.close();
@@ -451,7 +451,7 @@ public class MusicDBmgr  {
             file.setFilename(cursor.getString(cursor.getColumnIndex("name")));
             file.setObjid(objid);
             if (!finished)
-                file.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
+                file.setOffset((long)cursor.getInt(cursor.getColumnIndex("offset")));
 
         }
         cursor.close();
@@ -463,12 +463,12 @@ public class MusicDBmgr  {
         Cursor cursor = db.rawQuery("select * from " + db1 + " where objid=" + objid, null);
         if (cursor.moveToNext()) {
 
-            file.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
+            file.setOffset((long)cursor.getInt(cursor.getColumnIndex("offset")));
             //file.setFilename(getpath(cursor.getString(cursor.getColumnIndex("name"))));
             file.setFilename(cursor.getString(cursor.getColumnIndex("name")));
             file.setObjid(objid);
             if (!finished)
-                file.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
+                file.setOffset((long)cursor.getInt(cursor.getColumnIndex("offset")));
 
         }
         cursor.close();
