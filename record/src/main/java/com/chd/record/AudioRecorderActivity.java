@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -69,9 +70,11 @@ public class AudioRecorderActivity extends AppCompatActivity
 	private TextView timerView;
 	private ImageButton restartView;
 	private ImageButton recordView;
+	private ImageView delete;
 	private ImageButton playView;
 	private TextView titleView;
 	private String title;
+	private boolean exist;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +89,7 @@ public class AudioRecorderActivity extends AppCompatActivity
 			sampleRate = (AudioSampleRate) savedInstanceState.getSerializable(AndroidAudioRecorder.EXTRA_SAMPLE_RATE);
 			color = savedInstanceState.getInt(AndroidAudioRecorder.EXTRA_COLOR);
 			autoStart = savedInstanceState.getBoolean(AndroidAudioRecorder.EXTRA_AUTO_START);
+			exist = savedInstanceState.getBoolean(AndroidAudioRecorder.EXTRA_EXIST,false);
 			keepDisplayOn = savedInstanceState.getBoolean(AndroidAudioRecorder.EXTRA_KEEP_DISPLAY_ON);
 		} else {
 			filePath = getIntent().getStringExtra(AndroidAudioRecorder.EXTRA_FILE_PATH);
@@ -94,7 +98,9 @@ public class AudioRecorderActivity extends AppCompatActivity
 			channel = (AudioChannel) getIntent().getSerializableExtra(AndroidAudioRecorder.EXTRA_CHANNEL);
 			sampleRate = (AudioSampleRate) getIntent().getSerializableExtra(AndroidAudioRecorder.EXTRA_SAMPLE_RATE);
 			color = getIntent().getIntExtra(AndroidAudioRecorder.EXTRA_COLOR, Color.BLACK);
+			exist = getIntent().getBooleanExtra(AndroidAudioRecorder.EXTRA_EXIST,false);
 			autoStart = getIntent().getBooleanExtra(AndroidAudioRecorder.EXTRA_AUTO_START, false);
+			exist = getIntent().getBooleanExtra(AndroidAudioRecorder.EXTRA_AUTO_START, false);
 			keepDisplayOn = getIntent().getBooleanExtra(AndroidAudioRecorder.EXTRA_KEEP_DISPLAY_ON, false);
 		}
 
@@ -159,6 +165,21 @@ public class AudioRecorderActivity extends AppCompatActivity
 		restartView = (ImageButton) findViewById(R.id.restart);
 		recordView = (ImageButton) findViewById(R.id.record);
 		playView = (ImageButton) findViewById(R.id.play);
+		delete= (ImageView) findViewById(R.id.delete);
+		delete.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				//删除此文件
+				stopRecording();
+				Intent intent = new Intent();
+				intent.putExtra("duration", timerView.getText().toString());
+				intent.putExtra("title", titleView.getText().toString());
+				intent.putExtra("delete", true);
+				setResult(RESULT_OK, intent);
+				finish();
+
+			}
+		});
 
 		contentLayout.setBackgroundColor(Util.getDarkerColor(color));
 		contentLayout.addView(visualizerView, 0);
@@ -172,6 +193,11 @@ public class AudioRecorderActivity extends AppCompatActivity
 			}
 		});
 		playView.setVisibility(View.INVISIBLE);
+
+		if(exist){
+			//如果是已存在的
+			pauseRecording();
+		}
 
 		if (Util.isBrightColor(color)) {
 			ContextCompat.getDrawable(this, R.drawable.aar_ic_clear)

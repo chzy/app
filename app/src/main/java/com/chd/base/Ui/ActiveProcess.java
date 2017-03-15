@@ -1,7 +1,7 @@
 package com.chd.base.Ui;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -10,7 +10,7 @@ import com.chd.photo.ui.CustomProgressDialog;
 /**
  * Created by lxp1 on 2015/12/6.
  */
-public abstract class ActiveProcess extends Activity {
+public abstract class ActiveProcess extends AppCompatActivity {
 
 
     //public abstract void updateProgress(final int progress);

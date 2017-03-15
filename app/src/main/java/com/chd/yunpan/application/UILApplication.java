@@ -21,8 +21,8 @@ import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
-import com.chd.Loghandler;
 import com.chd.TClient;
+import com.chd.base.Entity.FilelistEntity;
 import com.lockscreen.view.LockPatternUtils;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
@@ -34,13 +34,20 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
 import cn.smssdk.SMSSDK;
-import im.fir.sdk.FIR;
 //import im.fir.sdk.FIR;
 
 /**
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
  */
-public class UILApplication extends Application implements Loghandler{
+public class UILApplication extends Application {
+
+
+
+	private static FilelistEntity filelistEntity;
+	private static UILApplication mInstance;
+	private LockPatternUtils mLockPatternUtils;
+
+
 	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 	@SuppressWarnings("unused")
 	@Override
@@ -50,7 +57,7 @@ public class UILApplication extends Application implements Loghandler{
 			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyDeath().build());*/
 		}
 		super.onCreate();
-		FIR.init(this);
+		//FIR.init(this);
 		CrashHandler.getInstance().init(this);
 		mInstance = this;
 		mLockPatternUtils = new LockPatternUtils(this);
@@ -66,7 +73,7 @@ public class UILApplication extends Application implements Loghandler{
 		SMSSDK.initSDK(this, "f40f0f41f1d1", "8542792ca37ec28ce85a0ce024c957b2",true);
 	}
 
-	@Override
+	//@Override
 	public void Wlog(String tag, String msg) {
 		try {
 			throw new Exception(msg);
@@ -75,12 +82,27 @@ public class UILApplication extends Application implements Loghandler{
 		}
 	}
 
+	public static FilelistEntity getFilelistEntity() {
+		if (filelistEntity==null);
+		filelistEntity=new FilelistEntity();
+		return filelistEntity;
+	}
+
+	public static void   ClearFileEntity()
+	{
+		if (filelistEntity!=null)
+		{
+			filelistEntity.getBklist().clear();
+			filelistEntity.getLocallist().clear();
+		}
+
+	}
+
 	public static class Config {
 		public static final boolean DEVELOPER_MODE = false;
 	}
-	
-	private static UILApplication mInstance;
-	private LockPatternUtils mLockPatternUtils;
+
+
 	public static UILApplication getInstance() {
 		return mInstance;
 	}
@@ -93,6 +115,7 @@ public class UILApplication extends Application implements Loghandler{
 		// or you can create default configuration by
 		//  ImageLoaderConfiguration.createDefault(this);
 		// method.
+
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
 				.threadPriority(Thread.NORM_PRIORITY - 2)
 				.threadPoolSize(5)
@@ -104,8 +127,9 @@ public class UILApplication extends Application implements Loghandler{
 				.tasksProcessingOrder(QueueProcessingType.LIFO)
 				.writeDebugLogs() // Remove for release app
 				.build();
-
 		// Initialize ImageLoader with configuration.
+
 		ImageLoader.getInstance().init(config);
+		//ImageLoader.getInstance().clearDiskCache();
 	}
 }

@@ -19,12 +19,15 @@ import com.chd.photo.entity.PicDBitem;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
+import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.share.ShareUtils;
+import com.chd.yunpan.utils.TimeUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.BitSet;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -36,7 +39,7 @@ public class MediaMgr  {
 	private FTYPE _ftype;
 	private boolean mExitTasksEarly;
 	static ShareUtils shareUtils ;
-	private   List<FileLocal> LocalUnits;
+	//private   List<FileLocal> LocalUnits;
 	//private HashMap<String ,Integer> LocalUnits;
 	public final  static String sZipFileMimeType = "application/zip";
 
@@ -56,7 +59,8 @@ public class MediaMgr  {
 
 
 	public List<FileLocal> getLocalUnits() {
-		return this.LocalUnits;
+		return  UILApplication.getFilelistEntity().getLocallist();
+		//return this.LocalUnits;
 	}
 
 
@@ -89,8 +93,8 @@ public class MediaMgr  {
 		shareUtils = new ShareUtils(context);
 		//PicCache=new HashMap<Integer, FileInfo0>(20);
 		_ftype=ftype;
-		if (LocalUnits==null)
-			LocalUnits=new ArrayList<FileLocal>();
+		//if (LocalUnits==null)
+		//	LocalUnits=new ArrayList<FileLocal>();
 		/*HashSet<FileLocal> fileLocalHashSet=new HashSet<FileLocal>();
 		fileLocalHashSet.contains("ddd");
 		fileLocalHashSet.addAll(LocalUnits);*/
@@ -100,8 +104,8 @@ public class MediaMgr  {
 		shareUtils = new ShareUtils(context);
 		//PicCache=new HashMap<Integer, FileInfo0>(20);
 		_ftype=null;
-		if (LocalUnits==null)
-			LocalUnits=new ArrayList<FileLocal>();
+		//if (LocalUnits==null)
+		//	LocalUnits=new ArrayList<FileLocal>();
 		//HashSet<FileLocal> fileLocalHashSet=new HashSet<FileLocal>();
 
 	}
@@ -133,7 +137,7 @@ public class MediaMgr  {
 		}
 		filters.put(StoreUtil.FileCategory.Custom, new FilenameExtFilter(exts));
 		this.contains=contain;*/
-		filters.setCustomCategory(exts, contain);
+		filters.setCustomCategory( Arrays.asList(exts), contain);
 	}
 
 	public void saveToSdcard(String filename, String content) throws IOException {
@@ -165,8 +169,8 @@ public class MediaMgr  {
 	}
 
 
-	public void   anlayLocalUnits(List<FileInfo0> couldlist,FilelistEntity filelistEntity) {
-		int count= LocalUnits.size();
+	/*public void   anlayLocalUnits(List<FileInfo0> couldlist, FilelistEntity filelistEntity) {
+		int count= filelistEntity.getLocallist().size();
 		int count2=couldlist.size();
 
 		ArrayList<FileInfo0> baklist=new ArrayList(count2);
@@ -174,7 +178,7 @@ public class MediaMgr  {
 		int j=0,i=0;
 		FileInfo0 item = null;
 		BitSet bm=new BitSet(count);
-		for(i=0;i<bm.length();i++)
+		//for(i=0;i<bm.length();i++)
 	    		bm.set(i,false);
 		for(j=0;idx<count2;j++)
 		{
@@ -187,7 +191,7 @@ public class MediaMgr  {
 			for (i=0;i<count;i++)
 			{
 				FileLocal fileLocal=LocalUnits.get(i);
-				if (fileLocal.bakuped ) {
+				if (fileLocal.getSysid()==1 *//*bakuped*//* ) {
 					if (!bm.get(i))
 					{
 						bm.set(i,true);
@@ -196,9 +200,9 @@ public class MediaMgr  {
 					}
 					continue;
 				}
-				if (fileLocal.fname.equalsIgnoreCase(fileInfo.getObjid())) {
-					item.setSysid(fileLocal.sysid);
-					fileLocal.bakuped = true;
+				if (fileLocal.getFilename().equalsIgnoreCase(fileInfo.getObjid())) {
+					item.setSysid(fileLocal.getSysid());
+					//fileLocal.bakuped = true;
 					if (filelistEntity != null)
 						filelistEntity.addbakNumber();
 					break;
@@ -208,7 +212,7 @@ public class MediaMgr  {
 		for (i=0;i<count;i++)
 		{
 			FileLocal fileLocal=LocalUnits.get(i);
-			if (!fileLocal.bakuped ) {
+			if ( fileLocal.getSysid()>1   *//*.bakuped*//* ) {
 				filelistEntity.addUnBakNumber();
 			}
 		}
@@ -216,18 +220,146 @@ public class MediaMgr  {
 		couldlist.clear();
 		//bm.clear();
 		bm=null;
-		filelistEntity.setBklist(baklist);
+	//	filelistEntity.setBklist(baklist);
 		//return  null;
+	}*/
+
+	/*public void   anlayLocalUnits90(List<FileInfo0> couldlist, FilelistEntity filelistEntity) {
+
+		int count_lc= LocalUnits.size();
+
+		int count2_cld=couldlist.size();
+		long t1 ,t0 = System.currentTimeMillis();
+		HashSet hashSet=new HashSet<FileInfo>(couldlist);
+
+				//couldlist.
+		ArrayList<FileInfo0>  backlist=new ArrayList<>();
+		//Collections.sort(couldlist,new  ComparatorObj());
+		//ArrayList<FileInfo0> baklist=new ArrayList(count2);
+		//int idx=0;
+		int j=0,i=0;
+		//FileInfo0 item = null;
+		//BitSet bm=new BitSet(count_lc);
+		//for(i=0;i<bm.length();i++)
+		//bm.set(i,false);
+		FileLocal local_item;
+		FileInfo cld_item;
+
+		for(j=0;j<count_lc;j++)
+		{
+			local_item=LocalUnits.get(j);
+			//if (local_item.bakuped )
+			//	continue;
+			if (hashSet.contains(local_item))
+			{
+				//local_item.bakuped=true;
+				//bm.set(j,true);
+				if (filelistEntity != null)
+					filelistEntity.addbakNumber();
+			}
+		*//*	for (i=0;i<count2_cld;i++)
+			{
+				if (bm.get(i))
+					continue;
+				cld_item=couldlist.get(i);
+
+				if ( local_item.fname.equalsIgnoreCase(cld_item.getObjid()))
+				{
+
+					FileInfo0 newfileinfo=new FileInfo0();
+					newfileinfo.setObjid(local_item.fname);
+					newfileinfo.setFtype(FTYPE.PICTURE);
+					newfileinfo.setSysid(local_item.sysid);
+					//
+					backlist.add((FileInfo0) newfileinfo);
+					LocalUnits.remove(j);
+					j--;
+					count_lc--;
+					local_item.bakuped = true;
+					bm.set(i,true);
+					if (filelistEntity != null)
+						filelistEntity.addbakNumber();
+					break;
+				}
+			}*//*
+		}
+		*//*for (i=0;i<count;i++)
+		{
+			FileLocal fileLocal=LocalUnits.get(i);
+			if (!fileLocal.bakuped ) {
+				filelistEntity.addUnBakNumber();
+			}
+		}*//*
+		//int z= count_lc-bm.cardinality();
+		//filelistEntity.addUnBakNumber();
+
+		//couldlist.clear();
+		//couldlist.addAll(backlist);
+		//bm.clear();
+		//bm=null;
+		//filelistEntity.setBklist(couldlist);
+		//filelistEntity.setLocallist(LocalUnits);
+		//filelistEntity.setUnBakNumber(LocalUnits.size()-bm.cardinality());
+		t1=System.currentTimeMillis();
+		//Toast.makeText(this.context,this.getClass().getName()+"cost : "+ (t1-t0),Toast.LENGTH_SHORT);
+		long z=t1-t0;
+		Log.i("111111111","cost : "+ (z));
+		return  ;
+	}
+*/
+	public void   anlayLocalUnits(final List<FileInfo> couldlist, FilelistEntity filelistEntity) {
+
+		long t1 ,t0 = System.currentTimeMillis();
+		//List<FileInfo> couldlist=filelistEntity.getBklist();
+
+		List<FileLocal> LocalUnits=filelistEntity.getLocallist();
+		Collections.sort(couldlist,new ComparatorByName());
+		FileLocal local_item;
+		//FileInfo cld_item;
+
+		int idx_cld = 0;
+		int idx_lcl = 0;
+		int vl=0;
+		FileInfo fileInfo;
+		while (idx_cld < couldlist.size() && idx_lcl < LocalUnits.size()) {
+			//fileInfo=couldlist.get(idx_cld);
+			//fileInfo.setLastModified(TimeUtils.getDayWithTimeMillis0(fileInfo.getLastModified()));
+
+			if ((fileInfo=couldlist.get(idx_cld)).getObjid() .compareTo(LocalUnits.get(idx_lcl).getObjid())<0) {
+				//fileInfo.setLastModified(TimeUtils.getDayWithTimeMillis0(fileInfo.getLastModified()));
+				idx_cld++;
+			}
+			else if (couldlist.get(idx_cld).getObjid() .compareTo(LocalUnits.get(idx_lcl).getObjid())>0) {
+				idx_lcl++;
+			}
+			else {
+				local_item=LocalUnits.get(idx_lcl);
+				local_item.bakuped=true;
+				filelistEntity.addbakups(local_item.getObjid(),/*local_item.getSysid()*/ 1);
+				//fileInfo=couldlist.get(idx_cld);
+				//fileInfo.setLastModified(TimeUtils.getDayWithTimeMillis0(fileInfo.getLastModified()));
+				idx_cld++;
+				idx_lcl++;
+			}
+		}
+
+  		Collections.sort(couldlist,new ComparatorByDate());
+		//filelistEntity.setBklist(couldlist);
+		//filelistEntity.setLocallist(LocalUnits);
+		t1=System.currentTimeMillis();
+		long z=t1-t0;
+		Log.i("111111111","cost : "+ (z));
+		return  ;
 	}
 
-
-	public void GetLocalFiles(MediaFileUtil.FileCategory fc,String[] exts,boolean include)
+	public void GetLocalFiles(MediaFileUtil.FileCategory fc,String[] exts,boolean include,FilelistEntity filelistEntity)
 	{
 		//setCustomCategory(new String[]{"doc", "pdf", "xls", "zip", "rar"}, true);
+		List<FileLocal> LocalUnits=filelistEntity.getLocallist();
 		if (LocalUnits!=null && !LocalUnits.isEmpty())
 			return;
 		setCustomCategory(exts, include);
-		Cursor c =query(fc, MediaFileUtil.FileCategory.All, MediaFileUtil.SortMethod.date/*null*/);
+		Cursor c =query(fc, MediaFileUtil.FileCategory.All, MediaFileUtil.SortMethod.name  /*date null*/);
 
 		while (c.moveToNext())
 		{
@@ -237,8 +369,16 @@ public class MediaMgr  {
 				continue;
 			}
 			FileLocal fileLocal =new FileLocal();
-			fileLocal.sysid=c.getInt(COLUMN_ID);
-			fileLocal.fname= MediaFileUtil.getFnameformPath(c.getString(COLUMN_PATH));
+			//fileLocal.setSysid(c.getInt(COLUMN_ID));
+			File file=new File(c.getString(COLUMN_PATH));
+			String objname=file.getName();
+			String path=file.getParent();
+			fileLocal.setLastModified(TimeUtils.getDayWithTimeMillis0(c.getLong(COLUMN_DATE)));
+			int pathid = filelistEntity.addFilePath(path);
+			fileLocal.setPathid(pathid);
+			file=null;
+			//String objname=MediaFileUtil.getFnameformPath(c.getString(COLUMN_PATH));
+			fileLocal.setObjid(objname);
 			LocalUnits.add(fileLocal);
 			//LocalUnits.put(fileLocal.fname,fileLocal);
 		}
@@ -266,8 +406,8 @@ public class MediaMgr  {
 			if (count<begin)
 				continue;
 			FileLocal fileLocal =new FileLocal();
-			fileLocal.sysid=c.getInt(COLUMN_ID);
-			fileLocal.fname= MediaFileUtil.getFnameformPath(c.getString(COLUMN_PATH));
+			//fileLocal.setSysid(c.getInt(COLUMN_ID));
+			//fileLocal.fname= MediaFileUtil.getFnameformPath(c.getString(COLUMN_PATH));
 			locals.add(fileLocal);
 			total++;
 			if (total>=max)
@@ -280,7 +420,7 @@ public class MediaMgr  {
 		return locals;
 	}
 
-	public  boolean queryLocalInfo(int sysid/*,FTYPE ftype*/,FileInfo0 fileInfo0)
+	/*public  boolean queryLocalInfo(int sysid*//*,FTYPE ftype*//*,FileInfo0 fileInfo0)
 	{
 
 		//MediaFileUtil.FileCategory fc0= MediaFileUtil.FileCategory.File;
@@ -329,7 +469,7 @@ public class MediaMgr  {
 		}
 		cursor.close();
 		return ret;
-	}
+	}*/
 
 	public List<PicDBitem> getUploadUnits(){
 		open();
@@ -393,22 +533,20 @@ public class MediaMgr  {
 			}
 		}
 	}
-//
-//	private FileInfo0 getUploadeItem(String objid,FileInfo0 info){
-//		FileInfo0 file=null;
-//		Cursor cursor = db.rawQuery("select * from upload_finished" +" where type=? objid="+objid, /*wheresection*/null);
-//		if (cursor.moveToNext()) {
-//			file.setOffset(cursor.getInt(cursor.getColumnIndex("offset"))+0L);
-//			//file.setFilename(getpath(cursor.getString(cursor.getColumnIndex("name"))));
-//			file.setFilename(cursor.getString(cursor.getColumnIndex("name")));
-//			file.setObjid(objid);
-//			//if (!finished)
-//				file.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
-//
-//		}
-//		cursor.close();
-//		return null;
-//	}
+
+	private FileInfo0 getUploadeItem(String objid, FileInfo0 info){
+		FileInfo0 file=null;
+		Cursor cursor = db.rawQuery("select * from upload_finished" +" where type=? objid="+objid, /*wheresection*/null);
+		if (cursor.moveToNext()) {
+			//file.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
+			file.setFilename(cursor.getString(cursor.getColumnIndex("name")));
+			file.setObjid(objid);
+			//	file.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
+
+		}
+		cursor.close();
+		return null;
+	}
 
 	//public abstract ArrayList<Integer> anlayLocalUnits(List<FileInfo0> couldlist);
 
@@ -418,7 +556,7 @@ public class MediaMgr  {
 	{
 		ContentValues values = new ContentValues();
 		values.put("objid",entity.getObjid());
-		values.put("offset",entity.getOffset());
+		//values.put("offset",entity.getOffset());
 		db.update("upload_inter", values, "sysid=?", new String[]{entity.getSysid() + ""});
 	}
 
@@ -542,7 +680,7 @@ public class MediaMgr  {
 	{
 
 		if (1==1) {
-			this.LocalUnits.clear();
+			UILApplication.getFilelistEntity().getLocallist().clear();
 			fileScan(info0.getFilePath(),context);
 			return;
 		}
@@ -612,7 +750,7 @@ public class MediaMgr  {
 ///////////////////////// 下载记录管理部分////////////////////////////
 
     // 通过文件名找到downloaded记录
-    public boolean QueryDownloadedFile(FileInfo0 info0,boolean autopen) {
+    public boolean QueryDownloadedFile(FileInfo0 info0, boolean autopen) {
 		if (autopen)
         	open();
 		String path=info0.getFilePath()==null? new ShareUtils(context).getStorePathStr()+File.separator+
@@ -626,7 +764,7 @@ public class MediaMgr  {
     }
 
 	// 通过文件名找到uploaded记录
-	public boolean QueryUploadedFile(FileInfo0 info0,boolean autopen) {
+	public boolean QueryUploadedFile(FileInfo0 info0, boolean autopen) {
 		if (autopen)
 			open();
 		boolean ret=QueryDBEntity(DBTAB.UPed,info0);
@@ -647,21 +785,21 @@ public class MediaMgr  {
 		return getFileDataDBEntitiesU("upload_finish", true);
 	}*/
 
-//	private FileInfo0 getFileDataDBEntity(String db1,String objid,boolean finished){
-//		FileInfo0 file=null;
-//		Cursor cursor = db.rawQuery("select * from "+db1 +" where objid=" + objid, null);
-//		if (cursor.moveToNext()) {
-//			file.setOffset(cursor.getInt(cursor.getColumnIndex("offset"))+0L);
-//			//file.setFilename(getpath(cursor.getString(cursor.getColumnIndex("name"))));
-//			file.setFilename(cursor.getString(cursor.getColumnIndex("name")));
-//			file.setObjid(objid);
-//			if (!finished)
-//				file.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
-//
-//		}
-//		cursor.close();
-//		return null;
-//	}
+	private FileInfo0 getFileDataDBEntity(String db1, String objid, boolean finished){
+		FileInfo0 file=null;
+		Cursor cursor = db.rawQuery("select * from "+db1 +" where objid=" + objid, null);
+		if (cursor.moveToNext()) {
+			//file.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
+			//file.setFilename(getpath(cursor.getString(cursor.getColumnIndex("name"))));
+			file.setFilename(cursor.getString(cursor.getColumnIndex("name")));
+			file.setObjid(objid);
+			//if (!finished)
+			//	file.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
+
+		}
+		cursor.close();
+		return null;
+	}
 
 	public boolean QueryDBEntity(DBTAB dbtab,FileInfo0 info0){
 		boolean ret=false;
@@ -677,8 +815,8 @@ public class MediaMgr  {
 		if (cursor.moveToNext()) {
 			if (info0.getFilePath()==null)
 				info0.setFilePath(cursor.getString(cursor.getColumnIndex("path")));
-			if (info0.getOffset()<1  && !finished )
-				info0.setOffset((long)cursor.getInt(cursor.getColumnIndex("offset")));
+			//if (info0.getOffset()<1  && !finished )
+			//	info0.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
 			if (!info0.isSetLastModified())
 				info0.setLastModified(cursor.getInt(cursor.getColumnIndex("time")));
 			if (!info0.isSetFilesize() && !finished && dbtab.equals(DBTAB.Dling))
@@ -688,7 +826,7 @@ public class MediaMgr  {
 		cursor.close();
 		return ret;
 	}
-	private List<FileInfo0> QueryDBUnits(DBTAB dbtab,FTYPE ftype,int max){
+	private List<FileInfo0> QueryDBUnits(DBTAB dbtab, FTYPE ftype, int max){
 		//boolean ret=false;
 		String sel="";
 		if (ftype!=null)
@@ -701,7 +839,7 @@ public class MediaMgr  {
 		while (cursor.moveToNext() && max>0) {
 			FileInfo0 info0=new FileInfo0();
 			info0.setFilePath(cursor.getString(cursor.getColumnIndex("objid")));
-			info0.setOffset((long)cursor.getInt(cursor.getColumnIndex("offset")));
+			info0.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
 			info0.setLastModified(cursor.getInt(cursor.getColumnIndex("time")));
 			info0.setFilesize(cursor.getLong(cursor.getColumnIndex("size")));
 			try {
@@ -719,11 +857,13 @@ public class MediaMgr  {
 		return list;
 	}
 
-	public void addUpLoadingFile(FileInfo0 entity){
+	public void addUpLoadingFile(FileInfo entity){
 		ContentValues values = new ContentValues();
 		//values.put(/*"hash"*/"sysid",/*entity.getFilePath().hashCode()*/entity.getSysid());
 		values.put("objid",entity.getObjid());
-		values.put("path", entity.getFilePath());
+
+		//values.put("path", entity.getFilePath());
+
 		values.put("size",entity.getFilesize());
 		values.put("type", (entity.getFtype()).getValue());
 		values.put("offset",0);
@@ -836,4 +976,38 @@ public class MediaMgr  {
 		db.delete(db1, "objid=?", new String[]{objid + ""});
 	}
 
+
+	 private class ComparatorObj0 implements Comparator{
+
+			public int compare(Object arg0, Object arg1) {
+				FileInfo0 item0=(FileInfo0)arg0;
+				FileInfo0 item1=(FileInfo0)arg1;
+				int flag=item0.getObjid().compareTo(item1.getObjid());
+					return flag;
+			}
+	}
+	private class ComparatorByName implements Comparator{
+
+		public int compare(Object arg0, Object arg1) {
+			String  item0=arg0.toString();
+			String item1=arg1.toString();
+			int flag=item0.compareTo(item1);
+			return flag;
+		}
+	}
+
+	private class ComparatorByDate implements Comparator{
+
+		public int compare(Object arg0, Object arg1) {
+			FileInfo  item0=(FileInfo) arg0;
+			/*if (item0.getLastModified()>29991230)
+				item0.setLastModified(TimeUtils.getDayWithTimeMillis0(item0.getLastModified()));*/
+			FileInfo item1=(FileInfo) arg1;
+			/*if (item1.getLastModified()>29991230)
+				                      //1467270158
+				item1.setLastModified(TimeUtils.getDayWithTimeMillis0(item1.getLastModified()));*/
+			int flag=item0.getLastModified()-item1.getLastModified();
+			return flag;
+		}
+	}
 }

@@ -2,92 +2,66 @@ package com.chd.photo.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
 
-import com.chd.photo.entity.PicBean;
-import com.chd.photo.entity.PicInfoBean;
-import com.chd.photo.entity.PicInfoBeanMonth;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
+import com.chd.photo.ui.PicActivity;
 import com.chd.photo.ui.PicEditActivity;
+import com.chd.proto.FileInfo;
 import com.chd.yunpan.R;
+import com.chd.yunpan.application.UILApplication;
+import com.chd.yunpan.utils.TimeUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
-import java.io.Serializable;
 import java.util.List;
 
 
-public class PicAdapter extends BaseAdapter{
+public class PicAdapter<E extends FileInfo> extends BaseQuickAdapter<E ,BaseViewHolder>{
 
 	private Activity context;
-	private List<PicBean<PicInfoBeanMonth>> list;
+	private List<E> list;
 	private boolean bIsUbkList;
 	private ImageLoader imageLoader;
-	public PicAdapter(Activity context,  List<PicBean<PicInfoBeanMonth>> list, boolean bIsUbkList,ImageLoader imageLoader) {
-		this.context = context;
-		this.list = list;
+
+
+	public PicAdapter(PicActivity picActivity, List<E> localList, boolean bIsUbkList, ImageLoader imageLoader) {
+		super(R.layout.item_pic_adapter,localList);
+		this.list=localList;
+		this.bIsUbkList=bIsUbkList;
+		this.context=picActivity;
 		this.imageLoader=imageLoader;
-		this.bIsUbkList = bIsUbkList;
+
 	}
 
 	@Override
-	public int getCount() {
-		return list.size();
-	}
-
-	@Override
-	public Object getItem(int arg0) {
-		return null;
-	}
-
-	@Override
-	public long getItemId(int arg0) {
-		return 0;
-	}
-
-	@Override
-	public View getView(final int position, View converView, ViewGroup parent) {
-		ViewHolder holder;
-		if (converView == null) {
-			converView = View.inflate(context, R.layout.item_pic_adapter, null);
-			holder = new ViewHolder();
-			holder.tv_pic_date = (TextView) converView
-					.findViewById(R.id.tv_pic_date);
-			holder.mlv_pic = (MyListView) converView.findViewById(R.id.mlv_pic);
-			converView.setTag(holder);
-		} else {
-			holder = (ViewHolder) converView.getTag();
-		}
-		holder.tv_pic_date.setText(list.get(position).getYear());
-		holder.mlv_pic.setAdapter(new PicInfoAdapter(context, list.get(position)
+	protected void convert(BaseViewHolder helper, E item) {
+		Integer[] iddByDate = UILApplication.getFilelistEntity().getIddByDate(helper.getAdapterPosition(), list, 3);
+		String start = TimeUtils.getDay(list.get(iddByDate[0]).getLastModified());
+		String end=TimeUtils.getDay(list.get(iddByDate[1]).getLastModified());
+		helper.setText(R.id.tv_pic_date,start+"至"+end);
+		RecyclerView recyclerView=helper.getView(R.id.mlv_pic);
+		recyclerView.setLayoutManager(new GridLayoutManager(mContext,5, LinearLayoutManager.VERTICAL,false));
+		recyclerView.setAdapter(new PicInfoAdapter(list.subList(iddByDate[0],iddByDate[1])
 				,imageLoader));
-		holder.mlv_pic.setOnScrollListener(new PauseOnScrollListener(imageLoader,true,true));
-		holder.mlv_pic.setOnItemClickListener(new OnItemClickListener() 
-		{
-
+		recyclerView.addOnScrollListener(new PauseOnScrollListener(imageLoader,true,true));
+		recyclerView.addOnItemTouchListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) 
-			{
+			public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
 				Intent intent = new Intent(context, PicEditActivity.class);
-				intent.putExtra("month", list.get(position).getMonth());
-				intent.putExtra("year", list.get(position).getYear());
-				List<PicInfoBean> mlist=list.get(position).getList().getPicunits();
-				intent.putExtra("listUnits", (Serializable) (mlist));//LIST<PicInfoBean>
+				intent.putExtra("month", TimeUtils.getMonthWithTimeMillis(list.get(position).getLastModified())/*getMonth()*/);
+				intent.putExtra("year", TimeUtils.getYearWithTimeMillis(list.get(position).getLastModified()));
+				//List<PicInfoBean> mlist=list.get(position).getList().getPicunits();
+				//intent.putExtra("listUnits", (Serializable) (mlist));//LIST<PicInfoBean>
 				intent.putExtra("ubklist", bIsUbkList);
 				context.startActivityForResult(intent,0x11);
 			}
-			
 		});
-		
-		return converView;
-	}
 
-	private class ViewHolder {
-		TextView tv_pic_date;
-		MyListView mlv_pic;
 	}
 }

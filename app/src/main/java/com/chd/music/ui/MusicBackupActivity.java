@@ -17,13 +17,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chd.base.Entity.FileLocal;
+import com.chd.base.Entity.FileLocal00;
 import com.chd.base.Entity.MessageEvent;
 import com.chd.base.UILActivity;
 import com.chd.base.Ui.DownListActivity;
 import com.chd.base.backend.SyncTask;
 import com.chd.music.adapter.MusicBackupAdapter;
-import com.chd.music.backend.MediaUtil;
 import com.chd.music.entity.MusicBackupBean;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
@@ -49,12 +48,12 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
 
     private Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(android.os.Message msg) {
-           try {
-               if (msg.what == 998) {
-                   //多文件上传
-                   processMsg(msg);
-               } else if (msg.what == 997) {
-                   //多文件下载
+            try {
+                if (msg.what == 998) {
+                    //多文件上传
+                    processMsg(msg);
+                } else if (msg.what == 997) {
+                    //多文件下载
 //				ArrayList<Integer> posList= (ArrayList<Integer>) msg.obj;
 //				for (Integer index:
 //						posList) {
@@ -62,17 +61,17 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
 //				}
 //				mPicList.removeAll(selectItem);
 //				picEditAdapter.notifyDataSetChanged();
-               } else if (msg.what == 996) {
-                   processMsg(msg);
-               } else {
-                   dismissDialog();
-                   dismissWaitDialog();
-                   mGvMusic.setAdapter(new MusicBackupAdapter(MusicBackupActivity.this, mMusicBackupList));
-                   mTvNumber.setText(String.format("共：%d首", mMusicBackupList.size()));
-               }
-           }catch (Exception e){
-               Log.e(getClass().getName(),"退出页面空指针");
-           }
+                } else if (msg.what == 996) {
+                    processMsg(msg);
+                } else {
+                    dismissDialog();
+                    dismissWaitDialog();
+                    mGvMusic.setAdapter(new MusicBackupAdapter(MusicBackupActivity.this, mMusicBackupList));
+                    mTvNumber.setText(String.format("共：%d首", mMusicBackupList.size()));
+                }
+            }catch (Exception e){
+                Log.e(getClass().getName(),"退出页面空指针");
+            }
 
         }
     };
@@ -125,7 +124,7 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
         initListener();
 
 
-        ArrayList<FileLocal> fileLocals = (ArrayList<FileLocal>) getIntent().getSerializableExtra("locallist");
+        ArrayList<FileLocal00> fileLocals = (ArrayList<FileLocal00>) getIntent().getSerializableExtra("locallist");
         initData(fileLocals);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -150,25 +149,25 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
 
     }
 
-    private void initData(final ArrayList<FileLocal> fileLocals) {
+    private void initData(final ArrayList<FileLocal00> fileLocals) {
         showWaitDialog();
         new Thread() {
             @Override
             public void run() {
-                for (FileLocal fileLocal : fileLocals) {
+                for (FileLocal00 fileLocal : fileLocals) {
                     if (fileLocal.bakuped)
                         continue;
                     String name = fileLocal.fname;
-                    FileInfo0 fileInfo0 = syncTask.queryLocalInfo(fileLocal.sysid);
-                    if (fileInfo0 == null) {
-                        continue;
-                    }
+                    // FileInfo0 fileInfo0 = syncTask.queryLocalInfo(fileLocal.sysid);
+                    // if (fileInfo0 == null) {
+                    //     continue;
+                    //  }
 
-                    MusicBackupBean musicBackupBean = new MusicBackupBean(name, fileInfo0.getFilePath(), false);
-                    musicBackupBean.setFileInfo0(fileInfo0);
-                    String albumArt = MediaUtil.getAlbumArt(MusicBackupActivity.this, musicBackupBean.getPic());
-                    musicBackupBean.setAlbumArt(albumArt);
-                    mMusicBackupList.add(musicBackupBean);
+                    // MusicBackupBean musicBackupBean = new MusicBackupBean(name, fileInfo0.getFilePath(), false);
+                    // musicBackupBean.setFileInfo0(fileInfo0);
+                    //  String albumArt = MediaUtil.getAlbumArt(MusicBackupActivity.this, musicBackupBean.getPic());
+                    //  musicBackupBean.setAlbumArt(albumArt);
+                    //  mMusicBackupList.add(musicBackupBean);
 
                 }
                 handler.sendEmptyMessage(0);
@@ -249,7 +248,7 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
                 info0s.add(musicBackupBean.getFileInfo0());
             }
         }
-        syncTask.uploadList(info0s, this, handler);
+        // syncTask.uploadList(info0s, this, handler);
 
     }
 

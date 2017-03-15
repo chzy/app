@@ -15,11 +15,16 @@
  *******************************************************************************/
 package com.nostra13.universalimageloader.core.listener;
 
+import android.support.v7.widget.RecyclerView;
 import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.GridView;
 import android.widget.ListView;
+
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_SETTLING;
 
 /**
  * Listener-helper for {@linkplain AbsListView list views} ({@link ListView}, {@link GridView}) which can
@@ -31,13 +36,13 @@ import com.nostra13.universalimageloader.core.ImageLoader;
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
  * @since 1.7.0
  */
-public class PauseOnScrollListener implements OnScrollListener {
+public class PauseOnScrollListener extends RecyclerView.OnScrollListener {
 
 	private ImageLoader imageLoader;
 
 	private final boolean pauseOnScroll;
 	private final boolean pauseOnFling;
-	private final OnScrollListener externalListener;
+	private final RecyclerView.OnScrollListener externalListener;
 
 	/**
 	 * Constructor
@@ -60,7 +65,7 @@ public class PauseOnScrollListener implements OnScrollListener {
 	 *                       will be get scroll events
 	 */
 	public PauseOnScrollListener(ImageLoader imageLoader, boolean pauseOnScroll, boolean pauseOnFling,
-			OnScrollListener customListener) {
+			RecyclerView.OnScrollListener customListener) {
 		this.imageLoader = imageLoader;
 		this.pauseOnScroll = pauseOnScroll;
 		this.pauseOnFling = pauseOnFling;
@@ -68,31 +73,36 @@ public class PauseOnScrollListener implements OnScrollListener {
 	}
 
 	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		switch (scrollState) {
-			case OnScrollListener.SCROLL_STATE_IDLE:
+	public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+		super.onScrollStateChanged(recyclerView, newState);
+		switch (newState) {
+			case SCROLL_STATE_IDLE:
 				imageLoader.resume();
 				break;
-			case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+
+			case SCROLL_STATE_DRAGGING:
 				if (pauseOnScroll) {
 					imageLoader.pause();
 				}
 				break;
-			case OnScrollListener.SCROLL_STATE_FLING:
+			case SCROLL_STATE_SETTLING:
 				if (pauseOnFling) {
 					imageLoader.pause();
 				}
 				break;
 		}
 		if (externalListener != null) {
-			externalListener.onScrollStateChanged(view, scrollState);
+			externalListener.onScrollStateChanged(recyclerView, newState);
 		}
 	}
 
 	@Override
-	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+	public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+		super.onScrolled(recyclerView, dx, dy);
 		if (externalListener != null) {
-			externalListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+			externalListener.onScrolled(recyclerView,dx,dy);
 		}
 	}
+
+
 }

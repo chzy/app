@@ -5,35 +5,27 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.UILActivity;
 import com.chd.base.backend.SyncTask;
-import com.chd.contacts.vcard.StringUtils;
 import com.chd.photo.adapter.PicAdapter;
-import com.chd.photo.entity.PicBean;
-import com.chd.photo.entity.PicInfoBean;
-import com.chd.photo.entity.PicInfoBeanMonth;
 import com.chd.proto.FTYPE;
-import com.chd.proto.FileInfo0;
+import com.chd.proto.FileInfo;
 import com.chd.yunpan.R;
-import com.chd.yunpan.utils.TimeUtils;
+import com.chd.yunpan.application.UILApplication;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class PicActivity extends UILActivity implements OnClickListener {
@@ -42,45 +34,41 @@ public class PicActivity extends UILActivity implements OnClickListener {
 	private TextView mTvCenter;
 	private TextView mTvRight;
 	private TextView mTvNumber;
-	private ListView mLvPic;
-	private Map<Integer, Map<Integer, List<PicInfoBean>>> YearMap;
-	private List<PicBean<PicInfoBeanMonth>> mPicList = new ArrayList();
+	private RecyclerView mLvPic;
 	private boolean bIsUbkList;
-	private List<FileInfo0> cloudUnits;
+	private List<FileInfo> cloudUnits;  //云端文件
+	private List<FileLocal> localUnits; //未备份的本地文件
 	private ImageLoader imageLoader;
 	private SyncTask syncTask;
-	private List<PicBean<PicInfoBeanMonth>> localList = new ArrayList();
+	//private List<PicBean<PicInfoBeanMonth>> localList = new ArrayList();
+	private FilelistEntity filelistEntity;
 
 	private Handler handler = new Handler(Looper.getMainLooper()) {
 		public void handleMessage(Message msg) {
+
 			if (bIsUbkList) {
+
 				dismissDialog();
 				dismissWaitDialog();
-				Collections.sort(localList);
+				//Collections.sort(localList);
 				findViewById(R.id.rl_pic_ubk_layout).setVisibility(View.GONE);
 				mTvCenter.setText("未备份照片");
-				mLvPic.setAdapter(new PicAdapter(PicActivity.this, localList, bIsUbkList, imageLoader));
+
+				mLvPic.setAdapter(new PicAdapter(PicActivity.this, localUnits, bIsUbkList, imageLoader));
 			} else {
+
 				dismissWaitDialog();
 				dismissDialog();
-				Collections.sort(mPicList);
+				//Collections.sort(mPicList);
 				int size = 0;
-				if (localList != null && localList.size() > 0) {
-					for (PicBean<PicInfoBeanMonth> bean :
-							localList) {
-						size += bean.getList().getPicunits().size();
-					}
-				} else {
-					size = filelistEntity.getUnbakNumber();
-				}
+				size = filelistEntity.getUnbakNumber();
 				Log.d("liumj", "数量" + size);
 				mTvNumber.setText(String.format("未备份照片%d张", size));
-				mLvPic.setAdapter(new PicAdapter(PicActivity.this, mPicList, bIsUbkList, imageLoader));
+				mLvPic.setAdapter(new PicAdapter(PicActivity.this, cloudUnits, bIsUbkList, imageLoader));
 			}
 		}
 
 	};
-	private FilelistEntity filelistEntity;
 
 
 	@Override
@@ -103,7 +91,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-
+				filelistEntity = UILApplication.getFilelistEntity();
 				if (syncTask == null)
 					syncTask = new SyncTask(PicActivity.this, FTYPE.PICTURE);
 				//未备份文件 ==  backedlist . removeAll(localist);
@@ -114,10 +102,11 @@ public class PicActivity extends UILActivity implements OnClickListener {
 						System.out.print("query cloudUnits remote failed");
 						return;
 					}
-					filelistEntity = syncTask.analyPhotoUnits(cloudUnits);
-					cloudUnits.clear();
-					cloudUnits = null;
-					cloudUnits = filelistEntity.getBklist();
+					syncTask.analyPhotoUnits(cloudUnits, filelistEntity);
+
+//					cloudUnits = filelistEntity.getBklist();
+					localUnits = filelistEntity.getLocallist();
+
 				}
 				if (bIsUbkList) {
 					initLocal();
@@ -129,7 +118,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 		thread.start();
 	}
 
-	void add2YearMap(FileInfo0 info) {
+	/*void add2YearMap(FileInfo01 info) {
 
 		int year = TimeUtils.getYearWithTimeMillis(info.getLastModified() * 1000L);
 		int month = TimeUtils.getMonthWithTimeMillis(info.getLastModified() * 1000L);
@@ -140,12 +129,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 		} else {
 			tmpMonthMap = new HashMap();
 		}
-		//List list=tmpMonthMap.get(month);
-//		boolean fillfrist = false;
-		//if (list==null || list.isEmpty())
-//		if (tmpMonthMap.isEmpty() || tmpMonthMap.containsKey(month) == false || tmpMonthMap.get(month).isEmpty()) {
-//			fillfrist = true;
-//		}
+
 		PicInfoBean picInfoBean = new PicInfoBean();
 
 
@@ -153,7 +137,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 			picInfoBean.setSysid(info.getSysid());
 			String uri = info.getUri();
 			picInfoBean.setUrl(uri);
-			if (uri == null /*&& syncTask.haveLocalCopy(info)*/)
+			if (uri == null *//*&& syncTask.haveLocalCopy(info)*//*)
 				picInfoBean.setUrl("file://" + info.getFilePath());
 
 		} else {
@@ -170,43 +154,30 @@ public class PicActivity extends UILActivity implements OnClickListener {
 			tmpMonthMap.put(month, monthPicInfoBeans);
 		}
 		YearMap.put(year, tmpMonthMap);
-	}
+	}*/
 
 
 	private void initData() {
 
-		//产生1 个 已备份的本地文件  list
-		// 产生 1个 未备份的文件        list
-
-		//本地已经备份的文件 list 对象名 FilesListEntity 从sqlite里面取出   可以调用 dbmanger.getUploadeFiles 得到本地已备份文件  backedlist
-
-		// localfiles 调用系统方法得到本地所有文件库. 文件对象需要用 fileinfo0 类封装 构造后 要set filepath, size , 变成list .构造成 FilesListEntity locallist
-
-
-		//未备份的列表  LIST<int>
-		//网盘文件列表  LIST<FileInfo>   fileinfo.getfilepath() 得到本地资源路径  如果 getfilepath为 null 则需要下载
-
-
-		//显示未备份文件
-
 		if (filelistEntity != null) {
+/*
 			if (YearMap == null)
 				YearMap = new HashMap<>();
-			for (FileInfo0 info : cloudUnits) {
-
+			for (FileInfo info : cloudUnits) {
 				add2YearMap(info);
 			}
+*/
 
 
-			mPicList = initData(mPicList);
-			YearMap.clear();
+			//mPicList = initData(mPicList);
+			//YearMap.clear();
 		}
 		//要有提示用户等待的画面
 		handler.sendEmptyMessage(0);
 	}
 
 
-	private List<PicBean<PicInfoBeanMonth>> initData(List<PicBean<PicInfoBeanMonth>> data) {
+	/*private List<PicBean<PicInfoBeanMonth>> initData(List<PicBean<PicInfoBeanMonth>> data) {
 		if (!YearMap.isEmpty()) {
 			data.clear();
 			for (Map.Entry<Integer, Map<Integer, List<PicInfoBean>>> entryYear : YearMap.entrySet()) {
@@ -218,7 +189,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 					PicInfoBeanMonth<PicInfoBean> monthInfoBean = new PicInfoBeanMonth();
 					midx = entryMonth.getKey();
 					List<PicInfoBean> value = entryMonth.getValue();
-					Collections.sort(value);
+					//Collections.sort(value);
 					int index = value.size() - 1;
 					monthInfoBean.setUrl(value.get(index).getUrl());//第一张图片
 					monthInfoBean.setPicunits(value);
@@ -233,12 +204,12 @@ public class PicActivity extends UILActivity implements OnClickListener {
 		return data;
 
 	}
-
+*/
 	private void initResourceId() {
 		mTvNumber = (TextView) findViewById(R.id.tv_pic_number);
-		mLvPic = (ListView) findViewById(R.id.lv_pic);
-
+		mLvPic = (RecyclerView) findViewById(R.id.lv_pic);
 		mTvNumber.setText("未备份照片0张");
+		mLvPic.setLayoutManager(new LinearLayoutManager(this));
 	}
 
 	private void initListener() {
@@ -273,27 +244,26 @@ public class PicActivity extends UILActivity implements OnClickListener {
 
 	private void initLocal() {
 		waitDialog.show();
-		localList.clear();
 		new Thread() {
 			@Override
 			public void run() {
 				List<FileLocal> locallist = filelistEntity.getLocallist();
 				for (FileLocal fileLocal : locallist) {
-					if (fileLocal.bakuped)
-						continue;
-					FileInfo0 info = syncTask.queryLocalInfo(fileLocal.sysid);
-
-					if (info == null) {
-						Log.d("PicActity", fileLocal.fname + " not found in mediaStore");
-						continue;
-					}
-					if (StringUtils.isNullOrEmpty(info.getFilename())) {
-						info.setFilename(fileLocal.fname);
-					}
-					add2YearMap(info);
+					//if (fileLocal.getSysid()>0)
+					//	continue;
+//				/*	FileInfo0 info = syncTask.queryLocalInfo(fileLocal.getSysid());
+					//filelistEntity.
+//					if (info == null) {
+//						Log.d("PicActity", fileLocal.getSysid() + " not found in mediaStore");
+//						continue;
+//					}
+//					if (StringUtils.isNullOrEmpty(info.getFilename())) {
+//						info.setFilename(fileLocal.getFilename());
+//					}*/
+					//add2YearMap(info);
 				}
-				localList = initData(localList);
-				YearMap.clear();
+				//localList = initData(localList);
+				//YearMap.clear();
 				bIsUbkList = true;
 				handler.sendEmptyMessage(0);
 			}
@@ -306,8 +276,6 @@ public class PicActivity extends UILActivity implements OnClickListener {
 			switch (requestCode) {
 				case 0x11:
 					Log.i("lmj", "返回执行了");
-					cloudUnits = null;
-					localList.clear();
 					onNewThreadRequest(bIsUbkList);
 					break;
 			}
@@ -327,4 +295,14 @@ public class PicActivity extends UILActivity implements OnClickListener {
 		super.onStop();
 	}
 
+
+	/*private class ComparatorByDate implements Comparator {
+
+		public int compare(Object arg0, Object arg1) {
+			FileInfo  item0=(FileInfo) arg0;
+			FileInfo item1=(FileInfo) arg1;
+			int flag=item0.getLastModified()-item1.getLastModified();
+			return flag;
+		}
+	}*/
 }

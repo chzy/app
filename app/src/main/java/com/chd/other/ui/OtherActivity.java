@@ -24,6 +24,7 @@ import com.chd.contacts.vcard.StringUtils;
 import com.chd.other.adapter.OtherListAdapter;
 import com.chd.other.entity.FileInfoL;
 import com.chd.proto.FTYPE;
+import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
@@ -117,7 +118,7 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
 
                 //未备份文件 ==  backedlist . removeAll(localist);
 
-                final List<FileInfo0> cloudUnits = syncTask.getCloudUnits(0, 100);
+                final List<FileInfo> cloudUnits = syncTask.getCloudUnits(0, 100);
                 runOnUiThread(new Runnable() {
                     public void run() {
                         initData(cloudUnits);
@@ -128,7 +129,7 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
         thread.start();
     }
 
-    private void initData(List<FileInfo0> cloudUnits) {
+    private void initData(List<FileInfo> cloudUnits) {
         if (cloudUnits == null) {
             System.out.print("query remote failed");
         }
@@ -148,35 +149,29 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
         MFileFilter fileFilter = new MFileFilter();
         fileFilter.setCustomCategory(new String[]{FileInfoL.FILE_TYPE_DOC, FileInfoL.FILE_TYPE_PDF, FileInfoL.FILE_TYPE_PPT, FileInfoL.FILE_TYPE_XLS}, true);
 
-        for (FileInfo0 item : cloudUnits) {
-            mFileInfoList.add(item);
+        for (FileInfo item : cloudUnits) {
+           // mFileInfoList.add(item);
             if (!fileFilter.contains(item.getObjid()))
                 continue;
             //已备份文件
-            if (syncTask.haveLocalCopy(item)) {
-                String path = item.getFilePath();
-            }
-//			else
-//			{
-//				String savepath= new ShareUtils(this).getStorePathStr()+item.getFilename();
-//				item.setFilePath(savepath);
-//				//param1  object ,param2 progressBar, param 3  beeque
-//				syncTask.download(item,null,false);
-//			}
+           // if (syncTask.haveLocalCopy(item)) {
+          //      String path = item.getFilePath();
+           // }
+
         }
         if (fileLocals != null) {
             for (FileLocal fileLocal : fileLocals) {
                 if (fileLocal.bakuped)
                     continue;
 
-                FileInfo0 fileInfo0 = syncTask.queryLocalInfo(fileLocal.sysid);
-                if (fileInfo0 == null) {
-                    continue;
-                }
+//                FileInfo0 fileInfo0 = syncTask.queryLocalInfo(fileLocal.getSysid());
+//                if (fileInfo0 == null) {
+//                    continue;
+//                }
 
-                if (fileFilter.contains(fileInfo0.getFilePath())) {
-                    mFileLocalList.add(fileInfo0);
-                }
+//                if (fileFilter.contains(fileInfo0.getFilePath())) {
+//                    mFileLocalList.add(fileInfo0);
+//                }
             }
         }
         handler.sendEmptyMessage(0);

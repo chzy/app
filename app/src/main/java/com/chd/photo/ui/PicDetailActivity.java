@@ -81,11 +81,11 @@ public class PicDetailActivity extends UILActivity implements OnClickListener
 
 		options = new DisplayImageOptions.Builder()
 //		.showImageOnLoading(R.drawable.pic_test1)
-		.cacheInMemory(false)
-		.cacheOnDisk(true)
-		.considerExifParams(true)
+				.cacheInMemory(false)
+				.cacheOnDisk(true)
+				.considerExifParams(true)
 //		.extraForDownloader(new ShareUtils(this).getStorePath())  //增加保存路径
-		.build();
+				.build();
 
 		initTitle();
 		initResourceId();
@@ -112,7 +112,7 @@ public class PicDetailActivity extends UILActivity implements OnClickListener
 		if (idx<0) {
 			Log.e(TAG, "error file path fail!!!!");
 			return;
-					}
+		}
 		fileInfo0=new FileInfo0();
 		idx+=3;
 		String uri=editItemBean.getUrl().substring(idx);
@@ -136,12 +136,12 @@ public class PicDetailActivity extends UILActivity implements OnClickListener
 					options, new SimpleImageLoadingListener() {
 						@Override
 						public void onLoadingStarted(String imageUri, View view) {
-								showWaitDialog();
+							showWaitDialog();
 						}
 
 						@Override
 						public void onLoadingFailed(String imageUri, View view,
-								FailReason failReason) {
+						                            FailReason failReason) {
 							/*vh.progressBar.setVisibility(View.GONE);*/
 							dismissWaitDialog();
 							Toast.makeText(PicDetailActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
@@ -149,14 +149,14 @@ public class PicDetailActivity extends UILActivity implements OnClickListener
 
 						@Override
 						public void onLoadingComplete(String imageUri, View view,
-								Bitmap loadedImage) {
+						                              Bitmap loadedImage) {
 							/*vh.progressBar.setVisibility(View.GONE);*/
 							dismissWaitDialog();
 						}
 					}, new ImageLoadingProgressListener() {
 						@Override
 						public void onProgressUpdate(String imageUri, View view,
-								int current, int total) {
+						                             int current, int total) {
 //							/*vh.progressBar.setProgress(Math.round(100.0f * current
 //									/ total));*/
 //							int i = (current / total) * 100;
@@ -197,66 +197,66 @@ public class PicDetailActivity extends UILActivity implements OnClickListener
 	{
 		switch (v.getId())
 		{
-		case R.id.iv_left:
-		case R.id.pic_detail_cancel:
-		{
-			finish();
-		}
-			break;
-		case R.id.pic_detail_delete:
-		{
-			Thread thread = new Thread(new Runnable()
+			case R.id.iv_left:
+			case R.id.pic_detail_cancel:
 			{
-				@Override
-				public void run()
+				finish();
+			}
+			break;
+			case R.id.pic_detail_delete:
+			{
+				Thread thread = new Thread(new Runnable()
 				{
-					if (fileInfo0 != null)
+					@Override
+					public void run()
 					{
-						final boolean bSucc = syncTask.DelRemoteObj(fileInfo0);
-						runOnUiThread(new Runnable()
+						if (fileInfo0 != null)
 						{
-							@Override
-							public void run() {
-								String strData = bSucc ? "删除成功" : "删除失败";
-								ToastUtils.toast(PicDetailActivity.this, strData);
-								if(bSucc){
-									Intent intent=new Intent();
-									intent.putExtra("pos",pos);
-									intent.putExtra("pos2",pos2);
-									setResult(99,intent);
+							final boolean bSucc = syncTask.DelRemoteObj(fileInfo0);
+							runOnUiThread(new Runnable()
+							{
+								@Override
+								public void run() {
+									String strData = bSucc ? "删除成功" : "删除失败";
+									ToastUtils.toast(PicDetailActivity.this, strData);
+									if(bSucc){
+										Intent intent=new Intent();
+										intent.putExtra("pos",pos);
+										intent.putExtra("pos2",pos2);
+										setResult(99,intent);
 
-									finish();
+										finish();
+									}
+
+
 								}
-
-
-							}
-						});
+							});
+						}
+					}
+				});
+				thread.start();
+			}
+			break;
+			case R.id.pic_detail_savelocal:
+			{
+				if (fileInfo0 != null)
+				{
+					List<FileInfo0> info0s=new ArrayList<>();
+					if(StringUtils.isNullOrEmpty(fileInfo0.getFilePath())){
+						fileInfo0.setFilePath(new ShareUtils(this).getPhotoFile().getPath()+"/"+ fileInfo0.getObjid());
+					}
+					info0s.add(fileInfo0);
+					if (syncTask != null)
+					{
+						//	syncTask.downloadList(info0s, PicDetailActivity.this, handler);
+//									ToastUtils.toast(PicDetailActivity.this, "保存成功!");
 					}
 				}
-			});
-			thread.start();
-		}
-			break;
-		case R.id.pic_detail_savelocal:
-		{
-			if (fileInfo0 != null)
-			{
-				List<FileInfo0> info0s=new ArrayList<>();
-				if(StringUtils.isNullOrEmpty(fileInfo0.getFilePath())){
-					fileInfo0.setFilePath(new ShareUtils(this).getPhotoFile().getPath()+"/"+ fileInfo0.getObjid());
-				}
-				info0s.add(fileInfo0);
-				if (syncTask != null)
-				{
-					syncTask.downloadList(info0s, PicDetailActivity.this, handler);
-//									ToastUtils.toast(PicDetailActivity.this, "保存成功!");
-				}
-			}
 
-		}
+			}
 			break;
-		default:
-			break;
+			default:
+				break;
 		}
 	}
 }

@@ -20,7 +20,7 @@ import com.chd.base.backend.SyncTask;
 import com.chd.music.adapter.MusicAdapter;
 import com.chd.music.entity.MusicBean;
 import com.chd.proto.FTYPE;
-import com.chd.proto.FileInfo0;
+import com.chd.proto.FileInfo;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
 
@@ -42,7 +42,8 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
     private MusicAdapter adapter;
     private String musicPath;
     private List<MusicBean> mMusicList = new ArrayList<MusicBean>();
-    private List<FileInfo0> cloudUnits;
+    private List<FileInfo> cloudUnits;
+    private FilelistEntity filelistEntity;
     private Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(android.os.Message msg) {
             dismissDialog();
@@ -78,10 +79,10 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
             @Override
             public void run() {
 
-                cloudUnits= syncTask.getCloudUnits(0, 10000);
-              
-              initData();
-               
+                cloudUnits = syncTask.getCloudUnits(0, 10000);
+
+                initData();
+
             }
         });
         thread.start();
@@ -93,42 +94,41 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
         }
     }
 
-    FilelistEntity filelistEntity;
     private void initData( ) {
 
 
         if (cloudUnits == null) {
             System.out.print("query remote failed");
         }
-        filelistEntity = syncTask.analyMusicUnits(cloudUnits);
-        cloudUnits.clear();
-        cloudUnits = null;
-        cloudUnits = filelistEntity.getBklist();
-	
-
-        for (FileInfo0 item : cloudUnits) {
-            //FileInfo0 item=new FileInfo0(finfo);
+        syncTask.analyMusicUnits(cloudUnits,filelistEntity);
+        // cloudUnits.clear();
+        // cloudUnits = null;
+        // cloudUnits = filelistEntity.getBklist();
 
 
-            //已备份文件
-            String path = item.getFilePath();
-            String name = item.getFilename();
-            if(item.getFilePath()==null){
-                if(item.getSysid()>0){
-                    item =syncTask.queryLocalInfo(item.getSysid());
-                }else{
-                    item.setFilePath(musicPath+ "/"+item.getObjid());
-                }
-            }
+        // for (FileInfo item : cloudUnits) {
+        //FileInfo0 item=new FileInfo0(finfo);
+
+
+        //已备份文件
+        //String path = item.getFilePath();
+        // String name = item.getFilename();
+        //if(item.getFilePath()==null){
+        //  if(item.getSysid()>0){
+        //     item =syncTask.queryLocalInfo(item.getSysid());
+        // }else{
+        //      item.setFilePath(musicPath+ "/"+item.getObjid());
+        // }
+        //   }
             /*if (syncTask.haveLocalCopy(item)) {
 
             }*/
-            MusicBean musicBean = new MusicBean(name, path);
-            musicBean.setFileInfo0(item);
+        //   MusicBean musicBean = new MusicBean(name, path);
+        //  musicBean.setFileInfo0(item);
 
-            //	syncTask.download(item, null, false);
-            mMusicList.add(musicBean);
-        }
+        //	syncTask.download(item, null, false);
+        //   mMusicList.add(musicBean);
+        // }
 
 
 

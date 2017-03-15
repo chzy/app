@@ -1,90 +1,92 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="#eeeeee"
-              android:orientation="vertical" >
+              android:orientation="vertical">
 
-    <include android:id="@+id/rl_title" layout="@layout/title_bar" />
+    <include
+        android:id="@+id/rl_title"
+        layout="@layout/title_bar"/>
 
     <TableLayout
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-            <TableRow
-        >
-        <LinearLayout
-            android:id="@+id/ll_one"
-            android:layout_weight="1"
-            android:background="#FFF"
-            android:layout_margin="10dp"
-            android:gravity="center"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:orientation="vertical"
-            >
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icon_safebox_photo"
-                />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="照片"
-                android:textSize="15sp"
-                android:layout_marginTop="8dp"
-                />
-
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/ll_two"
-            android:layout_weight="1"
-            android:background="#FFF"
-            android:layout_margin="10dp"
-            android:gravity="center"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:orientation="vertical"
-            >
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icon_safebox_video"
-                />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="视频"
-                android:textSize="15sp"
-                android:layout_marginTop="8dp"
-                />
-
-        </LinearLayout>
-
-
-    </TableRow>
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp">
 
         <TableRow
             >
 
             <LinearLayout
-                android:id="@+id/ll_three"
-                android:layout_weight="1"
-                android:background="#FFF"
+                android:id="@+id/ll_one"
                 android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_white_radius"
                 android:gravity="center"
+                android:orientation="vertical"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:orientation="vertical"
                 >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_safebox_photo"
+                    />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="照片"
+                    android:textSize="15sp"
+                    />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/ll_two"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+
+                android:background="@drawable/shape_white_radius"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_safebox_video"
+                    />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="视频"
+                    android:textSize="15sp"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_three"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+
+                android:background="@drawable/shape_white_radius"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                >
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -95,25 +97,33 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:text="文档"
                     android:textSize="15sp"
-                    android:layout_marginTop="8dp"
                     />
 
 
             </LinearLayout>
 
 
+        </TableRow>
+
+        <TableRow
+            >
+
+
             <LinearLayout
                 android:id="@+id/ll_four"
-                android:layout_weight="1"
-                android:background="#FFF"
                 android:layout_margin="10dp"
+                android:layout_weight="1"
+
+                android:background="@drawable/shape_white_radius"
                 android:gravity="center"
+                android:orientation="vertical"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:orientation="vertical"
                 >
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -124,28 +134,26 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:text="录音"
                     android:textSize="15sp"
-                    android:layout_marginTop="8dp"
                     />
 
             </LinearLayout>
 
 
-        </TableRow>
-
-        <TableRow
-            >
             <LinearLayout
                 android:id="@+id/ll_five"
-                android:layout_weight="1"
-                android:background="#FFF"
                 android:layout_margin="10dp"
+                android:layout_weight="1"
+
+                android:background="@drawable/shape_white_radius"
                 android:gravity="center"
+                android:orientation="vertical"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:orientation="vertical"
                 >
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -156,9 +164,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:text="记事本"
                     android:textSize="15sp"
-                    android:layout_marginTop="8dp"
                     />
 
 
@@ -167,27 +175,29 @@
 
             <LinearLayout
                 android:id="@+id/ll_six"
-                android:layout_weight="1"
-                android:background="#FFF"
                 android:layout_margin="10dp"
+                android:layout_weight="1"
+
+                android:background="@drawable/shape_white_radius"
                 android:gravity="center"
+                android:orientation="vertical"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:orientation="vertical"
                 >
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/icon_safebox_passwordmanager"
+                    android:src="@drawable/icon_safebox_no"
                     />
 
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="密码管理器"
-                    android:textSize="15sp"
                     android:layout_marginTop="8dp"
+                    android:text="音乐"
+                    android:textSize="15sp"
                     />
 
             </LinearLayout>
@@ -196,6 +206,102 @@
         </TableRow>
 
 
+        <TableRow
+            >
+
+
+            <LinearLayout
+                android:id="@+id/ll_seven"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+
+                android:background="@drawable/shape_white_radius"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_safebox_audio"
+                    />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="联系人"
+                    android:textSize="15sp"
+                    />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/ll_eight"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+
+                android:background="@drawable/shape_white_radius"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_safebox_note"
+                    />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="短信"
+                    android:textSize="15sp"
+                    />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/ll_nine"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+
+                android:background="@drawable/shape_white_radius"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_safebox_no"
+                    />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="敬请期待"
+                    android:textSize="15sp"
+                    />
+
+            </LinearLayout>
+
+
+        </TableRow>
 
     </TableLayout>
 

@@ -84,7 +84,7 @@ public class OtherListAdapter extends BaseAdapter {
            /* item.text_appintro.setText(_list.get(position).());
             item.img_url.setImageResource(_list.get(position).getPicid());
             item.text_appsize.setText(_list.get(position).getFilesize());*/
-            item.cb.setChecked(fileItem.isSelected());
+            //item.cb.setChecked(fileItem.isSelected());
         }
         item.cb.setTag(position);
         item.cb.setOnClickListener(new View.OnClickListener() {
@@ -95,9 +95,9 @@ public class OtherListAdapter extends BaseAdapter {
                 FileInfo0 checkItem = _list.get(pos);
                 for (FileInfo0 info :
                         checkList) {
-                    info.setIsChecked(false);
+                    //info.setIsChecked(false);
                 }
-                checkItem.setIsChecked(check);
+                //checkItem.setIsChecked(check);
                 if(check){
                     //选中
                     checkList.add(checkItem);

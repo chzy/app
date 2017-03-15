@@ -1,6 +1,8 @@
 package com.chd.MediaMgr.utils;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * Created by lxp1 on 2015/12/18.
@@ -8,8 +10,8 @@ import java.util.HashSet;
 public class MFileFilter {
     private boolean _contains;
 
-   // private HashMap<StoreUtil.FileCategory, FilenameExtFilter> filters = null;
-   private HashSet<String> filters = null;
+    // private HashMap<StoreUtil.FileCategory, FilenameExtFilter> filters = null;
+    private HashSet<String> filters = null;
 
     public MFileFilter()
     {
@@ -17,6 +19,10 @@ public class MFileFilter {
     }
 
     public void setCustomCategory(String[] exts,boolean contain) {
+
+        setCustomCategory( Arrays.asList(exts),contain);
+    }
+    public void setCustomCategory(List<String> exts, boolean contain) {
         if (filters.isEmpty()==false)
             filters.clear();
         for (String ext:exts)
@@ -34,7 +40,7 @@ public class MFileFilter {
             //return  (filters.(path)==_contains);
             return filters.contains(ext) == _contains;
         }
-    return false;
+        return false;
     }
 
 }

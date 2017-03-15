@@ -44,11 +44,20 @@
             android:src="@drawable/pic_icon2" />
     </RelativeLayout>
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/lv_pic"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:divider="@null" >
-    </ListView>
+    </android.support.v7.widget.RecyclerView>
 
+   <RelativeLayout
+       android:layout_width="match_parent"
+       android:background="#f6f7f9"
+       android:layout_height="22dp">
+
+
+
+   </RelativeLayout>
 </LinearLayout>

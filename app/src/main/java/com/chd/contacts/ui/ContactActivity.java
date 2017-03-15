@@ -14,7 +14,8 @@ import com.chd.base.UILActivity;
 import com.chd.base.backend.SyncTask;
 import com.chd.contacts.vcard.VCardIO;
 import com.chd.proto.FTYPE;
-import com.chd.proto.FileInfo0;
+import com.chd.proto.FileInfo;
+import com.chd.proto.FileInfo01;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
 
@@ -30,7 +31,7 @@ public class ContactActivity extends UILActivity implements OnClickListener{
     private ImageView mIvSelect;
     private String contactPath;
 
-    private  List<FileInfo0> cloudUnits;
+    private  List<FileInfo> cloudUnits;
     private SyncTask syncTask=null;
 
 
@@ -61,7 +62,7 @@ public class ContactActivity extends UILActivity implements OnClickListener{
                         new Thread(){
                             @Override
                             public void run() {
-                                FileInfo0 info0 = new FileInfo0(cloudUnits.get(0));
+                                FileInfo01 info0 = new FileInfo01(cloudUnits.get(0));
                                 vcarIO.getNetSize(info0.getObjid(), handler);
                             }
                         }.start();

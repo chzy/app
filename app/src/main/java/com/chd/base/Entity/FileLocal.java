@@ -1,41 +1,28 @@
 package com.chd.base.Entity;
 
-import java.io.Serializable;
+import com.chd.proto.FileInfo;
 
 /**
- * Created by lxp1 on 2015/12/17.
+ * Created by lxp on 2017/3/3.
  */
-public class FileLocal implements Serializable{
-    public int sysid;
-    public String fname;
-    public boolean bakuped =false;
 
+public class FileLocal extends FileInfo {
+    public boolean bakuped=false;
 
+    public int getPathid() {
+        return pathid;
+    }
 
-   /* @Override
-    public boolean equals(Object e)
+    public void setPathid(int pathid) {
+        this.pathid = pathid;
+    }
+
+    private  int pathid;
+    public FileLocal()
     {
-        return this.fname.equalsIgnoreCase((String)e);
-    }*/
-
-    @Override
-    public int hashCode()
-    {
-        return fname.hashCode();
-    }
-    /*public int getSysid() {
-        return sysid;
+        super();
+        bakuped=false;
     }
 
-    public void setSysid(int sysid) {
-        this.sysid = sysid;
-    }
 
-    public String get_fname() {
-        return fname;
-    }
-
-    public void set_fname(String fname) {
-        this.fname = fname;
-    }*/
 }

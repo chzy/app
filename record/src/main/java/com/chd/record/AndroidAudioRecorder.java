@@ -24,6 +24,7 @@ public class AndroidAudioRecorder {
 	protected static final String EXTRA_AUTO_START = "autoStart";
 	protected static final String EXTRA_KEEP_DISPLAY_ON = "keepDisplayOn";
 	protected static final String EXTRA_TITLE="title";
+	protected static final String EXTRA_EXIST = "exist";
 
 	private Activity activity;
 
@@ -36,6 +37,7 @@ public class AndroidAudioRecorder {
 	private int requestCode = 0;
 	private boolean autoStart = false;
 	private boolean keepDisplayOn = false;
+	private boolean exist;
 
 	private AndroidAudioRecorder(Activity activity) {
 		this.activity = activity;
@@ -103,7 +105,13 @@ public class AndroidAudioRecorder {
 		intent.putExtra(EXTRA_SAMPLE_RATE, sampleRate);
 		intent.putExtra(EXTRA_AUTO_START, autoStart);
 		intent.putExtra(EXTRA_TITLE, title);
+		intent.putExtra(EXTRA_EXIST,exist);
 		intent.putExtra(EXTRA_KEEP_DISPLAY_ON, keepDisplayOn);
 		activity.startActivityForResult(intent, requestCode);
+	}
+
+	public AndroidAudioRecorder setExist(boolean exist) {
+		this.exist = exist;
+		return this;
 	}
 }

@@ -41,7 +41,7 @@ public class SyncBackground extends Thread {
 	 * */
 	private int syncType = -1;
 
-	private List<FileInfo0> cloudlist=null;
+	private List<FileInfo> cloudlist=null;
 	private String _workpath;
 	private final String TAG="SyncnoteService";
 	private Handler mHandler;
@@ -50,7 +50,7 @@ public class SyncBackground extends Thread {
 	/**
 
 	 * */
-	public SyncBackground(Context context,Handler mHandler, List<FileInfo0> baklist,String workpath) {
+	public SyncBackground(Context context,Handler mHandler, List<FileInfo> baklist,String workpath) {
 		this.context = context;
 		this.syncType = syncType;
 		this.mHandler=mHandler;
@@ -70,7 +70,7 @@ public class SyncBackground extends Thread {
 		//su.open();
 	}
 
-    public void safeshutdown()
+	public void safeshutdown()
 	{
 
 		wakeup(1);
@@ -144,36 +144,36 @@ public class SyncBackground extends Thread {
 
 
 	private void sync() {
-				if (cloudlist==null )
-					cloudlist=syncTask.getCloudUnits(0, 10000);
-				getTasks();
-				boolean cl=false;
-				if(tasks.size()==0)
-				{
-					Log.d(TAG,"no taks to sync");
-				}
-				for (String fname:tasks)
-				{
-					FileInfo0 fileInfo0=new FileInfo0();
-					fileInfo0.setFilePath(_workpath+File.separator+fname);
-					fileInfo0.setObjid(fname);
-					syncTask.upload(fileInfo0,null,false, null);
+		if (cloudlist==null )
+			cloudlist=syncTask.getCloudUnits(0, 10000);
+		getTasks();
+		boolean cl=false;
+		if(tasks.size()==0)
+		{
+			Log.d(TAG,"no taks to sync");
+		}
+		for (String fname:tasks)
+		{
+			FileInfo0 fileInfo0=new FileInfo0();
+			fileInfo0.setFilePath(_workpath+File.separator+fname);
+			fileInfo0.setObjid(fname);
+			syncTask.upload(fileInfo0,null,false, null);
+			cl=true;
+		}
+		tasks.clear();
+		for (FileInfo fileInfo:cloudlist)
+		{
+			//miss match element has right ftype ,should to del;
+			if (fileInfo.getFtype()==FTYPE.NOTEPAD)
+				try {
+					TClient.getinstance().delObj(fileInfo.getObjid(),fileInfo.getFtype());
 					cl=true;
+				} catch (Exception e) {
+					e.printStackTrace();
+					Log.e(TAG,e.getMessage());
 				}
-				tasks.clear();
-				for (FileInfo fileInfo:cloudlist)
-				{
-					//miss match element has right ftype ,should to del;
-					if (fileInfo.getFtype()==FTYPE.NOTEPAD)
-						try {
-							TClient.getinstance().delObj(fileInfo.getObjid(),fileInfo.getFtype());
-							cl=true;
-						} catch (Exception e) {
-							e.printStackTrace();
-							Log.e(TAG,e.getMessage());
-						}
 
-				}
+		}
 		if (cl) {
 			cloudlist.clear();
 			cloudlist = null;
@@ -187,8 +187,8 @@ public class SyncBackground extends Thread {
 	private boolean SyncSingle(NoteItemtag itemtag) {
 
 
-       //if (itemtag.syncstate== DatabaseManage.SYNC_STAT.DONE)
-	//		return false;
+		//if (itemtag.syncstate== DatabaseManage.SYNC_STAT.DONE)
+		//		return false;
 
 	   /*
 	   * TODO call sync method
@@ -226,7 +226,7 @@ public class SyncBackground extends Thread {
 		}
 		synclist_R.removeAll(remotelist);// need sync to cloude; in local not in remote;
 
- 		locallists.removeAll(remotelist);
+		locallists.removeAll(remotelist);
 		locallists.addAll(remotelist);
 
 		return true;

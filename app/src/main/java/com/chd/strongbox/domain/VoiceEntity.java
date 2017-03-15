@@ -12,6 +12,7 @@ public class VoiceEntity {
 	private String date;
 	private String time;
 	private String duration;
+	private String filePath;
 
 	public String getTitle() {
 		return title;
@@ -43,5 +44,13 @@ public class VoiceEntity {
 
 	public void setDuration(String duration) {
 		this.duration = duration;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+	public String getFilePath() {
+		return filePath;
 	}
 }

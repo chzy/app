@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.chd.TClient;
+import com.chd.base.Entity.FileLocal;
 import com.chd.base.backend.SyncTask;
 import com.chd.notepad.service.SyncBackground;
 import com.chd.notepad.ui.adapter.ListViewAdapter;
@@ -55,6 +56,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
     public static final int ALERT_STATE = 2;
     private final int MODIFY_NOTPAD = 0x1001;
     FileDBmager fileDBmager;
+    Gson gson;
     private ImageView mIvLeft;
     private TextView mTvCenter;
     private TextView mTvRight;
@@ -63,9 +65,9 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
     private Cursor cursor = null;
     private int id = -1;//被点击的条目
     private int meunid = 3;
-    private long month;
+    private int month=0;
     private SyncTask syncTask;
-    private List<FileInfo0> cloudUnits;
+    private List<FileInfo> cloudUnits;
     private ArrayList<NoteItemtag> items;
     private SyncBackground syncBackground;
     private ProgressDialog dialog;
@@ -150,16 +152,32 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notepad_main);
+        if (UILApplication.getInstance().getLockPatternUtils().savedPatternExists()) {
+            if (!getIntent().getBooleanExtra("unlock", false)) {
+                Intent i = new Intent(this, UnlockGesturePasswordActivity.class);
+                startActivity(i);
+                isShow=false;
+                finish();
 
-        dialog = new ProgressDialog(this);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setMessage("正在加载");
-        dialog.show();
-        runfrist();
-        initTitle();
-        initResourceId();
-        initListener();
+            }
+        }else{
+            Intent i = new Intent(this, GuideGesturePasswordActivity.class);
+            startActivity(i);
+            isShow=false;
+            finish();
+        }
 
+        if(isShow){
+
+            dialog = new ProgressDialog(this);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setMessage("正在加载");
+            dialog.show();
+            runfrist();
+            initTitle();
+            initResourceId();
+            initListener();
+        }
     }
 
 
@@ -222,7 +240,8 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
             fname = fname.substring(0, fname.length() - 4);
             item.set_fname(fname);
             cal.setTimeInMillis(item.getStamp());
-            if (month != cal.get(Calendar.MONTH)) {
+            if (month !=(int)( cal.get(Calendar.MONTH)))
+            {
                 month = cal.get(Calendar.MONTH);
                 NoteItemtag head = new NoteItemtag();
                 //head.time = -1;
@@ -249,7 +268,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
     protected void onResume() {
         super.onResume();
         //gson = new Gson();
-       // syncBackground = new SyncBackground(this, mHandler);
+        // syncBackground = new SyncBackground(this, mHandler);
 
         //if (syncBackground==null)
         //    syncBackground = new SyncBackground(this, mHandler,cloudUnits,savepath);
@@ -316,9 +335,9 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                     adapter.notifyDataSetChanged();//通知数据源，数据已经改变，刷新界面
                     dialog.show();
                     //if (syncBackground==null) {
-                   //     syncBackground=new SyncBackground(this, mHandler,cloudUnits);
-                   //     syncBackground.start();
-                   // }
+                    //     syncBackground=new SyncBackground(this, mHandler,cloudUnits);
+                    //     syncBackground.start();
+                    // }
                     syncBackground.wakeup(1);
                     cloudUnits.clear();
                 } catch (Exception ex) {

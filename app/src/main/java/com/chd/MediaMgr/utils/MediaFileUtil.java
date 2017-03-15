@@ -240,7 +240,7 @@ public class MediaFileUtil {
 
     // does not include sd card folder
     private static String[] SysFileDirs = new String[] {
-        "miren_browser/imagecaches"
+            "miren_browser/imagecaches"
     };
 
   /*  public static boolean shouldShowFile(String path) {
@@ -333,6 +333,17 @@ public class MediaFileUtil {
         String fileName = path1.substring(idx+1);
         return fileName;
     }
+
+ /*   public static String getFpathformPath(String path)
+    {
+        String path1=path.trim();
+        //String cha= File.separator;
+        int idx=path1.indexOf(File.separator);
+
+        String pathName = path1.substring(idx+1);
+        return pathName;
+    }*/
+
     public static SDCardInfo getSDCardInfo() {
         String sDcString = Environment.getExternalStorageState();
 

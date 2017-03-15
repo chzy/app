@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.chd.payfor.ui.OpenSpaceActivity;
 import com.chd.proto.LoginResult;
+import com.chd.strongbox.StrongBoxActivity;
 import com.chd.userinfo.ui.UserInfoActivity;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
@@ -21,16 +22,13 @@ import com.chd.yunpan.ui.progressbar.McircleProgressBar;
 import com.chd.yunpan.utils.TimeAndSizeUtil;
 import com.chd.yunpan.utils.ToastUtils;
 import com.chd.yunpan.view.circleimage.CircularProgressButton;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
-
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Rationale;
+import com.yanzhenjie.permission.RationaleListener;
 
 public class netdiskActivity extends Activity implements OnClickListener {
 
+	private static final int REQUEST_CODE_PERMISSION_SD = 100;
 	private CircularProgressButton btn_login = null;
 
 	private TextView mTextTitle;// 套餐容量
@@ -61,26 +59,16 @@ public class netdiskActivity extends Activity implements OnClickListener {
 
 		initResourceId();
 		initListener();
-		Dexter.withActivity(this)
-				.withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-				.withListener(new PermissionListener() {
+		AndPermission.with(this)
+				.requestCode(REQUEST_CODE_PERMISSION_SD)
+				.permission(Manifest.permission.WRITE_CONTACTS)
+				// rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
+				.rationale(new RationaleListener() {
 					@Override
-					public void onPermissionGranted(PermissionGrantedResponse response) {
-						//权限授予
-					}
-
-					@Override
-					public void onPermissionDenied(PermissionDeniedResponse response) {
-						//权限拒绝
-
-					}
-
-					@Override
-					public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-						token.continuePermissionRequest();
+					public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
 					}
 				})
-				.check();
+				.send();
 
 	}
 	private String spaceStr;
@@ -177,7 +165,7 @@ public class netdiskActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.netdisk_space_layout:
 		{
-			Intent i = new Intent(netdiskActivity.this, MyspaceActivity.class);
+			Intent i = new Intent(netdiskActivity.this, StrongBoxActivity.class);
 			i.putExtra("space",spaceStr);
 			startActivity(i);
 		}

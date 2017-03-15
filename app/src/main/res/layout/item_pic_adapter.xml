@@ -19,7 +19,7 @@
             android:textSize="13sp" />
     </RelativeLayout>
 
-    <com.chd.photo.adapter.MyListView
+    <android.support.v7.widget.RecyclerView
         android:background="#ffffff"
         android:id="@+id/mlv_pic"
         android:layout_width="match_parent"

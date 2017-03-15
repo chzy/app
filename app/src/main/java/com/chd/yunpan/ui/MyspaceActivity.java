@@ -1,10 +1,10 @@
 package com.chd.yunpan.ui;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -13,6 +13,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chd.base.UILActivity;
 import com.chd.contacts.ui.ContactActivity;
 import com.chd.music.ui.MusicActivity;
 import com.chd.other.ui.OtherActivity;
@@ -22,11 +23,10 @@ import com.chd.strongbox.StrongBoxActivity;
 import com.chd.yunpan.R;
 import com.chd.yunpan.ui.adapter.MenuGridAdapter;
 import com.chd.yunpan.ui.entity.MySpaceBean;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.PermissionListener;
+import com.yanzhenjie.permission.Rationale;
+import com.yanzhenjie.permission.RationaleListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * Created by lxp1 on 2015/10/23.
  */
-public class MyspaceActivity extends Activity implements OnClickListener, OnItemClickListener {
+public class MyspaceActivity extends UILActivity implements OnClickListener, OnItemClickListener {
 
 	private ImageView mIvLeft;
 	private TextView mTvCenter;
@@ -108,51 +108,36 @@ public class MyspaceActivity extends Activity implements OnClickListener, OnItem
 //		mTvRight.setText("设置");
 	}
 
+	int clickPos=-1;
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, final int arg2, long arg3) {
+		clickPos=arg2;
 		if (arg2 == 3) {
-			//联系人
-			Dexter.withActivity(this)
-					.withPermissions(Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_CONTACTS)
-					.withListener(new MultiplePermissionsListener() {
+			// 申请单个权限。联系人
+			AndPermission.with(this)
+					.requestCode(REQUEST_CODE_PERMISSION_CONTACTS)
+					.permission(Manifest.permission.WRITE_CONTACTS)
+					// rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
+					.rationale(new RationaleListener() {
 						@Override
-						public void onPermissionsChecked(MultiplePermissionsReport report) {
-							//权限授予
-							Intent pageintent = new Intent();
-							pageintent.setClass(MyspaceActivity.this, meumList.get(arg2).getCls());
-							pageintent.putExtra("callpage", arg2);
-							startActivity(pageintent);
-						}
-
-						@Override
-						public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-							token.continuePermissionRequest();
+						public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
 						}
 					})
-					.check();
+					.send();
 		} else if (arg2 == 4) {
 			//短信
-			Dexter.withActivity(this)
-					.withPermissions(Manifest.permission.READ_SMS, Manifest.permission.SEND_SMS)
-					.withListener(new MultiplePermissionsListener() {
+			AndPermission.with(this)
+					.requestCode(REQUEST_CODE_PERMISSION_SMS)
+					.permission(Manifest.permission.WRITE_CONTACTS)
+					// rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
+					.rationale(new RationaleListener() {
 						@Override
-						public void onPermissionsChecked(MultiplePermissionsReport report) {
-							//权限授予
-
-							Intent pageintent = new Intent();
-							pageintent.setClass(MyspaceActivity.this, meumList.get(arg2).getCls());
-							pageintent.putExtra("callpage", arg2);
-							startActivity(pageintent);
-						}
-
-						@Override
-						public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-								token.continuePermissionRequest();
+						public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
 						}
 					})
-					.check();
-		}else{
+					.send();
 
+		}else{
 			Intent pageintent = new Intent();
 			pageintent.setClass(this, meumList.get(arg2).getCls());
 			pageintent.putExtra("callpage", arg2);
@@ -162,6 +147,65 @@ public class MyspaceActivity extends Activity implements OnClickListener, OnItem
 
 
 	}
+
+	private static final int REQUEST_CODE_PERMISSION_CONTACTS = 100;
+	private static final int REQUEST_CODE_PERMISSION_SMS = 101;
+
+	private static final int REQUEST_CODE_SETTING = 300;
+
+	private PermissionListener listener = new PermissionListener() {
+		@Override
+		public void onSucceed(int requestCode, List<String> grantedPermissions) {
+			// 权限申请成功回调。
+			if(requestCode == 100) {
+				// TODO 相应代码。 联系人
+				Intent pageintent = new Intent();
+				pageintent.setClass(MyspaceActivity.this, meumList.get(clickPos).getCls());
+				pageintent.putExtra("callpage", clickPos);
+				startActivity(pageintent);
+			} else if(requestCode == 101) {
+				// TODO 相应代码。
+				Intent pageintent = new Intent();
+				pageintent.setClass(MyspaceActivity.this, meumList.get(clickPos).getCls());
+				pageintent.putExtra("callpage", clickPos);
+				startActivity(pageintent);
+			}
+		}
+
+		@Override
+		public void onFailed(int requestCode, List<String> deniedPermissions) {
+			// 权限申请失败回调。
+
+			// 用户否勾选了不再提示并且拒绝了权限，那么提示用户到设置中授权。
+			if (AndPermission.hasAlwaysDeniedPermission(MyspaceActivity.this, deniedPermissions)) {
+				// 第一种：用默认的提示语。
+				AndPermission.defaultSettingDialog(MyspaceActivity.this, REQUEST_CODE_SETTING).show();
+
+				// 第二种：用自定义的提示语。
+				// AndPermission.defaultSettingDialog(this, REQUEST_CODE_SETTING)
+				// .setTitle("权限申请失败")
+				// .setMessage("我们需要的一些权限被您拒绝或者系统发生错误申请失败，请您到设置页面手动授权，否则功能无法正常使用！")
+				// .setPositiveButton("好，去设置")
+				// .show();
+
+				// 第三种：自定义dialog样式。
+				// SettingService settingService =
+				//    AndPermission.defineSettingDialog(this, REQUEST_CODE_SETTING);
+				// 你的dialog点击了确定调用：
+				// settingService.execute();
+				// 你的dialog点击了取消调用：
+				// settingService.cancel();
+			}
+		}
+	};
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		// 只需要调用这一句，其它的交给AndPermission吧，最后一个参数是PermissionListener。
+		AndPermission.onRequestPermissionsResult(requestCode, permissions, grantResults, listener);
+	}
+
+
 
 	@Override
 	public void onClick(View v) {

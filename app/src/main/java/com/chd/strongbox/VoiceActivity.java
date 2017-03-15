@@ -53,7 +53,7 @@ public class VoiceActivity extends UILActivity {
 	TextView tvCenter;
 
 
-	VoiceAdapter adapter=null;
+	VoiceAdapter adapter = null;
 	private List<VoiceEntity> entities;
 
 	@Override
@@ -62,8 +62,8 @@ public class VoiceActivity extends UILActivity {
 		setContentView(R.layout.activity_voice);
 		ButterKnife.bind(this);
 		tvCenter.setText("录音");
-		entities=new ArrayList<>();
-		adapter=new VoiceAdapter(entities);
+		entities = new ArrayList<>();
+		adapter = new VoiceAdapter(entities);
 
 		rvVoiceContent.setLayoutManager(new LinearLayoutManager(this));
 		rvVoiceContent.setAdapter(adapter);
@@ -76,31 +76,54 @@ public class VoiceActivity extends UILActivity {
 			@Override
 			public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
 				//点击事件
-
+				pos = position;
+				VoiceEntity voiceEntity = entities.get(position);
+				String date = voiceEntity.getDate();
+				String time = voiceEntity.getTime();
+				String title = voiceEntity.getTitle();
+				String filePath = entities.get(position).getFilePath();
+				int color = Color.parseColor("#f8b82d");
+				int requestCode = 1;
+				AndroidAudioRecorder.with(VoiceActivity.this)
+						// Required
+						.setFilePath(filePath)
+						.setTitle(title)
+						.setColor(color)
+						.setRequestCode(requestCode)
+						// Optional
+						.setSource(AudioSource.MIC)
+						.setChannel(AudioChannel.STEREO)
+						.setSampleRate(AudioSampleRate.HZ_48000)
+						.setAutoStart(true)
+						.setExist(true)
+						.setKeepDisplayOn(true)
+						// Start recording
+						.record();
 
 			}
 		});
-
-
 	}
 
-	long time=0L;
-	String filePath="";
-	@OnClick({R.id.iv_left,R.id.iv_voice_status})
-	public void onClick(View v){
-		switch (v.getId()){
+	int pos = -1;
+
+	long time = 0L;
+	String filePath = "";
+
+	@OnClick({R.id.iv_left, R.id.iv_voice_status})
+	public void onClick(View v) {
+		switch (v.getId()) {
 			case R.id.iv_left:
 				onBackPressed();
 				break;
 			case R.id.iv_voice_status:
-				time=System.currentTimeMillis();
-				filePath = getCacheDir() + "/"+time+"_audio.wav";
+				time = System.currentTimeMillis();
+				filePath = getCacheDir() + "/" + time + "_audio.wav";
 				int color = Color.parseColor("#f8b82d");
 				int requestCode = 0;
 				AndroidAudioRecorder.with(this)
 						// Required
 						.setFilePath(filePath)
-						.setTitle("新录音"+(entities.size()+1))
+						.setTitle("新录音" + (entities.size() + 1))
 						.setColor(color)
 						.setRequestCode(requestCode)
 						// Optional
@@ -118,20 +141,38 @@ public class VoiceActivity extends UILActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == 0) {
-			if (resultCode == RESULT_OK) {
+		if (RESULT_OK == resultCode) {
+			if (requestCode == 0) {
+				//添加时候
 				// Great! User has recorded and saved the audio file
-				String time = TimeUtils.getTime(this.time, "yyyy-MM-dd HH:mm");
-				VoiceEntity entity=new VoiceEntity();
-				entity.setTitle(data.getStringExtra("title"));
-				entity.setDate(time.split(" ")[0]);
-				entity.setTime(time.split(" ")[1]);
-				entity.setDuration(data.getStringExtra("duration"));
-				entities.add(entity);
-				Collections.reverse(entities);
+				boolean delete = data.getBooleanExtra("delete", false);
+				if (delete) {
+					//删除
+
+				} else {
+					String time = TimeUtils.getTime(this.time, "yyyy-MM-dd HH:mm");
+					VoiceEntity entity = new VoiceEntity();
+					entity.setTitle(data.getStringExtra("title"));
+					entity.setDate(time.split(" ")[0]);
+					entity.setTime(time.split(" ")[1]);
+					entity.setFilePath(filePath);
+					entity.setDuration(data.getStringExtra("duration"));
+					entities.add(entity);
+					Collections.reverse(entities);
+					adapter.notifyDataSetChanged();
+				}
+
+			} else if (requestCode == 1) {
+				//点击已添加的进入
+				boolean delete = data.getBooleanExtra("delete", false);
+				if (delete) {
+					//删除
+					entities.remove(pos);
+				} else {
+					VoiceEntity entity = entities.get(pos);
+					entity.setTitle(data.getStringExtra("title"));
+				}
 				adapter.notifyDataSetChanged();
-			} else if (resultCode == RESULT_CANCELED) {
-				// Oops! User has canceled the recording
 			}
 		}
 	}

@@ -111,7 +111,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 				PicEditBean bean = mPicList.get(j);
 				if (bean.getList() != null) {
 					bean.getList().removeAll(selectItem);
-				if(bean.getList().isEmpty()){
+					if(bean.getList().isEmpty()){
 						items.add(bean);
 					}
 				}
@@ -155,7 +155,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 			String tmpDay = item.getDay();
 			PicEditItemBean picInfoBean = new PicEditItemBean();
 			if (item.getSysid() > 0) {
-				info0 = syncTask.queryLocalInfo(item.getSysid());
+				//info0 = syncTask.queryLocalInfo(item.getSysid());
 				if (info0 != null)
 					picInfoBean.setUrl("file://" + info0.getFilePath());
 			} else
@@ -283,7 +283,7 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 					fileInfo0.setObjid(MediaFileUtil.getFnameformPath(uri));
 					info0s.add(fileInfo0);
 				}
-				syncTask.delList(info0s, this, handler, bIsUbkList);
+				//syncTask.delList(info0s, this, handler, bIsUbkList);
 			}
 			break;
 			case R.id.lv_pic_edit_updown: {
@@ -325,9 +325,9 @@ public class PicEditActivity extends ActiveProcess implements OnClickListener {
 					info0s.add(fileInfo0);
 				}
 				if (bIsUbkList) {
-					syncTask.uploadList(info0s, this, handler);
+					//syncTask.uploadList(info0s, this, handler);
 				} else {
-					syncTask.downloadList(info0s, this, handler);
+					//	syncTask.downloadList(info0s, this, handler);
 				}
 			}
 			break;

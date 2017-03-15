@@ -29,7 +29,7 @@ public class DownFileUtils {
     private Activity mAct;
     private CircularProgressButton mBtn;
     private  String appPath;
-    public DownFileUtils(Activity act,CircularProgressButton btn, final String url){
+    public DownFileUtils(Activity act, CircularProgressButton btn, final String url){
         this.mAct=act;
         this.mBtn=btn;
         appPath=new ShareUtils(act).getApkFile().getPath();

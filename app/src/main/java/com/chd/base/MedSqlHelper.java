@@ -8,7 +8,7 @@ public class MedSqlHelper extends SQLiteOpenHelper {
 	public MedSqlHelper(Context context, String name, int v) {
 		super(context, name, null, v);
 	}
-	
+
 
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("CREATE TABLE download_finish (objid TEXT PRIMARY KEY,sysid INTEGER ,time INTEGER ,size INTEGER,path text,type INTEGER )");
@@ -25,6 +25,6 @@ public class MedSqlHelper extends SQLiteOpenHelper {
 	}
 
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		
+
 	}
 }

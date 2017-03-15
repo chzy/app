@@ -168,6 +168,11 @@
                   android:theme="@style/Theme.AppCompat.Light"
             android:screenOrientation="portrait"/>
 
+        <activity android:name="com.chd.video.VideoListActivity"/>
+
+        <activity android:name="com.chd.video.VideoPlayActivity"/>
+
+
         <activity
             android:name=".ui.HelpActivity"
             android:screenOrientation="portrait" />

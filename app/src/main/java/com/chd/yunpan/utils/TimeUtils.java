@@ -2,6 +2,7 @@ package com.chd.yunpan.utils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -16,6 +17,7 @@ public class TimeUtils {
     public static final SimpleDateFormat DATE_YEAR=new SimpleDateFormat("yyyy");
     public static final SimpleDateFormat DATE_MONTH=new SimpleDateFormat("MM");
     public static final SimpleDateFormat DATE_DAY=new SimpleDateFormat("dd");
+    public static final SimpleDateFormat DATE_DAY_F=new SimpleDateFormat("yyyy/MM/dd");
 
     /**
      * long time to string
@@ -25,6 +27,10 @@ public class TimeUtils {
      * @return
      */
     public static String getTime(long timeInMillis, SimpleDateFormat dateFormat) {
+        //long ttt;
+        if (timeInMillis<1499999999)
+           timeInMillis=timeInMillis*1000;
+
         return dateFormat.format(new Date(timeInMillis));
     }
     
@@ -40,8 +46,30 @@ public class TimeUtils {
     
     public static int getDayWithTimeMillis(long timeInMillis)
     {
+        //String ddd=getTime(timeInMillis, DATE_DAY);
     	return Integer.valueOf(getTime(timeInMillis, DATE_DAY));
     }
+
+    public static int getDayWithTimeMillis0(long timeInMillis)
+    {
+        //SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//定义格式，不显示毫秒
+        //Timestamp now = new Timestamp(timeInMillis);//获取系统当前时间
+        //String str = df.format(now);
+
+        //SimpleDateFormat format=new SimpleDateFormat("yyyyMMdd");
+        //Date d1=new Date(timeInMillis);
+        //String str=format.format(d1);
+
+        Calendar calendar = Calendar.getInstance();
+        if (timeInMillis<1499999999)
+            calendar.setTimeInMillis(timeInMillis*1000);
+        else
+            calendar.setTimeInMillis(timeInMillis);
+        String date=""+calendar.get(Calendar.YEAR)+calendar.get(Calendar.MONTH)+calendar.get(Calendar.DAY_OF_MONTH);
+        //return Integer.valueOf(getTime(timeInMillis,DATE_DAY_F));
+        return Integer.valueOf(date);
+    }
+
 
     /**
      * long time to string, format is {@link #DEFAULT_DATE_FORMAT}
@@ -95,5 +123,10 @@ public class TimeUtils {
 
     public static String getTime(Long time, String format) {
         return getTime(time,new SimpleDateFormat(format));
+    }
+
+    public static  int ConverYear(Long time)
+    {
+     return  0;
     }
 }
