@@ -86,7 +86,6 @@ public class StrongBoxActivity extends UILActivity {
 
 	private static final int REQUEST_CODE_PERMISSION_CONTACTS = 100;
 	private static final int REQUEST_CODE_PERMISSION_SMS = 101;
-
 	private static final int REQUEST_CODE_SETTING = 300;
 
 	@OnClick({R.id.iv_left,R.id.ll_one, R.id.ll_two, R.id.ll_three, R.id.ll_four, R.id.ll_five, R.id.ll_six})
