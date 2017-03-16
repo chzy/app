@@ -23,7 +23,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.chd.TClient;
-import com.chd.base.Entity.FileLocal;
 import com.chd.base.backend.SyncTask;
 import com.chd.notepad.service.SyncBackground;
 import com.chd.notepad.ui.adapter.ListViewAdapter;
@@ -33,11 +32,8 @@ import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
-import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.share.ShareUtils;
 import com.google.gson.Gson;
-import com.lockscreen.pattern.GuideGesturePasswordActivity;
-import com.lockscreen.pattern.UnlockGesturePasswordActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -145,29 +141,27 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
         thread.start();
     }
 
-    private boolean isShow=true;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         savepath = new ShareUtils(this).getNotepadDir();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notepad_main);
-        if (UILApplication.getInstance().getLockPatternUtils().savedPatternExists()) {
-            if (!getIntent().getBooleanExtra("unlock", false)) {
-                Intent i = new Intent(this, UnlockGesturePasswordActivity.class);
-                startActivity(i);
-                isShow=false;
-                finish();
+//        if (UILApplication.getInstance().getLockPatternUtils().savedPatternExists()) {
+//            if (!getIntent().getBooleanExtra("unlock", false)) {
+//                Intent i = new Intent(this, UnlockGesturePasswordActivity.class);
+//                startActivity(i);
+//                isShow=false;
+//                finish();
+//
+//            }
+//        }else{
+//            Intent i = new Intent(this, GuideGesturePasswordActivity.class);
+//            startActivity(i);
+//            isShow=false;
+//            finish();
+//        }
 
-            }
-        }else{
-            Intent i = new Intent(this, GuideGesturePasswordActivity.class);
-            startActivity(i);
-            isShow=false;
-            finish();
-        }
-
-        if(isShow){
 
             dialog = new ProgressDialog(this);
             dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -177,7 +171,6 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
             initTitle();
             initResourceId();
             initListener();
-        }
     }
 
 

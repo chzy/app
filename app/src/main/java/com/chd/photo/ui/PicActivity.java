@@ -1,10 +1,17 @@
 package com.chd.photo.ui;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,14 +29,25 @@ import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
+import com.chd.yunpan.view.ActionSheetDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.PermissionListener;
+import com.yanzhenjie.permission.Rationale;
+import com.yanzhenjie.permission.RationaleListener;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
+
+import cn.iterlog.xmimagepicker.PickerActivity;
 
 
 public class PicActivity extends UILActivity implements OnClickListener {
 
+	private static final int REQUEST_CODE_SETTING = 300;
+	private static final int REQUEST_CODE_CAMERA = 1;
 	private ImageView mIvLeft;
 	private TextView mTvCenter;
 	private TextView mTvRight;
@@ -278,17 +296,141 @@ public class PicActivity extends UILActivity implements OnClickListener {
 					Log.i("lmj", "返回执行了");
 					onNewThreadRequest(bIsUbkList);
 					break;
+				case 1:
+					Bundle bundle = data.getExtras();
+					// 获取相机返回的数据，并转换为Bitmap图片格式，这是缩略图
+					Bitmap bitmap = (Bitmap) bundle.get("data");
+					Log.d("LMJ",saveImageToGallery(this,bitmap));
+
+					break;
+			}
+		}
+	}
+
+	public  String saveImageToGallery(Context context, Bitmap bitmap) {
+		File appDir = new File(Environment.getExternalStorageDirectory()
+				.getAbsolutePath(), "DCIM");
+		if (!appDir.exists()) {
+			// 目录不存在 则创建
+			appDir.mkdirs();
+		}
+		String fileName = System.currentTimeMillis() + ".jpg";
+		File file = new File(appDir, fileName);
+		try {
+			FileOutputStream fos = new FileOutputStream(file);
+			bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos); // 保存bitmap至本地
+			fos.flush();
+			fos.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+
+			ScannerByReceiver(context, file.getAbsolutePath());
+
+			if (!bitmap.isRecycled()) {
+				// bitmap.recycle(); 当存储大图片时，为避免出现OOM ，及时回收Bitmap
+				System.gc(); // 通知系统回收
+			}
+			return file.getPath();
+			// Toast.makeText(context, "图片保存成功" ,
+			// Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	/** Receiver扫描更新图库图片 **/
+
+	private static void ScannerByReceiver(Context context, String path) {
+		context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+				Uri.parse("file://" + path)));
+	}
+
+	public static final int REQUEST_CODE_PERMISSION_CAMERA = 100;
+
+	public void addPic(View v){
+		//添加图片
+		//从本地添加，视频拍照
+		new ActionSheetDialog(this).builder().addSheetItem("现拍照片", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+			@Override
+			public void onClick(int which) {
+				//视频拍照
+				AndPermission.with(PicActivity.this)
+						.requestCode(REQUEST_CODE_PERMISSION_CAMERA)
+						.permission(Manifest.permission.CAMERA)
+						// rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
+						.rationale(new RationaleListener() {
+							@Override
+							public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
+							}
+						})
+						.send();
+			}
+		}).addSheetItem("从本地添加", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+			@Override
+			public void onClick(int which) {
+					showMultiChoose();
+			}
+		}).setCanceledOnTouchOutside(true).setCancelable(true).show();
+	}
+
+	public void showMultiChoose() { // 多选图片，带预览功能
+		PickerActivity.chooseMultiPicture(this, 12, 6);
+	}
+
+	public void deletePic(View v){
+		//删除图片
+	}
+
+
+
+	private PermissionListener listener = new PermissionListener() {
+		@Override
+		public void onSucceed(int requestCode, List<String> grantedPermissions) {
+			// 权限申请成功回调。
+			if(requestCode == 100) {
+				// TODO 相应代码。录制视频
+				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+				startActivityForResult(intent, REQUEST_CODE_CAMERA);
 			}
 		}
 
+		@Override
+		public void onFailed(int requestCode, List<String> deniedPermissions) {
+			// 权限申请失败回调。
 
-	}
+			// 用户否勾选了不再提示并且拒绝了权限，那么提示用户到设置中授权。
+			if (AndPermission.hasAlwaysDeniedPermission(PicActivity.this, deniedPermissions)) {
+				// 第一种：用默认的提示语。
+				AndPermission.defaultSettingDialog(PicActivity.this, REQUEST_CODE_SETTING).show();
+
+				// 第二种：用自定义的提示语。
+				// AndPermission.defaultSettingDialog(this, REQUEST_CODE_SETTING)
+				// .setTitle("权限申请失败")
+				// .setMessage("我们需要的一些权限被您拒绝或者系统发生错误申请失败，请您到设置页面手动授权，否则功能无法正常使用！")
+				// .setPositiveButton("好，去设置")
+				// .show();
+
+				// 第三种：自定义dialog样式。
+				// SettingService settingService =
+				//    AndPermission.defineSettingDialog(this, REQUEST_CODE_SETTING);
+				// 你的dialog点击了确定调用：
+				// settingService.execute();
+				// 你的dialog点击了取消调用：
+				// settingService.cancel();
+			}
+		}
+	};
+
+
+
 
 	@Override
-	public void onStart() {
-		super.onStart();
-
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		// 只需要调用这一句，其它的交给AndPermission吧，最后一个参数是PermissionListener。
+		AndPermission.onRequestPermissionsResult(requestCode, permissions, grantResults, listener);
 	}
+
+
 
 	@Override
 	public void onStop() {

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.No.ActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="colorAccent">@color/accent</item>
+    </style>
+
+    <style name="ImageTheme.MainTheme" parent="BaseTheme">
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+    <style name="ImageTheme" parent="BaseTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+    <style name="ImageTheme.NoBack" parent="BaseTheme">
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+
+    <style name="ImageTheme.TransparentActivity">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="ImageTheme.TransparentActivity.FullScreen">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="SubTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabBackground">@color/accentLight</item>
+        <item name="tabIndicatorColor">#fff5f5f5</item>
+        <item name="tabTextAppearance">@style/TabLayout_TextAppearance_White</item>
+        <item name="tabSelectedTextColor">@android:color/white</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
+    <style name="TabLayout_TextAppearance_White">
+        <item name="android:textColor">#e8e8e8</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:ellipsize">middle</item>
+        <item name="android:lines">1</item>
+    </style>
+
+    <style name="Toolbar_TextAppearance_White">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:ellipsize">middle</item>
+        <item name="android:lines">1</item>
+    </style>
+
+    <style name="ImageTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+</resources>

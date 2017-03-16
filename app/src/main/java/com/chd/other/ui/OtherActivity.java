@@ -118,7 +118,7 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
 
                 //未备份文件 ==  backedlist . removeAll(localist);
 
-                final List<FileInfo> cloudUnits = syncTask.getCloudUnits(0, 100);
+                final List<FileInfo> cloudUnits = syncTask.getCloudUnits(0, 10000);
                 runOnUiThread(new Runnable() {
                     public void run() {
                         initData(cloudUnits);

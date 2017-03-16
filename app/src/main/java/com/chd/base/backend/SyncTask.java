@@ -101,7 +101,6 @@ public class SyncTask {
 			flist= cloudListEntity.getList();
 			if (flist!=null) {
 				//Collections.sort(flist, new SortBydesc());
-
 			}
 			else
 				return new ArrayList<FileInfo>();

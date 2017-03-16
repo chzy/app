@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:background="#ffa500" >
+    android:background="#f8b82d" >
 
     <!--<ImageView-->
         <!--android:id="@+id/iv_left"-->
@@ -42,5 +42,7 @@
         android:gravity="center_vertical"
         android:textColor="#ffffff"
         android:textSize="18sp" />
+
+
 
 </RelativeLayout>

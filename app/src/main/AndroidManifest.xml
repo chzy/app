@@ -199,6 +199,31 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+
+
+        <activity
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:name="cn.iterlog.xmimagepicker.PickerActivity"
+            android:theme="@style/ImageTheme"
+            >
+        </activity>
+        <activity
+            android:theme="@style/ImageTheme"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:name="cn.iterlog.xmimagepicker.corp.CropImageActivity"></activity>
+
+        <activity
+            android:theme="@style/ImageTheme"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:name="cn.iterlog.xmimagepicker.videoplay.VideoPlyerActivity">
+        </activity>
+
+        <activity
+            android:theme="@style/ImageTheme.NoBack"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:name="cn.iterlog.xmimagepicker.MediasPreviewActivity">
+        </activity>
+
     </application>
 
 </manifest>

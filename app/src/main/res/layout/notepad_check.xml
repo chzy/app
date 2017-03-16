@@ -37,7 +37,7 @@
         android:textColor="#666666"
         android:textSize="17sp" />
 
-            <com.chd.yunpan.view.NineGridlayout
+            <android.support.v7.widget.RecyclerView
                 android:id="@+id/editNineGrid"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="20dp"

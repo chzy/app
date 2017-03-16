@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -25,6 +26,8 @@ import com.chd.yunpan.R;
 import com.chd.yunpan.utils.TimeUtils;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
+import com.yanzhenjie.permission.Rationale;
+import com.yanzhenjie.permission.RationaleListener;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.ArrayList;
@@ -69,7 +72,11 @@ public class VoiceActivity extends UILActivity {
 		tvCenter.setText("录音");
 		entities = new ArrayList<>();
 		adapter = new VoiceAdapter(entities);
-		SyncTask syncTask = new SyncTask(this, FTYPE.MUSIC);
+		SyncTask syncTask = new SyncTask(this, FTYPE.RECORD);
+
+
+
+
 		rvVoiceContent.setLayoutManager(new LinearLayoutManager(this));
 		rvVoiceContent.setAdapter(adapter);
 		rvVoiceContent.addItemDecoration(
@@ -85,12 +92,11 @@ public class VoiceActivity extends UILActivity {
 				VoiceEntity voiceEntity = entities.get(position);
 				String date = voiceEntity.getDate();
 				String time = voiceEntity.getTime();
-				String title = voiceEntity.getTitle();
-				String filePath = entities.get(position).getFilePath();
-				int color = Color.parseColor("#f8b82d");
+				title = voiceEntity.getTitle();
+				filePath = entities.get(position).getFilePath();
 				int requestCode = 1;
 				isNew = false;
-				AndPermission.with(this)
+				AndPermission.with(VoiceActivity.this)
 						.requestCode(REQUEST_CODE_PERMISSION_RECORD)
 						.permission(Manifest.permission.RECORD_AUDIO)
 						// rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
@@ -108,6 +114,7 @@ public class VoiceActivity extends UILActivity {
 
 	long time = 0L;
 	String filePath = "";
+	String title="";
 	private boolean isNew;
 
 	private final static int REQUEST_CODE_PERMISSION_RECORD = 100;
@@ -121,8 +128,6 @@ public class VoiceActivity extends UILActivity {
 			case R.id.iv_voice_status:
 				time = System.currentTimeMillis();
 				filePath = getCacheDir() + "/" + time + "_audio.wav";
-				int color = Color.parseColor("#f8b82d");
-				int requestCode = 0;
 				isNew = true;
 				AndPermission.with(this)
 						.requestCode(REQUEST_CODE_PERMISSION_RECORD)
@@ -146,11 +151,11 @@ public class VoiceActivity extends UILActivity {
 			if (requestCode == REQUEST_CODE_PERMISSION_RECORD) {
 				// TODO 相应代码。
 				if (isNew) {
-					AndroidAudioRecorder.with(this)
+					AndroidAudioRecorder.with(VoiceActivity.this)
 							// Required
 							.setFilePath(filePath)
 							.setTitle("新录音" + (entities.size() + 1))
-							.setColor(color)
+							.setColor(Color.parseColor("#f8b82d"))
 							.setRequestCode(requestCode)
 							// Optional
 							.setSource(AudioSource.MIC)
@@ -165,7 +170,7 @@ public class VoiceActivity extends UILActivity {
 							// Required
 							.setFilePath(filePath)
 							.setTitle(title)
-							.setColor(color)
+							.setColor(Color.parseColor("#f8b82d"))
 							.setRequestCode(requestCode)
 							// Optional
 							.setSource(AudioSource.MIC)
@@ -185,9 +190,9 @@ public class VoiceActivity extends UILActivity {
 			// 权限申请失败回调。
 
 			// 用户否勾选了不再提示并且拒绝了权限，那么提示用户到设置中授权。
-			if (AndPermission.hasAlwaysDeniedPermission(StrongBoxActivity.this, deniedPermissions)) {
+			if (AndPermission.hasAlwaysDeniedPermission(VoiceActivity.this, deniedPermissions)) {
 				// 第一种：用默认的提示语。
-				AndPermission.defaultSettingDialog(StrongBoxActivity.this, REQUEST_CODE_SETTING).show();
+				AndPermission.defaultSettingDialog(VoiceActivity.this, REQUEST_CODE_SETTING).show();
 
 				// 第二种：用自定义的提示语。
 				// AndPermission.defaultSettingDialog(this, REQUEST_CODE_SETTING)

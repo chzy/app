@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.chd.base.UILActivity;
 import com.chd.yunpan.R;
+import com.chd.yunpan.view.ActionSheetDialog;
 import com.gturedi.views.StatefulLayout;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -31,6 +32,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.iterlog.xmimagepicker.PickerActivity;
 
 /**
  * User: Liumj(liumengjie@365tang.cn)
@@ -50,16 +52,14 @@ public class VideoListActivity extends UILActivity {
 	RecyclerView rvVideoListContent;
 	@BindView(R.id.sl_video_list_layout)
 	StatefulLayout slVideoListLayout;
-	@BindView(R.id.iv_video_list_add)
-	ImageView ivVideoListAdd;
-	@BindView(R.id.iv_video_list_start)
-	ImageView ivVideoListStart;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_video_list);
 		ButterKnife.bind(this);
+		tvCenter.setText("视频");
 		File f=new File(
 				getCacheDir()+"/video");
 		if(!f.exists()){
@@ -71,19 +71,13 @@ public class VideoListActivity extends UILActivity {
 	private static final int REQUEST_CODE_SETTING = 300;
 	private static final int REQUEST_CODE_PERMISSION_VIDEO = 100;
 
-	@OnClick({R.id.iv_left,R.id.iv_video_list_add,R.id.iv_video_list_start})
-	public void onClick(View v){
-		switch (v.getId()){
-			case R.id.iv_left:
-				//退出
-				onBackPressed();
-				break;
-			case R.id.iv_video_list_add:
-				//从本地添加
-				break;
-			case R.id.iv_video_list_start:
+	public void addVideo(View v){
+		//从本地添加，视频拍照
+		new ActionSheetDialog(this).builder().addSheetItem("现拍视频", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+			@Override
+			public void onClick(int which) {
 				//视频拍照
-				AndPermission.with(this)
+				AndPermission.with(VideoListActivity.this)
 						.requestCode(REQUEST_CODE_PERMISSION_VIDEO)
 						.permission(Manifest.permission.CAMERA,Manifest.permission.RECORD_AUDIO)
 						// rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
@@ -93,10 +87,33 @@ public class VideoListActivity extends UILActivity {
 							}
 						})
 						.send();
+			}
+		}).addSheetItem("从本地添加", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+			@Override
+			public void onClick(int which) {
+				showVideoChoose();
 
+			}
+		}).setCanceledOnTouchOutside(true).setCancelable(true).show();
+	}
+
+	public void showVideoChoose() {
+		PickerActivity.chooseMultiMovie(this, 12, 9);
+	}
+
+	public void deleteVideo(View v){
+		//删除视频
+
+	}
+
+	@OnClick({R.id.iv_left})
+	public void onClick(View v){
+		switch (v.getId()){
+			case R.id.iv_left:
+				//退出
+				onBackPressed();
 				break;
 		}
-
 	}
 
 	private PermissionListener listener = new PermissionListener() {

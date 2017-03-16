@@ -4,18 +4,21 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.chd.notepad.ui.adapter.NineAdapter;
 import com.chd.notepad.ui.db.FileDBmager;
 import com.chd.notepad.ui.item.NoteItem;
 import com.chd.notepad.ui.item.NoteItemtag;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
-import com.chd.yunpan.view.NineGridlayout;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -29,7 +32,7 @@ public class NotepadCheckActivity extends Activity {
 	Gson gson;
 
 	private final String TAG=this.getClass().getName();
-	private NineGridlayout nineGrid;
+	private RecyclerView nineGrid;
 	private ArrayList<String> eatPath;
 	private Context mContext;
 	private int FOOD_IMAGE=0xAF;
@@ -49,18 +52,15 @@ public class NotepadCheckActivity extends Activity {
 		contentText = (TextView)findViewById(R.id.checkContent);
 		checkTitle = (TextView)findViewById(R.id.checkTitle);
 		timeText = (TextView)findViewById(R.id.checkTime);
-		nineGrid = (NineGridlayout) findViewById(R.id.editNineGrid);
-
-
-
-		nineGrid.setOnItemClickListerner(new NineGridlayout.OnItemClickListerner() {
+		nineGrid = (RecyclerView) findViewById(R.id.editNineGrid);
+		nineGrid.setLayoutManager(new GridLayoutManager(this,4, GridLayoutManager.VERTICAL,false));
+		nineGrid.addOnItemTouchListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(View view, int position) {
-
-					Intent intent = new Intent(mContext, PhotoBrowseActivity.class);
-					intent.putStringArrayListExtra("PhotoPath", eatPath);
+			public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
+				Intent intent = new Intent(mContext, PhotoBrowseActivity.class);
+				intent.putStringArrayListExtra("PhotoPath", eatPath);
 				intent.putExtra("PhotoPosition", position);
-					startActivityForResult(intent, DELFOODIMG);
+				startActivityForResult(intent, DELFOODIMG);
 			}
 		});
 
@@ -87,7 +87,7 @@ public class NotepadCheckActivity extends Activity {
 			this.checkTitle.setText(noteItem.getTitle());
 			eatPath=noteItem.getPicList();
 			if(eatPath!=null&&eatPath.size()>0){
-				adapter=new NineAdapter(this,eatPath);
+				adapter=new NineAdapter(eatPath);
 				nineGrid.setAdapter(adapter);
 			}else{
 				nineGrid.setVisibility(View.GONE);

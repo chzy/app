@@ -67,8 +67,7 @@ public class PhotoBrowseActivity extends Activity implements View.OnClickListene
 //                Picasso.with(this).load(uri).resize(500,500).error(R.drawable.load_failure).into(photo);
                 if(photoPath.get(i).startsWith("file")){
                     Picasso.with(this)
-                            .load((String) photoPath.get(i))
-                            .resize(150, 150)
+                            .load(photoPath.get(i))
                             .into(photo);
                 }else{
                     Bitmap bitmap = Base64Utils.base64ToBitmap(photoPath.get(i));

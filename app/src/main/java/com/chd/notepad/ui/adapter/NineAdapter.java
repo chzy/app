@@ -1,13 +1,12 @@
 package com.chd.notepad.ui.adapter;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.view.View;
 import android.widget.ImageView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.chd.yunpan.R;
 import com.chd.yunpan.utils.Base64Utils;
-import com.chd.yunpan.view.NineGridAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -21,74 +20,36 @@ import java.util.List;
  * Developer Kits:AndroidStudio 1.5
  */
 
-public class NineAdapter extends NineGridAdapter {
-        private List<String> list;
-        public NineAdapter(Context context, List<String> list) {
-            super(context, list);
-
-            this.list = list;
+public class NineAdapter extends BaseQuickAdapter<String,BaseViewHolder> {
+        public NineAdapter( List<String> list) {
+            super(R.layout.item_gridview, list);
         }
 
-        @Override
-        public int getCount() {
-            return (list == null) ? 0 : list.size();
-        }
 
-        @Override
-        public String getUrl(int position) {
-            return null;
-        }
+    @Override
+    protected void convert(BaseViewHolder helper, String item) {
 
-        @Override
-        public Object getItem(int position) {
-            return (list == null) ? null : list.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int i, View view) {
-            ViewHolder viewHolder;
-            if (view == null) {
-                viewHolder = new ViewHolder();
-                view = View.inflate(context, R.layout.item_gridview, null);
-                viewHolder.img = (ImageView) view.findViewById(R.id.iv_gv_item);
-                view.setTag(viewHolder);
+        if (item.equals("assets://add_photo.png")) {
+            if (helper.getAdapterPosition() == 5) {
+                helper.setVisible(R.id.iv_gv_item,false);
             } else {
-                viewHolder = (ViewHolder) view.getTag();
+                helper.setVisible(R.id.iv_gv_item,true);
+                Picasso.with(mContext)
+                        .load(R.drawable.add_photo)
+                        .into((ImageView) helper.getView(R.id.iv_gv_item));
             }
-
-            if (list.get(i).equals("assets://add_photo.png")) {
-                if (i == 5) {
-                    viewHolder.img.setVisibility(View.GONE);
-                } else {
-                    viewHolder.img.setVisibility(View.VISIBLE);
-                    Picasso.with(context)
-                            .load(R.drawable.add_photo)
-                            .resize(150, 150)
-                            .into(viewHolder.img);
-                }
-            } else {
-                if(list.get(i).startsWith("file")){
-                    viewHolder.img.setVisibility(View.VISIBLE);
-                    Picasso.with(context)
-                            .load((String) list.get(i))
-                            .resize(150, 150)
-                            .into(viewHolder.img);
-                }else{
-                    Bitmap bitmap = Base64Utils.base64ToBitmap(list.get(i));
-                    viewHolder.img.setImageBitmap(bitmap);
-                }
+        } else {
+            if(item.startsWith("file")){
+                helper.setVisible(R.id.iv_gv_item,true);
+                Picasso.with(mContext)
+                        .load(item)
+                        .into((ImageView) helper.getView(R.id.iv_gv_item));
+            }else{
+                Bitmap bitmap = Base64Utils.base64ToBitmap(item);
+                ( (ImageView) helper.getView(R.id.iv_gv_item)).setImageBitmap(bitmap);
             }
-
-            return view;
         }
+    }
 
-        public final class ViewHolder {
-            ImageView img;
-        }
 
 }
