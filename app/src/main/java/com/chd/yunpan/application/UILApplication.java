@@ -56,6 +56,7 @@ public class UILApplication extends Application {
 		/*	StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyDialog().build());
 			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyDeath().build());*/
 		}
+		filelistEntity=new FilelistEntity();
 		super.onCreate();
 		//FIR.init(this);
 		CrashHandler.getInstance().init(this);
