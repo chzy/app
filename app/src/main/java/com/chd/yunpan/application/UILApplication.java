@@ -84,8 +84,7 @@ public class UILApplication extends Application {
 	}
 
 	public static FilelistEntity getFilelistEntity() {
-		if (filelistEntity==null);
-		filelistEntity=new FilelistEntity();
+
 		return filelistEntity;
 	}
 
