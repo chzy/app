@@ -54,14 +54,14 @@ public class SyncTask {
 	}
 
 	//查询远程对象是否有本地副本. 根据文件名匹配
-	public boolean haveLocalCopy(FileInfo info0) {
+	/*public boolean haveLocalCopy(FileInfo info0) {
 		boolean ret=false;
 		if (info0.getObjid()==null)
 		{
 			Log.d(TAG, "not remote file obj");
 			return false;
 		}
-	/*	if (info0.getSysid() > 0)
+	*//*	if (info0.getSysid() > 0)
 		{
 			if (info0.getFilePath()!=null && info0.getFilePath().indexOf(".")>1 ) {
 					File file=new File(info0.getFilePath());
@@ -71,17 +71,17 @@ public class SyncTask {
 				info0.setFtype(_ftype);
 			int time=info0.getLastModified();
 			ret=   dbManager.queryLocalInfo(info0.getSysid(),info0);
-			*//*
+			*//**//*
 			临时方案 恢复成远程的上传时间
-			* *//*
+			* *//**//*
 			if (ret)
 				info0.setLastModified(time);
-		}*/
+		}*//*
 
 		return ret;
 
 
-	}
+	}*/
 
 
 

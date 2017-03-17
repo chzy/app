@@ -151,40 +151,50 @@ public class FilelistEntity {
 
     public Integer[] getIddByDate(int postion,List<? extends FileInfo> list,int intervalDay)
     {
-//        List<? extends FileInfo> list=list0.subList(0,1);
         final  int interval=intervalDay*24*3600;
         int lastday=0,day=0;
         int idx=0,pst=0;
-
+        if (_GroupCp.size()-1>(postion)) {
+            //pst=postion+1;
+            pst=_GroupCp.get(postion)+1;
+            idx=list.size();
+        }
+        else {
+            if (_GroupCp.size()>0)
+            {
+                pst = _GroupCp.size()-1;
+                idx = _GroupCp.get(pst );
+                lastday=list.get(idx++).getLastModified();
+                pst++;
+            }
+            else
+                lastday=list.get(0).getLastModified();
+        }
         for(;( (idx<list.size()) && pst<=postion );idx++)
         {
             day=list.get(idx).getLastModified();
-
-            if (day>=lastday) {
-
-                if (day-lastday>=interval)
+                if (day-lastday>interval)
                 {
-
-                    if (_GroupCp.size()<pst)
-                    {
-                        for(int i=0;i<_GroupCp.size();i++) {
-                            if (!_GroupCp.contains(i))
-                                _GroupCp.add(i, 0);
-                        }
-                    }
                     _GroupCp.add(pst,idx);
                     pst++;
-                }
-                lastday = day;
-            }
 
+                }
+                lastday=day;
         }
-        int currentPst=pst-1;
-        int frontPst=Math.max(0,pst-1-1);
+        int currentPst=Math.max(0,pst-1);
+        int frontPst=Math.max(0,currentPst-1);
         Integer[] ret=new Integer[2];
-        ret[0]=_GroupCp.get(frontPst);
-        ret[1]=_GroupCp.get(currentPst);
-        Log.i("picadpter",""+ ret[0]+" "+ret[1]);
+        if (postion==0)
+            ret[0]=0;
+        else
+            ret[0]=Math.max(1,_GroupCp.get(frontPst)+1);
+        ret[1]=Math.max(0,_GroupCp.get(currentPst)-1);
+/*
+        Log.i("picadpter",currentPst+" "+ ret[0]+" "+ret[1]);
+        Log.i("picadpter",""+TimeUtils.getDayWithTimeMillis0(list.get(ret[0]).getLastModified())+" === "+TimeUtils.getDayWithTimeMillis0(list.get(ret[1]).getLastModified()));
+        Log.i("picadpter"," "+ _GroupCp);
+*/
+
         return ret;
     }
 }
