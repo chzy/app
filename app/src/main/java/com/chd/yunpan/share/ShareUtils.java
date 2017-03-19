@@ -27,6 +27,11 @@ public class ShareUtils {
 	private final String SMS =DOWNLOAD+"/"+"sms";
 	private final String OTHER=DOWNLOAD+"/"+"other";
 	private final String APK=DOWNLOAD+"/"+"apk";
+	private final String DFlOW=DOWNLOAD+"/"+"dflow";
+	private final String NORMAL=DOWNLOAD+"/"+"normal";
+	private final String RECORD=DOWNLOAD+"/"+"record";
+	private final String VIDEO=DOWNLOAD+"/"+"video";
+
 	public ShareUtils(Context context) {
 		this.context=context;
 		sp = context.getSharedPreferences("data", Context.MODE_PRIVATE);
@@ -150,6 +155,51 @@ public class ShareUtils {
 	 */
 	public File getMusicFile(){
 		File f=new File(MUSIC);
+		if(!f.exists()){
+			f.mkdirs();
+		}
+		return f;
+	}
+
+	/**
+	 * 视频下载地址
+	 * @return
+	 */
+	public File getVideoFile(){
+		File f=new File(VIDEO);
+		if(!f.exists()){
+			f.mkdirs();
+		}
+		return f;
+	}
+	/**
+	 * 录音下载地址
+	 * @return
+	 */
+	public File getRecordFile(){
+		File f=new File(RECORD);
+		if(!f.exists()){
+			f.mkdirs();
+		}
+		return f;
+	}
+	/**
+	 * DFLOW下载地址
+	 * @return
+	 */
+	public File getDFLOWFile(){
+		File f=new File(DFlOW);
+		if(!f.exists()){
+			f.mkdirs();
+		}
+		return f;
+	}
+	/**
+	 * 普通下载地址
+	 * @return
+	 */
+	public File getNormalFile(){
+		File f=new File(NORMAL);
 		if(!f.exists()){
 			f.mkdirs();
 		}

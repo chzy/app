@@ -61,7 +61,7 @@ public class netdiskActivity extends Activity implements OnClickListener {
 		initListener();
 		AndPermission.with(this)
 				.requestCode(REQUEST_CODE_PERMISSION_SD)
-				.permission(Manifest.permission.WRITE_CONTACTS)
+				.permission(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WRITE_CONTACTS)
 				// rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
 				.rationale(new RationaleListener() {
 					@Override

@@ -86,7 +86,9 @@ public class StrongBoxActivity extends UILActivity {
 
 	private static final int REQUEST_CODE_PERMISSION_CONTACTS = 100;
 	private static final int REQUEST_CODE_PERMISSION_SMS = 101;
+	private static final int REQUEST_CODE_PERMISSION_SD = 102;
 	private static final int REQUEST_CODE_SETTING = 300;
+	Class cls;
 
 	@OnClick({R.id.iv_left,R.id.ll_one, R.id.ll_two, R.id.ll_three, R.id.ll_four, R.id.ll_five, R.id.ll_six})
 	public void onClick(View view) {
@@ -97,31 +99,88 @@ public class StrongBoxActivity extends UILActivity {
 				break;
 			case R.id.ll_one:
 				//照片
-				intent=new Intent(this, PicActivity.class);
-				startActivity(intent);
+				cls=PicActivity.class;
+				AndPermission.with(this)
+						.requestCode(REQUEST_CODE_PERMISSION_SD)
+						.permission(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WRITE_CONTACTS)
+						// rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
+						.rationale(new RationaleListener() {
+							@Override
+							public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
+							}
+						})
+						.send();
+
 				break;
 			case R.id.ll_two:
 				//视频
-				intent=new Intent(this, VideoListActivity.class);
-				startActivity(intent);
+				cls=VideoListActivity.class;
+				AndPermission.with(this)
+						.requestCode(REQUEST_CODE_PERMISSION_SD)
+						.permission(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WRITE_CONTACTS)
+						// rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
+						.rationale(new RationaleListener() {
+							@Override
+							public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
+							}
+						})
+						.send();
+
 				break;
 			case R.id.ll_three:
 				//文档
-				intent=new Intent(this, OtherActivity.class);
-				startActivity(intent);
+				cls=OtherActivity.class;
+				AndPermission.with(this)
+						.requestCode(REQUEST_CODE_PERMISSION_SD)
+						.permission(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WRITE_CONTACTS)
+						// rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
+						.rationale(new RationaleListener() {
+							@Override
+							public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
+							}
+						})
+						.send();
 				break;
 			case R.id.ll_four:
 				//录音
-				intent=new Intent(this, VoiceActivity.class);
-				startActivity(intent);
+				cls=VoiceActivity.class;
+				AndPermission.with(this)
+						.requestCode(REQUEST_CODE_PERMISSION_SD)
+						.permission(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WRITE_CONTACTS)
+						// rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
+						.rationale(new RationaleListener() {
+							@Override
+							public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
+							}
+						})
+						.send();
 				break;
 			case R.id.ll_five:
 				//记事本
-				intent=new Intent(this, NotepadActivity.class);
-				startActivity(intent);
+				cls=NotepadActivity.class;
+				AndPermission.with(this)
+						.requestCode(REQUEST_CODE_PERMISSION_SD)
+						.permission(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WRITE_CONTACTS)
+						// rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
+						.rationale(new RationaleListener() {
+							@Override
+							public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
+							}
+						})
+						.send();
 				break;
 			case R.id.ll_six:
 				//音乐
+				AndPermission.with(this)
+						.requestCode(REQUEST_CODE_PERMISSION_SD)
+						.permission(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WRITE_CONTACTS)
+						// rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
+						.rationale(new RationaleListener() {
+							@Override
+							public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
+							}
+						})
+						.send();
 				intent=new Intent(this, MusicActivity.class);
 				startActivity(intent);
 				break;
@@ -171,6 +230,11 @@ public class StrongBoxActivity extends UILActivity {
 				// TODO 相应代码。
 				Intent pageintent = new Intent();
 				pageintent.setClass(StrongBoxActivity.this, SmsBackActivity.class);
+				startActivity(pageintent);
+			}else if(requestCode==102){
+				//相应代码
+				Intent pageintent = new Intent();
+				pageintent.setClass(StrongBoxActivity.this, cls);
 				startActivity(pageintent);
 			}
 		}

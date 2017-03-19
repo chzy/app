@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -88,13 +89,13 @@ public class VoiceActivity extends UILActivity {
 			@Override
 			public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
 				//点击事件
+				Log.d("liumj","执行了几次");
 				pos = position;
 				VoiceEntity voiceEntity = entities.get(position);
 				String date = voiceEntity.getDate();
 				String time = voiceEntity.getTime();
 				title = voiceEntity.getTitle();
 				filePath = entities.get(position).getFilePath();
-				int requestCode = 1;
 				isNew = false;
 				AndPermission.with(VoiceActivity.this)
 						.requestCode(REQUEST_CODE_PERMISSION_RECORD)
@@ -156,7 +157,7 @@ public class VoiceActivity extends UILActivity {
 							.setFilePath(filePath)
 							.setTitle("新录音" + (entities.size() + 1))
 							.setColor(Color.parseColor("#f8b82d"))
-							.setRequestCode(requestCode)
+							.setRequestCode(0)
 							// Optional
 							.setSource(AudioSource.MIC)
 							.setChannel(AudioChannel.STEREO)
@@ -171,7 +172,7 @@ public class VoiceActivity extends UILActivity {
 							.setFilePath(filePath)
 							.setTitle(title)
 							.setColor(Color.parseColor("#f8b82d"))
-							.setRequestCode(requestCode)
+							.setRequestCode(1)
 							// Optional
 							.setSource(AudioSource.MIC)
 							.setChannel(AudioChannel.STEREO)

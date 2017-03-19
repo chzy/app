@@ -1,6 +1,7 @@
 package com.chd.photo.adapter;
 
-import android.content.Context;
+import android.graphics.Bitmap;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -10,35 +11,62 @@ import com.chd.proto.FileInfo;
 import com.chd.yunpan.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.util.List;
 
 
-public class PicInfoAdapter<T extends FileInfo> extends BaseQuickAdapter<T,BaseViewHolder> {
+public class PicInfoAdapter<T extends FileInfo> extends BaseQuickAdapter<T, BaseViewHolder> {
 
-	private Context context;
 	protected ImageLoader imageLoader;
-	DisplayImageOptions options;
+	protected DisplayImageOptions options;
+	protected boolean showSelect;
 
-	public PicInfoAdapter(List<T> data, ImageLoader imageLoader) {
-		super(R.layout.item_pic_info_adapter,data);
-		this.imageLoader=imageLoader;
+	public PicInfoAdapter(List<T> data, ImageLoader imageLoader, boolean showSelect) {
+		super(R.layout.item_pic_info_adapter, data);
+		this.imageLoader = imageLoader;
+		this.showSelect = showSelect;
+		options = new DisplayImageOptions.Builder()
+				.cacheInMemory(true).cacheOnDisk(true)
+				.considerExifParams(true)
+				.showImageOnFail(R.drawable.pic_test1).showImageOnLoading(R.drawable.pic_test1)
+				.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+				.bitmapConfig(Bitmap.Config.RGB_565)
+				.resetViewBeforeLoading(false)
+//				.extraForDownloader(new ShareUtils(context).getStorePathStr())
+				.displayer(new RoundedBitmapDisplayer(20))
+				.displayer(new FadeInBitmapDisplayer(0)).build();
 	}
-
 
 
 	@Override
 	protected void convert(BaseViewHolder helper, T item) {
-		String url="";
-		if(item instanceof FileInfo){
-			FileInfo info=item;
-			url="trpc://"+info.getObjid();
-		}else if(item instanceof FileLocal){
-			FileLocal info= (FileLocal) item;
-			url="file://"+info.getPathid();
+		if (showSelect) {
+			helper.setVisible(R.id.iv_pic_edit_item_photo_check, true);
+			Log.d("liumj",isCheck+"");
+			if(isCheck){
+				//是选中的,需要取消
+				helper.setImageResource(R.id.iv_pic_edit_item_photo_check,R.drawable.pic_edit_photo_check);
+			}else{
+				//是未选中的,需要选中
+				helper.setImageResource(R.id.iv_pic_edit_item_photo_check,R.drawable.pic_edit_photo_checked);
+			}
+
+		} else {
+			helper.setVisible(R.id.iv_pic_edit_item_photo_check, false);
 		}
-		imageLoader.displayImage(url, (ImageView) helper.getView(R.id.iv_pic_info_photo),options,new SimpleImageLoadingListener());
+
+
+		String url = "";
+		url = "ttrpc://" + item.getObjid();
+		if (item instanceof FileLocal) {
+			url = "file://" + ((FileLocal) item).getPathid();
+		}
+
+		imageLoader.displayImage(url, (ImageView) helper.getView(R.id.iv_pic_info_photo), options, new SimpleImageLoadingListener());
 
 			/*holder.iv_pic_info_photo.setImageResource(list.get(position).getPicUrl());*/
 //		holder.tv_pic_info_month.setText(/*list.get(position).getMonth()*/_month + "月");
@@ -76,6 +104,23 @@ public class PicInfoAdapter<T extends FileInfo> extends BaseQuickAdapter<T,BaseV
 
 	}
 
+	private boolean isCheck = true;
 
+	void changeItem(int position, boolean contains) {
+		isCheck=contains;
+		notifyItemChanged(position);
+	}
 
+	private int groupPos;
+	public void setPosition(int pos) {
+		groupPos=pos;
+	}
+
+	public int getGroupPos() {
+		return groupPos;
+	}
+
+	public void setGroupPos(int groupPos) {
+		this.groupPos = groupPos;
+	}
 }

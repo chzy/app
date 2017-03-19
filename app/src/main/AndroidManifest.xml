@@ -35,6 +35,11 @@
 
         <meta-data android:value="4aa7f252c9e0f4fe47624a26d3a5825c" android:name="BUG_HD_SDK_GENERAL_KEY" />
 
+        <meta-data android:name="design_width" android:value="720">
+        </meta-data>
+        <meta-data android:name="design_height" android:value="1280">
+        </meta-data>
+
         <activity
             android:name="com.chd.yunpan.ui.LoginActivity"
             android:launchMode="singleTask"

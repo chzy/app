@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -53,12 +53,28 @@
     </android.support.v7.widget.RecyclerView>
 
     <RelativeLayout
+        android:id="@+id/rl_pic_bottom"
         android:layout_width="match_parent"
         android:background="#f6f7f9"
         android:layout_alignParentBottom="true"
         android:layout_height="45dp">
 
+        <TextView
+            android:id="@+id/tv_pic_upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="上传"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:padding="5dp"
+            android:textSize="18sp"
+            android:background="@drawable/btn_cancel_yellow_shape"
+            android:textColor="@color/background"
+            android:onClick="uploadPic"
+            />
+
         <ImageView
+            android:id="@+id/tv_pic_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
@@ -79,4 +95,4 @@
             />
 
     </RelativeLayout>
-</LinearLayout>
+</com.zhy.autolayout.AutoLinearLayout>

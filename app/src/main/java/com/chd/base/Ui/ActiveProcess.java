@@ -1,16 +1,16 @@
 package com.chd.base.Ui;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.chd.photo.ui.CustomProgressDialog;
+import com.zhy.autolayout.AutoLayoutActivity;
 
 /**
  * Created by lxp1 on 2015/12/6.
  */
-public abstract class ActiveProcess extends AppCompatActivity {
+public abstract class ActiveProcess extends AutoLayoutActivity {
 
 
     //public abstract void updateProgress(final int progress);

@@ -21,13 +21,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
 
 import com.chd.yunpan.R;
 
-public class RoundImageView extends ImageView{
+public class RoundImageView extends AppCompatImageView{
     public static final String TAG = "RoundImageView";
 
     private int mResource = 0;

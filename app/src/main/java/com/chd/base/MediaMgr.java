@@ -15,7 +15,6 @@ import com.chd.MediaMgr.utils.MFileFilter;
 import com.chd.MediaMgr.utils.MediaFileUtil;
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
-import com.chd.photo.entity.PicDBitem;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
@@ -470,23 +469,23 @@ public class MediaMgr  {
 		cursor.close();
 		return ret;
 	}*/
-
-	public List<PicDBitem> getUploadUnits(){
-		open();
-		Cursor cursor = db.rawQuery("select sysid,path,time from upload_finish union  select sysid,time from upload_inter order by time desc", null);
-		//Cursor cursor = db.rawQuery("select sysid,time from upload_finish, upload_inter order by time desc", null);
-		List<PicDBitem> lists = new ArrayList<PicDBitem>();
-		while (cursor.moveToNext()) {
-			PicDBitem item=new PicDBitem();
-			item.setSysid(cursor.getInt(0));
-			item.setPath(cursor.getString(1));
-			lists.add(item);
-		}
-		cursor.close();
-		close();
-		//Collections.sort(lists,new SortBydesc());
-		return lists;
-	}
+//
+//	public List<PicDBitem> getUploadUnits(){
+//		open();
+//		Cursor cursor = db.rawQuery("select sysid,path,time from upload_finish union  select sysid,time from upload_inter order by time desc", null);
+//		//Cursor cursor = db.rawQuery("select sysid,time from upload_finish, upload_inter order by time desc", null);
+//		List<PicDBitem> lists = new ArrayList<PicDBitem>();
+//		while (cursor.moveToNext()) {
+//			PicDBitem item=new PicDBitem();
+//			item.setSysid(cursor.getInt(0));
+//			item.setPath(cursor.getString(1));
+//			lists.add(item);
+//		}
+//		cursor.close();
+//		close();
+//		//Collections.sort(lists,new SortBydesc());
+//		return lists;
+//	}
 
 	public List<Integer> getUploadUnits_(){
 		open();
@@ -502,21 +501,21 @@ public class MediaMgr  {
 		return lists;
 	}
 
-	public List<PicDBitem> getdownoadUnits(){
-		open();
-		Cursor cursor = db.rawQuery("select path,time from download_finish where type=? order by time desc", new String[]{""/*+wheresection*/});
-		//Cursor cursor = db.rawQuery("select sysid,time from upload_finish, upload_inter order by time desc", null);
-		List<PicDBitem> lists = new ArrayList<PicDBitem>();
-		while (cursor.moveToNext()) {
-			PicDBitem item=new PicDBitem();
-			item.setPath(cursor.getString(0));
-			lists.add(item);
-		}
-		cursor.close();
-		close();
-		//Collections.sort(lists,new SortBydesc());
-		return lists;
-	}
+//	public List<PicDBitem> getdownoadUnits(){
+//		open();
+//		Cursor cursor = db.rawQuery("select path,time from download_finish where type=? order by time desc", new String[]{""/*+wheresection*/});
+//		//Cursor cursor = db.rawQuery("select sysid,time from upload_finish, upload_inter order by time desc", null);
+//		List<PicDBitem> lists = new ArrayList<PicDBitem>();
+//		while (cursor.moveToNext()) {
+//			PicDBitem item=new PicDBitem();
+//			item.setPath(cursor.getString(0));
+//			lists.add(item);
+//		}
+//		cursor.close();
+//		close();
+//		//Collections.sort(lists,new SortBydesc());
+//		return lists;
+//	}
 
 	public FileInfo0 getPiceParam(int picId) {
 		return  null;

@@ -1,111 +1,111 @@
-package com.chd.photo.adapter;
-
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-
-import com.chd.photo.entity.PicEditItemBean;
-import com.chd.yunpan.R;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.assist.ImageSize;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
-
-import java.util.List;
-
-
-public class PicEditItemAdapter extends BaseAdapter {
-
-	protected ImageLoader imageLoader;
-	DisplayImageOptions options;
-	private Activity context;
-	private List<PicEditItemBean> list;
-	private LayoutInflater mInflater;
-	private boolean isEdit;
-	private ImageSize imageSize;
-
-	public PicEditItemAdapter(Activity context, List<PicEditItemBean> list, boolean isEdit) {
-		this.context = context;
-		this.list = list;
-		this.isEdit = isEdit;
-		this.mInflater = LayoutInflater.from(context);
-		this.imageLoader = ImageLoader.getInstance();
-		this.imageSize=new ImageSize(100,100);
-		options = new DisplayImageOptions.Builder()
-				.cacheInMemory(true).cacheOnDisk(true)
-				.considerExifParams(true)
-				.showImageOnFail(R.drawable.pic_test1).showImageOnLoading(R.drawable.pic_test1)
-				.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-				.bitmapConfig(Bitmap.Config.RGB_565)
-				.resetViewBeforeLoading(false)
-//				.extraForDownloader(new ShareUtils(context).getStorePathStr())
-				.displayer(new RoundedBitmapDisplayer(20))
-				.displayer(new FadeInBitmapDisplayer(0)).build();
-
-	}
-
-	@Override
-	public int getCount() {
-		return list == null ? 0 : list.size();
-	}
-
-	@Override
-	public Object getItem(int arg0) {
-		return arg0;
-	}
-
-	@Override
-	public long getItemId(int arg0) {
-		return arg0;
-	}
-
-	@Override
-	public View getView(final int position, View converView, ViewGroup parent) {
-		final ViewHolder holder;
-		if (converView == null) {
-			converView = mInflater.inflate(R.layout.item_pic_edit_item_adapter, parent, false);
-			holder = new ViewHolder();
-			holder.iv_pic_info_photo = (ImageView) converView.findViewById(R.id.iv_pic_edit_item_photo);
-			holder.iv_pic_edit_check = (ImageView) converView.findViewById(R.id.iv_pic_edit_item_photo_check);
-			converView.setTag(holder);
-		} else {
-			holder = (ViewHolder) converView.getTag();
-		}
-		if (isEdit) {
-			holder.iv_pic_edit_check.setVisibility(View.VISIBLE);
-		} else {
-			holder.iv_pic_edit_check.setVisibility(View.GONE);
-		}
-		holder.iv_pic_edit_check.setImageResource(list.get(position).isSelect() ? R.drawable.pic_edit_photo_checked : R.drawable.pic_edit_photo_check);
-		String url = list.get(position).getUrl();
-		{
+//package com.chd.photo.adapter;
+//
+//import android.app.Activity;
+//import android.graphics.Bitmap;
+//import android.view.LayoutInflater;
+//import android.view.View;
+//import android.view.ViewGroup;
+//import android.widget.BaseAdapter;
+//import android.widget.ImageView;
+//
+//import com.chd.photo.entity.PicEditItemBean;
+//import com.chd.yunpan.R;
+//import com.nostra13.universalimageloader.core.DisplayImageOptions;
+//import com.nostra13.universalimageloader.core.ImageLoader;
+//import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+//import com.nostra13.universalimageloader.core.assist.ImageSize;
+//import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+//import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+//
+//import java.util.List;
+//
+//
+//public class PicEditItemAdapter extends BaseAdapter {
+//
+//	protected ImageLoader imageLoader;
+//	DisplayImageOptions options;
+//	private Activity context;
+//	private List<PicEditItemBean> list;
+//	private LayoutInflater mInflater;
+//	private boolean isEdit;
+//	private ImageSize imageSize;
+//
+//	public PicEditItemAdapter(Activity context, List<PicEditItemBean> list, boolean isEdit) {
+//		this.context = context;
+//		this.list = list;
+//		this.isEdit = isEdit;
+//		this.mInflater = LayoutInflater.from(context);
+//		this.imageLoader = ImageLoader.getInstance();
+//		this.imageSize=new ImageSize(100,100);
+//		options = new DisplayImageOptions.Builder()
+//				.cacheInMemory(true).cacheOnDisk(true)
+//				.considerExifParams(true)
+//				.showImageOnFail(R.drawable.pic_test1).showImageOnLoading(R.drawable.pic_test1)
+//				.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+//				.bitmapConfig(Bitmap.Config.RGB_565)
+//				.resetViewBeforeLoading(false)
+////				.extraForDownloader(new ShareUtils(context).getStorePathStr())
+//				.displayer(new RoundedBitmapDisplayer(20))
+//				.displayer(new FadeInBitmapDisplayer(0)).build();
+//
+//	}
+//
+//	@Override
+//	public int getCount() {
+//		return list == null ? 0 : list.size();
+//	}
+//
+//	@Override
+//	public Object getItem(int arg0) {
+//		return arg0;
+//	}
+//
+//	@Override
+//	public long getItemId(int arg0) {
+//		return arg0;
+//	}
+//
+//	@Override
+//	public View getView(final int position, View converView, ViewGroup parent) {
+//		final ViewHolder holder;
+//		if (converView == null) {
+//			converView = mInflater.inflate(R.layout.item_pic_edit_item_adapter, parent, false);
+//			holder = new ViewHolder();
+//			holder.iv_pic_info_photo = (ImageView) converView.findViewById(R.id.iv_pic_edit_item_photo);
+//			holder.iv_pic_edit_check = (ImageView) converView.findViewById(R.id.iv_pic_edit_item_photo_check);
+//			converView.setTag(holder);
+//		} else {
+//			holder = (ViewHolder) converView.getTag();
+//		}
+//		if (isEdit) {
+//			holder.iv_pic_edit_check.setVisibility(View.VISIBLE);
+//		} else {
+//			holder.iv_pic_edit_check.setVisibility(View.GONE);
+//		}
+//		holder.iv_pic_edit_check.setImageResource(list.get(position).isSelect() ? R.drawable.pic_edit_photo_checked : R.drawable.pic_edit_photo_check);
+//		String url = list.get(position).getUrl();
+//		{
+////			imageLoader.displayImage(url,holder.iv_pic_info_photo,
+////					options);
 //			imageLoader.displayImage(url,holder.iv_pic_info_photo,
 //					options);
-			imageLoader.displayImage(url,holder.iv_pic_info_photo,
-					options);
-//			imageLoader.loadImage(url, options, new SimpleImageLoadingListener() {
-//						public void onLoadingComplete(String imageUri,View view, Bitmap loadedImage) {
-//							holder.iv_pic_info_photo.setImageBitmap(loadedImage);   //imageView，你要显示的imageview控件对象，布局文件里面//配置的
-//						}
-//						;
-//					}
-//			);
-//			holder.iv_pic_info_photo.setTag(url);
-		}
-
-
-		return converView;
-	}
-
-	private class ViewHolder {
-		ImageView iv_pic_info_photo;
-		ImageView iv_pic_edit_check;
-	}
-
-}
+////			imageLoader.loadImage(url, options, new SimpleImageLoadingListener() {
+////						public void onLoadingComplete(String imageUri,View view, Bitmap loadedImage) {
+////							holder.iv_pic_info_photo.setImageBitmap(loadedImage);   //imageView，你要显示的imageview控件对象，布局文件里面//配置的
+////						}
+////						;
+////					}
+////			);
+////			holder.iv_pic_info_photo.setTag(url);
+//		}
+//
+//
+//		return converView;
+//	}
+//
+//	private class ViewHolder {
+//		ImageView iv_pic_info_photo;
+//		ImageView iv_pic_edit_check;
+//	}
+//
+//}

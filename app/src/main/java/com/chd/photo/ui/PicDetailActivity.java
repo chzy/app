@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,12 +14,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chd.MediaMgr.utils.MediaFileUtil;
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.chd.base.Entity.FileLocal;
 import com.chd.base.UILActivity;
 import com.chd.base.backend.SyncTask;
 import com.chd.contacts.vcard.StringUtils;
-import com.chd.photo.entity.PicEditItemBean;
 import com.chd.proto.FTYPE;
+import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
@@ -29,11 +32,12 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PicDetailActivity extends UILActivity implements OnClickListener
-{
+public class PicDetailActivity extends UILActivity implements OnClickListener {
 
 	private ImageView mIvLeft;
 	private TextView mTvCenter;
@@ -44,19 +48,18 @@ public class PicDetailActivity extends UILActivity implements OnClickListener
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
 	DisplayImageOptions options;
 	private boolean bIsUbkList;
-
-	private SyncTask syncTask;
-	private FileInfo0 fileInfo0;
-	private final String TAG=this.getClass().getName();
-	private int pos;
+private int pos1;
 	private int pos2;
-	private Handler handler=new Handler(){
+	private SyncTask syncTask;
+	private FileInfo0 fileInfo0 = new FileInfo0();
+	private final String TAG = this.getClass().getName();
+	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			switch (msg.what){
+			switch (msg.what) {
 				case 997:
 					//下载成功
-					Log.d("liumj","下载成功");
+					Log.d("liumj", "下载成功");
 					Toast.makeText(PicDetailActivity.this, "保存到本地成功", Toast.LENGTH_SHORT).show();
 					break;
 			}
@@ -65,20 +68,17 @@ public class PicDetailActivity extends UILActivity implements OnClickListener
 //	private TextView mTvRight;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_pic_detail);
 
 		bIsUbkList = getIntent().getBooleanExtra("ubklist", false);
-		pos=getIntent().getIntExtra("pos", -1);
-		pos2=getIntent().getIntExtra("pos2",-1);
-		if (bIsUbkList)
-		{
+		if (bIsUbkList) {
 			findViewById(R.id.pic_detail_btm_layout).setVisibility(View.GONE);
 		}
-
+	pos1=getIntent().getIntExtra("pos1",0);
+		pos2=getIntent().getIntExtra("pos2",0);
 		options = new DisplayImageOptions.Builder()
 //		.showImageOnLoading(R.drawable.pic_test1)
 				.cacheInMemory(false)
@@ -93,45 +93,35 @@ public class PicDetailActivity extends UILActivity implements OnClickListener
 		initData();
 	}
 
+	String url;
 
-
-	private void initData(){
+	private void initData() {
 		/*int nPicId = getIntent().getIntExtra("picid", -1);
 		if (nPicId < 0)
 		{
 			return;
 		}*/
 		if (syncTask == null)
-			syncTask=new SyncTask(this, FTYPE.PICTURE);
-		PicEditItemBean editItemBean= (PicEditItemBean) getIntent().getSerializableExtra("bean");
-		String url =editItemBean.getUrl();
-		if(StringUtils.isNullOrEmpty(url)){
-			return;
+			syncTask = new SyncTask(this, FTYPE.PICTURE);
+		Serializable bean = getIntent().getSerializableExtra("bean");
+		boolean ubklist = getIntent().getBooleanExtra("ubklist", false);
+		if (bean instanceof FileLocal) {
+			url = ((FileInfo) bean).getObjid();
+			fileInfo0.setFilename(url);
+			fileInfo0.setSysid(((FileLocal) bean).getPathid());
+		} else {
+			url = ((FileInfo) bean).getObjid();
+			fileInfo0.setFilename(url);
 		}
-		int idx=url.indexOf("://");
-		if (idx<0) {
-			Log.e(TAG, "error file path fail!!!!");
-			return;
-		}
-		fileInfo0=new FileInfo0();
-		idx+=3;
-		String uri=editItemBean.getUrl().substring(idx);
-		if (editItemBean.isbIsUbkList()) {
-			fileInfo0.setFilePath(uri);
-			fileInfo0.setObjid(MediaFileUtil.getFnameformPath(uri));
-		}
-		else{
-			fileInfo0.setObjid(uri);
-		}
-		fileInfo0.setFtype(FTYPE.PICTURE);
 
-		Log.d("liumj","---"+url);
-		if (url != null)
-		{
-			if(url.startsWith("ttrpc://")){
-				url="trpc://"+uri;
-			}
-			Log.d("liumj",""+url);
+		if (StringUtils.isNullOrEmpty(url)) {
+			return;
+		}
+
+		Log.d("liumj", "---" + url);
+		if (url != null) {
+			url = "trpc://" + url;
+			Log.d("liumj", "" + url);
 			imageLoader.displayImage(url, mImgView,
 					options, new SimpleImageLoadingListener() {
 						@Override
@@ -193,39 +183,54 @@ public class PicDetailActivity extends UILActivity implements OnClickListener
 	}
 
 	@Override
-	public void onClick(View v)
-	{
-		switch (v.getId())
-		{
+	public void onClick(View v) {
+		switch (v.getId()) {
 			case R.id.iv_left:
-			case R.id.pic_detail_cancel:
-			{
+			case R.id.pic_detail_cancel: {
 				finish();
 			}
 			break;
-			case R.id.pic_detail_delete:
-			{
-				Thread thread = new Thread(new Runnable()
-				{
+			case R.id.pic_detail_delete: {
+				Thread thread = new Thread(new Runnable() {
 					@Override
-					public void run()
-					{
-						if (fileInfo0 != null)
-						{
+					public void run() {
+						if (fileInfo0 != null) {
 							final boolean bSucc = syncTask.DelRemoteObj(fileInfo0);
-							runOnUiThread(new Runnable()
-							{
+							runOnUiThread(new Runnable() {
 								@Override
 								public void run() {
 									String strData = bSucc ? "删除成功" : "删除失败";
 									ToastUtils.toast(PicDetailActivity.this, strData);
-									if(bSucc){
-										Intent intent=new Intent();
-										intent.putExtra("pos",pos);
-										intent.putExtra("pos2",pos2);
-										setResult(99,intent);
-
-										finish();
+									if (bSucc) {
+										if (StringUtils.isNullOrEmpty(fileInfo0.getFilePath())) {
+											new MaterialDialog.Builder(PicDetailActivity.this).title("温馨提示").content("是否将本地资源同步删除").positiveText("删除").negativeText("取消").onPositive(new MaterialDialog.SingleButtonCallback() {
+												@Override
+												public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+													File f = new File(fileInfo0.getFilePath());
+													f.delete();
+													Intent intent = new Intent();
+													intent.putExtra("pos1",pos1);
+													intent.putExtra("pos2",pos2);
+													setResult(RESULT_OK, intent);
+													finish();
+												}
+											}).onNegative(new MaterialDialog.SingleButtonCallback() {
+												@Override
+												public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+													Intent intent = new Intent();
+													intent.putExtra("pos1",pos1);
+													intent.putExtra("pos2",pos2);
+													setResult(RESULT_OK, intent);
+													finish();
+												}
+											}).show();
+										}else{
+											Intent intent = new Intent();
+											intent.putExtra("pos1",pos1);
+											intent.putExtra("pos2",pos2);
+											setResult(RESULT_OK, intent);
+											finish();
+										}
 									}
 
 
@@ -237,19 +242,16 @@ public class PicDetailActivity extends UILActivity implements OnClickListener
 				thread.start();
 			}
 			break;
-			case R.id.pic_detail_savelocal:
-			{
-				if (fileInfo0 != null)
-				{
-					List<FileInfo0> info0s=new ArrayList<>();
-					if(StringUtils.isNullOrEmpty(fileInfo0.getFilePath())){
-						fileInfo0.setFilePath(new ShareUtils(this).getPhotoFile().getPath()+"/"+ fileInfo0.getObjid());
+			case R.id.pic_detail_savelocal: {
+				if (fileInfo0 != null) {
+					List<FileInfo> info0s = new ArrayList<>();
+					if (StringUtils.isNullOrEmpty(fileInfo0.getFilePath())) {
+						fileInfo0.setFilePath(new ShareUtils(this).getPhotoFile().getPath() + "/" + fileInfo0.getObjid());
 					}
 					info0s.add(fileInfo0);
-					if (syncTask != null)
-					{
-						//	syncTask.downloadList(info0s, PicDetailActivity.this, handler);
-//									ToastUtils.toast(PicDetailActivity.this, "保存成功!");
+					if (syncTask != null) {
+						syncTask.downloadList(info0s, PicDetailActivity.this, handler);
+						ToastUtils.toast(PicDetailActivity.this, "保存成功!");
 					}
 				}
 

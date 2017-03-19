@@ -1,7 +1,5 @@
 package com.chd.base.Entity;
 
-import android.util.Log;
-
 import com.chd.proto.FileInfo;
 
 import java.util.ArrayList;
@@ -111,6 +109,8 @@ public class FilelistEntity {
     {
         return pathmap.get(pathid);
     }
+
+
 
     public int addFilePath(String path)
     {
