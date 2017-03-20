@@ -160,12 +160,14 @@ public class FilelistEntity {
             //pst=postion+1;
             pst=_GroupCp.get(postion)+1;
             idx=list.size();
+            Log.i("FilelistEntity","use cache ing ...");
         }
         else {
             if (_GroupCp.size()>0)
             {
                 pst = _GroupCp.size()-1;
                 idx = _GroupCp.get(pst );
+                Log.i("FilelistEntity","use cache last idx ");
                 if (idx+1>=list.size())
                 {
                     Log.i("FilelistEntity", "reach buttom  ");
@@ -190,12 +192,14 @@ public class FilelistEntity {
                 }
                 lastday=day;
         }
-        //if (_GroupCp.size()-1<postion)
-        if (idx>list.size()-1)
+        if (pst-1!=postion)
         {
             Log.i("FilelistEntity ","not found postion: "+postion+" pst:"+pst);
-            _GroupCp.add(postion,idx-1);
-            pst=postion+1;
+            if (_GroupCp.size()>1)
+                return null;
+            _GroupCp.add(pst,idx-1);
+            pst=pst+1;
+
         }
         int currentPst=Math.max(0,pst-1);
         int frontPst=Math.max(0,currentPst-1);
@@ -206,14 +210,14 @@ public class FilelistEntity {
             ret[0]=Math.max(1,_GroupCp.get(frontPst)+1);
         ret[1]=Math.max(0,_GroupCp.get(currentPst));
 
-        /*Log.i("FilelistEntity ","Current :"+ currentPst+" "+ ret[0]+" "+ret[1]);
-        Log.i("FilelistEntity",""+TimeUtils.getDayWithTimeMillis0(list.get(ret[0]).getLastModified())+" === "+TimeUtils.getDayWithTimeMillis0(list.get(ret[1]).getLastModified()));
+       /* Log.i("FilelistEntity ","Current :"+ currentPst+" "+ ret[0]+" "+ret[1]);
+        Log.i("FilelistEntity",""+ TimeUtils.getDayWithTimeMillis0(list.get(ret[0]).getLastModified())+" === "+TimeUtils.getDayWithTimeMillis0(list.get(ret[1]).getLastModified()));
 
         for (int i=0;i<_GroupCp.size();i++)
         {
             Log.i("FilelistEntity"," idx: "+ i+" : "+_GroupCp.get(i));
-        }
-*/
+        }*/
+
 
         return ret;
     }
