@@ -164,22 +164,36 @@ public class FilelistEntity {
             {
                 pst = _GroupCp.size()-1;
                 idx = _GroupCp.get(pst );
+                if (idx+1>=list.size())
+                {
+                    Log.i("FilelistEntity", "reach buttom  ");
+                    return null;
+                }
                 lastday=list.get(idx++).getLastModified();
                 pst++;
             }
             else
                 lastday=list.get(0).getLastModified();
         }
+        Log.i("FilelistEntity "," postion from cache :"+ pst);
         for(;( (idx<list.size()) && pst<=postion );idx++)
         {
             day=list.get(idx).getLastModified();
                 if (day-lastday>interval)
                 {
+                    Log.i("FilelistEntity found","found idx:"+idx);
                     _GroupCp.add(pst,idx);
                     pst++;
 
                 }
                 lastday=day;
+        }
+        //if (_GroupCp.size()-1<postion)
+        if (idx>list.size()-1)
+        {
+            Log.i("FilelistEntity ","not found postion: "+postion+" pst:"+pst);
+            _GroupCp.add(postion,idx-1);
+            pst=postion+1;
         }
         int currentPst=Math.max(0,pst-1);
         int frontPst=Math.max(0,currentPst-1);
@@ -188,11 +202,15 @@ public class FilelistEntity {
             ret[0]=0;
         else
             ret[0]=Math.max(1,_GroupCp.get(frontPst)+1);
-        ret[1]=Math.max(0,_GroupCp.get(currentPst)-1);
-/*
-        Log.i("picadpter",currentPst+" "+ ret[0]+" "+ret[1]);
-        Log.i("picadpter",""+TimeUtils.getDayWithTimeMillis0(list.get(ret[0]).getLastModified())+" === "+TimeUtils.getDayWithTimeMillis0(list.get(ret[1]).getLastModified()));
-        Log.i("picadpter"," "+ _GroupCp);
+        ret[1]=Math.max(0,_GroupCp.get(currentPst));
+
+        /*Log.i("FilelistEntity ","Current :"+ currentPst+" "+ ret[0]+" "+ret[1]);
+        Log.i("FilelistEntity",""+TimeUtils.getDayWithTimeMillis0(list.get(ret[0]).getLastModified())+" === "+TimeUtils.getDayWithTimeMillis0(list.get(ret[1]).getLastModified()));
+
+        for (int i=0;i<_GroupCp.size();i++)
+        {
+            Log.i("FilelistEntity"," idx: "+ i+" : "+_GroupCp.get(i));
+        }
 */
 
         return ret;
