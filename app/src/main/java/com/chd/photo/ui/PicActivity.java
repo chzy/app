@@ -130,7 +130,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 					syncTask.analyPhotoUnits(cloudUnits, filelistEntity);
 
 					List<FileLocal> localUnits = filelistEntity.getLocallist();
-					if (cloudUnits != null) {
+					if (cloudUnits != null&&!localUnits.isEmpty()) {
 						List<FileInfo> local = new ArrayList<>();
 						int time = cloudUnits.get(0).getLastModified();
 						local.add(cloudUnits.get(0));
@@ -148,6 +148,23 @@ public class PicActivity extends UILActivity implements OnClickListener {
 								local = null;
 							}
 						}
+					}
+					if(localUnits!=null&&!localUnits.isEmpty()){
+						List<FileLocal> local = new ArrayList<>();
+						int time = localUnits.get(0).getLastModified();
+						local.add(localUnits.get(0));
+						for (int i = 1; i < localUnits.size(); i++) {
+							FileLocal fileInfo = localUnits.get(i);
+							if (fileInfo.lastModified <= ((localList.size() + 1) * 3 * 24 * 3600 + time)) {
+								local.add(fileInfo);
+							} else {
+								localList.add(local);
+								local = new ArrayList<>();
+								local.add(fileInfo);
+							}
+						}
+						localList.add(local);
+						local = null;
 					}
 				}
 				if (bIsUbkList) {

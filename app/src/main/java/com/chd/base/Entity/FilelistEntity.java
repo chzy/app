@@ -1,5 +1,7 @@
 package com.chd.base.Entity;
 
+import android.util.Log;
+
 import com.chd.proto.FileInfo;
 
 import java.util.ArrayList;

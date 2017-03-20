@@ -14,9 +14,11 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
+import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.UILActivity;
 import com.chd.base.backend.SyncTask;
 import com.chd.proto.FTYPE;
+import com.chd.proto.FileInfo;
 import com.chd.record.AndroidAudioRecorder;
 import com.chd.record.model.AudioChannel;
 import com.chd.record.model.AudioSampleRate;
@@ -24,6 +26,7 @@ import com.chd.record.model.AudioSource;
 import com.chd.strongbox.adapter.VoiceAdapter;
 import com.chd.strongbox.domain.VoiceEntity;
 import com.chd.yunpan.R;
+import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.utils.TimeUtils;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -64,6 +67,7 @@ public class VoiceActivity extends UILActivity {
 
 	VoiceAdapter adapter = null;
 	private List<VoiceEntity> entities;
+	private FilelistEntity filelistEntity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +77,6 @@ public class VoiceActivity extends UILActivity {
 		tvCenter.setText("录音");
 		entities = new ArrayList<>();
 		adapter = new VoiceAdapter(entities);
-		SyncTask syncTask = new SyncTask(this, FTYPE.RECORD);
-
-
 
 
 		rvVoiceContent.setLayoutManager(new LinearLayoutManager(this));
@@ -109,6 +110,41 @@ public class VoiceActivity extends UILActivity {
 						.send();
 			}
 		});
+	}
+
+	private void onNewThreadRequest(final boolean bIsUbkList) {
+
+		showWaitDialog();
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				filelistEntity = UILApplication.getFilelistEntity();
+				SyncTask syncTask= new SyncTask(VoiceActivity.this, FTYPE.RECORD);
+				//未备份文件 ==  backedlist . removeAll(localist);
+				final List<FileInfo> cloudUnits= syncTask.getCloudUnits(0, 10000);
+					if (cloudUnits == null) {
+						System.out.print("query cloudUnits remote failed");
+						return;
+					}
+					syncTask.analyPhotoUnits(cloudUnits, filelistEntity);
+					if(!cloudUnits.isEmpty()){
+						//如果不是空的
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+
+								for (FileInfo o:
+								     cloudUnits) {
+
+
+								}
+							}
+						});
+					}
+
+			}
+		});
+		thread.start();
 	}
 
 	int pos = -1;

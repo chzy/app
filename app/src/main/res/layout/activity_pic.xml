@@ -56,6 +56,7 @@
         android:id="@+id/rl_pic_bottom"
         android:layout_width="match_parent"
         android:background="#f6f7f9"
+        android:visibility="gone"
         android:layout_alignParentBottom="true"
         android:layout_height="45dp">
 

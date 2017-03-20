@@ -9,6 +9,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.chd.base.Entity.FileLocal;
 import com.chd.proto.FileInfo;
 import com.chd.yunpan.R;
+import com.chd.yunpan.application.UILApplication;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
@@ -63,7 +64,9 @@ public class PicInfoAdapter<T extends FileInfo> extends BaseQuickAdapter<T, Base
 		String url = "";
 		url = "ttrpc://" + item.getObjid();
 		if (item instanceof FileLocal) {
-			url = "file://" + ((FileLocal) item).getPathid();
+
+			url = "file://"+UILApplication.getFilelistEntity().getFilePath(((FileLocal) item).getPathid())+"/"+item.getObjid();
+			Log.d("liumj",url);
 		}
 
 		imageLoader.displayImage(url, (ImageView) helper.getView(R.id.iv_pic_info_photo), options, new SimpleImageLoadingListener());
