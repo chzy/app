@@ -17,7 +17,9 @@ public class TimeUtils {
     public static final SimpleDateFormat DATE_YEAR=new SimpleDateFormat("yyyy");
     public static final SimpleDateFormat DATE_MONTH=new SimpleDateFormat("MM");
     public static final SimpleDateFormat DATE_DAY=new SimpleDateFormat("dd");
-    public static final SimpleDateFormat DATE_DAY_F=new SimpleDateFormat("yyyy/MM/dd");
+    public static final SimpleDateFormat DATE_DAY_F=new SimpleDateFormat("yyyyMMdd");
+    public static final long EIGHT_COMPLEMENT_MILLISECONDS = 8 * 60 * 60 * 1000L;
+    public static final long MILLISECONDS_OF_DAY = 24 * 60 * 60 * 1000L;
 
     /**
      * long time to string
@@ -52,6 +54,15 @@ public class TimeUtils {
 
     public static int getDayWithTimeMillis0(long timeInMillis)
     {
+        //String ddd=getTime(timeInMillis, DATE_DAY);
+       // if (timeInMillis<1499999999)
+        //    calendar.setTimeInMillis(timeInMillis*1000);
+
+        return Integer.valueOf(getTime(timeInMillis, DATE_DAY_F));
+    }
+
+    public static int getDayWithTimeMillis00(long timeInMillis)
+    {
         //SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//定义格式，不显示毫秒
         //Timestamp now = new Timestamp(timeInMillis);//获取系统当前时间
         //String str = df.format(now);
@@ -60,7 +71,7 @@ public class TimeUtils {
         //Date d1=new Date(timeInMillis);
         //String str=format.format(d1);
 
-        Calendar calendar = Calendar.getInstance();
+         Calendar calendar = Calendar.getInstance();
         if (timeInMillis<1499999999)
             calendar.setTimeInMillis(timeInMillis*1000);
         else
@@ -68,6 +79,13 @@ public class TimeUtils {
         String date=""+calendar.get(Calendar.YEAR)+calendar.get(Calendar.MONTH)+calendar.get(Calendar.DAY_OF_MONTH);
         //return Integer.valueOf(getTime(timeInMillis,DATE_DAY_F));
         return Integer.valueOf(date);
+    }
+
+
+    public static boolean isSameDay(long timestamp1,long timestamp2){
+        /*return ((timestamp1+EIGHT_COMPLEMENT_MILLISECONDS) / MILLISECONDS_OF_DAY)
+                == ((timestamp2+EIGHT_COMPLEMENT_MILLISECONDS) / MILLISECONDS_OF_DAY);*/
+        return getDayWithTimeMillis0(timestamp1)==getDayWithTimeMillis0(timestamp2);
     }
 
 
