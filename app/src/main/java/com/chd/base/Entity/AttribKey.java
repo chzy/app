@@ -8,6 +8,8 @@ public  enum  AttribKey {
 
     duration {public String getName(){return "duration";}}
     ,title  {public  String getName() {return  "title";}}
-    ,lines  {public  String getName() {return  "lines";}}
+    ,lines  {public  String getName() {return  "lines";}};
+
+    public abstract String getName();
 
 }
