@@ -73,7 +73,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 				//Collections.sort(localList);
 				findViewById(R.id.rl_pic_ubk_layout).setVisibility(View.GONE);
 				mTvCenter.setText("未备份照片");
-				adapter = new PicAdapter(PicActivity.this, localList, bIsUbkList, imageLoader);
+				adapter = new PicAdapter(PicActivity.this, cloudUnits, bIsUbkList, imageLoader);
 				mLvPic.setAdapter(adapter);
 			} else {
 
@@ -84,7 +84,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 				size = filelistEntity.getUnbakNumber();
 				Log.d("liumj", "数量" + size);
 				mTvNumber.setText(String.format("未备份照片%d张", size));
-				adapter = new PicAdapter(PicActivity.this, cloudList, bIsUbkList, imageLoader);
+				adapter = new PicAdapter(PicActivity.this, cloudUnits, bIsUbkList, imageLoader);
 				mLvPic.setAdapter(adapter);
 			}
 		}
@@ -130,6 +130,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 					syncTask.analyPhotoUnits(cloudUnits, filelistEntity);
 
 					List<FileLocal> localUnits = filelistEntity.getLocallist();
+
 					if (cloudUnits != null&&!localUnits.isEmpty()) {
 						List<FileInfo> local = new ArrayList<>();
 						int time = cloudUnits.get(0).getLastModified();
@@ -155,12 +156,13 @@ public class PicActivity extends UILActivity implements OnClickListener {
 						local.add(localUnits.get(0));
 						for (int i = 1; i < localUnits.size(); i++) {
 							FileLocal fileInfo = localUnits.get(i);
-							if (fileInfo.lastModified <= ((localList.size() + 1) * 3 * 24 * 3600 + time)) {
+							if (fileInfo.lastModified <=  3 * 24 * 3600 + time) {
 								local.add(fileInfo);
 							} else {
 								localList.add(local);
 								local = new ArrayList<>();
 								local.add(fileInfo);
+								time=fileInfo.getLastModified();
 							}
 						}
 						localList.add(local);
