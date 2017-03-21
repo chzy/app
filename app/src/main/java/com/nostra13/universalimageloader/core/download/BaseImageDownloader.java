@@ -31,7 +31,7 @@ import android.webkit.MimeTypeMap;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ContentLengthInputStream;
 import com.nostra13.universalimageloader.core.inputstream.RecyclableBufferedInputStream;
-import com.nostra13.universalimageloader.core.inputstream.TrpcInpustream;
+import com.nostra13.universalimageloader.core.inputstream.TrpcReadstream;
 import com.nostra13.universalimageloader.utils.IoUtils;
 
 import java.io.BufferedInputStream;
@@ -144,7 +144,7 @@ public class BaseImageDownloader implements ImageDownloader {
 
 	protected InputStream getStreamFromTRPC(String imageUri, Object extra)  throws IOException {
 		//Log.d("BaseImageDownloader",imageUri);
-		TrpcInpustream imageStream = null;
+		TrpcReadstream imageStream = null;
 		int length=0;
 		String savefile=null;
 		boolean thum=false;
@@ -165,7 +165,7 @@ public class BaseImageDownloader implements ImageDownloader {
 		}*/
 
 		try {
-			imageStream= new TrpcInpustream(objid,savefile,thum);
+			imageStream= new TrpcReadstream(objid,savefile,thum);
 			length=(int)imageStream.getSize();
 		} catch (Exception ex)
 		{

@@ -16,7 +16,7 @@ import java.io.InputStream;
 /**
  * Created by lxp1 on 2015/12/13.
  */
-public final   class TrpcInpustream extends InputStream {
+public final   class TrpcReadstream extends InputStream {
    private TrpcReadtransport transport;
    private /*RandomAccessFile*/FileOutputStream outfilewrter=null;
    private String _savefile;
@@ -27,7 +27,7 @@ public final   class TrpcInpustream extends InputStream {
 
 
 
-    public TrpcInpustream(String name, String savefile,boolean thum) throws Exception   {
+    public TrpcReadstream(String name, String savefile, boolean thum) throws Exception   {
         if (thum)
             transport=new InputTrasnportThum(name, FTYPE.PICTURE);
         else
@@ -68,10 +68,7 @@ public final   class TrpcInpustream extends InputStream {
         if ( objlen<=remoteoffset )
             return -1;
         int redbytes=0;
-        //long offset=remoteoffset+byteOffset;
         Log.i(TAG, Thread.currentThread().getId()+ " offset:" + remoteoffset + " readcount:" + (/*buffer.length - byteOffset*/ byteCount));
-      /*  if (byteOffset>=objlen)
-            return  -1;*/
         redbytes= transport.read(buffer,byteOffset,remoteoffset,byteCount);
 
         if (redbytes>-1 )
