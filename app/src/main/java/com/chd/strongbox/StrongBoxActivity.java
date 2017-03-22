@@ -73,12 +73,11 @@ public class StrongBoxActivity extends UILActivity {
 				startActivity(i);
 				finish();
 			}
-		}else{
+		} else {
 			Intent i = new Intent(this, GuideGesturePasswordActivity.class);
 			startActivity(i);
 			finish();
 		}
-
 
 
 	}
@@ -90,19 +89,19 @@ public class StrongBoxActivity extends UILActivity {
 	private static final int REQUEST_CODE_SETTING = 300;
 	Class cls;
 
-	@OnClick({R.id.iv_left,R.id.ll_one, R.id.ll_two, R.id.ll_three, R.id.ll_four, R.id.ll_five, R.id.ll_six})
+	@OnClick({R.id.iv_left, R.id.ll_one, R.id.ll_two, R.id.ll_three, R.id.ll_four, R.id.ll_five, R.id.ll_six})
 	public void onClick(View view) {
-		Intent intent=null;
+		Intent intent = null;
 		switch (view.getId()) {
 			case R.id.iv_left:
 				onBackPressed();
 				break;
 			case R.id.ll_one:
 				//照片
-				cls=PicActivity.class;
+				cls = PicActivity.class;
 				AndPermission.with(this)
 						.requestCode(REQUEST_CODE_PERMISSION_SD)
-						.permission(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WRITE_CONTACTS)
+						.permission(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WRITE_CONTACTS)
 						// rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
 						.rationale(new RationaleListener() {
 							@Override
@@ -114,10 +113,10 @@ public class StrongBoxActivity extends UILActivity {
 				break;
 			case R.id.ll_two:
 				//视频
-				cls=VideoListActivity.class;
+				cls = VideoListActivity.class;
 				AndPermission.with(this)
 						.requestCode(REQUEST_CODE_PERMISSION_SD)
-						.permission(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WRITE_CONTACTS)
+						.permission(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WRITE_CONTACTS)
 						// rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
 						.rationale(new RationaleListener() {
 							@Override
@@ -128,11 +127,11 @@ public class StrongBoxActivity extends UILActivity {
 
 				break;
 			case R.id.ll_three:
-				//文档
-				cls=OtherActivity.class;
+				//录音
+				cls = VoiceActivity.class;
 				AndPermission.with(this)
 						.requestCode(REQUEST_CODE_PERMISSION_SD)
-						.permission(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WRITE_CONTACTS)
+						.permission(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WRITE_CONTACTS)
 						// rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
 						.rationale(new RationaleListener() {
 							@Override
@@ -140,13 +139,14 @@ public class StrongBoxActivity extends UILActivity {
 							}
 						})
 						.send();
+
 				break;
 			case R.id.ll_four:
-				//录音
-				cls=VoiceActivity.class;
+				//音乐
+				cls = MusicActivity.class;
 				AndPermission.with(this)
 						.requestCode(REQUEST_CODE_PERMISSION_SD)
-						.permission(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WRITE_CONTACTS)
+						.permission(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WRITE_CONTACTS)
 						// rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
 						.rationale(new RationaleListener() {
 							@Override
@@ -154,13 +154,13 @@ public class StrongBoxActivity extends UILActivity {
 							}
 						})
 						.send();
+
 				break;
 			case R.id.ll_five:
-				//记事本
-				cls=NotepadActivity.class;
+				//短信
 				AndPermission.with(this)
-						.requestCode(REQUEST_CODE_PERMISSION_SD)
-						.permission(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WRITE_CONTACTS)
+						.requestCode(REQUEST_CODE_PERMISSION_SMS)
+						.permission(Manifest.permission.WRITE_CONTACTS)
 						// rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
 						.rationale(new RationaleListener() {
 							@Override
@@ -168,23 +168,9 @@ public class StrongBoxActivity extends UILActivity {
 							}
 						})
 						.send();
+
 				break;
 			case R.id.ll_six:
-				//音乐
-				AndPermission.with(this)
-						.requestCode(REQUEST_CODE_PERMISSION_SD)
-						.permission(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.WRITE_CONTACTS)
-						// rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
-						.rationale(new RationaleListener() {
-							@Override
-							public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
-							}
-						})
-						.send();
-				intent=new Intent(this, MusicActivity.class);
-				startActivity(intent);
-				break;
-			case R.id.ll_seven:
 				//通讯录
 				// 申请单个权限。联系人
 				AndPermission.with(this)
@@ -197,12 +183,28 @@ public class StrongBoxActivity extends UILActivity {
 							}
 						})
 						.send();
+
+				break;
+			case R.id.ll_seven:
+				//文档
+				cls = OtherActivity.class;
+				AndPermission.with(this)
+						.requestCode(REQUEST_CODE_PERMISSION_SD)
+						.permission(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WRITE_CONTACTS)
+						// rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
+						.rationale(new RationaleListener() {
+							@Override
+							public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
+							}
+						})
+						.send();
 				break;
 			case R.id.ll_eight:
-				//短信
+				//记事本
+				cls = NotepadActivity.class;
 				AndPermission.with(this)
-						.requestCode(REQUEST_CODE_PERMISSION_SMS)
-						.permission(Manifest.permission.WRITE_CONTACTS)
+						.requestCode(REQUEST_CODE_PERMISSION_SD)
+						.permission(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WRITE_CONTACTS)
 						// rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
 						.rationale(new RationaleListener() {
 							@Override
@@ -212,7 +214,7 @@ public class StrongBoxActivity extends UILActivity {
 						.send();
 				break;
 			case R.id.ll_nine:
-				ToastUtils.toast(this,"敬请期待");
+				ToastUtils.toast(this, "敬请期待");
 				break;
 		}
 	}
@@ -222,16 +224,16 @@ public class StrongBoxActivity extends UILActivity {
 		@Override
 		public void onSucceed(int requestCode, List<String> grantedPermissions) {
 			// 权限申请成功回调。
-			if(requestCode == 100) {
+			if (requestCode == 100) {
 				// TODO 相应代码。 联系人
-				Intent intent=new Intent(StrongBoxActivity.this, ContactActivity.class);
+				Intent intent = new Intent(StrongBoxActivity.this, ContactActivity.class);
 				startActivity(intent);
-			} else if(requestCode == 101) {
+			} else if (requestCode == 101) {
 				// TODO 相应代码。
 				Intent pageintent = new Intent();
 				pageintent.setClass(StrongBoxActivity.this, SmsBackActivity.class);
 				startActivity(pageintent);
-			}else if(requestCode==102){
+			} else if (requestCode == 102) {
 				//相应代码
 				Intent pageintent = new Intent();
 				pageintent.setClass(StrongBoxActivity.this, cls);
@@ -265,6 +267,7 @@ public class StrongBoxActivity extends UILActivity {
 			}
 		}
 	};
+
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 //		super.onRequestPermissionsResult(requestCode, permissions, grantResults);

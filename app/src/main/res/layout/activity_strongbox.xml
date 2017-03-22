@@ -90,7 +90,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/icon_safebox_decument"
+                    android:src="@drawable/icon_safebox_audio"
                     />
 
 
@@ -98,7 +98,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="文档"
+                    android:text="录音"
                     android:textSize="15sp"
                     />
 
@@ -127,7 +127,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/icon_safebox_audio"
+                    android:src="@drawable/icon_safebox_music"
                     />
 
 
@@ -135,7 +135,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="录音"
+                    android:text="音乐"
                     android:textSize="15sp"
                     />
 
@@ -157,7 +157,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/icon_safebox_note"
+                    android:src="@drawable/icon_safebox_sms"
                     />
 
 
@@ -165,7 +165,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="记事本"
+                    android:text="短信"
                     android:textSize="15sp"
                     />
 
@@ -188,7 +188,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/icon_safebox_no"
+                    android:src="@drawable/icon_safebox_contact"
                     />
 
 
@@ -196,7 +196,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="音乐"
+                    android:text="通讯录"
                     android:textSize="15sp"
                     />
 
@@ -225,7 +225,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/icon_safebox_audio"
+                    android:src="@drawable/icon_safebox_decument"
                     />
 
 
@@ -233,7 +233,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="联系人"
+                    android:text="文档"
                     android:textSize="15sp"
                     />
 
@@ -263,7 +263,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="短信"
+                    android:text="记事本"
                     android:textSize="15sp"
                     />
 
