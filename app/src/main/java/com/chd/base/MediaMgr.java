@@ -343,7 +343,7 @@ public class MediaMgr  {
 		}
 
   		Collections.sort(couldlist,new ComparatorByDate());
-		//filelistEntity.setBklist(couldlist);
+		filelistEntity.setBklist(couldlist);
 		//filelistEntity.setLocallist(LocalUnits);
 		t1=System.currentTimeMillis();
 		long z=t1-t0;

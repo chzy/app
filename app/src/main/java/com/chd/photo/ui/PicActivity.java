@@ -63,6 +63,9 @@ public class PicActivity extends UILActivity implements OnClickListener {
 	//private List<PicBean<PicInfoBeanMonth>> localList = new ArrayList();
 	private FilelistEntity filelistEntity;
 	private PicAdapter adapter;
+	private List<List<? extends FileInfo>> localList = new ArrayList();
+	private List<List<? extends FileInfo>> cloudList = new ArrayList<>();
+	private List<FileInfo> cloudUnits /*= new ArrayList<>()*/;
 
 	private Handler handler = new Handler(Looper.getMainLooper()) {
 		public void handleMessage(Message msg) {
@@ -106,9 +109,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 		onNewThreadRequest(false);
 	}
 
-	private List<List<? extends FileInfo>> localList = new ArrayList();
-	private List<List<? extends FileInfo>> cloudList = new ArrayList<>();
-	private List<FileInfo> cloudUnits = new ArrayList<>();
+
 
 	private void onNewThreadRequest(final boolean bIsUbkList) {
 
@@ -117,6 +118,15 @@ public class PicActivity extends UILActivity implements OnClickListener {
 			@Override
 			public void run() {
 				filelistEntity = UILApplication.getFilelistEntity();
+				if (filelistEntity.getLocallist().size()>0 && filelistEntity.getBklist().size()>0) {
+					cloudUnits=filelistEntity.getBklist();
+					if (bIsUbkList) {
+						initLocal();
+					} else {
+						initData();
+					}
+					return;
+				}
 				if (syncTask == null)
 					syncTask = new SyncTask(PicActivity.this, FTYPE.PICTURE);
 				//未备份文件 ==  backedlist . removeAll(localist);
@@ -385,9 +395,9 @@ public class PicActivity extends UILActivity implements OnClickListener {
 			info0s.add(f);
 		}
 		if (bIsUbkList) {
-			syncTask.uploadList(info0s, this, handler);
+			//syncTask.uploadList(info0s, this, handler);
 		} else {
-			syncTask.downloadList(info0s, this, handler);
+			//syncTask.downloadList(info0s, this, handler);
 		}
 
 	}

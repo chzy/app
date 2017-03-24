@@ -3,9 +3,13 @@ package com.chd.service.RPCchannel.upload;
 
 
 
+import com.chd.base.Entity.FileLocal;
+import com.chd.base.Entity.FilelistEntity;
+import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.service.RPCchannel.upload.listener.OnUploadListener;
 import com.chd.service.RPCchannel.upload.listener.OnUploadProgressListener;
+import com.chd.yunpan.application.UILApplication;
 
 import java.io.File;
 import java.util.HashMap;
@@ -28,28 +32,24 @@ public class FileUploadInfo {
     private OnUploadListener apiCallback;
     private OnUploadProgressListener progressListener;
     private UploadOptions uploadOptions;
+    private FilelistEntity filelistEntity;
 
 
 
     private String preProcessedFile;     //上传前对文件预处理后，生成的临时文件
 
-    public FileUploadInfo(HashMap<String, String> descmap, /*String id, String filePath, String mimeType, String url*/FileInfo0 info0,
+    public FileUploadInfo(HashMap<String, String> descmap, /*String id, String filePath, String mimeType, String url*/FileLocal info0,
                           OnUploadListener apiCallback, OnUploadProgressListener progressListener,UploadOptions uploadOptions ) {
         this.descAttribMap = descmap;
-/*        this.id = id;
-        this.filePath = filePath;
-        this.mimeType = mimeType;
-        this.url = url;*/
 
-        _item=info0;
+        _item=new FileInfo0((FileInfo)info0);
+        _item.setFilePath(filelistEntity.getFilePath(info0.getPathid()));
         this.apiCallback = apiCallback;
         this.progressListener = progressListener;
         this.uploadOptions = uploadOptions;
+        filelistEntity= UILApplication.getFilelistEntity();
     }
 
-    public FileUploadInfo(FileInfo0 fileInfo0, OnUploadListener apiCallback, OnUploadProgressListener uploadProgressListener) {
-
-    }
 
    /* @Override
     public String toString() {
@@ -85,7 +85,7 @@ public class FileUploadInfo {
     }
 
     public String getId() {
-        return _item.getId();
+        return ""+_item.getObjid().hashCode();
     }
 
    public String getType() {
@@ -104,9 +104,9 @@ public class FileUploadInfo {
         return uploadOptions;
     }
 
-    public String getUrl() {
+    /*public String getUrl() {
         return _item.getUrl();
         //return url;
-    }
+    }*/
 
 }

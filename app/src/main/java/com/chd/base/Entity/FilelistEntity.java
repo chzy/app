@@ -209,7 +209,7 @@ public class FilelistEntity {
                 }
                 lastday=day;
         }
-        if (pst-1!=postion)
+        if (pst-1!=postion && day!=0 )
         {
             Log.i(classname,"not found postion: "+postion+" pst:"+pst);
             if (GroupLL.size()>1)
