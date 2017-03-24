@@ -9,6 +9,7 @@ import com.chd.yunpan.net.NetworkUtils;
 
 public class SyncFileService extends Service {
 
+
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		isStarting = true;

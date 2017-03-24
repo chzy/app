@@ -856,12 +856,12 @@ public class MediaMgr  {
 		return list;
 	}
 
-	public void addUpLoadingFile(FileInfo entity){
+	public void addUpLoadingFile(FileInfo0 entity){
 		ContentValues values = new ContentValues();
 		//values.put(/*"hash"*/"sysid",/*entity.getFilePath().hashCode()*/entity.getSysid());
 		values.put("objid",entity.getObjid());
 
-		//values.put("path", entity.getFilePath());
+		values.put("path", entity.getFilePath());
 
 		values.put("size",entity.getFilesize());
 		values.put("type", (entity.getFtype()).getValue());

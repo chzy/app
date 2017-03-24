@@ -27,13 +27,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SyncLocalFileBackground implements Runnable {
 
 
     private final String TAG = "SyncLocal";
     private final int Maxbuflen = (int)256 * 1024;
-    List<FileInfo0> files = new ArrayList<FileInfo0>();
+   // private static ConcurrentLinkedQueue<FileInfo0> files = new ConcurrentLinkedQueue<FileInfo0>();
+   private  List<FileInfo0> files = new ArrayList<>();
     private MediaMgr su = null;
     private Context context = null;
     private FileInfo0 _item;
@@ -320,7 +322,7 @@ public class SyncLocalFileBackground implements Runnable {
                 Log.d(TAG, "del remote obj :" + "fail !!!");
         }
         su.open();
-        TClient.TFilebuilder filebuilder = null;
+        //TClient.TFilebuilder filebuilder = null;
         long oft=0l;
 
         FileInfo fileInfo = tClient.queryFile(entity);
@@ -349,14 +351,14 @@ public class SyncLocalFileBackground implements Runnable {
                     Log.e(TAG, "remote obj exist!!");
                     boolean ret = false;
                     try {
-                        ret=tClient.CommitObj(entity.objid, entity.ftype,null);
+                        //ret=tClient.CommitObj(entity.objid, entity.ftype,null);
                         if(activeProcess!=null){
                         activeProcess.finishProgress();
                         }
                         su.close();
                         return ret;
 
-                    } catch (TException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     start =/*entity.getOffset()*/oft;
@@ -424,10 +426,10 @@ public class SyncLocalFileBackground implements Runnable {
 
         try {
             String fname = entity.getObjid() == null ? MediaFileUtil.getFnameformPath(entity.getFilePath()) : entity.getObjid();
-            filebuilder = tClient.new TFilebuilder(fname, entity.getFtype(),(int)size);
+            //filebuilder = tClient.new TFilebuilder(fname, entity.getFtype(),(int)size);
             String objid = null;
             if (start == -1 ) {
-                objid = filebuilder.ApplyObj();
+                //objid = filebuilder.ApplyObj();
                 if (objid == null) {
                     Log.e(TAG, "alloc obj failed ");
                     return false;
@@ -437,7 +439,7 @@ public class SyncLocalFileBackground implements Runnable {
                 //su.setUploadStatus(entity);
             } else {
                 objid = entity.getObjid();
-                filebuilder.setObj(objid);
+                //filebuilder.setObj(objid);
             }
             RandomAccessFile rf = new RandomAccessFile(entity.getFilePath(), "r");
             int bufflen=  Math.min(Maxbuflen,(int)(size - start));
@@ -451,7 +453,9 @@ public class SyncLocalFileBackground implements Runnable {
             while ((len = rf.read(buffer, 0, bflen)) != -1) {
                 pz = pz + len;
                 t0=System.currentTimeMillis();
-                if (filebuilder.Append(/*pz,*/buffer,len)) {
+               // if (filebuilder.Append(/*pz,*/buffer,len))
+                if (2==1)
+                {
                         t1 = System.currentTimeMillis();
                         speed = (len  / ((t1 - t0)));
                         speed1=(pz/(t1-t00));
@@ -486,7 +490,8 @@ public class SyncLocalFileBackground implements Runnable {
 
             if (succed)
             {
-                if (filebuilder.Commit(desc)) {
+                if (/*filebuilder.Commit(desc)*/ 1==2)
+                {
                     su.finishTransform(MediaMgr.DBTAB.UPed, entity);
                     succed = true;
                     Log.d(TAG, objid + " upload finished !!");
@@ -517,8 +522,8 @@ public class SyncLocalFileBackground implements Runnable {
             }
             su.close();
             if (!succed) {
-                if (filebuilder != null)
-                    filebuilder.DestoryObj();
+                //if (filebuilder != null)
+                    //filebuilder.Destory();
                 return false;
             }
         }

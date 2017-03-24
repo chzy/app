@@ -55,36 +55,6 @@ public class SyncTask {
 		return filelistEntity.getBklist().get(id);
 	}
 
-	//查询远程对象是否有本地副本. 根据文件名匹配
-	/*public boolean haveLocalCopy(FileInfo info0) {
-		boolean ret=false;
-		if (info0.getObjid()==null)
-		{
-			Log.d(TAG, "not remote file obj");
-			return false;
-		}
-	*//*	if (info0.getSysid() > 0)
-		{
-			if (info0.getFilePath()!=null && info0.getFilePath().indexOf(".")>1 ) {
-					File file=new File(info0.getFilePath());
-				   return  (file.exists() && file.isFile());
-			}
-			if (info0.getFtype()==null)
-				info0.setFtype(_ftype);
-			int time=info0.getLastModified();
-			ret=   dbManager.queryLocalInfo(info0.getSysid(),info0);
-			*//**//*
-			临时方案 恢复成远程的上传时间
-			* *//**//*
-			if (ret)
-				info0.setLastModified(time);
-		}*//*
-
-		return ret;
-
-
-	}*/
-
 
 	public void flush() {
 		filelistEntity.getBklist().clear();
@@ -181,7 +151,7 @@ public class SyncTask {
 	activeProcess 对象 实现进度条展现
 	beeque  放入数据库 做队列 通过服务方式后台下载
 	* */
-	public void uploadList(final List<FileInfo> files, final ActiveProcess activeProcess, final Handler mHandler) {
+	public void uploadList(final List<FileInfo0> files, final ActiveProcess activeProcess, final Handler mHandler) {
 		dialog = new AlertDialog.Builder(activeProcess)
 				.setTitle("正在上传")
 				.setMessage("")
@@ -261,7 +231,7 @@ public class SyncTask {
 	activeProcess 对象 实现进度条展现
 	beeque  放入数据库 做队列 通过服务方式后台下载
 	* */
-	public boolean upload(final FileInfo item, final ActiveProcess activeProcess, boolean beeque, AlertDialog dialog) {
+	public boolean upload(final FileInfo0 item, final ActiveProcess activeProcess, boolean beeque, AlertDialog dialog) {
 
 		if (!item.isSetFtype())
 			item.setFtype(_ftype);
@@ -282,15 +252,15 @@ public class SyncTask {
 			activeProcess.setParMessage("上传失败");
 			activeProcess.finishProgress();
 		}
-		FileInfo0 info0 = new FileInfo0(item);
-		return syncLocalFileBackground.uploadBigFile(info0, activeProcess, dialog);
+		//FileInfo0 info0 = new FileInfo0(item);
+		return syncLocalFileBackground.uploadBigFile(item, activeProcess, dialog);
 	}
 
-	public void uploadFileOvWrite(final FileInfo item, final ActiveProcess activeProcess, boolean beeque) {
+	public void uploadFileOvWrite(final FileInfo0 item, final ActiveProcess activeProcess, boolean beeque) {
 
 		if (!item.isSetFtype())
 			item.setFtype(_ftype);
-
+		//FileInfo0 fileInfo0=(FileInfo0) item;
 		try {
 			dbManager.open();
 			dbManager.addUpLoadingFile(item);

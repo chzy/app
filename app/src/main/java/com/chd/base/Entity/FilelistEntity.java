@@ -118,8 +118,6 @@ public class FilelistEntity {
         return pathmap.get(pathid);
     }
 
-
-
     public int addFilePath(String path)
     {
         int hash=path.hashCode();
