@@ -372,7 +372,7 @@ public class MediaMgr  {
 			File file=new File(c.getString(COLUMN_PATH));
 			String objname=file.getName();
 			String path=file.getParent();
-			fileLocal.setLastModified(TimeUtils.getDayWithTimeMillis0(c.getLong(COLUMN_DATE)));
+			fileLocal.setLastModified((int) c.getLong(COLUMN_DATE));
 			int pathid = filelistEntity.addFilePath(path);
 			fileLocal.setPathid(pathid);
 			file=null;
