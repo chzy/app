@@ -25,4 +25,7 @@ public class FileLocal extends FileInfo {
     }
 
 
+    public String getId() {
+        return ""+pathid+"-"+super.getObjid();
+    }
 }
