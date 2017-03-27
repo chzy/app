@@ -26,7 +26,7 @@ public class MediaFileUtil {
     private static final String LOG_TAG = "Util";
 
     public enum FileCategory {
-        All, Music, Video, Picture, Theme, Doc, Zip, Apk, Custom, Other, Favorite,File,_ID
+        All, Music, Video,Record, Picture, Theme, Doc, Zip, Apk, Custom, Other, Favorite,File,_ID
     }
 
     public enum SortMethod {

@@ -6,7 +6,7 @@ import com.chd.proto.FileInfo0;
  * Created by lxp1 on 2015/11/20.
  */
 public class Mp3Info extends FileInfo0 {
-    //private  long id;
+    private  long musicid;
     /*private  String title;
     private  String artist;
     private  String  album;
@@ -18,12 +18,11 @@ public class Mp3Info extends FileInfo0 {
     public Mp3Info()
     {}
 
-    /*public long getId() {
-        return id;
-    }*/
+    public long getMusicid() {
+        return musicid;
+    }
 
-    /*public void setId(long id) {
-        this.id = id;
-    }*/
-
+    public void setMusicid(long musicid) {
+        this.musicid = musicid;
+    }
 }

@@ -15,8 +15,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chd.base.Entity.FileLocal;
 import com.chd.base.UILActivity;
+import com.chd.proto.FileInfo;
+import com.chd.service.RPCchannel.upload.FileUploadInfo;
+import com.chd.service.RPCchannel.upload.FileUploadManager;
+import com.chd.service.RPCchannel.upload.listener.OnUploadListener;
 import com.chd.yunpan.R;
+import com.chd.yunpan.application.UILApplication;
+import com.chd.yunpan.utils.ToastUtils;
 import com.chd.yunpan.view.ActionSheetDialog;
 import com.gturedi.views.StatefulLayout;
 import com.yanzhenjie.permission.AndPermission;
@@ -27,6 +34,7 @@ import com.yanzhenjie.permission.RationaleListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -54,6 +62,7 @@ public class VideoListActivity extends UILActivity {
 	StatefulLayout slVideoListLayout;
 
 
+	private List<FileInfo> cloudUnits=new ArrayList<>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,7 +74,14 @@ public class VideoListActivity extends UILActivity {
 		if(!f.exists()){
 			f.mkdir();
 		}
-
+//
+//		final SyncTask syncTask=new SyncTask(this, FTYPE.VIDEO);
+//		new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				syncTask.analyVideoUnits(cloudUnits,);
+//			}
+//		}).start();
 
 	}
 	private static final int REQUEST_CODE_SETTING = 300;
@@ -193,12 +209,29 @@ public class VideoListActivity extends UILActivity {
 					}
 					fis.close();
 					fos.close();
+
 					// 文件写完之后删除/sdcard/dcim/CAMERA/XXX.MP4
 					deleteDefaultFile(data.getData());
-					Intent intent=new Intent(VideoListActivity.this,VideoPlayActivity.class);
-					intent.putExtra("url",tmpFile.getPath());
-					intent.putExtra("bitmap",bitmap);
-					startActivity(intent);
+					FileUploadManager manager=FileUploadManager.getInstance();
+					FileLocal fileLocal=new FileLocal();
+					int pathid= UILApplication.getFilelistEntity().addFilePath(tmpFile.getParent());
+					fileLocal.setPathid(pathid);
+					fileLocal.setObjid(tmpFile.getName());
+					manager.uploadFile(fileLocal, new OnUploadListener() {
+						@Override
+						public void onError(FileUploadInfo uploadData, int errorType, String msg) {
+							ToastUtils.toast(VideoListActivity.this,"上传失败");
+						}
+
+						@Override
+						public void onSuccess(FileUploadInfo uploadData, Object data) {
+							ToastUtils.toast(VideoListActivity.this,"上传成功");
+						}
+					});
+//					Intent intent=new Intent(VideoListActivity.this,VideoPlayActivity.class);
+//					intent.putExtra("url",tmpFile.getPath());
+//					intent.putExtra("bitmap",bitmap);
+//					startActivity(intent);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

@@ -64,9 +64,7 @@ public class PicInfoAdapter<T extends FileInfo> extends BaseQuickAdapter<T, Base
 		String url = "";
 		url = "ttrpc://" + item.getObjid();
 		if (item instanceof FileLocal) {
-
 			url = "file://"+UILApplication.getFilelistEntity().getFilePath(((FileLocal) item).getPathid())+"/"+item.getObjid();
-			Log.d("liumj",url);
 		}
 
 		imageLoader.displayImage(url, (ImageView) helper.getView(R.id.iv_pic_info_photo), options, new SimpleImageLoadingListener());

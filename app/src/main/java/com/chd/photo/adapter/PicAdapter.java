@@ -11,6 +11,7 @@ import android.view.View;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
+import com.chd.base.Entity.FileLocal;
 import com.chd.photo.ui.PicActivity;
 import com.chd.photo.ui.PicDetailActivity;
 import com.chd.proto.FileInfo;
@@ -24,14 +25,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class PicAdapter<E extends FileInfo> extends BaseQuickAdapter<E, BaseViewHolder> {
+public class PicAdapter<E extends FileInfo> extends BaseQuickAdapter<List<E>, BaseViewHolder> {
 
 	private Activity context;
 	private boolean bIsUbkList;
 	private ImageLoader imageLoader;
 
 
-	public PicAdapter(PicActivity picActivity, List<E> localList, boolean bIsUbkList, ImageLoader imageLoader) {
+	public PicAdapter(PicActivity picActivity, List<List<E>> localList, boolean bIsUbkList, ImageLoader imageLoader) {
 		super(R.layout.item_pic_adapter, localList);
 		this.bIsUbkList = bIsUbkList;
 		this.context = picActivity;
@@ -47,33 +48,25 @@ public class PicAdapter<E extends FileInfo> extends BaseQuickAdapter<E, BaseView
 	}
 
 	@Override
-	protected void convert(final BaseViewHolder helper, final E item) {
-		Integer[] iddByDate = UILApplication.getFilelistEntity().getIddByDate(helper.getAdapterPosition(), mData, 3);
-		if (iddByDate == null) {
-			return;
-		}
-		List<E> es = mData.subList(iddByDate[0], iddByDate[1]);
-//			if (item.get(0) != null) {
-		String start = TimeUtils.getDay(es.get(0).getLastModified());
-		String end = TimeUtils.getDay(es.get(es.size() - 1).getLastModified());
+	protected void convert(final BaseViewHolder helper, final List<E> item) {
+
+		String start = TimeUtils.getDay(item.get(0).getLastModified());
+		String end = TimeUtils.getDay(item.get(item.size()-1).getLastModified());
 		if (start.equals(end)) {
 			helper.setText(R.id.tv_pic_date, start);
 		} else {
-			helper.setText(R.id.tv_pic_date, start + "至" + end);
+			helper.setText(R.id.tv_pic_date, end + "至" + start);
 		}
 		RecyclerView recyclerView = helper.getView(R.id.mlv_pic);
 
 		recyclerView.setLayoutManager(new GridLayoutManager(mContext, 4, LinearLayoutManager.VERTICAL, false));
-		final PicInfoAdapter<E> infoAdapter = new PicInfoAdapter<E>(es
+		final PicInfoAdapter<E> infoAdapter = new PicInfoAdapter<E>(item
 				, imageLoader, showSelect);
 		infoAdapter.setPosition(helper.getAdapterPosition());
 		recyclerView.setAdapter(infoAdapter);
 		recyclerView.setHasFixedSize(true);
 		recyclerView.addOnScrollListener(new PauseOnScrollListener(imageLoader, true, true));
 		recyclerView.addOnItemTouchListener(onItemClickListener);
-//			}
-
-
 	}
 
 
@@ -85,6 +78,7 @@ public class PicAdapter<E extends FileInfo> extends BaseQuickAdapter<E, BaseView
 			PicInfoAdapter<E> infoAdapter = ((PicInfoAdapter) adapter);
 			if (showSelect) {
 				//执行了几次
+
 				String s = infoAdapter.getGroupPos() + " " + position;
 				boolean contains = selectList.contains(s);
 				if (contains) {
@@ -110,13 +104,12 @@ public class PicAdapter<E extends FileInfo> extends BaseQuickAdapter<E, BaseView
 	}
 
 	public void remove(int pos1, int pos2) {
-//		getItem(pos1).remove(pos2);
-//		notifyItemChanged(pos1);
+		getItem(pos1).remove(pos2);
+		notifyItemChanged(pos1);
 	}
 
 	public E getFileInfo(int pos1, int pos2) {
-//		return getItem(pos1).get(pos2);
-		return null;
+		return getItem(pos1).get(pos2);
 	}
 
 

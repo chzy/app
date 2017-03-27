@@ -99,6 +99,20 @@ public class TimeUtils {
         return getTime(timeInMillis, DEFAULT_DATE_FORMAT);
     }
 
+    /**
+     * 获取当前日期0点时间
+     * @param timeInMillis
+     * @return
+     */
+    public static int getZeroTime(int timeInMillis){
+        Calendar date=Calendar.getInstance();
+        date.setTimeInMillis(timeInMillis*1000L);
+        date.set(Calendar.HOUR,0);
+        date.set(Calendar.MINUTE,0);
+        date.set(Calendar.MILLISECOND,0);
+        return (int)(date.getTimeInMillis()/1000);
+    }
+
     public static String getDay(long timeInMillis){
     	return getTime(timeInMillis, DATE_FORMAT_DATE);
     }

@@ -89,7 +89,7 @@ public class StrongBoxActivity extends UILActivity {
 	private static final int REQUEST_CODE_SETTING = 300;
 	Class cls;
 
-	@OnClick({R.id.iv_left, R.id.ll_one, R.id.ll_two, R.id.ll_three, R.id.ll_four, R.id.ll_five, R.id.ll_six})
+	@OnClick({R.id.iv_left, R.id.ll_one, R.id.ll_two, R.id.ll_three, R.id.ll_four, R.id.ll_five, R.id.ll_six,R.id.ll_seven,R.id.ll_eight,R.id.ll_nine})
 	public void onClick(View view) {
 		Intent intent = null;
 		switch (view.getId()) {

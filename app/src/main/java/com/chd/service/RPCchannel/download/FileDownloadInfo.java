@@ -1,9 +1,6 @@
 package com.chd.service.RPCchannel.download;
 
 
-
-import com.chd.base.Entity.AttribKey;
-import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.service.RPCchannel.download.listener.OnDownloadProgressListener;
 import com.chd.service.RPCchannel.download.listener.OnDownloadingListener;

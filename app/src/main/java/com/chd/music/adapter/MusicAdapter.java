@@ -11,8 +11,9 @@ import android.widget.TextView;
 
 import com.chd.contacts.vcard.StringUtils;
 import com.chd.music.backend.MediaUtil;
-import com.chd.music.entity.MusicBean;
+import com.chd.proto.FileInfo;
 import com.chd.yunpan.R;
+import com.chd.yunpan.share.ShareUtils;
 import com.chd.yunpan.view.circleimage.CircleImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -23,13 +24,15 @@ import java.util.List;
 public class MusicAdapter extends BaseAdapter {
 
 	private Context context;
-	private List<MusicBean> mMusiclist;
+	private List<FileInfo> mMusiclist;
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
 	DisplayImageOptions options;
+	private String musicPath="";
 
-	public MusicAdapter(Context context, List<MusicBean> list) {
+	public MusicAdapter(Context context, List<FileInfo> list) {
 		this.context = context;
 		this.mMusiclist = list;
+		this.musicPath = new ShareUtils(context).getMusicFile().getPath();
 		options = new DisplayImageOptions.Builder()
 		.showImageOnLoading(R.drawable.pic_test1)
 		.cacheInMemory(true)
@@ -69,9 +72,9 @@ public class MusicAdapter extends BaseAdapter {
 			holder = (ViewHolder) converView.getTag();
 		}
 
-		holder.tv_title.setText(mMusiclist.get(position).getTitle());
+		holder.tv_title.setText(mMusiclist.get(position).getObjid());
 		
-		String pic = mMusiclist.get(position).getFileInfo0().getFilePath();
+		String pic =musicPath+"/"+mMusiclist.get(position).getObjid();
 		String albumArt=null;
 		if(!StringUtils.isNullOrEmpty(pic)){
 			albumArt= MediaUtil.getAlbumArt(context,pic);

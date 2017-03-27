@@ -157,17 +157,17 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
                 for (FileLocal00 fileLocal : fileLocals) {
                     if (fileLocal.bakuped)
                         continue;
-                    String name = fileLocal.fname;
-                    // FileInfo0 fileInfo0 = syncTask.queryLocalInfo(fileLocal.sysid);
-                    // if (fileInfo0 == null) {
-                    //     continue;
-                    //  }
-
-                    // MusicBackupBean musicBackupBean = new MusicBackupBean(name, fileInfo0.getFilePath(), false);
-                    // musicBackupBean.setFileInfo0(fileInfo0);
-                    //  String albumArt = MediaUtil.getAlbumArt(MusicBackupActivity.this, musicBackupBean.getPic());
-                    //  musicBackupBean.setAlbumArt(albumArt);
-                    //  mMusicBackupList.add(musicBackupBean);
+//                    String name = fileLocal.fname;
+//                     FileInfo fileInfo0 = syncTask.queryLocalInfo(fileLocal.sysid);
+//                     if (fileInfo0 == null) {
+//                         continue;
+//                      }
+//
+//                     MusicBackupBean musicBackupBean = new MusicBackupBean(name, fileInfo0.getFilePath(), false);
+//                     musicBackupBean.setFileInfo(fileInfo0);
+//                      String albumArt = MediaUtil.getAlbumArt(MusicBackupActivity.this, musicBackupBean.getPic());
+//                      musicBackupBean.setAlbumArt(albumArt);
+//                      mMusicBackupList.add(musicBackupBean);
 
                 }
                 handler.sendEmptyMessage(0);

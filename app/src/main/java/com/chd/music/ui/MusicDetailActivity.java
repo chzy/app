@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.backend.SyncTask;
 import com.chd.music.backend.MediaUtil;
-import com.chd.music.entity.MusicBean;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
@@ -45,7 +44,6 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
     private ImageView mBtnDelete;
     private CircleImageView mRoundImageView;
     private SyncTask syncTask;
-    private MusicBean bean;
     private Handler mHandler = new Handler();
 
     @Override
@@ -75,13 +73,7 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
 
     private void initData() {
         //模拟数据
-        bean = (MusicBean) getIntent().getSerializableExtra("file");
-        fileInfo0 = bean.getFileInfo0();
-        if (fileInfo0 == null) {
-            return;
-        }
-
-
+        fileInfo0 = (FileInfo0) getIntent().getSerializableExtra("file");
         mTvMusicName.setText(fileInfo0.getFilename());
         String url = fileInfo0.getFilePath();
         String albumArt = MediaUtil.getAlbumArt(this, url);

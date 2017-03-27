@@ -37,10 +37,8 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import cn.smssdk.SMSSDK;
 //import im.fir.sdk.FIR;
@@ -150,11 +148,11 @@ public class UILApplication extends Application {
 		//ExecutorService exService = Executors.newFixedThreadPool(2);
 
 		FileUploadConfiguration fileUploadConfiguration = new  FileUploadConfiguration.Builder(context)
-				.setResponseProcessor(new TrpcResponseParse())  //ÉèÖÃhttp response×Ö·û´®µÄ½á¹û½âÎöÆ÷£¬Èç¹û²»ÉèÖÃ£¬ÔòÄ¬ÈÏ·µ»Øresponse×Ö·û´®
-              .setThreadPoolSize(2)		 //ÉèÖÃÏß³Ì³Ø´óĞ¡£¬Èç¹û²ÉÓÃÄ¬ÈÏµÄÏß³Ì³ØÔòÓĞĞ§
-			.setThreadPriority(Thread.NORM_PRIORITY - 1)  //ÉèÖÃÏß³ÌÓÅÏÈ¼¶£¬Èç¹û²ÉÓÃÄ¬ÈÏµÄÏß³Ì³ØÔòÓĞĞ§
-			.setTaskExecutor(exService)     //ÉèÖÃ×Ô¶¨ÒåµÄÏß³Ì³Ø
-              .setFileUploader(new TrpcUploader())     //ÉèÖÃ×Ô¶¨ÒåµÄÎÄ¼şÉÏ´«¹¦ÄÜ£¬Èç¹û²»ÉèÖÃÔò²ÉÓÃÄ¬ÈÏµÄÎÄ¼şÉÏ´«¹¦ÄÜ
+				.setResponseProcessor(new TrpcResponseParse())  //è®¾ç½®http responseå­—ç¬¦ä¸²çš„ç»“æœè§£æå™¨ï¼Œå¦‚æœä¸è®¾ç½®ï¼Œåˆ™é»˜è®¤è¿”å›responseå­—ç¬¦ä¸²
+			.setThreadPoolSize(2)		 //è®¾ç½®çº¿ç¨‹æ± å¤§å°ï¼Œå¦‚æœé‡‡ç”¨é»˜è®¤çš„çº¿ç¨‹æ± åˆ™æœ‰æ•ˆ
+			.setThreadPriority(Thread.NORM_PRIORITY - 1)  //è®¾ç½®çº¿ç¨‹ä¼˜å…ˆçº§ï¼Œå¦‚æœé‡‡ç”¨é»˜è®¤çš„çº¿ç¨‹æ± åˆ™æœ‰æ•ˆ
+			.setTaskExecutor(exService)     //è®¾ç½®è‡ªå®šä¹‰çš„çº¿ç¨‹æ± 
+              .setFileUploader(new TrpcUploader())    //è®¾ç½®è‡ªå®šä¹‰çš„æ–‡ä»¶ä¸Šä¼ åŠŸèƒ½ï¼Œå¦‚æœä¸è®¾ç½®åˆ™é‡‡ç”¨é»˜è®¤çš„æ–‡ä»¶ä¸Šä¼ åŠŸèƒ½
               .build();
 		FileUploadManager.getInstance().init(fileUploadConfiguration);
 	}

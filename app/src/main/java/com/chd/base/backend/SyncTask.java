@@ -103,10 +103,27 @@ public class SyncTask {
 		//return filelistEntity;
 	}
 
+
+	public void analyVideoUnits(List<FileInfo> remotelist, FilelistEntity filelistEntity) {
+		//filelistEntity = new FilelistEntity();
+		dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Video, new String[]{"mp4", "3gp"}, true, filelistEntity);
+		dbManager.anlayLocalUnits(remotelist, filelistEntity);
+		//filelistEntity.setLocallist(dbManager.getLocalUnits());
+		//return filelistEntity;
+	}
+
+	public void analyRecordUnits(List<FileInfo> remotelist, FilelistEntity filelistEntity) {
+		//filelistEntity = new FilelistEntity();
+		dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Record, new String[]{"mar", "wav","awb"}, true, filelistEntity);
+		dbManager.anlayLocalUnits(remotelist, filelistEntity);
+		//filelistEntity.setLocallist(dbManager.getLocalUnits());
+		//return filelistEntity;
+	}
+
 	public FilelistEntity analyMusicUnits(List<FileInfo> remotelist, FilelistEntity filelistEntity) {
 		//filelistEntity = new FilelistEntity();
 		dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Music, new String[]{"mp3", "wav", "m4a", "flac", "ape"}, true, filelistEntity);
-//		dbManager.anlayLocalUnits(remotelist, filelistEntity);
+		dbManager.anlayLocalUnits(remotelist, filelistEntity);
 		//filelistEntity.setLocallist(dbManager.getLocalUnits());
 		return filelistEntity;
 	}
@@ -114,7 +131,7 @@ public class SyncTask {
 	public FilelistEntity analyOtherUnits(List<FileInfo> remotelist, FilelistEntity filelistEntity) {
 		//filelistEntity = new FilelistEntity();
 		dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Other, new String[]{"pdf", "xls", "doc", "docx"}, true, filelistEntity);
-		//dbManager.anlayLocalUnits(remotelist, filelistEntity);
+		dbManager.anlayLocalUnits(remotelist, filelistEntity);
 		//filelistEntity.setLocallist(dbManager.getLocalUnits());
 		return filelistEntity;
 	}
@@ -286,7 +303,7 @@ public class SyncTask {
 	activeProcess 对象 实现进度条展现
 	beeque  放入数据库 做队列 通过服务方式后台下载
 	* */
-	public void downloadList(final List<FileInfo> files, final ActiveProcess activeProcess, final Handler mHandler) {
+	public void downloadList(final List<FileInfo0> files, final ActiveProcess activeProcess, final Handler mHandler) {
 		dialog = new AlertDialog.Builder(activeProcess)
 				.setTitle("正在下载")
 				.setMessage("")

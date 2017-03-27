@@ -24,7 +24,9 @@ import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
+import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.share.ShareUtils;
+import com.chd.yunpan.utils.PhotoView;
 import com.chd.yunpan.utils.ToastUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -39,226 +41,226 @@ import java.util.List;
 
 public class PicDetailActivity extends UILActivity implements OnClickListener {
 
-	private ImageView mIvLeft;
-	private TextView mTvCenter;
-	private ImageView mImgView;
-	private Button mBtnSaveLocal;
-	private Button mBtnCancel;
-	private Button mBtnDelete;
-	protected ImageLoader imageLoader = ImageLoader.getInstance();
-	DisplayImageOptions options;
-	private boolean bIsUbkList;
-private int pos1;
-	private int pos2;
-	private SyncTask syncTask;
-	private FileInfo0 fileInfo0 = new FileInfo0();
-	private final String TAG = this.getClass().getName();
-	private Handler handler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-				case 997:
-					//下载成功
-					Log.d("liumj", "下载成功");
-					Toast.makeText(PicDetailActivity.this, "保存到本地成功", Toast.LENGTH_SHORT).show();
-					break;
-			}
-		}
-	};
+    private ImageView mIvLeft;
+    private TextView mTvCenter;
+    private PhotoView mImgView;
+    private Button mBtnSaveLocal;
+    private Button mBtnCancel;
+    private Button mBtnDelete;
+    protected ImageLoader imageLoader = ImageLoader.getInstance();
+    DisplayImageOptions options;
+    private boolean bIsUbkList;
+    private int pos1;
+    private int pos2;
+    private SyncTask syncTask;
+    private FileInfo0 fileInfo0 = new FileInfo0();
+    private final String TAG = this.getClass().getName();
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 997:
+                    //下载成功
+                    Log.d("liumj", "下载成功");
+                    Toast.makeText(PicDetailActivity.this, "保存到本地成功", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
 //	private TextView mTvRight;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_pic_detail);
+        setContentView(R.layout.activity_pic_detail);
 
-		bIsUbkList = getIntent().getBooleanExtra("ubklist", false);
-		if (bIsUbkList) {
-			findViewById(R.id.pic_detail_btm_layout).setVisibility(View.GONE);
-		}
-	pos1=getIntent().getIntExtra("pos1",0);
-		pos2=getIntent().getIntExtra("pos2",0);
-		options = new DisplayImageOptions.Builder()
+        bIsUbkList = getIntent().getBooleanExtra("ubklist", false);
+        if (bIsUbkList) {
+            findViewById(R.id.pic_detail_btm_layout).setVisibility(View.GONE);
+        }
+        pos1 = getIntent().getIntExtra("pos1", 0);
+        pos2 = getIntent().getIntExtra("pos2", 0);
+        options = new DisplayImageOptions.Builder()
 //		.showImageOnLoading(R.drawable.pic_test1)
-				.cacheInMemory(false)
-				.cacheOnDisk(true)
-				.considerExifParams(true)
+                .cacheInMemory(false)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
 //		.extraForDownloader(new ShareUtils(this).getStorePath())  //增加保存路径
-				.build();
+                .build();
 
-		initTitle();
-		initResourceId();
-		initListener();
-		initData();
-	}
+        initTitle();
+        initResourceId();
+        initListener();
+        initData();
+    }
 
-	String url;
+    String url;
 
-	private void initData() {
-		/*int nPicId = getIntent().getIntExtra("picid", -1);
+    private void initData() {
+        /*int nPicId = getIntent().getIntExtra("picid", -1);
 		if (nPicId < 0)
 		{
 			return;
 		}*/
-		if (syncTask == null)
-			syncTask = new SyncTask(this, FTYPE.PICTURE);
-		Serializable bean = getIntent().getSerializableExtra("bean");
-		boolean ubklist = getIntent().getBooleanExtra("ubklist", false);
-		if (bean instanceof FileLocal) {
-			url = ((FileInfo) bean).getObjid();
-			fileInfo0.setFilename(url);
-			fileInfo0.setSysid(((FileLocal) bean).getPathid());
-		} else {
-			url = ((FileInfo) bean).getObjid();
-			fileInfo0.setFilename(url);
-		}
+        if (syncTask == null)
+            syncTask = new SyncTask(this, FTYPE.PICTURE);
+        Serializable bean = getIntent().getSerializableExtra("bean");
+        boolean ubklist = getIntent().getBooleanExtra("ubklist", false);
+        if (bean instanceof FileLocal) {
+            url = "file://" + UILApplication.getFilelistEntity().getFilePath(((FileLocal) bean).getPathid()) + "/" + ((FileLocal) bean).getObjid();
+            fileInfo0.setFilename(url);
+            fileInfo0.setSysid(((FileLocal) bean).getPathid());
+        } else {
+            url = "trpc://" + ((FileInfo) bean).getObjid();
+            fileInfo0.setFilename(url);
+        }
 
-		if (StringUtils.isNullOrEmpty(url)) {
-			return;
-		}
+        if (StringUtils.isNullOrEmpty(url)) {
+            return;
+        }
 
-		Log.d("liumj", "---" + url);
-		if (url != null) {
-			url = "trpc://" + url;
-			Log.d("liumj", "" + url);
-			imageLoader.displayImage(url, mImgView,
-					options, new SimpleImageLoadingListener() {
-						@Override
-						public void onLoadingStarted(String imageUri, View view) {
-							showWaitDialog();
-						}
+        Log.d("liumj", "---" + url);
+        if (url != null) {
 
-						@Override
-						public void onLoadingFailed(String imageUri, View view,
-						                            FailReason failReason) {
+            Log.d("liumj", "" + url);
+            imageLoader.displayImage(url, mImgView,
+                    options, new SimpleImageLoadingListener() {
+                        @Override
+                        public void onLoadingStarted(String imageUri, View view) {
+                            showWaitDialog();
+                        }
+
+                        @Override
+                        public void onLoadingFailed(String imageUri, View view,
+                                                    FailReason failReason) {
 							/*vh.progressBar.setVisibility(View.GONE);*/
-							dismissWaitDialog();
-							Toast.makeText(PicDetailActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
-						}
+                            dismissWaitDialog();
+                            Toast.makeText(PicDetailActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
+                        }
 
-						@Override
-						public void onLoadingComplete(String imageUri, View view,
-						                              Bitmap loadedImage) {
+                        @Override
+                        public void onLoadingComplete(String imageUri, View view,
+                                                      Bitmap loadedImage) {
 							/*vh.progressBar.setVisibility(View.GONE);*/
-							dismissWaitDialog();
-						}
-					}, new ImageLoadingProgressListener() {
-						@Override
-						public void onProgressUpdate(String imageUri, View view,
-						                             int current, int total) {
+                            dismissWaitDialog();
+                        }
+                    }, new ImageLoadingProgressListener() {
+                        @Override
+                        public void onProgressUpdate(String imageUri, View view,
+                                                     int current, int total) {
 //							/*vh.progressBar.setProgress(Math.round(100.0f * current
 //									/ total));*/
 //							int i = (current / total) * 100;
 //							setParMessage("正在加载中");
 //							updateProgress(i);
-						}
-					});
-		}
+                        }
+                    });
+        }
 		/*else
 		{
 			mImgView.setImageResource(R.drawable.pic_test1);
 		}*/
-	}
+    }
 
-	private void initListener() {
-		mIvLeft.setOnClickListener(this);
-		mBtnCancel.setOnClickListener(this);
-		mBtnDelete.setOnClickListener(this);
-		mBtnSaveLocal.setOnClickListener(this);
-	}
+    private void initListener() {
+        mIvLeft.setOnClickListener(this);
+        mBtnCancel.setOnClickListener(this);
+        mBtnDelete.setOnClickListener(this);
+        mBtnSaveLocal.setOnClickListener(this);
+    }
 
-	private void initResourceId() {
-		mImgView = (ImageView) findViewById(R.id.pic_detail_img);
-		mBtnSaveLocal = (Button) findViewById(R.id.pic_detail_savelocal);
-		mBtnDelete = (Button) findViewById(R.id.pic_detail_delete);
-		mBtnCancel = (Button) findViewById(R.id.pic_detail_cancel);
-	}
+    private void initResourceId() {
+        mImgView = (PhotoView) findViewById(R.id.pic_detail_img);
+        mBtnSaveLocal = (Button) findViewById(R.id.pic_detail_savelocal);
+        mBtnDelete = (Button) findViewById(R.id.pic_detail_delete);
+        mBtnCancel = (Button) findViewById(R.id.pic_detail_cancel);
+    }
 
-	private void initTitle() {
-		mIvLeft = (ImageView) findViewById(R.id.iv_left);
-		mTvCenter = (TextView) findViewById(R.id.tv_center);
+    private void initTitle() {
+        mIvLeft = (ImageView) findViewById(R.id.iv_left);
+        mTvCenter = (TextView) findViewById(R.id.tv_center);
 
-		mTvCenter.setText("照片");
-	}
+        mTvCenter.setText("照片");
+    }
 
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-			case R.id.iv_left:
-			case R.id.pic_detail_cancel: {
-				finish();
-			}
-			break;
-			case R.id.pic_detail_delete: {
-				Thread thread = new Thread(new Runnable() {
-					@Override
-					public void run() {
-						if (fileInfo0 != null) {
-							final boolean bSucc = syncTask.DelRemoteObj(fileInfo0);
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									String strData = bSucc ? "删除成功" : "删除失败";
-									ToastUtils.toast(PicDetailActivity.this, strData);
-									if (bSucc) {
-										if (StringUtils.isNullOrEmpty(fileInfo0.getFilePath())) {
-											new MaterialDialog.Builder(PicDetailActivity.this).title("温馨提示").content("是否将本地资源同步删除").positiveText("删除").negativeText("取消").onPositive(new MaterialDialog.SingleButtonCallback() {
-												@Override
-												public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-													File f = new File(fileInfo0.getFilePath());
-													f.delete();
-													Intent intent = new Intent();
-													intent.putExtra("pos1",pos1);
-													intent.putExtra("pos2",pos2);
-													setResult(RESULT_OK, intent);
-													finish();
-												}
-											}).onNegative(new MaterialDialog.SingleButtonCallback() {
-												@Override
-												public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-													Intent intent = new Intent();
-													intent.putExtra("pos1",pos1);
-													intent.putExtra("pos2",pos2);
-													setResult(RESULT_OK, intent);
-													finish();
-												}
-											}).show();
-										}else{
-											Intent intent = new Intent();
-											intent.putExtra("pos1",pos1);
-											intent.putExtra("pos2",pos2);
-											setResult(RESULT_OK, intent);
-											finish();
-										}
-									}
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_left:
+            case R.id.pic_detail_cancel: {
+                finish();
+            }
+            break;
+            case R.id.pic_detail_delete: {
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (fileInfo0 != null) {
+                            final boolean bSucc = syncTask.DelRemoteObj(fileInfo0);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    String strData = bSucc ? "删除成功" : "删除失败";
+                                    ToastUtils.toast(PicDetailActivity.this, strData);
+                                    if (bSucc) {
+                                        if (StringUtils.isNullOrEmpty(fileInfo0.getFilePath())) {
+                                            new MaterialDialog.Builder(PicDetailActivity.this).title("温馨提示").content("是否将本地资源同步删除").positiveText("删除").negativeText("取消").onPositive(new MaterialDialog.SingleButtonCallback() {
+                                                @Override
+                                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                    File f = new File(fileInfo0.getFilePath());
+                                                    f.delete();
+                                                    Intent intent = new Intent();
+                                                    intent.putExtra("pos1", pos1);
+                                                    intent.putExtra("pos2", pos2);
+                                                    setResult(RESULT_OK, intent);
+                                                    finish();
+                                                }
+                                            }).onNegative(new MaterialDialog.SingleButtonCallback() {
+                                                @Override
+                                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                    Intent intent = new Intent();
+                                                    intent.putExtra("pos1", pos1);
+                                                    intent.putExtra("pos2", pos2);
+                                                    setResult(RESULT_OK, intent);
+                                                    finish();
+                                                }
+                                            }).show();
+                                        } else {
+                                            Intent intent = new Intent();
+                                            intent.putExtra("pos1", pos1);
+                                            intent.putExtra("pos2", pos2);
+                                            setResult(RESULT_OK, intent);
+                                            finish();
+                                        }
+                                    }
 
 
-								}
-							});
-						}
-					}
-				});
-				thread.start();
-			}
-			break;
-			case R.id.pic_detail_savelocal: {
-				if (fileInfo0 != null) {
-					List<FileInfo> info0s = new ArrayList<>();
-					if (StringUtils.isNullOrEmpty(fileInfo0.getFilePath())) {
-						fileInfo0.setFilePath(new ShareUtils(this).getPhotoFile().getPath() + "/" + fileInfo0.getObjid());
-					}
-					info0s.add(fileInfo0);
-					if (syncTask != null) {
-						syncTask.downloadList(info0s, PicDetailActivity.this, handler);
-						ToastUtils.toast(PicDetailActivity.this, "保存成功!");
-					}
-				}
+                                }
+                            });
+                        }
+                    }
+                });
+                thread.start();
+            }
+            break;
+            case R.id.pic_detail_savelocal: {
+                if (fileInfo0 != null) {
+                    List<FileInfo0> info0s = new ArrayList<>();
+                    if (StringUtils.isNullOrEmpty(fileInfo0.getFilePath())) {
+                        fileInfo0.setFilePath(new ShareUtils(this).getPhotoFile().getPath() + "/" + fileInfo0.getObjid());
+                    }
+                    info0s.add(fileInfo0);
+                    if (syncTask != null) {
+                        syncTask.downloadList(info0s, PicDetailActivity.this, handler);
+                        ToastUtils.toast(PicDetailActivity.this, "保存成功!");
+                    }
+                }
 
-			}
-			break;
-			default:
-				break;
-		}
-	}
+            }
+            break;
+            default:
+                break;
+        }
+    }
 }
