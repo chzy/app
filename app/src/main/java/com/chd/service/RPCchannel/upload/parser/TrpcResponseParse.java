@@ -21,7 +21,7 @@ public class TrpcResponseParse extends BaseResponseParser {
             }
         };
 
-        return  null;
+        return  result;
 
     }
 }

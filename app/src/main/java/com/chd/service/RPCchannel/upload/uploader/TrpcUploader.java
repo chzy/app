@@ -28,17 +28,19 @@ import java.io.RandomAccessFile;
 
 public class TrpcUploader extends BaseUploader {
     private final String TAG = "TrpcUploader";
-    private final int Maxbuflen=5*1024;
+    private final int Maxbuflen=1024*1024;
     TrpcOutputstream transport;
 
     @Override
     public String upload(FileUploadInfo fileUploadInfo, OnFileTransferredListener fileTransferredListener) throws IOException {
         try {
             transport = new TrpcOutputstream(fileUploadInfo._item, fileUploadInfo.getDescAttribMap());
+            if (upload(fileUploadInfo,transport))
+                return null;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return "upload failed !";
     }
 
 
@@ -54,11 +56,14 @@ public class TrpcUploader extends BaseUploader {
 
 
     public boolean upload(FileUploadInfo fileUploadInfo, TrpcOutputstream trpcOutputstream)  {
-        File file;
+        long size=fileUploadInfo._item.getFilesize();
+        String objid = "";
+        FileInfo0 entity=fileUploadInfo._item;
+       /* File file;
         FileInfo0 entity=fileUploadInfo._item;
         String objid = "";
         long size = entity.getFilesize();
-        file = new File(entity.getFilePath());
+        file = new File(fileUploadInfo.getUploadFilePath());
         if (!file.exists()) {
             Log.d(TAG, entity.getFilePath() + " not exsits");
             return false;
@@ -72,40 +77,50 @@ public class TrpcUploader extends BaseUploader {
             entity.setFilesize(size);
         }
         if (size < 1)
-            return false;
+            return false;*/
         System.out.println("开始上传喽");
         //先检查 云端是否 有同名文件
         long start = -1l;
         long oft = 0l;
         if (trpcOutputstream.ObjExist()) {
             Log.e(TAG, "upload file exist !!");
-            if (fileUploadInfo.getUploadOptions().overwrite) {
-                trpcOutputstream.cancel();
-                //del exist obj
-            } else {
-                oft = trpcOutputstream.transport.Queryoffset();
-                if (size >= oft) {
-                    Log.i(TAG, "remote obj exist!!");
-                    try {
-                        trpcOutputstream.flush();
-                        return true;
-                    } catch (Exception e) {
-                        Log.e(TAG, e.getMessage());
-                    }
-                    start = oft;
+            if (fileUploadInfo.getUploadOptions()!=null) {
+                if (fileUploadInfo.getUploadOptions().overwrite) {
+                    trpcOutputstream.cancel();
+                    //del exist obj
                 } else {
-                    Log.e(TAG, "remote file size > local");
-                    return false;
+                    oft = trpcOutputstream.transport.Queryoffset();
+                    if (size >= oft) {
+                        Log.i(TAG, "remote obj exist!!");
+                        try {
+                            trpcOutputstream.flush();
+                            return true;
+                        } catch (Exception e) {
+                            Log.e(TAG, e.getMessage());
+                        }
+                        if (fileUploadInfo.getUploadOptions().resume) {
+                            start = oft;
+                        }
+                        else
+                            start=0;
+                    } else {
+                        Log.e(TAG, "remote file size > local");
+                        return false;
+                    }
                 }
             }
-        } else {
-            start = 0l;
+
         }
         int len = 0;
         boolean succed = false;
         if (start == -1) {
                 try {
                      objid= trpcOutputstream.transport.ApplyObj();
+                    if (objid==null)
+                    {
+                        Log.i(TAG,"alloc obj failed !!!");
+                        return false;
+                    }
                     start = 0;
                     entity.setObjid(objid);
                 } catch (Exception e1) {
@@ -132,7 +147,7 @@ public class TrpcUploader extends BaseUploader {
             float speed = 0f, speed1 = 0f;
             long pz = 1, t1 = 0, t0 = 0, t00 = System.currentTimeMillis();
             int bflen = Math.min(1024 * 64, buffer.length);
-            float unit = 1000f / 1024f;
+           // float unit = 1000f / 1024f;
         try {
             while ((len = rf.read(buffer, 0, bflen)) != -1) {
                 pz = pz + len;

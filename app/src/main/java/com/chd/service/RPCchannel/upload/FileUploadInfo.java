@@ -40,14 +40,15 @@ public class FileUploadInfo {
 
     public FileUploadInfo(HashMap<String, String> descmap, /*String id, String filePath, String mimeType, String url*/FileLocal info0,
                           OnUploadListener apiCallback, OnUploadProgressListener progressListener,UploadOptions uploadOptions ) {
+        if (filelistEntity==null)
+            filelistEntity=UILApplication.getFilelistEntity();
         this.descAttribMap = descmap;
-
         _item=new FileInfo0((FileInfo)info0);
         _item.setFilePath(filelistEntity.getFilePath(info0.getPathid()));
         this.apiCallback = apiCallback;
         this.progressListener = progressListener;
         this.uploadOptions = uploadOptions;
-        filelistEntity= UILApplication.getFilelistEntity();
+        //filelistEntity= UILApplication.getFilelistEntity();
     }
 
 
@@ -66,14 +67,14 @@ public class FileUploadInfo {
     }*/
 
     public String getOriginalFilePath() {
-        return _item.getFilePath()+ File.pathSeparator+_item.getObjid();
+        return _item.getFilePath()+ File.separator+_item.getObjid();
     }
 
     public String getUploadFilePath() {
         if(preProcessedFile != null && !preProcessedFile.trim().equals("")) {
             return preProcessedFile;
         }
-        return _item.getFilePath()+ File.pathSeparator+_item.getObjid();
+        return _item.getFilePath()+ File.separator+_item.getObjid();
     }
 
     public OnUploadListener getApiCallback() {

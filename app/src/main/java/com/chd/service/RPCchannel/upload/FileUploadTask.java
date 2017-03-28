@@ -147,7 +147,7 @@ public class FileUploadTask implements Runnable {
             public void run() {
                 if (mFileUploadInfo.getApiCallback() != null) {
                     if (mCanceled)
-                        mFileUploadInfo.getApiCallback().onError(mFileUploadInfo, ErrorType.ERROR_TYPE_CANCELED, null);
+                        mFileUploadInfo.getApiCallback().onError(mFileUploadInfo, com.chd.service.RPCchannel.upload.ErrorType.ERROR_TYPE_CANCELED, null);
                     else
                         mFileUploadInfo.getApiCallback().onError(mFileUploadInfo, errorType, errorMsg);
                 }

@@ -2,6 +2,7 @@ package com.chd.service.RPCchannel.upload;
 
 
 import com.chd.service.RPCchannel.upload.parser.BaseResponseParser;
+import com.chd.service.RPCchannel.upload.parser.TrpcResponseParse;
 import com.chd.service.RPCchannel.upload.preprocessor.BasePreProcessor;
 
 /**
@@ -18,6 +19,13 @@ public class UploadOptions {
     public UploadOptions( FileUploadConfiguration.Builder builder) {
        // mPreProcessor = builder.preProcessor;
         mResponseParser = builder.responseProcessor;
+    }
+
+    public UploadOptions( boolean Overwrite,boolean Resume) {
+        // mPreProcessor = builder.preProcessor;
+        mResponseParser =new  TrpcResponseParse();
+        overwrite=Overwrite;
+        resume=Resume;
     }
 
     public BaseResponseParser getResponseParser() {
