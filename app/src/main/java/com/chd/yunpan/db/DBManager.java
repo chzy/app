@@ -63,7 +63,7 @@ public class DBManager   {
 
 	private String getpath(String fname)
 	{
-		return  pfpath+ File.pathSeparator+fname;
+		return  pfpath+ File.separator+fname;
 	}
 /*
 	db.execSQL("CREATE TABLE download_finish (objid TEXT PRIMARY KEY ,time Text ,size INTEGER,name text )");

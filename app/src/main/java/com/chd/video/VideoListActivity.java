@@ -17,9 +17,11 @@ import android.widget.TextView;
 
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.UILActivity;
+import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
 import com.chd.service.RPCchannel.upload.FileUploadInfo;
 import com.chd.service.RPCchannel.upload.FileUploadManager;
+import com.chd.service.RPCchannel.upload.UploadOptions;
 import com.chd.service.RPCchannel.upload.listener.OnUploadListener;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
@@ -216,7 +218,11 @@ public class VideoListActivity extends UILActivity {
 					FileLocal fileLocal=new FileLocal();
 					int pathid= UILApplication.getFilelistEntity().addFilePath(tmpFile.getParent());
 					fileLocal.setPathid(pathid);
+					fileLocal.setFtype(FTYPE.VIDEO);
 					fileLocal.setObjid(tmpFile.getName());
+					boolean overwrite=true;
+					boolean resume=true;
+					UploadOptions options=new UploadOptions(overwrite,resume);
 					manager.uploadFile(fileLocal, new OnUploadListener() {
 						@Override
 						public void onError(FileUploadInfo uploadData, int errorType, String msg) {
@@ -227,7 +233,7 @@ public class VideoListActivity extends UILActivity {
 						public void onSuccess(FileUploadInfo uploadData, Object data) {
 							ToastUtils.toast(VideoListActivity.this,"上传成功");
 						}
-					});
+					},options);
 //					Intent intent=new Intent(VideoListActivity.this,VideoPlayActivity.class);
 //					intent.putExtra("url",tmpFile.getPath());
 //					intent.putExtra("bitmap",bitmap);

@@ -79,7 +79,7 @@ public class FileDownloadInfo  {
     }*/
 
     public File getOutFile() {
-        outFile=  new File(_item.getFilePath()+File.pathSeparator+_item.getObjid());
+        outFile=  new File(_item.getFilePath()+File.separator+_item.getObjid());
         return outFile;
     }
 

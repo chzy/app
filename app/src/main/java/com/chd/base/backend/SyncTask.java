@@ -495,7 +495,7 @@ public class SyncTask {
 						if (bIsUbkList) {
 							//是未备份
 							FileLocal fileLocal = (FileLocal) item;
-							File f = new File(UILApplication.getFilelistEntity().getFilePath(fileLocal.getPathid()) + File.pathSeparator + fileLocal.getObjid());
+							File f = new File(UILApplication.getFilelistEntity().getFilePath(fileLocal.getPathid()) + File.separator + fileLocal.getObjid());
 							result = f.delete();
 							if (result) {
 								Intent media = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(f));
