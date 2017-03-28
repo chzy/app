@@ -22,7 +22,8 @@ public class Mp3Info extends FileInfo0 {
         return musicid;
     }
 
-    public void setMusicid(long musicid) {
-        this.musicid = musicid;
-    }
+    /*public void setId(long id) {
+        this.id = id;
+    }*/
+
 }

@@ -66,7 +66,7 @@ public class ShareUtils {
 		String dir=null;
 		if (getuseSDcard()&&sdCardExist())
 		{
-			dir= Environment.getExternalStorageDirectory().getAbsoluteFile()+File.pathSeparator+context.getPackageName();
+			dir= Environment.getExternalStorageDirectory().getAbsoluteFile()+File.separator+context.getPackageName();
 		}
 		else {
 			dir = context.getFilesDir().getAbsolutePath();

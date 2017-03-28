@@ -1,5 +1,6 @@
 package com.chd.service.RPCchannel.upload.uploader;
 
+import android.provider.Settings;
 import android.util.Log;
 
 import com.chd.MediaMgr.utils.MediaFileUtil;
@@ -59,25 +60,7 @@ public class TrpcUploader extends BaseUploader {
         long size=fileUploadInfo._item.getFilesize();
         String objid = "";
         FileInfo0 entity=fileUploadInfo._item;
-       /* File file;
-        FileInfo0 entity=fileUploadInfo._item;
-        String objid = "";
-        long size = entity.getFilesize();
-        file = new File(fileUploadInfo.getUploadFilePath());
-        if (!file.exists()) {
-            Log.d(TAG, entity.getFilePath() + " not exsits");
-            return false;
-        }
-        if (!file.isFile()) {
-            Log.d(TAG, entity.getFilePath() + " not a file");
-            return false;
-        }
-        if (size < 1) {
-            size = file.length();
-            entity.setFilesize(size);
-        }
-        if (size < 1)
-            return false;*/
+
         System.out.println("开始上传喽");
         //先检查 云端是否 有同名文件
         long start = -1l;
@@ -143,17 +126,16 @@ public class TrpcUploader extends BaseUploader {
             Log.i(TAG,e.getMessage());
             return false;
         }
-        int proc = 0, proc1 = 0;
-            float speed = 0f, speed1 = 0f;
-            long pz = 1, t1 = 0, t0 = 0, t00 = System.currentTimeMillis();
-            int bflen = Math.min(1024 * 64, buffer.length);
-           // float unit = 1000f / 1024f;
+            long pz=0,  t0 = 0, t00 =0;
+            int bflen = buffer.length;
         try {
             while ((len = rf.read(buffer, 0, bflen)) != -1) {
                 pz = pz + len;
                 t0 = System.currentTimeMillis();
                 try {
                     trpcOutputstream.write(buffer, 0, len);
+                    t00= System.currentTimeMillis();
+                    Log.i(TAG,"speed : " +(float) ((len/1024)/(t00-t0)/1024)+ "K/S"  );
                 }catch (IOException ex)
                 {
                     Log.i(TAG,"upload write failed ");
