@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.chd.base.UILActivity;
 import com.chd.yunpan.R;
+import com.chd.yunpan.view.ActionSheetDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,9 +33,8 @@ public class VideoPlayActivity extends UILActivity implements MediaPlayer.OnPrep
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_video_play);
 		ButterKnife.bind(this);
-
 		tvCenter.setText("视频播放");
-		tvRight.setText("删除");
+		tvRight.setText("编辑");
 		String url = getIntent().getStringExtra("url");
 
 		videoView.setOnPreparedListener(this);
@@ -53,11 +53,28 @@ public class VideoPlayActivity extends UILActivity implements MediaPlayer.OnPrep
 				onBackPressed();
 				break;
 			case R.id.tv_right:
-				//删除
+				//添加图片
+				//从本地添加，视频拍照
+				editVideo();
 				break;
 		}
 
 
+	}
+
+	private void editVideo(){
+		new ActionSheetDialog(this).builder().addSheetItem("下载视频", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+			@Override
+			public void onClick(int which) {
+                    //下载视频操作
+			}
+		}).addSheetItem("删除视频", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
+			@Override
+			public void onClick(int which) {
+                //删除视频操作
+
+			}
+		}).setCanceledOnTouchOutside(true).setCancelable(true).show();
 	}
 
 
