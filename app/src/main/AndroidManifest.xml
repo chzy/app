@@ -1,9 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="com.chd.yunpan"
-          android:versionCode="2"
-          android:versionName="4.0.0">
-    <uses-sdk tools:overrideLibrary="com.chd.api"/>
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.chd.yunpan"
+    android:versionCode="2"
+    android:versionName="4.0.0">
+
+    <uses-sdk tools:overrideLibrary="com.chd.api" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -33,12 +35,16 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
 
-        <meta-data android:value="4aa7f252c9e0f4fe47624a26d3a5825c" android:name="BUG_HD_SDK_GENERAL_KEY" />
+        <meta-data
+            android:name="BUG_HD_SDK_GENERAL_KEY"
+            android:value="4aa7f252c9e0f4fe47624a26d3a5825c" />
 
-        <meta-data android:name="design_width" android:value="720">
-        </meta-data>
-        <meta-data android:name="design_height" android:value="1280">
-        </meta-data>
+        <meta-data
+            android:name="design_width"
+            android:value="720"></meta-data>
+        <meta-data
+            android:name="design_height"
+            android:value="1280"></meta-data>
 
         <activity
             android:name="com.chd.yunpan.ui.LoginActivity"
@@ -68,28 +74,28 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.chd.contacts.ui.ContactActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.chd.music.ui.MusicActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.chd.music.ui.MusicBackupActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.chd.music.ui.MusicDetailActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.chd.smsbackup.ui.SmsBackActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.chd.strongbox.StrongBoxActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <!-- 注册页面-->
         <activity
             android:name=".ui.RegisterActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <!-- 锁屏的activity -->
         <activity
@@ -169,22 +175,31 @@
         <activity
             android:name="com.chd.strongbox.VoiceActivity"
             android:screenOrientation="portrait" />
-        <activity android:name="com.chd.record.AudioRecorderActivity"
-                  android:theme="@style/Theme.AppCompat.Light"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.chd.record.AudioRecorderActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light" />
 
-        <activity android:name="com.chd.video.VideoListActivity"/>
+        <activity android:name="com.chd.video.VideoListActivity" />
 
-        <activity android:name="com.chd.video.VideoPlayActivity"/>
+        <activity android:name="com.chd.video.VideoPlayActivity" />
 
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.chd.base.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+
+        </provider>
+        >
 
         <activity
             android:name=".ui.HelpActivity"
             android:screenOrientation="portrait" />
-        <!-- 多图选择-->
-        <activity
-            android:name="com.multi_image_selector.MultiImageSelectorActivity"
-            android:screenOrientation="portrait" />
+
         <!-- 图片浏览-->
         <activity
             android:name="com.chd.notepad.ui.activity.PhotoBrowseActivity"
@@ -207,27 +222,23 @@
 
 
         <activity
-            android:configChanges="orientation|keyboardHidden|screenSize"
             android:name="cn.iterlog.xmimagepicker.PickerActivity"
-            android:theme="@style/ImageTheme"
-            >
-        </activity>
-        <activity
-            android:theme="@style/ImageTheme"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:name="cn.iterlog.xmimagepicker.corp.CropImageActivity"></activity>
+            android:theme="@style/ImageTheme"></activity>
+        <activity
+            android:name="cn.iterlog.xmimagepicker.corp.CropImageActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/ImageTheme"></activity>
 
         <activity
-            android:theme="@style/ImageTheme"
+            android:name="cn.iterlog.xmimagepicker.videoplay.VideoPlyerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:name="cn.iterlog.xmimagepicker.videoplay.VideoPlyerActivity">
-        </activity>
+            android:theme="@style/ImageTheme"></activity>
 
         <activity
-            android:theme="@style/ImageTheme.NoBack"
+            android:name="cn.iterlog.xmimagepicker.MediasPreviewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:name="cn.iterlog.xmimagepicker.MediasPreviewActivity">
-        </activity>
+            android:theme="@style/ImageTheme.NoBack"></activity>
 
     </application>
 

@@ -78,7 +78,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
                 //Collections.sort(localList);
                 findViewById(R.id.rl_pic_ubk_layout).setVisibility(View.GONE);
                 mTvCenter.setText("未备份照片");
-                adapter = new PicAdapter(PicActivity.this, localList, bIsUbkList, imageLoader);
+                adapter = new PicAdapter(PicActivity.this, localList, bIsUbkList, imageLoader,false);
                 mLvPic.setAdapter(adapter);
             } else {
 
@@ -89,7 +89,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
                 size = filelistEntity.getUnbakNumber();
                 Log.d("liumj", "数量" + size);
                 mTvNumber.setText(String.format("未备份照片%d张", size));
-                adapter = new PicAdapter(PicActivity.this, cloudList, bIsUbkList, imageLoader);
+                adapter = new PicAdapter(PicActivity.this, cloudList, bIsUbkList, imageLoader,false);
                 mLvPic.setAdapter(adapter);
             }
         }

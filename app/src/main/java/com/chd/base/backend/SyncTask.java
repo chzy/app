@@ -81,12 +81,12 @@ public class SyncTask {
 		return flist;
 	}
 
-	public FileInfo queryLocalInfo(int sysid) {
-		FileInfo FileInfo = new FileInfo();
-		//FileInfo.setSysid(sysid);
+	public FileInfo0 queryLocalInfo(int sysid) {
+		FileInfo0 FileInfo = new FileInfo0();
+		FileInfo.setSysid(sysid);
 		FileInfo.setFtype(_ftype);
-		//if ( dbManager.queryLocalInfo(sysid,FileInfo))
-		//	return FileInfo;
+		if ( dbManager.queryLocalInfo(sysid,FileInfo))
+			return FileInfo;
 		return null;
 	}
 

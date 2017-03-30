@@ -124,6 +124,7 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
                 finish();
                 break;
             case R.id.music_detail_download:
+
                 if (syncTask != null && fileInfo0 != null) {
                     new Thread(new Runnable() {
                         @Override
@@ -135,8 +136,6 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
                 }
                 break;
             case R.id.music_detail_play:
-
-
                 try {
                     File f=new File(fileInfo0.getFilePath());
                     if(!f.exists()){
@@ -148,6 +147,7 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
                     intent.setDataAndType(uri, "video/mp4");
                     startActivity(intent);
                 } catch (Exception e) {
+                    e.printStackTrace();
                     Toast.makeText(MusicDetailActivity.this, "请先下载", Toast.LENGTH_SHORT).show();
                 }
                 break;

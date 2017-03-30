@@ -39,8 +39,6 @@ import org.apache.http.impl.client.HttpClients;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import cn.smssdk.SMSSDK;
 //import im.fir.sdk.FIR;
 
 /**
@@ -79,7 +77,7 @@ public class UILApplication extends Application {
 			e.printStackTrace();
 			Log.e("Application", e.getMessage());
 		}
-		SMSSDK.initSDK(this, "f40f0f41f1d1", "8542792ca37ec28ce85a0ce024c957b2",true);
+
 	}
 
 	//@Override
@@ -155,5 +153,6 @@ public class UILApplication extends Application {
               .setFileUploader(new TrpcUploader())    //设置自定义的文件上传功能，如果不设置则采用默认的文件上传功能
               .build();
 		FileUploadManager.getInstance().init(fileUploadConfiguration);
+
 	}
 }

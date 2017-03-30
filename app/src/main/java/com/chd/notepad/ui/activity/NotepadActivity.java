@@ -128,7 +128,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                             e.printStackTrace();
                         }
                     }
-                    if (new File(file).exists() == false) {
+                    if (!new File(file).exists()) {
                         fileInfo0.setFilePath(file);
                         syncTask.download(fileInfo0, null, false, dialog);
                         Log.d("NotepadActivity", "download note :" + fileInfo0.getObjid());

@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 
+import com.chd.contacts.vcard.StringUtils;
 import com.chd.music.entity.Mp3Info;
 import com.chd.yunpan.R;
 
@@ -341,6 +342,9 @@ public class MediaUtil {
      */
     public static String getAlbumArt(Context context,String mp3Path) {
         String[] projection = new String[] { "album_art" };
+        if(StringUtils.isNullOrEmpty(mp3Path)){
+            return null;
+        }
         Cursor cursor = getCursorfromPath2(context, mp3Path);
         String album_art = null;
         if(cursor != null && cursor.getCount() > 0){

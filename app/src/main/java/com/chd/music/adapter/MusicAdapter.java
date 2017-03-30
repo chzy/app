@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.chd.contacts.vcard.StringUtils;
 import com.chd.music.backend.MediaUtil;
-import com.chd.proto.FileInfo;
+import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
 import com.chd.yunpan.view.circleimage.CircleImageView;
@@ -24,12 +24,12 @@ import java.util.List;
 public class MusicAdapter extends BaseAdapter {
 
 	private Context context;
-	private List<FileInfo> mMusiclist;
+	private List<FileInfo0> mMusiclist;
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
 	DisplayImageOptions options;
 	private String musicPath="";
 
-	public MusicAdapter(Context context, List<FileInfo> list) {
+	public MusicAdapter(Context context, List<FileInfo0> list) {
 		this.context = context;
 		this.mMusiclist = list;
 		this.musicPath = new ShareUtils(context).getMusicFile().getPath();

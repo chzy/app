@@ -20,7 +20,6 @@ import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.share.ShareUtils;
-import com.chd.yunpan.utils.TimeUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -419,7 +418,7 @@ public class MediaMgr  {
 		return locals;
 	}
 
-	/*public  boolean queryLocalInfo(int sysid*//*,FTYPE ftype*//*,FileInfo0 fileInfo0)
+	public  boolean queryLocalInfo(int sysid,FileInfo0 fileInfo0)
 	{
 
 		//MediaFileUtil.FileCategory fc0= MediaFileUtil.FileCategory.File;
@@ -468,7 +467,7 @@ public class MediaMgr  {
 		}
 		cursor.close();
 		return ret;
-	}*/
+	}
 //
 //	public List<PicDBitem> getUploadUnits(){
 //		open();

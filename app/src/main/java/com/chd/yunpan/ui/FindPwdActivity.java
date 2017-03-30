@@ -47,6 +47,7 @@ public class FindPwdActivity extends Activity implements View.OnClickListener {
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
 		this.setContentView(R.layout.lz_find_password);
+		SMSSDK.initSDK(this, "f40f0f41f1d1", "8542792ca37ec28ce85a0ce024c957b2",true);
 		mRegEdAccountEditText = (EditText) findViewById(R.id.reg_ed_account);
 		mRegAccountLinearLayout = (LinearLayout) findViewById(R.id.reg_account);
 		mRegEdConfirmPwdEditText = (EditText) findViewById(R.id.reg_ed_confirm_pwd);

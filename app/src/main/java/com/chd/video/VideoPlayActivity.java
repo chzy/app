@@ -28,6 +28,9 @@ public class VideoPlayActivity extends UILActivity implements MediaPlayer.OnPrep
 	@BindView(R.id.video_view)
 	FullScreenVideoView videoView;
 
+	@BindView(R.id.video_preview)
+	ImageView ivPreview;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,13 +39,14 @@ public class VideoPlayActivity extends UILActivity implements MediaPlayer.OnPrep
 		tvCenter.setText("视频播放");
 		tvRight.setText("编辑");
 		String url = getIntent().getStringExtra("url");
-
+		MediaController mediaController = new MediaController(this);
 		videoView.setOnPreparedListener(this);
 		//For now we just picked an arbitrary item to play.  More can be found at
 		//https://archive.org/details/more_animation
 //		videoView.setVideoURI(Uri.parse("https://archive.org/download/Popeye_forPresident/Popeye_forPresident_512kb.mp4"));
 		videoView.setVideoURI(Uri.parse(url));
-		videoView.setMediaController(new MediaController(this));
+		videoView.setMediaController(mediaController);
+		mediaController.show();
 	}
 
 
@@ -53,7 +57,6 @@ public class VideoPlayActivity extends UILActivity implements MediaPlayer.OnPrep
 				onBackPressed();
 				break;
 			case R.id.tv_right:
-				//添加图片
 				//从本地添加，视频拍照
 				editVideo();
 				break;
@@ -83,6 +86,5 @@ public class VideoPlayActivity extends UILActivity implements MediaPlayer.OnPrep
 	public void onPrepared(MediaPlayer mediaPlayer) {
 //		mediaPlayer.start();
 	}
-
 
 }

@@ -3,11 +3,9 @@ package com.chd.service.RPCchannel.upload;
 import android.os.Handler;
 import android.os.Looper;
 
-
 import com.chd.service.RPCchannel.upload.listener.OnFileTransferredListener;
 import com.chd.service.RPCchannel.upload.parser.BaseResponseParser;
 import com.chd.service.RPCchannel.upload.parser.ParserResult;
-import com.chd.service.RPCchannel.upload.preprocessor.BasePreProcessor;
 import com.chd.service.RPCchannel.upload.progressaware.ProgressAware;
 import com.chd.service.RPCchannel.upload.uploader.BaseUploader;
 
@@ -74,7 +72,6 @@ public class FileUploadTask implements Runnable {
         public void transferred(long transferred, long totalSize) {
             if(mCanceled)
                 return;
-
             final long currSize = transferred;
             final int progress = (int)((transferred / (float) totalSize) * 100);
             long now = System.currentTimeMillis();
@@ -216,7 +213,10 @@ public class FileUploadTask implements Runnable {
 
     private boolean isProgressViewReused(ProgressAware progressAware) {
         String currentFileUploadId = mFileUploadEngine.getFileUploadInfoIdForProgressAware(progressAware);
-        if(!mFileUploadInfo.getId().equals(currentFileUploadId))
+//        if(!mFileUploadInfo.getId().equals(currentFileUploadId))
+        //TODO 修改 去掉了！号
+        if(mFileUploadInfo.getId().equals(currentFileUploadId))
+
             return true;
         return false;
     }

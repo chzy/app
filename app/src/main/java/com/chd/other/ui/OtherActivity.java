@@ -136,42 +136,39 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
 
         FilelistEntity filelistEntity = syncTask.analyUnits(cloudUnits);
 //        cloudUnits  是网存的文件
-        cloudUnits.clear();
-        cloudUnits = null;
+//        cloudUnits.clear();
+//        cloudUnits = null;
         List<FileLocal> fileLocals = filelistEntity.getLocallist();
-        if (filelistEntity != null) {
-            mTvNumber.setText("未备份文件" + filelistEntity.getUnbakNumber() + "个");
-        } else {
-            mTvNumber.setText("未备份文件0个");
-        }
-        cloudUnits = filelistEntity.getBklist();
+        mTvNumber.setText("未备份文件" + filelistEntity.getUnbakNumber() + "个");
+
+//        cloudUnits = filelistEntity.getBklist();
         //显示的时候过滤文件类型
         MFileFilter fileFilter = new MFileFilter();
         fileFilter.setCustomCategory(new String[]{FileInfoL.FILE_TYPE_DOC, FileInfoL.FILE_TYPE_PDF, FileInfoL.FILE_TYPE_PPT, FileInfoL.FILE_TYPE_XLS}, true);
 
-        for (FileInfo item : cloudUnits) {
-           // mFileInfoList.add(item);
-            if (!fileFilter.contains(item.getObjid()))
-                continue;
-            //已备份文件
-           // if (syncTask.haveLocalCopy(item)) {
-          //      String path = item.getFilePath();
-           // }
-
-        }
+//        for (FileInfo item : cloudUnits) {
+//            // mFileInfoList.add(item);
+//            if (!fileFilter.contains(item.getObjid()))
+//                continue;
+//            //已备份文件
+//            // if (syncTask.haveLocalCopy(item)) {
+//            //      String path = item.getFilePath();
+//            // }
+//
+//        }
         if (fileLocals != null) {
             for (FileLocal fileLocal : fileLocals) {
                 if (fileLocal.bakuped)
                     continue;
 
-//                FileInfo0 fileInfo0 = syncTask.queryLocalInfo(fileLocal.getSysid());
-//                if (fileInfo0 == null) {
-//                    continue;
-//                }
+                FileInfo0 fileInfo0 = syncTask.queryLocalInfo(fileLocal.getPathid());
+                if (fileInfo0 == null) {
+                    continue;
+                }
 
-//                if (fileFilter.contains(fileInfo0.getFilePath())) {
-//                    mFileLocalList.add(fileInfo0);
-//                }
+                if (fileFilter.contains(fileInfo0.getFilePath())) {
+                    mFileLocalList.add(fileInfo0);
+                }
             }
         }
         handler.sendEmptyMessage(0);

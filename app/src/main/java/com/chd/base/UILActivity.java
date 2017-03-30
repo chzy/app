@@ -1,8 +1,8 @@
 package com.chd.base;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.chd.base.Ui.ActiveProcess;
 
 /**
@@ -34,49 +34,48 @@ import com.chd.base.Ui.ActiveProcess;
  * Developer Kits:AndroidStudio 1.3
  */
 
-public class UILActivity extends ActiveProcess{
+public class UILActivity extends ActiveProcess {
 
-	protected ProgressDialog waitDialog;
-
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		waitDialog=new ProgressDialog(this);
-		waitDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		waitDialog.setMessage("正在加载");
-		waitDialog.setCancelable(false);
-		waitDialog.setCanceledOnTouchOutside(false);
-	}
+    protected MaterialDialog waitDialog;
 
 
-	public void showWaitDialog(){
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				if(waitDialog!=null)
-				waitDialog.show();
-			}
-		});
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        waitDialog = new MaterialDialog.Builder(this).build();
+        waitDialog.getBuilder().title("正在加载");
+        waitDialog.getBuilder().cancelable(false);
+        waitDialog.getBuilder().canceledOnTouchOutside(false);
+    }
 
 
-	public void dismissWaitDialog(){
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				if(waitDialog!=null)
-				waitDialog.dismiss();
-			}
-		});
-	}
+    public void showWaitDialog() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (waitDialog != null)
+                    waitDialog.show();
+            }
+        });
+    }
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		if(waitDialog!=null){
-			waitDialog.dismiss();
-			waitDialog=null;
-		}
-	}
+
+    public void dismissWaitDialog() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (waitDialog != null)
+                    waitDialog.dismiss();
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (waitDialog != null) {
+            waitDialog.dismiss();
+            waitDialog = null;
+        }
+    }
 }

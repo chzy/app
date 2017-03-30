@@ -69,6 +69,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
+		SMSSDK.initSDK(this, "f40f0f41f1d1", "8542792ca37ec28ce85a0ce024c957b2",true);
 		initView();
 		initListener();
 

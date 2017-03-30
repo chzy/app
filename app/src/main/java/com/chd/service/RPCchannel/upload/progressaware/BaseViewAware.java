@@ -3,25 +3,27 @@ package com.chd.service.RPCchannel.upload.progressaware;
 import android.os.Looper;
 import android.view.View;
 
-//import com.chd.service.RPCchannel.upload.progressaware.ProgressAware;
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+
+//import com.chd.service.RPCchannel.upload.progressaware.ProgressAware;
 
 /**
  * Created by hjy on 7/9/15.<br>
  */
 public abstract class BaseViewAware implements ProgressAware {
 
-    protected Reference<View> mViewRef;
+    protected Reference< MaterialDialog> mViewRef;
 
-    public BaseViewAware(View view) {
-        mViewRef = new WeakReference<View>(view);
+    public BaseViewAware( MaterialDialog view) {
+        mViewRef = new WeakReference< MaterialDialog>(view);
     }
 
     @Override
     public int getId() {
-        View view = mViewRef.get();
+        MaterialDialog view = mViewRef.get();
         if(view == null)
             return super.hashCode();
         else
@@ -36,7 +38,7 @@ public abstract class BaseViewAware implements ProgressAware {
     @Override
     public boolean setProgress(int progress) {
         if(Looper.myLooper() == Looper.getMainLooper()) {
-            View view = mViewRef.get();
+            MaterialDialog view = mViewRef.get();
             if(view != null) {
                 setProgress(progress, view);
                 return true;
@@ -46,18 +48,22 @@ public abstract class BaseViewAware implements ProgressAware {
     }
 
     @Override
-    public View getWrappedView() {
+    public  MaterialDialog getWrappedView() {
         return mViewRef.get();
     }
 
     @Override
     public void setVisibility(int visibility) {
-        View view = mViewRef.get();
+        MaterialDialog view = mViewRef.get();
         if(view != null) {
-            view.setVisibility(visibility);
+            if(visibility==View.VISIBLE){
+                view.show();
+            }else{
+                view.dismiss();
+            }
         }
     }
 
-    public abstract void setProgress(int progress, View view);
+    public abstract void setProgress(int progress, MaterialDialog view);
 
 }

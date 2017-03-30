@@ -13,4 +13,12 @@
         android:layout_below="@id/toolbar_top"
         android:layout_height="match_parent"/>
 
+    <ImageView
+        android:id="@+id/video_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:layout_below="@id/toolbar_top"
+        />
+
 </RelativeLayout>

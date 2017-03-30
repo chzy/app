@@ -22,6 +22,7 @@ import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
+import com.chd.yunpan.share.ShareUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -40,15 +41,17 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
     private View mViewNumber;
     private MusicAdapter adapter;
     private List<FileInfo> cloudUnits=new ArrayList<>();
+    private List<FileInfo0> cloudList=new ArrayList<>();
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             dismissDialog();
             adapter = new MusicAdapter(MusicActivity.this,
-                    cloudUnits);
+                    cloudList);
             mGvMusic.setAdapter(adapter);
             mTvNumber.setText("未备份音乐"+filelistEntity.getUnbakNumber()+"首");
         }
     };
+    private String musicPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +61,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
         initTitle();
         initResourceId();
         initListener();
-
+        musicPath=new ShareUtils(this).getMusicFile().getPath();
         syncTask = new SyncTask(MusicActivity.this, FTYPE.MUSIC);
         onNewThreadRequest();
         EventBus.getDefault().register(this);
@@ -100,29 +103,25 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
         syncTask.analyMusicUnits(cloudUnits,filelistEntity);
 
 
-//        for (FileInfo item : cloudUnits) {
-//            //FileInfo0 item=new FileInfo0(finfo);
-//
-//
-//            //已备份文件
-//            String path = item.getFilePath();
-//            String name = item.getFilename();
-//            if(item.getFilePath()==null){
-//                if(item.getSysid()>0){
-//                    item =syncTask.queryLocalInfo(item.getSysid());
-//                }else{
-//                    item.setFilePath(musicPath+ "/"+item.getObjid());
-//                }
-//            }
-//            /*if (syncTask.haveLocalCopy(item)) {
-//
-//            }*/
-//            MusicBean musicBean = new MusicBean(name, path);
-//            musicBean.setFileInfo0(item);
-//
-//            //	syncTask.download(item, null, false);
-//            mMusicList.add(musicBean);
-//        }
+        for (FileInfo finfo : cloudUnits) {
+            FileInfo0 item=new FileInfo0(finfo);
+
+
+            //已备份文件
+            String path = item.getFilePath();
+            String name = item.getFilename();
+            if(path==null){
+                if(item.getSysid()>0){
+                    item =syncTask.queryLocalInfo(item.getSysid());
+                }else{
+                    item.setFilePath(musicPath+ "/"+item.getObjid());
+                }
+            }
+            if(name==null){
+               item.setFilename(item.getObjid());
+            }
+            cloudList.add(item);
+        }
 
 
 
@@ -175,7 +174,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
         Intent intent = new Intent(this, MusicDetailActivity.class);
-        intent.putExtra("file", new FileInfo0(cloudUnits.get(arg2)));
+        intent.putExtra("file", cloudList.get(arg2));
         startActivityForResult(intent, 0x99);
     }
 

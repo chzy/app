@@ -25,5 +25,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.kailashdabhi:om-recorder:1.1.0'
     compile 'com.cleveroad:audiovisualization:1.0.0'
-    compile 'com.afollestad.material-dialogs:core:0.9.3.0'
+    compile 'com.afollestad.material-dialogs:core:0.9.4.2'
 }

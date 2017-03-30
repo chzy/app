@@ -1,6 +1,6 @@
 package com.chd.service.RPCchannel.upload.progressaware;
 
-import android.view.View;
+import com.afollestad.materialdialogs.MaterialDialog;
 
 /**
  * Created by hjy on 7/9/15.<br>
@@ -23,7 +23,7 @@ public interface ProgressAware {
      */
     public boolean setProgress(int progress);
 
-    public View getWrappedView();
+    public  MaterialDialog getWrappedView();
 
     public void setVisibility(int visibility);
 

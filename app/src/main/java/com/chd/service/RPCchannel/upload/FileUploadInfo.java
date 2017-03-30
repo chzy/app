@@ -13,7 +13,6 @@ import com.chd.yunpan.application.UILApplication;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by hjy on 7/8/15.<br>
