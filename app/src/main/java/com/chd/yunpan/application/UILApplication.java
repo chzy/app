@@ -23,6 +23,8 @@ import android.util.Log;
 
 import com.chd.TClient;
 import com.chd.base.Entity.FilelistEntity;
+import com.chd.service.RPCchannel.download.DownloadConfiguration;
+import com.chd.service.RPCchannel.download.DownloadManager;
 import com.chd.service.RPCchannel.upload.FileUploadConfiguration;
 import com.chd.service.RPCchannel.upload.FileUploadManager;
 import com.chd.service.RPCchannel.upload.parser.TrpcResponseParse;
@@ -154,5 +156,12 @@ public class UILApplication extends Application {
               .build();
 		FileUploadManager.getInstance().init(fileUploadConfiguration);
 
+		DownloadConfiguration downloadConfiguration = new DownloadConfiguration.Builder(context)
+				//.setCacheDir()        //设置下载缓存目录，必须设置
+              //.setTaskExecutor(...)    //同上传类似
+              //.setThreadPriority(...)  //同上传类似
+              .setThreadPoolCoreSize(2)  //同上传类似
+  			.build();
+		DownloadManager.getInstance(context).init(downloadConfiguration);
 	}
 }
