@@ -27,7 +27,7 @@ public class FileDownloadTask implements Runnable {
 
     private long currSize;
     private long totalSize;
-    private  final int readbuflen=8*1024;
+    private  final int readbuflen=256*1024;
 
     /**
      * 是否同步加载
