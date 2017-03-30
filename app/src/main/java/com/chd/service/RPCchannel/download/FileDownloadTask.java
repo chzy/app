@@ -27,6 +27,7 @@ public class FileDownloadTask implements Runnable {
 
     private long currSize;
     private long totalSize;
+    private  final int readbuflen=8*1024;
 
     /**
      * 是否同步加载
@@ -79,8 +80,8 @@ public class FileDownloadTask implements Runnable {
             return;
         }
         try {
-            {
-                byte[] buffer = new byte[1024];
+
+                byte[] buffer = new byte[readbuflen];
                 int size = 0;
                 long currentSize = 0;
                 while ((size = trpcInputstream.read(buffer)) != -1) {
@@ -93,8 +94,7 @@ public class FileDownloadTask implements Runnable {
                 trpcInputstream.close();
                 if(downloadingListener != null)
                     downloadingListener.onDownloadSucc(this, fileDownloadInfo.getOutFile());
-            }
-            /* else {
+             /*else {
                 if(downloadingListener != null)
                     downloadingListener.onDownloadFailed(this, DownloadErrorType.ERROR_OTHER, resp.toString());
             }*/

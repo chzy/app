@@ -5,8 +5,10 @@ import android.os.Handler;
 import android.os.Looper;
 
 
+import com.chd.base.Entity.FileLocal;
 import com.chd.proto.Errcode;
 import com.chd.proto.FTYPE;
+import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.service.RPCchannel.download.listener.OnDownloadProgressListener;
 import com.chd.service.RPCchannel.download.listener.OnDownloadingListener;
@@ -90,29 +92,30 @@ public class DownloadManager {
         return false;
     }
 
-    public void downloadFile(/*int type, String id, String url*/FileInfo0 info0, OnDownloadingListener downloadingListener) {
-        downloadFile(/*type, id, url*/info0, downloadingListener,null);
+    public void downloadFile( FileInfo info,File outfile, OnDownloadingListener downloadingListener) {
+        downloadFile(info,outfile, downloadingListener,null);
     }
 
-    public void downloadFile(/*int type, String id, String url*/FileInfo0 info0, OnDownloadingListener downloadingListener, OnDownloadProgressListener downloadProgressListener) {
-        downloadFile(/*type, id, url*/info0, null, downloadingListener, downloadProgressListener);
+    public void downloadFile(FileInfo info0,File outfile, OnDownloadingListener downloadingListener, OnDownloadProgressListener downloadProgressListener) {
+        downloadFile(/*type, id, url*/info0, outfile,null, downloadingListener, downloadProgressListener);
     }
 
     /**
      * 下载文件
      *
-     * @param info0 Fileinfo0
+     * @param info Fileinfo0
      * @param progressAware 进度
      * @param downloadingListener
      * @param downloadProgressListener
      */
-    public void downloadFile(FileInfo0 info0, ProgressAware progressAware, OnDownloadingListener downloadingListener, OnDownloadProgressListener downloadProgressListener) {
+    public void downloadFile(FileInfo info,File outfile, ProgressAware progressAware, OnDownloadingListener downloadingListener, OnDownloadProgressListener downloadProgressListener) {
         checkConfiguration();
+        //FileInfo0 info0=new FileInfo0(info);
         synchronized (mTaskList) {
-            if(isTaskExists(info0.getId(), info0.getUrl()))
+            if(isTaskExists(info.getObjid(),outfile.getAbsolutePath()))
                 return;
-            File cacheFile = generateCacheFile(info0.getUrl(), info0.getFtype());
-            FileDownloadInfo downloadInfo = new FileDownloadInfo(/*id, url, cacheFile*/info0, mOnDownloadDispatcher, mOnDwonloadProgressDispatcher);
+            File cacheFile = generateCacheFile(info.getObjid(), info.getFtype());
+            FileDownloadInfo downloadInfo = new FileDownloadInfo(info,cacheFile, mOnDownloadDispatcher, mOnDwonloadProgressDispatcher);
             FileDownloadTask task = new FileDownloadTask(downloadInfo, this, progressAware);
             mTaskList.add(task);
             if(downloadingListener != null)
@@ -166,22 +169,22 @@ public class DownloadManager {
         return downloadFileSync(cacheFile,/* id, url*/info0);
     }
 
-    public File downloadFileSync(File cacheFile, /*String id, String url*/FileInfo0 info0) {
-        return downloadFileSync(cacheFile, /*id, url*/info0, null);
+    public File downloadFileSync(File outFile, /*String id, String url*/FileInfo0 info0) {
+        return downloadFileSync(outFile, /*id, url*/info0, null);
     }
 
-    public File downloadFileSync(File cacheFile,/* String id, String url*/FileInfo0 info0, OnDownloadProgressListener progressListener) {
-        return downloadFileSync(/*cacheFile, id, url*/info0, null, progressListener);
+    public File downloadFileSync(File outFile,FileInfo info, OnDownloadProgressListener progressListener) {
+        return downloadFileSync(/*cacheFile, id, url*/info,outFile, null, progressListener);
     }
 
     /**
      * 同步下载方法
      *
      */
-    public File downloadFileSync(/*File cacheFile, String id, String url*/FileInfo0 info0, ProgressAware progressAware, OnDownloadProgressListener progressListener) {
+    public File downloadFileSync(FileInfo info,File outfile ,ProgressAware progressAware, OnDownloadProgressListener progressListener) {
         checkConfiguration();
         SyncDownloadLister syncDownloadLister = new SyncDownloadLister();
-        FileDownloadInfo downloadInfo = new FileDownloadInfo(/*id, url, cacheFile*/info0, syncDownloadLister, progressListener);
+        FileDownloadInfo downloadInfo = new FileDownloadInfo(info,outfile ,syncDownloadLister, progressListener);
         FileDownloadTask task = new FileDownloadTask(downloadInfo, this, progressAware);
         task.setSyncLoading(true);
         mDowndloadingMap.put(task, syncDownloadLister);
@@ -220,7 +223,6 @@ public class DownloadManager {
         } else {
 
         }*/
-
          cacheDir  = new File(cacheDir.getAbsolutePath() + File.separator + type.toString());
         if (!cacheDir.exists())
             cacheDir.mkdirs();

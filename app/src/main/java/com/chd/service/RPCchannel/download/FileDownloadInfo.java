@@ -1,6 +1,8 @@
 package com.chd.service.RPCchannel.download;
 
 
+import com.chd.base.Entity.AttribKey;
+import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.service.RPCchannel.download.listener.OnDownloadProgressListener;
 import com.chd.service.RPCchannel.download.listener.OnDownloadingListener;
@@ -18,7 +20,7 @@ public class FileDownloadInfo  {
     */
     private File outFile;
 
-   public FileInfo0 _item;
+   public FileInfo _item;
 
     private OnDownloadingListener onDownloadingListener;
 
@@ -33,12 +35,16 @@ public class FileDownloadInfo  {
         this.onDownloadProgressListener = onDownloadProgressListener;
     }*/
 
-    public FileDownloadInfo(FileInfo0 info0, OnDownloadingListener onDownloadingListener, OnDownloadProgressListener onDownloadProgressListener) {
+    public FileDownloadInfo(FileInfo fileInfo, File outFile ,OnDownloadingListener onDownloadingListener, OnDownloadProgressListener onDownloadProgressListener) {
       //  this.id = id;
        // this.url = url;
       //  this.outFile = outFile;
        // _item=info0;
-        super();
+       // super();
+        //_item=new FileInfo0(fileInfo);
+       // _item.setFilePath(downloadpath);
+        _item=fileInfo;
+        this.outFile=outFile;
         this.onDownloadingListener = onDownloadingListener;
         this.onDownloadProgressListener = onDownloadProgressListener;
     }
@@ -46,7 +52,7 @@ public class FileDownloadInfo  {
 
 
     public String getId() {
-        return ""+_item.getId();
+        return ""+_item.getObjid()+"--"+_item.getFtype();
     }
 
    /* public void setId(String id) {
@@ -71,7 +77,7 @@ public class FileDownloadInfo  {
 
 
     public String getUrl() {
-        return  _item.getUrl();
+        return AttribKey.protoprefix.getName()+ _item.getObjid();
     }
 
    /*public void setUrl(String url) {
@@ -79,7 +85,7 @@ public class FileDownloadInfo  {
     }*/
 
     public File getOutFile() {
-        outFile=  new File(_item.getFilePath()+File.separator+_item.getObjid());
+        //,outFile=  new File(_item.getFilePath()+File.separator+_item.getObjid());
         return outFile;
     }
 
