@@ -2216,11 +2216,8 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
 
 	@Override
 	public boolean onSingleTapConfirmed(MotionEvent e) {
-		if (discardTap) {
-			return false;
-		}
-		return true;
-	}
+        return !discardTap;
+    }
 
 	@Override
 	public boolean onDoubleTap(MotionEvent e) {

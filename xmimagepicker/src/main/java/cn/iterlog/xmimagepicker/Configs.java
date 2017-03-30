@@ -89,11 +89,8 @@ public class Configs implements Serializable {
 	}
 
 	public boolean isSingleMedia() { // 小余最大MEDIA_TYPE的值，那么只有一种类型
-		if (types.size() <= 1) {
-			return true;
-		}
-		return false;
-	}
+        return types.size() <= 1;
+    }
 
 	private List<String> names = new ArrayList<>();
 

@@ -21,7 +21,7 @@ public interface OnDownloadingListener {
      * @param errorType
      * @param msg 错误信息
      */
-    public void onDownloadFailed(final  FileDownloadTask task, final int errorType, final  String msg);
+    void onDownloadFailed(final FileDownloadTask task, final int errorType, final String msg);
 
     /**
      * 下载成功
@@ -29,6 +29,6 @@ public interface OnDownloadingListener {
      * @param task Download task
      * @param outFile 下载成功后的文件
      */
-    public void onDownloadSucc(FileDownloadTask task, File outFile);
+    void onDownloadSucc(FileDownloadTask task, File outFile);
 
 }

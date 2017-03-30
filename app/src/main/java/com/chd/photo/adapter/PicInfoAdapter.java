@@ -66,9 +66,10 @@ public class PicInfoAdapter<T extends FileInfo> extends BaseQuickAdapter<T, Base
 			if (item instanceof FileLocal) {
 				url = "file://" + UILApplication.getFilelistEntity().getFilePath(((FileLocal) item).getPathid()) + "/" + item.getObjid();
 			}
+			imageLoader.displayImage(url, (ImageView) helper.getView(R.id.iv_pic_info_photo), options, new SimpleImageLoadingListener());
+		}else{
+			helper.setImageResource(R.id.iv_pic_info_photo,R.drawable.img_default);
 		}
-		imageLoader.displayImage(url, (ImageView) helper.getView(R.id.iv_pic_info_photo), options, new SimpleImageLoadingListener());
-
 	}
 
 	private boolean isCheck = true;

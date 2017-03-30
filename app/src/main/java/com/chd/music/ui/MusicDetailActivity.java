@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chd.base.FileProvider;
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.backend.SyncTask;
 import com.chd.music.backend.MediaUtil;
@@ -114,12 +115,14 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
 
         mTvCenter.setText("音乐");
         mTvRight.setText("取消");
+        mTvRight.setVisibility(View.GONE);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_right:
+                break;
             case R.id.iv_left:
                 finish();
                 break;
@@ -141,9 +144,10 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
                     if(!f.exists()){
                         throw new FileNotFoundException("文件未找到");
                     }
-                    Uri uri = Uri.parse("file://"+fileInfo0.getFilePath());
+                    Uri uri = FileProvider.getUriForFile(this, "com.chd.base.FileProvider", f);
                     //调用系统自带的播放器
                     Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     intent.setDataAndType(uri, "video/mp4");
                     startActivity(intent);
                 } catch (Exception e) {

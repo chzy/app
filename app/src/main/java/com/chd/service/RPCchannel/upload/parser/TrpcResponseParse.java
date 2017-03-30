@@ -10,9 +10,7 @@ public class TrpcResponseParse extends BaseResponseParser {
         ParserResult<String> result = new ParserResult<String>(responseStr) {
             @Override
             public boolean isSuccessful() {
-                if (responseStr==null)
-                    return true;
-                return false;
+                return responseStr == null;
             }
 
             @Override

@@ -7,24 +7,24 @@ import com.afollestad.materialdialogs.MaterialDialog;
  */
 public interface ProgressAware {
 
-    public int getId();
+    int getId();
 
     /**
      * 是否被回收
      *
      * @return
      */
-    public boolean isCollected();
+    boolean isCollected();
 
     /**
      * 设置进度
      *
      * @param progress
      */
-    public boolean setProgress(int progress);
+    boolean setProgress(int progress);
 
-    public  MaterialDialog getWrappedView();
+    MaterialDialog getWrappedView();
 
-    public void setVisibility(int visibility);
+    void setVisibility(int visibility);
 
 }

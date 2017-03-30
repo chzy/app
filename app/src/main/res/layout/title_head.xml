@@ -5,7 +5,6 @@
     >
 
 <TextView
-    android:id="@+id/global_head_title"
     android:layout_width="fill_parent"
     android:layout_height="53dp"
     android:background="@color/background"

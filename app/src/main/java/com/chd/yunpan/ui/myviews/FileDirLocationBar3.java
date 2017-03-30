@@ -92,7 +92,7 @@ public class FileDirLocationBar3 implements OnClickListener {
 	 * */
 	public String changeCurrentPath(File file) {
 		allPath.add(file);
-		isRootDir = allPath.size() > 1 ? false : true;
+		isRootDir = allPath.size() <= 1;
 
 		String displayName = null;
 
@@ -101,7 +101,7 @@ public class FileDirLocationBar3 implements OnClickListener {
 	}
 
 	public File backOneClass() {
-		isRootDir = allPath.size() > 1 ? false : true;
+		isRootDir = allPath.size() <= 1;
 		if (isRootDir) {
 			return null;
 		}
@@ -169,7 +169,7 @@ public class FileDirLocationBar3 implements OnClickListener {
 			}
 			buttons = bs;
 			allPath = str;
-			isRootDir = allPath.size() > 1 ? false : true;
+			isRootDir = allPath.size() <= 1;
 			initButtons();
 		}
 	}

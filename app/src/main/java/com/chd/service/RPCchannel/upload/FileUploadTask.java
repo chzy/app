@@ -206,19 +206,14 @@ public class FileUploadTask implements Runnable {
     }
 
     private boolean isProgressViewCollected(ProgressAware progressAware) {
-        if(progressAware.isCollected())
-            return true;
-        return false;
+        return progressAware.isCollected();
     }
 
     private boolean isProgressViewReused(ProgressAware progressAware) {
         String currentFileUploadId = mFileUploadEngine.getFileUploadInfoIdForProgressAware(progressAware);
 //        if(!mFileUploadInfo.getId().equals(currentFileUploadId))
         //TODO 修改 去掉了！号
-        if(mFileUploadInfo.getId().equals(currentFileUploadId))
-
-            return true;
-        return false;
+        return mFileUploadInfo.getId().equals(currentFileUploadId);
     }
 
     private void cancelUpdateProgressTask(ProgressAware progressAware) {

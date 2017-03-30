@@ -14,7 +14,6 @@
         android:background="#F0F0F0" />
 
     <LinearLayout
-        android:id="@+id/openspace_payfor_mobile_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="#ffffff"
@@ -49,7 +48,6 @@
         android:background="#F0F0F0" />
 
     <LinearLayout
-        android:id="@+id/openspace_payfor_money_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="#ffffff"

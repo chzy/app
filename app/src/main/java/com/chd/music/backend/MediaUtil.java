@@ -28,7 +28,6 @@ import java.util.List;
 public class MediaUtil {
 
 
-
     //获取专辑封面的Uri
     private static final Uri albumArtUri = Uri.parse("content://media/external/audio/albums");
 
@@ -80,13 +79,14 @@ public class MediaUtil {
 
     /**
      * 往List集合中添加Map对象数据，每一个Map对象存放一首音乐的所有属性
+     *
      * @param mp3Infos
      * @return
      */
     public static List<HashMap<String, String>> getMusicMaps(
             List<Mp3Info> mp3Infos) {
         List<HashMap<String, String>> mp3list = new ArrayList<HashMap<String, String>>();
-        for (Iterator iterator = mp3Infos.iterator(); iterator.hasNext();) {
+        for (Iterator iterator = mp3Infos.iterator(); iterator.hasNext(); ) {
             Mp3Info mp3Info = (Mp3Info) iterator.next();
             HashMap<String, String> map = new HashMap<String, String>();
           /*  map.put("title", mp3Info.getTitle());
@@ -103,6 +103,7 @@ public class MediaUtil {
 
     /**
      * 格式化时间，将毫秒转换为分:秒格式
+     *
      * @param time
      * @return
      */
@@ -129,14 +130,15 @@ public class MediaUtil {
 
     /**
      * 获取默认专辑图片
+     *
      * @param context
      * @return
      */
-    public static Bitmap getDefaultArtwork(Context context,boolean small) {
+    public static Bitmap getDefaultArtwork(Context context, boolean small) {
         Options opts = new Options();
         opts.inPreferredConfig = Bitmap.Config.RGB_565;
 
-        if(small){	//返回小图片
+        if (small) {    //返回小图片
             return BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.play_img_default), null, opts);
         }
         return BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.play_img_default), null, opts);
@@ -145,30 +147,31 @@ public class MediaUtil {
 
     /**
      * 从文件当中获取专辑封面位图
+     *
      * @param context
      * @param songid
      * @param albumid
      * @return
      */
-    protected static Bitmap getArtworkFromFile(Context context, int songid, int albumid){
+    protected static Bitmap getArtworkFromFile(Context context, int songid, int albumid) {
         Bitmap bm = null;
-        if(albumid < 0 && songid < 0) {
+        if (albumid < 0 && songid < 0) {
             throw new IllegalArgumentException("Must specify an album or a song id");
         }
         try {
             Options options = new Options();
             FileDescriptor fd = null;
-            if(albumid < 0){
+            if (albumid < 0) {
                 Uri uri = Uri.parse("content://media/external/audio/media/"
                         + songid + "/albumart");
                 ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "r");
-                if(pfd != null) {
+                if (pfd != null) {
                     fd = pfd.getFileDescriptor();
                 }
             } else {
                 Uri uri = ContentUris.withAppendedId(albumArtUri, albumid);
                 ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "r");
-                if(pfd != null) {
+                if (pfd != null) {
                     fd = pfd.getFileDescriptor();
                 }
             }
@@ -195,28 +198,29 @@ public class MediaUtil {
 
     /**
      * 获取专辑封面位图对象
+     *
      * @param context
      * @param song_id
      * @param album_id
      * @param allowdefalut
      * @return
      */
-    public static Bitmap getArtwork(Context context, int song_id, int album_id, boolean allowdefalut, boolean small){
-        if(album_id < 0) {
-            if(song_id < 0) {
+    public static Bitmap getArtwork(Context context, int song_id, int album_id, boolean allowdefalut, boolean small) {
+        if (album_id < 0) {
+            if (song_id < 0) {
                 Bitmap bm = getArtworkFromFile(context, song_id, -1);
-                if(bm != null) {
+                if (bm != null) {
                     return bm;
                 }
             }
-            if(allowdefalut) {
+            if (allowdefalut) {
                 return getDefaultArtwork(context, small);
             }
             return null;
         }
         ContentResolver res = context.getContentResolver();
         Uri uri = ContentUris.withAppendedId(albumArtUri, album_id);
-        if(uri != null) {
+        if (uri != null) {
             InputStream in = null;
             try {
                 in = res.openInputStream(uri);
@@ -229,9 +233,9 @@ public class MediaUtil {
                 BitmapFactory.decodeStream(in, null, options);
                 /** 我们的目标是在你N pixel的画面上显示。 所以需要调用computeSampleSize得到图片缩放的比例 **/
                 /** 这里的target为800是根据默认专辑图片大小决定的，800只是测试数字但是试验后发现完美的结合 **/
-                if(small){
+                if (small) {
                     options.inSampleSize = computeSampleSize(options, 40);
-                } else{
+                } else {
                     options.inSampleSize = computeSampleSize(options, 600);
                 }
                 // 我们得到了缩放比例，现在开始正式读入Bitmap数据
@@ -242,20 +246,20 @@ public class MediaUtil {
                 return BitmapFactory.decodeStream(in, null, options);
             } catch (FileNotFoundException e) {
                 Bitmap bm = getArtworkFromFile(context, song_id, album_id);
-                if(bm != null) {
-                    if(bm.getConfig() == null) {
+                if (bm != null) {
+                    if (bm.getConfig() == null) {
                         bm = bm.copy(Bitmap.Config.RGB_565, false);
-                        if(bm == null && allowdefalut) {
+                        if (bm == null && allowdefalut) {
                             return getDefaultArtwork(context, small);
                         }
                     }
-                } else if(allowdefalut) {
+                } else if (allowdefalut) {
                     bm = getDefaultArtwork(context, small);
                 }
                 return bm;
             } finally {
                 try {
-                    if(in != null) {
+                    if (in != null) {
                         in.close();
                     }
                 } catch (IOException e) {
@@ -268,6 +272,7 @@ public class MediaUtil {
 
     /**
      * 对图片进行合适的缩放
+     *
      * @param options
      * @param target
      * @return
@@ -278,16 +283,16 @@ public class MediaUtil {
         int candidateW = w / target;
         int candidateH = h / target;
         int candidate = Math.max(candidateW, candidateH);
-        if(candidate == 0) {
+        if (candidate == 0) {
             return 1;
         }
-        if(candidate > 1) {
-            if((w > target) && (w / candidate) < target) {
+        if (candidate > 1) {
+            if ((w > target) && (w / candidate) < target) {
                 candidate -= 1;
             }
         }
-        if(candidate > 1) {
-            if((h > target) && (h / candidate) < target) {
+        if (candidate > 1) {
+            if ((h > target) && (h / candidate) < target) {
                 candidate -= 1;
             }
         }
@@ -298,12 +303,10 @@ public class MediaUtil {
     /**
      * 通过MP3路径得到指向当前MP3的Cursor
      *
-     * @param filePath
-     *            MP3路径
-     *
+     * @param filePath MP3路径
      * @return Cursor 返回的Cursor指向当前MP3
      */
-    private static   Cursor getCursorfromPath(Context context,String filePath) {
+    private static Cursor getCursorfromPath(Context context, String filePath) {
         String path = null;
         Cursor c = context.getContentResolver().query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null,
@@ -332,25 +335,23 @@ public class MediaUtil {
     }
 
 
-
     /**
-     *
      * 功能 通过album_id查找 album_art 如果找不到返回null
      *
      * @param mp3Path mp3路径
      * @return album_art
      */
-    public static String getAlbumArt(Context context,String mp3Path) {
-        String[] projection = new String[] { "album_art" };
-        if(StringUtils.isNullOrEmpty(mp3Path)){
+    public static String getAlbumArt(Context context, String mp3Path) {
+        String[] projection = new String[]{"album_art"};
+        if (StringUtils.isNullOrEmpty(mp3Path)) {
             return null;
         }
         Cursor cursor = getCursorfromPath2(context, mp3Path);
         String album_art = null;
-        if(cursor != null && cursor.getCount() > 0){
-            int trackId=cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
+        if (cursor != null && cursor.getCount() > 0) {
+            int trackId = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
             cursor.close();
-            cursor=null;
+            cursor = null;
             Cursor cur = context.getContentResolver().query(
                     Uri.parse(albumArtUri + "/" + Integer.toString(trackId)),
                     projection, null, null, null);
@@ -368,10 +369,39 @@ public class MediaUtil {
         return album_art;
     }
 
-    private static Cursor getCursorfromPath2(Context context,String filePath) {
+
+    /**
+     * 功能 通过album_id查找 album_art 如果找不到返回null
+     *
+     * @param videoPath mp3路径
+     * @return album_art
+     */
+    public static Bitmap getVideoAlbumArt(Context context, String videoPath) {
+
+        String[] projection = new String[]{"album_art"};
+        if (StringUtils.isNullOrEmpty(videoPath)) {
+            return null;
+        }
+        Cursor cursor = getCursorfromPath2(context, videoPath);
+        Bitmap album_art = null;
+        if (cursor != null && cursor.getCount() > 0) {
+            if (cursor.moveToFirst()) {
+                int trackId = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media._ID));
+                cursor.close();
+                cursor = null;
+                album_art = MediaStore.Images.Thumbnails.getThumbnail(context.getContentResolver(), trackId, MediaStore.Video.Thumbnails.MICRO_KIND, null);
+                return album_art;
+            }
+        }
+        if (cursor != null)
+            cursor.close();
+        return album_art;
+    }
+
+    private static Cursor getCursorfromPath2(Context context, String filePath) {
         Cursor c = context.getContentResolver().query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                null, MediaStore.Audio.Media.DATA+"=?", new String[]{filePath},
+                null, MediaStore.Audio.Media.DATA + "=?", new String[]{filePath},
                 MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
         if (c.moveToFirst()) {
             return c;

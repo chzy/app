@@ -42,7 +42,7 @@ public class FileUploadInfo {
         if (filelistEntity==null)
             filelistEntity=UILApplication.getFilelistEntity();
         this.descAttribMap = descmap;
-        _item=new FileInfo0((FileInfo)info0);
+        _item=new FileInfo0(info0);
         _item.setFilePath(filelistEntity.getFilePath(info0.getPathid()));
         this.apiCallback = apiCallback;
         this.progressListener = progressListener;

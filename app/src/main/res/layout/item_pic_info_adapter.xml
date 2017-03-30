@@ -4,6 +4,7 @@
                 android:layout_height="90dp">
 
 
+
     <ImageView
         android:id="@+id/iv_pic_info_photo"
         android:layout_width="90dp"
@@ -22,4 +23,17 @@
         android:visibility="gone"
         android:tag="false"
         android:src="@drawable/pic_edit_photo_check" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+android:textColor="#FFF"
+        android:textSize="13sp"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"
+        />
+
 </com.zhy.autolayout.AutoRelativeLayout>

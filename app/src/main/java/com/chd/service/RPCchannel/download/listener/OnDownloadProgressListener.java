@@ -13,6 +13,6 @@ public interface OnDownloadProgressListener {
      * @param current Downloaded size in bytes.
      * @param totalSize Total size in bytes.
      */
-    public void onProgressUpdate(  FileDownloadTask downloadInfo, long current, long totalSize);
+    void onProgressUpdate(FileDownloadTask downloadInfo, long current, long totalSize);
 
 }

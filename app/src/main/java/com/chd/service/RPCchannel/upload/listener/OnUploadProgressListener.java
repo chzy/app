@@ -11,6 +11,6 @@ public interface OnUploadProgressListener {
      * @param currSize 当前已上传的大小
      * @param progress 进度 0-100
      */
-    public void onProgress(long totalSize, long currSize, int progress);
+    void onProgress(long totalSize, long currSize, int progress);
 
 }

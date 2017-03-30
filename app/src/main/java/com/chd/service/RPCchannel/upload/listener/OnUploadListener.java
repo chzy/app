@@ -15,7 +15,7 @@ public interface OnUploadListener<T> {
      * @param errorType
      * @param msg
      */
-    public void onError(FileUploadInfo uploadData, int errorType, String msg);
+    void onError(FileUploadInfo uploadData, int errorType, String msg);
 
     /**
      * 上传成功
@@ -23,6 +23,6 @@ public interface OnUploadListener<T> {
      * @param uploadData
      * @param data 数据返回的解析结果
      */
-    public void onSuccess(FileUploadInfo uploadData, T data);
+    void onSuccess(FileUploadInfo uploadData, T data);
 
 }

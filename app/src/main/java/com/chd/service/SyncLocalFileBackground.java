@@ -33,7 +33,7 @@ public class SyncLocalFileBackground implements Runnable {
 
 
     private final String TAG = "SyncLocal";
-    private final int Maxbuflen = (int)256 * 1024;
+    private final int Maxbuflen = 256 * 1024;
    // private static ConcurrentLinkedQueue<FileInfo0> files = new ConcurrentLinkedQueue<FileInfo0>();
    private  List<FileInfo0> files = new ArrayList<>();
     private MediaMgr su = null;
@@ -206,7 +206,7 @@ public class SyncLocalFileBackground implements Runnable {
             Log.e(TAG,"contruct rpc inputstream fail ");
             return false;
         }
-        int buflen=Math.min((int) (total - offset), Maxbuflen);
+        int buflen=Math.min(total - offset, Maxbuflen);
         byte[] buffer = new byte[buflen];
 
         if (pb != null&&dialog==null) {

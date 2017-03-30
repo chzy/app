@@ -119,16 +119,12 @@ public class FileDownloadTask implements Runnable {
     }
 
     private boolean isProgressViewCollected(ProgressAware pa) {
-        if(pa.isCollected())
-            return true;
-        return false;
+        return pa.isCollected();
     }
 
     private boolean isProgressViewReused(ProgressAware pa) {
         String downloadTaskId = downloadManager.getFileDownloadInfoIdForProgressAware(pa);
-        if(!fileDownloadInfo.getId().equals(downloadTaskId))
-            return true;
-        return false;
+        return !fileDownloadInfo.getId().equals(downloadTaskId);
     }
 
     public void updateProgress(int progress) {

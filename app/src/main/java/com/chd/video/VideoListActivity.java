@@ -105,7 +105,6 @@ public class VideoListActivity extends UILActivity {
         setContentView(R.layout.activity_video_list);
         ButterKnife.bind(this);
         imageLoader = ImageLoader.getInstance();
-        ;
         tvCenter.setText("视频");
         File f = new File(
                 getCacheDir() + "/video");

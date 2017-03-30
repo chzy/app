@@ -50,7 +50,7 @@ public class MediaMgr  {
 	public final int COLUMN_DATE = 3;
 	private final String TAG=this.getClass().getName();
 
-	public static enum DBTAB
+	public enum DBTAB
 	{
 		Dling,UPing,DLed,UPed
 	}

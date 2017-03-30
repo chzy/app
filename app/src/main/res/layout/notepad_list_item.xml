@@ -52,7 +52,6 @@
                     android:src="@drawable/note_title_bg" />
 
                 <TextView
-                    android:id="@+id/note_mon_head"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_marginTop="1dp"

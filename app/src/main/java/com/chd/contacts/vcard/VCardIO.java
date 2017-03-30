@@ -67,7 +67,7 @@ public class VCardIO {
 						Log.d("添加成功:",len+"");
 						importStatus += parseContact.getParseLen();
 						// 更新进度条
-						activity.updateProgress((int) (100 * len / netSize));
+						activity.updateProgress(100 * len / netSize);
 					} while (true);
 				} catch (Exception e) {
 					Log.e("lmj", "联系人出错");

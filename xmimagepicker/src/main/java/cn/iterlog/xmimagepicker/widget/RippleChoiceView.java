@@ -327,7 +327,7 @@ public class RippleChoiceView extends View {
 		}
 	}
 
-	public static interface OnCheckedChangeListener {
+	public interface OnCheckedChangeListener {
 		void onCheckedChanged(RippleChoiceView view, boolean isChecked);
 	}
 
