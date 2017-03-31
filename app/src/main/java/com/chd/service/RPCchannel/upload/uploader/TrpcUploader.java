@@ -23,6 +23,8 @@ public class TrpcUploader extends BaseUploader {
     @Override
     public String upload(FileUploadInfo fileUploadInfo, OnFileTransferredListener fileTransferredListener) throws IOException {
         try {
+            FileInfo0 item = fileUploadInfo._item;
+            Log.d("liumj",item.getFilePath()+"/"+item.getObjid());
             transport = new TrpcOutputstream(fileUploadInfo._item, fileUploadInfo.getDescAttribMap());
             if (upload(fileUploadInfo, transport, fileTransferredListener))
                 return null;

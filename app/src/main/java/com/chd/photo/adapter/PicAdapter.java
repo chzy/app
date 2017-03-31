@@ -14,6 +14,7 @@ import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.chd.photo.ui.PicActivity;
 import com.chd.photo.ui.PicDetailActivity;
 import com.chd.proto.FileInfo;
+import com.chd.video.VideoPlayActivity;
 import com.chd.yunpan.R;
 import com.chd.yunpan.utils.TimeUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -97,7 +98,10 @@ public class PicAdapter<E extends FileInfo> extends BaseQuickAdapter<List<E>, Ba
                     intent.putExtra("ubklist", bIsUbkList);
                     context.startActivityForResult(intent, 0x12);
                 } else {
-
+                    //非视频，即图片进去
+                    Intent intent = new Intent(context, VideoPlayActivity.class);
+                    intent.putExtra("bean", infoAdapter.getItem(position));
+                    context.startActivityForResult(intent, 0x13);
                 }
             }
         }

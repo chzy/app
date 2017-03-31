@@ -42,10 +42,11 @@ public class UILActivity extends ActiveProcess {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        waitDialog = new MaterialDialog.Builder(this).build();
-        waitDialog.getBuilder().title("正在加载");
-        waitDialog.getBuilder().cancelable(false);
-        waitDialog.getBuilder().canceledOnTouchOutside(false);
+       MaterialDialog.Builder builder = new MaterialDialog.Builder(this);
+        builder.title("正在加载");
+        builder.cancelable(false);
+        builder.canceledOnTouchOutside(false);
+        waitDialog=builder.build();
     }
 
 

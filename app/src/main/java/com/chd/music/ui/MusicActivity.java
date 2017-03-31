@@ -16,6 +16,7 @@ import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.Entity.MessageEvent;
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.backend.SyncTask;
+import com.chd.contacts.vcard.StringUtils;
 import com.chd.music.adapter.MusicAdapter;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
@@ -105,14 +106,13 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
 
         for (FileInfo finfo : cloudUnits) {
             FileInfo0 item=new FileInfo0(finfo);
-
-
             //已备份文件
             String path = item.getFilePath();
             String name = item.getFilename();
-            if(path==null){
-                if(item.getSysid()>0){
-                    item =syncTask.queryLocalInfo(item.getSysid());
+            if(StringUtils.isNullOrEmpty(path)){
+                int sysid = filelistEntity.queryLocalSysid(item.getObjid());
+                if(sysid>0){
+                    item.setFilename(filelistEntity.getFilePath(sysid));
                 }else{
                     item.setFilePath(musicPath+ "/"+item.getObjid());
                 }

@@ -135,8 +135,14 @@ public class VoiceActivity extends UILActivity {
                     System.out.print("query cloudUnits remote failed");
                     return;
                 }
-                syncTask.analyPhotoUnits(cloudUnits, filelistEntity);
+                syncTask.analyRecordUnits(cloudUnits, filelistEntity);
                 Log.d("liumj", "云端数量：" + cloudUnits.size());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dismissWaitDialog();
+                    }
+                });
             }
         });
         thread.start();
@@ -261,20 +267,26 @@ public class VoiceActivity extends UILActivity {
                 boolean delete = data.getBooleanExtra("delete", false);
                 if (delete) {
                     //删除
+                    File f=new File(filePath);
+                    if(f.exists()){
+                        f.delete();
+                    }
 
                 } else {
                     String time = TimeUtils.getTime(this.time, "yyyy-MM-dd HH:mm");
                     String title = data.getStringExtra("title");
                     FileLocal fileLocal = new FileLocal();
                     File oldFile = new File(filePath);
+                    File newFile=null;
                     if (!oldFile.getName().equals(title + ".wav")) {
-                        File newFile = new File(recordPath + "/" + title + ".wav");
+                        newFile = new File(recordPath + "/" + title + ".wav");
                         oldFile.renameTo(newFile);
                     }
-                    int pathid = UILApplication.getFilelistEntity().addFilePath(oldFile.getParent());
+                    Log.d("liumj",newFile.getPath());
+                    int pathid = UILApplication.getFilelistEntity().addFilePath(newFile.getParent());
                     fileLocal.setPathid(pathid);
                     fileLocal.setFtype(FTYPE.RECORD);
-                    fileLocal.setObjid(oldFile.getName());
+                    fileLocal.setObjid(newFile.getName());
                     HashMap<String, String> param = new HashMap<>();
                     param.put("time", time);
                     param.put("title", title);
@@ -282,7 +294,7 @@ public class VoiceActivity extends UILActivity {
                     UploadOptions options = new UploadOptions(true, true);
                     FileUploadManager manager = FileUploadManager.getInstance();
                     MaterialDialog.Builder builder=new MaterialDialog.Builder(VoiceActivity.this);
-                    builder.content("正在上传："+builder);
+                    builder.content("正在上传：0%");
                     builder.progress(false,100);
                     final MaterialDialog build = builder.build();
                     build.show();

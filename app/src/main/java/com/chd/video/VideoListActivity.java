@@ -21,8 +21,6 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.UILActivity;
@@ -112,12 +110,6 @@ public class VideoListActivity extends UILActivity {
             f.mkdir();
         }
         rvVideoListContent.setLayoutManager(new LinearLayoutManager(this));
-        rvVideoListContent.addOnItemTouchListener(new OnItemClickListener() {
-            @Override
-            public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
-
-            }
-        });
         filelistEntity = UILApplication.getFilelistEntity();
         final SyncTask syncTask = new SyncTask(this, FTYPE.VIDEO);
         new Thread(new Runnable() {
@@ -154,8 +146,6 @@ public class VideoListActivity extends UILActivity {
                         local = null;
                     }
                 }
-
-
                 mHandler.sendEmptyMessage(0);
 
             }
@@ -302,6 +292,10 @@ public class VideoListActivity extends UILActivity {
                     }
                 }).show();
                 break;
+            case 0x13:
+                //进入了详情
+
+                break;
         }
     }
 
@@ -342,9 +336,6 @@ public class VideoListActivity extends UILActivity {
             boolean overwrite = true;
             boolean resume = true;
             UploadOptions options = new UploadOptions(overwrite, resume);
-
-
-//            param.put("duration",)
             final MaterialDialog.Builder builder=new MaterialDialog.Builder(VideoListActivity.this);
             builder.content("正在上传:0%");
             builder.progress(false,100);
