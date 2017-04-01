@@ -276,7 +276,8 @@ public class ExportSms {
                     TClient tClient = TClient.getinstance();
                     int last=fpath.lastIndexOf("/");
                     String name=fpath.substring(last + 1);
-                    String lines=tClient.queryAttribute(name, FTYPE.SMS, "lines");
+                    HashMap<String,String> descmap=tClient.queryAttribute(name, FTYPE.SMS);
+                    String lines=descmap.get( "lines");
                     int size=0;
                     if (lines!=null) {
                         size = Integer.parseInt(lines);
