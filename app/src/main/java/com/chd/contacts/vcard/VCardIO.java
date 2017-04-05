@@ -112,7 +112,8 @@ public class VCardIO {
 
 					// TClient.getinstance().delObj()
 					TClient tClient = TClient.getinstance();
-					String lines = tClient.queryAttribute(fileName, FTYPE.ADDRESS, "lines");
+					HashMap<String,String> descmap=tClient.queryAttribute(fileName, FTYPE.ADDRESS);
+					String lines = descmap.get("lines");
 					size = Integer.parseInt(lines);
 
 					msg.what = 999;
