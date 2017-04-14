@@ -106,7 +106,6 @@ public class PicDetailActivity extends UILActivity implements OnClickListener {
         if (syncTask == null)
             syncTask = new SyncTask(this, FTYPE.PICTURE);
         Serializable bean = getIntent().getSerializableExtra("bean");
-        boolean ubklist = getIntent().getBooleanExtra("ubklist", false);
         if (bean instanceof FileLocal) {
             url = "file://" + UILApplication.getFilelistEntity().getFilePath(((FileLocal) bean).getPathid()) + "/" + ((FileLocal) bean).getObjid();
             fileInfo0.setFilename(url);

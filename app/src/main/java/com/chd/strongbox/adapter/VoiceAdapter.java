@@ -2,9 +2,9 @@ package com.chd.strongbox.adapter;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.chd.strongbox.domain.VoiceEntity;
 import com.chd.yunpan.R;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -13,16 +13,21 @@ import java.util.List;
  * Time: 14:19
  * describe:
  */
-public class VoiceAdapter extends BaseQuickAdapter<VoiceEntity,BaseViewHolder>{
-	public VoiceAdapter(List<VoiceEntity> data) {
-		super(R.layout.item_voice,data);
-	}
+public class VoiceAdapter extends BaseQuickAdapter<HashMap<String, String>, BaseViewHolder> {
 
-	@Override
-	protected void convert(BaseViewHolder helper, VoiceEntity item) {
-		helper.setText(R.id.tv_item_voice_time,item.getTime());
-		helper.setText(R.id.tv_item_voice_name,item.getTitle());
-		helper.setText(R.id.tv_item_voice_date,item.getDate());
-		helper.setText(R.id.tv_item_voice_duration,item.getDuration());
-	}
+    public VoiceAdapter(List<HashMap<String, String>> cloudHashMap) {
+        super(R.layout.item_voice, cloudHashMap);
+    }
+
+    @Override
+    protected void convert(BaseViewHolder helper, HashMap<String, String> item) {
+        if(item.containsKey("time")){
+        helper.setText(R.id.tv_item_voice_date, item.get("time"));
+        }
+        if(item.containsKey("title")){
+        helper.setText(R.id.tv_item_voice_name, item.get("title"));}
+        if(item.containsKey("duration")){
+        helper.setText(R.id.tv_item_voice_duration, item.get("duration"));
+        }
+    }
 }

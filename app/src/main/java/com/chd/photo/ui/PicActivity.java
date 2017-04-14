@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.UILActivity;
@@ -29,6 +30,11 @@ import com.chd.photo.adapter.PicAdapter;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
+import com.chd.service.RPCchannel.upload.FileUploadInfo;
+import com.chd.service.RPCchannel.upload.FileUploadManager;
+import com.chd.service.RPCchannel.upload.UploadOptions;
+import com.chd.service.RPCchannel.upload.listener.OnUploadListener;
+import com.chd.service.RPCchannel.upload.progressaware.ProgressBarAware;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.utils.TimeUtils;
@@ -43,9 +49,12 @@ import com.yanzhenjie.permission.RationaleListener;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.iterlog.xmimagepicker.Configs;
 import cn.iterlog.xmimagepicker.PickerActivity;
 
 
@@ -291,6 +300,85 @@ public class PicActivity extends UILActivity implements OnClickListener {
                     Bitmap bitmap = (Bitmap) bundle.get("data");
                     Log.d("LMJ", saveImageToGallery(this, bitmap));
                     break;
+                case 12:
+                    //从本地添加
+                    int type = data.getIntExtra(Configs.MEDIA_TYPE, -1);
+                    FileUploadManager manager=FileUploadManager.getInstance();
+                    if(type == Configs.MEDIA_PICTURE){
+                        Uri res = data.getParcelableExtra(Configs.OUT_PUT);
+                        //一张图片上传
+                        try {
+                            File tmpFile=new File(new URI(res.toString()));
+                            FileLocal fileLocal=new FileLocal();
+                            int pathid = UILApplication.getFilelistEntity().addFilePath(tmpFile.getParent());
+                            fileLocal.setPathid(pathid);
+                            fileLocal.setFtype(FTYPE.PICTURE);
+                            fileLocal.setObjid(tmpFile.getName());
+                            boolean overwrite = true;
+                            boolean resume = true;
+                            UploadOptions options = new UploadOptions(overwrite, resume);
+                            final MaterialDialog.Builder builder=new MaterialDialog.Builder(PicActivity.this);
+                            builder.content("正在上传:0%");
+                            builder.progress(false,100);
+                            final MaterialDialog build = builder.build();
+                            build.show();
+                            manager.uploadFile(new ProgressBarAware(build), null, fileLocal, new OnUploadListener() {
+                                @Override
+                                public void onError(FileUploadInfo uploadData, int errorType, String msg) {
+                                    build.dismiss();
+                                    ToastUtils.toast(PicActivity.this,"上传失败");
+                                }
+
+                                @Override
+                                public void onSuccess(FileUploadInfo uploadData, Object data) {
+                                    build.dismiss();
+                                    ToastUtils.toast(PicActivity.this,"上传成功");
+                                }
+                            },options);
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    } else if(type == Configs.MEDIA_MULTI) {
+                        List<Uri> images = data.getParcelableArrayListExtra(Configs.OUT_PUT_IMAGES);
+                        //多张图片上传
+                        final MaterialDialog.Builder builder=new MaterialDialog.Builder(PicActivity.this);
+                        builder.progress(false,100);
+                        final MaterialDialog build = builder.build();
+
+                        for (int i = 0; i < images.size(); i++) {
+                            Uri res = images.get(i);
+                            try {
+                                File tmpFile=new File(new URI(res.toString()));
+                                FileLocal fileLocal=new FileLocal();
+                                int pathid = UILApplication.getFilelistEntity().addFilePath(tmpFile.getParent());
+                                fileLocal.setPathid(pathid);
+                                fileLocal.setFtype(FTYPE.PICTURE);
+                                fileLocal.setObjid(tmpFile.getName());
+                                boolean overwrite = true;
+                                boolean resume = true;
+                                build.setContent((i+1)+"/"+images.size()+"正在上传:0%");
+                                build.show();
+                                UploadOptions options = new UploadOptions(overwrite, resume);
+                                manager.uploadFile(new ProgressBarAware(build), null, fileLocal, new OnUploadListener() {
+
+                                    @Override
+                                    public void onError(FileUploadInfo uploadData, int errorType, String msg) {
+                                        build.dismiss();
+                                        ToastUtils.toast(PicActivity.this,"上传失败");
+                                    }
+
+                                    @Override
+                                    public void onSuccess(FileUploadInfo uploadData, Object data) {
+                                        build.dismiss();
+                                        ToastUtils.toast(PicActivity.this,"上传成功");
+                                    }
+                                },options);
+                            } catch (URISyntaxException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    break;
                 case 0x12:
                     //删除成功
                     if (data != null) {
@@ -306,6 +394,8 @@ public class PicActivity extends UILActivity implements OnClickListener {
             }
         }
     }
+
+
 
 
     public String saveImageToGallery(Context context, Bitmap bitmap) {

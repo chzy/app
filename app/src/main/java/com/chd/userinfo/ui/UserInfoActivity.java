@@ -96,7 +96,7 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
             info0.setFilePath(icon_file.getPath());
             info0.setFtype(FTYPE.PICTURE);
             setParMessage("头像上传中");
-            boolean b = new SyncLocalFileBackground(UserInfoActivity.this).uploadFileOvWrite(info0, UserInfoActivity.this, null,null);
+            boolean b = new SyncLocalFileBackground(UserInfoActivity.this).uploadFileOvWrite(info0, UserInfoActivity.this, null, null);
             if (b) {
                 runOnUiThread(new Runnable() {
                     @Override
@@ -301,7 +301,7 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
                 .displayer(new FadeInBitmapDisplayer(0)).build();
 
 
-        imageLoader.displayImage("trpc://netdiskportrait", mImgHead,options);
+        imageLoader.displayImage("trpc://netdiskportrait", mImgHead, options);
     }
 
     private void initListener() {
@@ -350,36 +350,30 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
             case R.id.iv_left:
                 onBackPressed();
                 break;
-            case R.id.userinfo_head_layout: {
+            case R.id.userinfo_head_layout:
                 iconWindow.showPopupWindow(root_view);
-            }
-            break;
-            case R.id.userinfo_name_layout: {
+                break;
+            case R.id.userinfo_name_layout:
                 edit_type = UserInfoFlag.FLAG_EDIT_TYPE_NAME;
                 edit_value = mTextName.getText().toString();
-            }
-            break;
-            case R.id.userinfo_sex_layout: {
+                break;
+            case R.id.userinfo_sex_layout:
                 edit_type = UserInfoFlag.FLAG_EDIT_TYPE_SEX;
                 edit_value = mTextSex.getText().toString();
-            }
-            break;
-            case R.id.userinfo_age_layout: {
+                break;
+            case R.id.userinfo_age_layout:
                 edit_type = UserInfoFlag.FLAG_EDIT_TYPE_AGE;
                 edit_value = mTextAge.getText().toString();
-            }
-            break;
-            case R.id.userinfo_mobile_layout: {
+                break;
+            case R.id.userinfo_mobile_layout:
                 edit_type = UserInfoFlag.FLAG_EDIT_TYPE_MOBILE;
                 edit_value = mTextMobile.getText().toString();
-            }
-            break;
-            case R.id.userinfo_pwd_layout: {
+                break;
+            case R.id.userinfo_pwd_layout:
                 edit_type = UserInfoFlag.FLAG_EDIT_TYPE_PWD;
                 edit_value = mTextPwd.getText().toString();
-            }
-            break;
-            case R.id.userinfo_logout: {
+                break;
+            case R.id.userinfo_logout:
                 ShareUtils shareUtils = new ShareUtils(UserInfoActivity.this);
                 shareUtils.setLoginEntity(null);
                 shareUtils.setURL("");
@@ -389,8 +383,7 @@ public class UserInfoActivity extends ActiveProcess implements OnClickListener {
                 startIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(startIntent);
                 finish();
-            }
-            return;
+                return;
             default:
                 break;
         }

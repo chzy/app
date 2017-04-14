@@ -13,7 +13,6 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.util.List;
@@ -35,10 +34,9 @@ public class PicInfoAdapter<T extends FileInfo> extends BaseQuickAdapter<T, Base
 				.cacheInMemory(true).cacheOnDisk(true)
 				.considerExifParams(true)
 				.showImageOnFail(R.drawable.pic_test1).showImageOnLoading(R.drawable.pic_test1)
-				.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+				.imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
 				.bitmapConfig(Bitmap.Config.RGB_565)
 				.resetViewBeforeLoading(false)
-				.displayer(new RoundedBitmapDisplayer(20))
 				.displayer(new FadeInBitmapDisplayer(0)).build();
 	}
 
@@ -68,7 +66,9 @@ public class PicInfoAdapter<T extends FileInfo> extends BaseQuickAdapter<T, Base
 			}
 			imageLoader.displayImage(url, (ImageView) helper.getView(R.id.iv_pic_info_photo), options, new SimpleImageLoadingListener());
 		}else{
-			helper.setImageResource(R.id.iv_pic_info_photo,R.drawable.img_default);
+			url="ttrpc://yunpan_thumb_"+item.getObjid();
+			url=url.replace("mp4","jpg");
+			imageLoader.displayImage(url, (ImageView) helper.getView(R.id.iv_pic_info_photo), options, new SimpleImageLoadingListener());
 		}
 	}
 

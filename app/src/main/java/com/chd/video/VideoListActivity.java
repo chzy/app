@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.chd.TClient;
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.UILActivity;
@@ -46,9 +48,13 @@ import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
 import com.yanzhenjie.permission.RationaleListener;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,6 +64,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.iterlog.xmimagepicker.Configs;
 import cn.iterlog.xmimagepicker.PickerActivity;
 
 /**
@@ -89,6 +96,7 @@ public class VideoListActivity extends UILActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
+                    waitDialog.dismiss();
                     picAdapter = new PicAdapter(VideoListActivity.this, cloudList, false, imageLoader, true);
                     rvVideoListContent.setAdapter(picAdapter);
                     break;
@@ -110,48 +118,50 @@ public class VideoListActivity extends UILActivity {
             f.mkdir();
         }
         rvVideoListContent.setLayoutManager(new LinearLayoutManager(this));
+        referData();
+    }
+
+    private void referData() {
+        waitDialog.show();
         filelistEntity = UILApplication.getFilelistEntity();
-        final SyncTask syncTask = new SyncTask(this, FTYPE.VIDEO);
+
         new Thread(new Runnable() {
             @Override
             public void run() {
-                syncTask.analyVideoUnits(cloudUnits, filelistEntity);
-                if (cloudUnits == null || cloudUnits.isEmpty()) {
-                    // 0-100 分批取文件
-                    cloudUnits = syncTask.getCloudUnits(0, 10000);
-                    if (cloudUnits == null) {
-                        System.out.print("query cloudUnits remote failed");
-                        return;
-                    }
-                    syncTask.analyPhotoUnits(cloudUnits, filelistEntity);
-
-                    List<FileLocal> localUnits = filelistEntity.getLocallist();
-
-                    if (cloudUnits != null && !localUnits.isEmpty()) {
-                        List<FileInfo> local = new ArrayList<>();
-                        int time = TimeUtils.getZeroTime(cloudUnits.get(0).getLastModified());
-                        local.add(cloudUnits.get(0));
-                        for (int i = 1; i < cloudUnits.size(); i++) {
-                            FileInfo fileInfo = cloudUnits.get(i);
-                            if (fileInfo.lastModified <= ((cloudList.size() + 1) * 3 * 24 * 3600 + time)) {
-                                local.add(fileInfo);
-                            } else {
-                                cloudList.add(local);
-                                local = new ArrayList<>();
-                                local.add(fileInfo);
-                                time = TimeUtils.getZeroTime(fileInfo.getLastModified());
-                            }
-                        }
-                        cloudList.add(local);
-                        local = null;
-                    }
+                // 0-100 分批取文件
+                cloudList.clear();
+                SyncTask syncTask = new SyncTask(VideoListActivity.this, FTYPE.VIDEO);
+                cloudUnits = syncTask.getCloudUnits(0, 10000);
+                if (cloudUnits == null) {
+                    System.out.print("query cloudUnits remote failed");
+                    return;
                 }
+                syncTask.analyVideoUnits(cloudUnits, filelistEntity);
+                if (cloudUnits != null && !cloudUnits.isEmpty()) {
+                    List<FileInfo> local = new ArrayList<>();
+                    int time = TimeUtils.getZeroTime(cloudUnits.get(0).getLastModified());
+                    local.add(cloudUnits.get(0));
+                    for (int i = 1; i < cloudUnits.size(); i++) {
+                        FileInfo fileInfo = cloudUnits.get(i);
+                        if (fileInfo.lastModified <= ((cloudList.size() + 1) * 3 * 24 * 3600 + time)) {
+                            local.add(fileInfo);
+                        } else {
+                            cloudList.add(local);
+                            local = new ArrayList<>();
+                            local.add(fileInfo);
+                            time = TimeUtils.getZeroTime(fileInfo.getLastModified());
+                        }
+                    }
+                    cloudList.add(local);
+                    local = null;
+                }
+
                 mHandler.sendEmptyMessage(0);
 
             }
         }).start();
-
     }
+
 
     private FilelistEntity filelistEntity;
     private static final int REQUEST_CODE_SETTING = 300;
@@ -184,7 +194,7 @@ public class VideoListActivity extends UILActivity {
     }
 
     public void showVideoChoose() {
-        PickerActivity.chooseMultiMovie(this, 12, 9);
+        PickerActivity.chooseSingleMovie(this, 12, true);
     }
 
     public void deleteVideo(View v) {
@@ -288,116 +298,211 @@ public class VideoListActivity extends UILActivity {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         // 文件写完之后删除/sdcard/dcim/CAMERA/XXX.MP4
-                        deleteDefaultFile(data.getData());
+                        deleteDefaultFile(false, true, data.getData());
                     }
                 }).show();
                 break;
-            case 0x13:
-                //进入了详情
+            case 12:
+                //添加本地视频 上传
+                final Uri res = data.getParcelableExtra(Configs.OUT_PUT);
+                FileUploadManager manager = FileUploadManager.getInstance();
+                //一张视频上传
+                try {
+                    File tmpFile = new File(new URI(res.toString()));
+                    FileLocal fileLocal = new FileLocal();
+                    int pathid = UILApplication.getFilelistEntity().addFilePath(tmpFile.getParent());
+                    fileLocal.setPathid(pathid);
+                    fileLocal.setFtype(FTYPE.VIDEO);
+                    fileLocal.setObjid(tmpFile.getName());
+                    boolean overwrite = true;
+                    boolean resume = true;
+                    UploadOptions options = new UploadOptions(overwrite, resume);
+                    final MaterialDialog.Builder builder = new MaterialDialog.Builder(VideoListActivity.this);
+                    builder.content("正在上传:0%");
+                    builder.progress(false, 100);
+                    final MaterialDialog build = builder.build();
+                    build.show();
+                    manager.uploadFile(new ProgressBarAware(build), null, fileLocal, new OnUploadListener() {
+                        @Override
+                        public void onError(FileUploadInfo uploadData, int errorType, String msg) {
+                            build.dismiss();
+                            ToastUtils.toast(VideoListActivity.this, "上传失败");
+                        }
 
+                        @Override
+                        public void onSuccess(FileUploadInfo uploadData, Object data) {
+                            build.dismiss();
+                            ToastUtils.toast(VideoListActivity.this, "上传成功");
+                            deleteDefaultFile(true, false, res);
+
+                        }
+                    }, options);
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 0x13:
+                //进入了详情,删除了视频
+                referData();
                 break;
         }
     }
 
-    private void uploadVideoFile(String name, Intent data) {
-        try {
-            AssetFileDescriptor videoAsset = getContentResolver()
-                    .openAssetFileDescriptor(data.getData(), "r");
-            FileInputStream fis = videoAsset.createInputStream();
-            HashMap<String,String> param=new HashMap<>();
-            Cursor cursor = getContentResolver().query(data.getData(), null, null, null, null);
-            if (cursor != null) {
-                if (cursor.moveToFirst()) {
-                    long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media.DURATION));
-                    SimpleDateFormat sdf=new SimpleDateFormat("mm:ss");
-                    String format = sdf.format(new Date(duration));
-                    param.put("duration",format);//视频时长
-                }
-                cursor.close();
-            }
-            File tmpFile = new File(
-                    getCacheDir() + "/video",
-                    name + ".mp4");
+    private void uploadVideoFile(final String name, final Intent data) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    AssetFileDescriptor videoAsset = getContentResolver()
+                            .openAssetFileDescriptor(data.getData(), "r");
+                    FileInputStream fis = videoAsset.createInputStream();
+                    final HashMap<String, String> param = new HashMap<>();
+                    Cursor cursor = getContentResolver().query(data.getData(), null, null, null, null);
+                    if (cursor != null) {
+                        if (cursor.moveToFirst()) {
+                            long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media.DURATION));
+                            SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
+                            String format = sdf.format(new Date(duration));
+                            param.put("duration", format);//视频时长
+                        }
+                        cursor.close();
+                    }
+                    final File tmpFile = new File(
+                            getCacheDir() + "/video",
+                            name + ".mp4");
 
-            FileOutputStream fos = new FileOutputStream(tmpFile);
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = fis.read(buf)) > 0) {
-                fos.write(buf, 0, len);
-            }
-            fis.close();
-            fos.close();
-            FileUploadManager manager = FileUploadManager.getInstance();
-            FileLocal fileLocal = new FileLocal();
-            int pathid = UILApplication.getFilelistEntity().addFilePath(tmpFile.getParent());
-            fileLocal.setPathid(pathid);
-            fileLocal.setFtype(FTYPE.VIDEO);
-            fileLocal.setObjid(tmpFile.getName());
-            boolean overwrite = true;
-            boolean resume = true;
-            UploadOptions options = new UploadOptions(overwrite, resume);
-            final MaterialDialog.Builder builder=new MaterialDialog.Builder(VideoListActivity.this);
-            builder.content("正在上传:0%");
-            builder.progress(false,100);
-            final MaterialDialog build = builder.build();
-            build.show();
-            manager.uploadFile(new ProgressBarAware(build),param,fileLocal, new OnUploadListener() {
-                @Override
-                public void onError(FileUploadInfo uploadData, int errorType, String msg) {
-                    build.dismiss();
-                    ToastUtils.toast(VideoListActivity.this, "上传失败");
+                    FileOutputStream fos = new FileOutputStream(tmpFile);
+                    final byte[] buf = new byte[1024];
+                    int len;
+                    while ((len = fis.read(buf)) > 0) {
+                        fos.write(buf, 0, len);
+                    }
+                    fis.close();
+                    fos.close();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            FileUploadManager manager = FileUploadManager.getInstance();
+                            FileLocal fileLocal = new FileLocal();
+                            int pathid = UILApplication.getFilelistEntity().addFilePath(tmpFile.getParent());
+                            fileLocal.setPathid(pathid);
+                            fileLocal.setFtype(FTYPE.VIDEO);
+                            fileLocal.setObjid(tmpFile.getName());
+                            objid = tmpFile.getName();
+                            objid = "yunpan_thumb_" + objid.replace("mp4", "jpg");
+                            param.put("thumbnail", objid);
+                            boolean overwrite = true;
+                            boolean resume = true;
+                            UploadOptions options = new UploadOptions(overwrite, resume);
+                            final MaterialDialog.Builder builder = new MaterialDialog.Builder(VideoListActivity.this);
+                            builder.content("正在上传:0%");
+                            builder.progress(false, 100);
+                            builder.canceledOnTouchOutside(false);
+                            final MaterialDialog build = builder.build();
+                            build.show();
+                            manager.uploadFile(new ProgressBarAware(build), param, fileLocal, new OnUploadListener() {
+                                @Override
+                                public void onError(FileUploadInfo uploadData, int errorType, String msg) {
+                                    build.dismiss();
+                                    ToastUtils.toast(VideoListActivity.this, "上传失败");
+                                }
+
+                                @Override
+                                public void onSuccess(FileUploadInfo uploadData, Object data2) {
+                                    build.dismiss();
+                                    ToastUtils.toast(VideoListActivity.this, "上传成功");
+                                    deleteDefaultFile(true, true, data.getData());
+//
+                                    // 文件写完之后删除/sdcard/dcim/CAMERA/XXX.MP4
+
+                                }
+                            }, options);
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
-                @Override
-                public void onSuccess(FileUploadInfo uploadData, Object data) {
-                    build.dismiss();
-                    ToastUtils.toast(VideoListActivity.this, "上传成功");
-                }
-            }, options);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }finally {
-            // 文件写完之后删除/sdcard/dcim/CAMERA/XXX.MP4
-            deleteDefaultFile(data.getData());
-        }
+            }
+        }).start();
+
     }
 
-
+    private String objid;
     private Bitmap bitmap = null;
 
+
     // 删除在/sdcard/dcim/Camera/默认生成的文件
-    private void deleteDefaultFile(Uri uri) {
+    private void deleteDefaultFile(final boolean isUpload, final boolean isDel, Uri uri) {
         String fileName = null;
         if (uri != null) {
             // content
-            Log.d("Scheme", uri.getScheme().toString());
-            if (uri.getScheme().toString().equals("content")) {
+            Log.d("Scheme", uri.getScheme());
+            if (uri.getScheme().equals("content")) {
                 Cursor cursor = this.getContentResolver().query(uri, null,
                         null, null, null);
-                if (cursor.moveToNext()) {
+                if (cursor != null && cursor.moveToNext()) {
                     int columnIndex = cursor
                             .getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
                     fileName = cursor.getString(columnIndex);
-                    //获取缩略图id
-                    int id = cursor.getInt(cursor
-                            .getColumnIndex(MediaStore.Video.VideoColumns._ID));
-                    //获取缩略图
-                    bitmap = MediaStore.Video.Thumbnails.getThumbnail(
-                            getContentResolver(), id, MediaStore.Video.Thumbnails.MICRO_KIND,
-                            null);
-                    Log.d("fileName", fileName);
-//					if (!fileName.startsWith("/mnt")) {
-//						fileName = "/mnt" + fileName;
-//					}
-//					Log.d("fileName", fileName);
+                    bitmap = ThumbnailUtils.createVideoThumbnail(fileName, MediaStore.Video.Thumbnails.MINI_KIND);
+
+                    final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                    final String finalFileName = fileName;
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                if (isUpload) {
+                                    ByteBuffer byteBuffer = ByteBuffer.wrap(baos.toByteArray());
+                                    FileInfo fileInfo = new FileInfo();
+                                    fileInfo.setObjid(objid);
+                                    fileInfo.setFtype(FTYPE.THUMB);
+                                    String s = TClient.getinstance().AllocObj(fileInfo, null);
+                                    TClient.getinstance().AppendObj(objid, byteBuffer, FTYPE.PICTURE, 0L);
+                                    TClient.getinstance().CommitObj(objid, FTYPE.PICTURE, null);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                // 删除文件
+                                if (isDel) {
+                                    File file = new File(finalFileName);
+                                    if (file.exists()) {
+                                        file.delete();
+                                        Log.d("delete", "删除成功");
+                                    }
+                                }
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        referData();
+                                    }
+                                });
+                            }
+                        }
+                    }).start();
+
+
+                    //                    //获取缩略图id
+                    //                    int id = cursor.getInt(cursor
+                    //                            .getColumnIndex(MediaStore.Video.VideoColumns._ID));
+                    //                    //获取缩略图
+                    //                    bitmap = MediaStore.Video.Thumbnails.getThumbnail(
+                    //                            getContentResolver(), id, MediaStore.Video.Thumbnails.MICRO_KIND,
+                    //                            null);
+
+
+                    //                    Log.d("fileName", fileName);
+                    //					if (!fileName.startsWith("/mnt")) {
+                    //						fileName = "/mnt" + fileName;
+                    //					}
+                    //					Log.d("fileName", fileName);
                 }
             }
         }
-        // 删除文件
-        File file = new File(fileName);
-        if (file.exists()) {
-            file.delete();
-            Log.d("delete", "删除成功");
-        }
+
     }
 }

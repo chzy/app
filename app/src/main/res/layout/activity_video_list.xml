@@ -24,15 +24,7 @@
             android:padding="10dp"
             android:src="@drawable/iconfont_video_list_add" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
-            android:onClick="deleteVideo"
-            android:padding="10dp"
-            android:src="@drawable/iconfont_video_list_delete" />
+       />
 
     </RelativeLayout>
 

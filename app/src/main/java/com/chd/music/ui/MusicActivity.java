@@ -41,15 +41,15 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
     private GridView mGvMusic;
     private View mViewNumber;
     private MusicAdapter adapter;
-    private List<FileInfo> cloudUnits=new ArrayList<>();
-    private List<FileInfo0> cloudList=new ArrayList<>();
+    private List<FileInfo> cloudUnits = new ArrayList<>();
+    private List<FileInfo0> cloudList = new ArrayList<>();
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             dismissDialog();
             adapter = new MusicAdapter(MusicActivity.this,
                     cloudList);
             mGvMusic.setAdapter(adapter);
-            mTvNumber.setText("未备份音乐"+filelistEntity.getUnbakNumber()+"首");
+            mTvNumber.setText("未备份音乐" + filelistEntity.getUnbakNumber() + "首");
         }
     };
     private String musicPath;
@@ -62,7 +62,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
         initTitle();
         initResourceId();
         initListener();
-        musicPath=new ShareUtils(this).getMusicFile().getPath();
+        musicPath = new ShareUtils(this).getMusicFile().getPath();
         syncTask = new SyncTask(MusicActivity.this, FTYPE.MUSIC);
         onNewThreadRequest();
         EventBus.getDefault().register(this);
@@ -77,52 +77,47 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-
-                cloudUnits= syncTask.getCloudUnits(0, 10000);
-
+                cloudUnits = syncTask.getCloudUnits(0, 10000);
                 initData();
-
             }
         });
         thread.start();
     }
+
     @Subscribe
     public void onEventMainThread(MessageEvent event) {
-        if(event.type==FTYPE.MUSIC){
+        if (event.type == FTYPE.MUSIC) {
 //            onNewThreadRequest();
         }
     }
 
     FilelistEntity filelistEntity;
-    private void initData( ) {
 
-    filelistEntity= UILApplication.getFilelistEntity();
-        filelistEntity=UILApplication.getFilelistEntity();
+    private void initData() {
+
+        filelistEntity = UILApplication.getFilelistEntity();
         if (cloudUnits == null) {
             System.out.print("query remote failed");
         }
-        syncTask.analyMusicUnits(cloudUnits,filelistEntity);
-
-
+        syncTask.analyMusicUnits(cloudUnits, filelistEntity);
         for (FileInfo finfo : cloudUnits) {
-            FileInfo0 item=new FileInfo0(finfo);
+            FileInfo0 item = new FileInfo0(finfo);
             //已备份文件
             String path = item.getFilePath();
             String name = item.getFilename();
-            if(StringUtils.isNullOrEmpty(path)){
+            if (StringUtils.isNullOrEmpty(path)) {
                 int sysid = filelistEntity.queryLocalSysid(item.getObjid());
-                if(sysid>0){
-                    item.setFilename(filelistEntity.getFilePath(sysid));
-                }else{
-                    item.setFilePath(musicPath+ "/"+item.getObjid());
+                if (sysid > 0) {
+                    item.setFilePath(filelistEntity.getFilePath(sysid));
+                } else {
+                    item.setFilePath(musicPath + "/" + item.getObjid());
                 }
             }
-            if(name==null){
-               item.setFilename(item.getObjid());
+            if (name == null) {
+                item.setFilename(item.getObjid());
             }
             cloudList.add(item);
         }
-
 
 
         handler.sendEmptyMessage(0);
@@ -164,8 +159,8 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
                 break;
             case R.id.iv_music_num_layout:
                 Intent intent = new Intent(this, MusicBackupActivity.class);
-                ArrayList<FileLocal> fileLocals=new ArrayList<>(filelistEntity.getLocallist());
-                intent.putExtra("locallist",fileLocals);
+                ArrayList<FileLocal> fileLocals = new ArrayList<>(filelistEntity.getLocallist());
+                intent.putExtra("locallist", fileLocals);
                 startActivityForResult(intent, 0x02);
                 break;
         }

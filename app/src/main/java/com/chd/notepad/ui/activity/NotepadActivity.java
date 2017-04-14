@@ -211,8 +211,9 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                 finish();
             }
         });
-        mTvCenter.setText(R.string.mysapce_menu + meunid);
+//        mTvCenter.setText(R.string.mysapce_menu + meunid);
         mTvRight.setText("记录");
+        mTvCenter.setText("记事本");
         mTvRight.setOnClickListener(new AddRecordListener());
     }
 

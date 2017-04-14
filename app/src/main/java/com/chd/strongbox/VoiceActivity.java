@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
+import com.chd.TClient;
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.UILActivity;
@@ -31,7 +32,6 @@ import com.chd.service.RPCchannel.upload.UploadOptions;
 import com.chd.service.RPCchannel.upload.listener.OnUploadListener;
 import com.chd.service.RPCchannel.upload.progressaware.ProgressBarAware;
 import com.chd.strongbox.adapter.VoiceAdapter;
-import com.chd.strongbox.domain.VoiceEntity;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.share.ShareUtils;
@@ -77,7 +77,6 @@ public class VoiceActivity extends UILActivity {
 
     private String recordPath = "";
     VoiceAdapter adapter = null;
-    private List<VoiceEntity> entities;
     private FilelistEntity filelistEntity;
 
     @Override
@@ -86,12 +85,10 @@ public class VoiceActivity extends UILActivity {
         setContentView(R.layout.activity_voice);
         ButterKnife.bind(this);
         tvCenter.setText("录音");
-        entities = new ArrayList<>();
-        adapter = new VoiceAdapter(entities);
 
         recordPath = new ShareUtils(this).getRecordFile().getPath();
         rvVoiceContent.setLayoutManager(new LinearLayoutManager(this));
-        rvVoiceContent.setAdapter(adapter);
+
         rvVoiceContent.addItemDecoration(
                 new HorizontalDividerItemDecoration.Builder(this)
                         .color(Color.parseColor("#d5d5d5"))
@@ -103,9 +100,15 @@ public class VoiceActivity extends UILActivity {
                 //点击事件
                 Log.d("liumj", "执行了几次");
                 pos = position;
-                VoiceEntity voiceEntity = entities.get(position);
-                title = voiceEntity.getTitle();
-                filePath = entities.get(position).getFilePath();
+                FileInfo voiceEntity = cloudUnits.get(position);
+                HashMap<String, String> map = cloudHashMap.get(position);
+                title = map.get("title");
+                int sysid = filelistEntity.queryLocalSysid(voiceEntity.getObjid());
+                if (sysid > 0) {
+                    filePath = filelistEntity.getFilePath(sysid);
+                } else {
+                    filePath = recordPath + "/" + voiceEntity.getObjid();
+                }
                 isNew = false;
                 AndPermission.with(VoiceActivity.this)
                         .requestCode(REQUEST_CODE_PERMISSION_RECORD)
@@ -122,6 +125,9 @@ public class VoiceActivity extends UILActivity {
         onNewThreadRequest();
     }
 
+    private List<FileInfo> cloudUnits = new ArrayList<>();
+    private List<HashMap<String, String>> cloudHashMap = new ArrayList<>();
+
     private void onNewThreadRequest() {
         showWaitDialog();
         Thread thread = new Thread(new Runnable() {
@@ -130,17 +136,29 @@ public class VoiceActivity extends UILActivity {
                 filelistEntity = UILApplication.getFilelistEntity();
                 SyncTask syncTask = new SyncTask(VoiceActivity.this, FTYPE.RECORD);
                 //未备份文件 ==  backedlist . removeAll(localist);
-                final List<FileInfo> cloudUnits = syncTask.getCloudUnits(0, 10000);
+                cloudUnits.clear();
+                cloudUnits.addAll(syncTask.getCloudUnits(0, 10000));
                 if (cloudUnits == null) {
                     System.out.print("query cloudUnits remote failed");
                     return;
                 }
                 syncTask.analyRecordUnits(cloudUnits, filelistEntity);
+
+                for (FileInfo c : cloudUnits) {
+                    try {
+                        HashMap<String, String> s = TClient.getinstance().queryAttribute(c.getObjid(), c.getFtype());
+                        cloudHashMap.add(s);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 Log.d("liumj", "云端数量：" + cloudUnits.size());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         dismissWaitDialog();
+                        adapter = new VoiceAdapter(cloudHashMap);
+                        rvVoiceContent.setAdapter(adapter);
                     }
                 });
             }
@@ -192,7 +210,7 @@ public class VoiceActivity extends UILActivity {
                     AndroidAudioRecorder.with(VoiceActivity.this)
                             // Required
                             .setFilePath(filePath)
-                            .setTitle("新录音" + (entities.size() + 1))
+                            .setTitle("新录音" + (cloudUnits.size() + 1))
                             .setColor(Color.parseColor("#f8b82d"))
                             .setRequestCode(0)
                             // Optional
@@ -267,22 +285,21 @@ public class VoiceActivity extends UILActivity {
                 boolean delete = data.getBooleanExtra("delete", false);
                 if (delete) {
                     //删除
-                    File f=new File(filePath);
-                    if(f.exists()){
+                    File f = new File(filePath);
+                    if (f.exists()) {
                         f.delete();
                     }
 
                 } else {
-                    String time = TimeUtils.getTime(this.time, "yyyy-MM-dd HH:mm");
+                    String time = TimeUtils.getTime(this.time, "yyyy-MM-dd   HH:mm");
                     String title = data.getStringExtra("title");
                     FileLocal fileLocal = new FileLocal();
                     File oldFile = new File(filePath);
-                    File newFile=null;
+                    File newFile = null;
                     if (!oldFile.getName().equals(title + ".wav")) {
                         newFile = new File(recordPath + "/" + title + ".wav");
                         oldFile.renameTo(newFile);
                     }
-                    Log.d("liumj",newFile.getPath());
                     int pathid = UILApplication.getFilelistEntity().addFilePath(newFile.getParent());
                     fileLocal.setPathid(pathid);
                     fileLocal.setFtype(FTYPE.RECORD);
@@ -293,9 +310,9 @@ public class VoiceActivity extends UILActivity {
                     param.put("duration", data.getStringExtra("duration"));
                     UploadOptions options = new UploadOptions(true, true);
                     FileUploadManager manager = FileUploadManager.getInstance();
-                    MaterialDialog.Builder builder=new MaterialDialog.Builder(VoiceActivity.this);
+                    MaterialDialog.Builder builder = new MaterialDialog.Builder(VoiceActivity.this);
                     builder.content("正在上传：0%");
-                    builder.progress(false,100);
+                    builder.progress(false, 100);
                     final MaterialDialog build = builder.build();
                     build.show();
                     manager.uploadFile(new ProgressBarAware(build), param, fileLocal, new OnUploadListener() {
@@ -321,13 +338,37 @@ public class VoiceActivity extends UILActivity {
                 boolean delete = data.getBooleanExtra("delete", false);
                 if (delete) {
                     //删除
-                    entities.remove(pos);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            FileInfo fileInfo = cloudUnits.get(pos);
+                            SyncTask syncTask = new SyncTask(VoiceActivity.this, FTYPE.RECORD);
+                            final boolean b = syncTask.DelRemoteObj(fileInfo);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (b) {
+                                        //删除成功
+                                        ToastUtils.toast(VoiceActivity.this, "删除成功");
+                                        cloudHashMap.remove(pos);
+                                        cloudUnits.remove(pos);
+                                        adapter.notifyDataSetChanged();
+                                    } else {
+                                        ToastUtils.toast(VoiceActivity.this, "删除失败");
+                                        //删除失败
+                                    }
+                                }
+                            });
+                        }
+                    }).start();
+
                 } else {
-                    VoiceEntity entity = entities.get(pos);
-                    entity.setTitle(data.getStringExtra("title"));
+                    HashMap<String, String> entity = cloudHashMap.get(pos);
+                    entity.put("title", data.getStringExtra("title"));
+
                 }
-                adapter.notifyDataSetChanged();
             }
+
         }
     }
 }

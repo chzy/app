@@ -7,15 +7,18 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chd.TClient;
 import com.chd.base.FileProvider;
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.backend.SyncTask;
+import com.chd.contacts.vcard.StringUtils;
 import com.chd.music.backend.MediaUtil;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
@@ -77,6 +80,7 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
         fileInfo0 = (FileInfo0) getIntent().getSerializableExtra("file");
         mTvMusicName.setText(fileInfo0.getFilename());
         String url = fileInfo0.getFilePath();
+
         String albumArt = MediaUtil.getAlbumArt(this, url);
         if (albumArt == null) {
 //			albumImage.setBackgroundResource(R.drawable.audio_default_bg);
@@ -86,7 +90,21 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
             mRoundImageView.setImageDrawable(bmpDraw);
         }
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    remote = TClient.getinstance().CreateShare(FTYPE.MUSIC, fileInfo0.getObjid());
+                    Log.d("liumj","远程地址："+remote);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
     }
+
+    String remote = "";
 
     private void initListener() {
         mIvLeft.setOnClickListener(this);
@@ -140,16 +158,23 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
                 break;
             case R.id.music_detail_play:
                 try {
-                    File f=new File(fileInfo0.getFilePath());
-                    if(!f.exists()){
+
+                    File f = new File(fileInfo0.getFilePath());
+                    if (StringUtils.isNullOrEmpty(remote) && !f.exists()) {
                         throw new FileNotFoundException("文件未找到");
+                    } else {
+                        Uri uri=null;
+                        if(f.exists()) {
+                             uri = FileProvider.getUriForFile(this, "com.chd.base.FileProvider", f);
+                            //调用系统自带的播放器
+                        }else{
+                            uri=Uri.parse(remote);
+                        }
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        intent.setDataAndType(uri, "video/mp4");
+                        startActivity(intent);
                     }
-                    Uri uri = FileProvider.getUriForFile(this, "com.chd.base.FileProvider", f);
-                    //调用系统自带的播放器
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.setDataAndType(uri, "video/mp4");
-                    startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(MusicDetailActivity.this, "请先下载", Toast.LENGTH_SHORT).show();

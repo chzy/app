@@ -17,16 +17,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chd.base.Entity.FileLocal00;
+import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.MessageEvent;
 import com.chd.base.UILActivity;
 import com.chd.base.Ui.DownListActivity;
 import com.chd.base.backend.SyncTask;
 import com.chd.music.adapter.MusicBackupAdapter;
+import com.chd.music.backend.MediaUtil;
 import com.chd.music.entity.MusicBackupBean;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
+import com.chd.yunpan.application.UILApplication;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -54,13 +56,6 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
                     processMsg(msg);
                 } else if (msg.what == 997) {
                     //多文件下载
-//				ArrayList<Integer> posList= (ArrayList<Integer>) msg.obj;
-//				for (Integer index:
-//						posList) {
-//					selectItem.remove(index);
-//				}
-//				mPicList.removeAll(selectItem);
-//				picEditAdapter.notifyDataSetChanged();
                 } else if (msg.what == 996) {
                     processMsg(msg);
                 } else {
@@ -69,8 +64,8 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
                     mGvMusic.setAdapter(new MusicBackupAdapter(MusicBackupActivity.this, mMusicBackupList));
                     mTvNumber.setText(String.format("共：%d首", mMusicBackupList.size()));
                 }
-            }catch (Exception e){
-                Log.e(getClass().getName(),"退出页面空指针");
+            } catch (Exception e) {
+                Log.e(getClass().getName(), "退出页面空指针");
             }
 
         }
@@ -124,7 +119,7 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
         initListener();
 
 
-        ArrayList<FileLocal00> fileLocals = (ArrayList<FileLocal00>) getIntent().getSerializableExtra("locallist");
+        ArrayList<FileLocal> fileLocals = (ArrayList<FileLocal>) getIntent().getSerializableExtra("locallist");
         initData(fileLocals);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -136,9 +131,9 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
     @Subscribe
     public void onEventMainThread(MessageEvent event) {
         if (event.type == FTYPE.MUSIC) {
-            isUpdate = true;
-            mMusicBackupList.remove(uploadBean);
-            handler.sendEmptyMessage(0);
+//            isUpdate = true;
+//            mMusicBackupList.remove(uploadBean);
+//            handler.sendEmptyMessage(0);
         }
     }
 
@@ -149,25 +144,25 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
 
     }
 
-    private void initData(final ArrayList<FileLocal00> fileLocals) {
+    private void initData(final ArrayList<FileLocal> fileLocals) {
         showWaitDialog();
         new Thread() {
             @Override
             public void run() {
-                for (FileLocal00 fileLocal : fileLocals) {
+                for (FileLocal fileLocal : fileLocals) {
                     if (fileLocal.bakuped)
                         continue;
-//                    String name = fileLocal.fname;
-//                     FileInfo fileInfo0 = syncTask.queryLocalInfo(fileLocal.sysid);
+                    String name = fileLocal.getObjid();
+//                     FileInfo0 fileInfo0 = syncTask.queryLocalInfo(fileLocal.getPathid());
 //                     if (fileInfo0 == null) {
 //                         continue;
 //                      }
-//
-//                     MusicBackupBean musicBackupBean = new MusicBackupBean(name, fileInfo0.getFilePath(), false);
-//                     musicBackupBean.setFileInfo(fileInfo0);
-//                      String albumArt = MediaUtil.getAlbumArt(MusicBackupActivity.this, musicBackupBean.getPic());
-//                      musicBackupBean.setAlbumArt(albumArt);
-//                      mMusicBackupList.add(musicBackupBean);
+                    String path = UILApplication.getFilelistEntity().getFilePath(fileLocal.getPathid());
+                    MusicBackupBean musicBackupBean = new MusicBackupBean(name, path, false);
+                    musicBackupBean.setFileInfo0(fileLocal);
+                    String albumArt = MediaUtil.getAlbumArt(MusicBackupActivity.this, musicBackupBean.getPic());
+                    musicBackupBean.setAlbumArt(albumArt);
+                    mMusicBackupList.add(musicBackupBean);
 
                 }
                 handler.sendEmptyMessage(0);
@@ -201,7 +196,6 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
         mTvRight.setTag(false);
     }
 
-    private MusicBackupBean uploadBean;
 
     @Override
     public void onClick(View v) {
@@ -245,10 +239,11 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
         for (final MusicBackupBean musicBackupBean : mMusicBackupList) {
             if (musicBackupBean.isSelect()) {
                 uploadList.add(musicBackupBean);
-                info0s.add(musicBackupBean.getFileInfo0());
+                FileInfo0 fileInfo0=new FileInfo0(musicBackupBean.getFileInfo0());
+                info0s.add(fileInfo0);
             }
         }
-        // syncTask.uploadList(info0s, this, handler);
+        syncTask.uploadList(info0s, this, handler);
 
     }
 
