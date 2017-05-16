@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical" >
+
+    <include layout="@layout/title_bar" />
+
+    <!-- 上部分开始 -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="186dp" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="137dp"
+            android:background="@drawable/contact_icon2" >
+
+            <ImageView
+                android:id="@+id/contact_center"
+                android:layout_width="78dp"
+                android:layout_height="35dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="40dp"
+                android:src="@drawable/contact_icon1" />
+
+            <ImageView
+                android:id="@+id/iv_sms"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:layout_toLeftOf="@id/contact_center"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="40dp"
+                android:src="@drawable/contact_icon4" />
+
+            <ImageView
+                android:id="@+id/iv_cloud"
+                android:layout_width="wrap_content"
+                android:singleLine="true"
+                android:layout_height="40dp"
+                android:layout_toRightOf="@id/contact_center"
+                android:layout_marginTop="40dp"
+                android:src="@drawable/contact_icon3" />
+
+            <TextView
+                android:id="@+id/tv_sms_number"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/iv_sms"
+                android:layout_below="@+id/iv_sms"
+                android:layout_marginTop="11dp"
+                android:gravity="center"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_cloud_number"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/iv_cloud"
+                android:layout_below="@id/iv_cloud"
+                android:singleLine="true"
+                android:layout_marginTop="11dp"
+                android:gravity="center"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/iv_select"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="102dp"
+            android:src="@drawable/iconfont_synchro" />
+
+
+    </RelativeLayout>
+    <!-- 上部分结束 -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_circle"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="22dp"
+            android:src="@drawable/contact_icon6" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:layout_toRightOf="@+id/iv_circle"
+            android:gravity="center_vertical"
+            android:text="已备份信息详情"
+            android:textColor="#5bb8ea"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="15dp"
+            android:layout_below="@+id/iv_circle"
+            android:layout_marginLeft="32dp"
+            android:background="#cccccc" />
+    </RelativeLayout>
+
+
+</LinearLayout>

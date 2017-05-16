@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="divider">#dcdcdc</color>
+    <!-- Main-->
+    <!--<color name="primary">#009688</color>-->
+    <color name="primary">#f8b82d</color>
+    <!--<color name="primaryDark">#00796b</color>-->
+    <color name="primaryDark">#f8b82d</color>
+    <color name="primaryLight">#f8b82d</color>
+    <color name="accent">#f8b82d</color>
+    <color name="accentLight">#f8b82d</color>
+    <color name="lighter_gray">#ddd</color>
+    <color name="crop__button_bar">#f3f3f3</color>
+    <color name="crop__button_text">#666666</color>
+    <color name="crop__selector_pressed">#1a000000</color>
+    <color name="crop__selector_focused">#77000000</color>
+    <color name="black_p50">#aa000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="green">#f8b82d</color>
+    <color name="white_50">#99ffffff</color>
+</resources>

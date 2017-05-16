@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/title_bar" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="12dp"
+        android:background="#eeeeee" />
+
+    <RelativeLayout
+        android:id="@+id/rl_pic_ubk_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#ffa500" >
+
+        <ImageView
+            android:id="@+id/iv_pic"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="14dp"
+            android:src="@drawable/pic_icon1" />
+
+        <TextView
+            android:id="@+id/tv_pic_number"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="12dp"
+            android:layout_toRightOf="@+id/iv_pic"
+            android:gravity="center_vertical"
+            android:textColor="#ffffff"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="14dp"
+            android:src="@drawable/pic_icon2" />
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/lv_pic"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@null" >
+    </android.support.v7.widget.RecyclerView>
+
+    <RelativeLayout
+        android:id="@+id/rl_pic_bottom"
+        android:layout_width="match_parent"
+        android:background="#f6f7f9"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:layout_height="45dp">
+
+        <TextView
+            android:id="@+id/tv_pic_upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="上传"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:padding="5dp"
+            android:textSize="18sp"
+            android:background="@drawable/btn_cancel_yellow_shape"
+            android:textColor="@color/background"
+            android:onClick="uploadPic"
+            />
+
+        <ImageView
+            android:id="@+id/tv_pic_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:onClick="addPic"
+            android:layout_centerInParent="true"
+            android:src="@drawable/iconfont_video_list_add"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:padding="10dp"
+            android:onClick="deletePic"
+            android:src="@drawable/iconfont_video_list_delete"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            />
+
+    </RelativeLayout>
+</com.zhy.autolayout.AutoLinearLayout>

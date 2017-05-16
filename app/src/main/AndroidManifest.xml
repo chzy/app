@@ -1,0 +1,245 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.chd.yunpan"
+    android:versionCode="1"
+    android:versionName="4.0.0">
+
+    <uses-sdk tools:overrideLibrary="com.chd.api" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+
+    <uses-feature
+        android:name="android.hardware.camera2"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <meta-data
+        android:name="UMENG_CHANNEL"
+        android:value="${UMENG_CHANNEL_VALUE}" />
+    <application
+        android:name="com.chd.yunpan.application.UILApplication"
+        android:allowBackup="true"
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="BUG_HD_SDK_GENERAL_KEY"
+            android:value="4aa7f252c9e0f4fe47624a26d3a5825c" />
+
+        <meta-data
+            android:name="design_width"
+            android:value="720"/>
+        <meta-data
+            android:name="design_height"
+            android:value="1280"/>
+
+        <activity
+            android:name="com.chd.yunpan.ui.LoginActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.chd.yunpan.ui.MyspaceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.yunpan.ui.FreeDownActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.notepad.ui.activity.NotepadActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.notepad.ui.activity.NotepadEditActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.notepad.ui.activity.NotepadCheckActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.contacts.ui.ContactActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.music.ui.MusicActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.music.ui.MusicBackupActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.music.ui.MusicDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.smsbackup.ui.SmsBackActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.chd.strongbox.StrongBoxActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- 注册页面-->
+        <activity
+            android:name=".ui.RegisterActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- 锁屏的activity -->
+        <activity
+            android:name="com.lockscreen.pattern.UnlockGesturePasswordActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.lockscreen.pattern.UnlockGesturePassword2Activity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.lockscreen.pattern.OffUnlockPasswordActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.lockscreen.pattern.CreateGesturePasswordActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.lockscreen.pattern.GuideGesturePasswordActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.yunpan.ui.SettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.yunpan.ui.AboutActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.chd.yunpan.ui.FindPwdActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.photo.ui.PicActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.photo.ui.PicEditActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.photo.ui.PicDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.yunpan.ui.netdiskActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.userinfo.ui.UserInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.userinfo.ui.UserInfoEditActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.yunpan.ui.CRBTActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.payfor.ui.OpenSpaceActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.payfor.ui.PayForActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.payfor.ui.PayForResultActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.other.ui.OtherActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.base.Ui.DownListActivity"
+            android:screenOrientation="portrait" />
+
+        <!--录制声音-->
+        <activity
+            android:name="com.chd.strongbox.VoiceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chd.record.AudioRecorderActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light" />
+
+        <activity android:name="com.chd.video.VideoListActivity" />
+
+        <activity android:name="com.chd.video.VideoPlayActivity" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.chd.base.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+
+        </provider>
+        >
+
+        <activity
+            android:name=".ui.HelpActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- 图片浏览-->
+        <activity
+            android:name="com.chd.notepad.ui.activity.PhotoBrowseActivity"
+            android:screenOrientation="portrait" />
+
+
+        <service android:name="com.chd.service.SyncFileService"></service>
+        <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <!--<meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />-->
+
+        <!--mob短信验证码-->
+        <activity
+            android:name="com.mob.tools.MobUIShell"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+
+        <activity
+            android:name="cn.iterlog.xmimagepicker.PickerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/ImageTheme"></activity>
+        <activity
+            android:name="cn.iterlog.xmimagepicker.corp.CropImageActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/ImageTheme"></activity>
+
+        <activity
+            android:name="cn.iterlog.xmimagepicker.videoplay.VideoPlyerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/ImageTheme"></activity>
+
+        <activity
+            android:name="cn.iterlog.xmimagepicker.MediasPreviewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/ImageTheme.NoBack"></activity>
+
+    </application>
+
+</manifest>

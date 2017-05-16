@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name" translatable="false">AndroidAudioRecorder</string>
+    <string name="aar_save">保存</string>
+    <string name="aar_paused">暂停</string>
+    <string name="aar_recording">录音中</string>
+    <string name="aar_playing">播放中</string>
+</resources>

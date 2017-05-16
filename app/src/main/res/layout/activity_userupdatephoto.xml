@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFF"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#F7F7F7"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/btn_photo"
+            android:layout_width="fill_parent"
+            android:layout_height="45dip"
+            android:layout_marginTop="15dp"
+            android:text="拍照"
+            android:background="@color/azure"
+            android:textColor="@color/black_text"
+            android:textSize="17sp" />
+
+        <Button
+            android:id="@+id/btn_picLibrary"
+            android:layout_width="fill_parent"
+            android:layout_height="45dip"
+            android:layout_marginTop="15dp"
+            android:background="@color/azure"
+            android:text="选择本地图片"
+            android:textColor="@color/black_text"
+            android:textSize="17sp" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="fill_parent"
+            android:layout_height="45dip"
+            android:layout_marginBottom="15dip"
+            android:layout_marginTop="15dp"
+            android:background="#5cceff"
+            android:text="取消"
+            android:textColor="#ffffff"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+</LinearLayout>

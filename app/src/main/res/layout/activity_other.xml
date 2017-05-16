@@ -1,0 +1,188 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#eeeeee"
+        android:orientation="vertical">
+
+        <include layout="@layout/title_bar" />
+
+        <RelativeLayout
+            android:id="@+id/rl_other_ubk_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="15dp"
+            android:background="#ffa500">
+
+            <ImageView
+                android:id="@+id/iv_other"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="14dp"
+                android:src="@drawable/pic_icon1" />
+
+            <TextView
+                android:id="@+id/tv_other_number"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="12dp"
+                android:layout_toRightOf="@+id/iv_other"
+                android:gravity="center_vertical"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="14dp"
+                android:src="@drawable/pic_icon2" />
+        </RelativeLayout>
+
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="15dp"
+            android:background="#F0F0F0" />
+
+
+        <LinearLayout
+            android:id="@+id/freedown_tab_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/other_tab_all"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:background="@drawable/other_tab_left_checked"
+                android:gravity="center"
+                android:text="全部"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/other_tab_doc"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:background="@drawable/other_tab_center_normal"
+                android:gravity="center"
+                android:text="DOC"
+                android:textColor="#f8b82d"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/other_tab_xls"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:background="@drawable/other_tab_center_normal"
+                android:gravity="center"
+                android:text="XLS"
+                android:textColor="#f8b82d"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/other_tab_ppt"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:background="@drawable/other_tab_center_normal"
+                android:gravity="center"
+                android:text="PPT"
+                android:textColor="#f8b82d"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/other_tab_pdf"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:background="@drawable/other_tab_right_normal"
+                android:gravity="center"
+                android:text="PDF"
+                android:textColor="#f8b82d"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/other_listview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"></ListView>
+
+        <RelativeLayout
+            android:id="@+id/other_edit_rl"
+            android:layout_width="match_parent"
+            android:layout_height="97dp"
+            android:background="#f3f3f3"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/other_edit_down"
+                android:layout_width="88dp"
+                android:layout_height="31dp"
+                android:layout_marginLeft="28dp"
+                android:layout_marginTop="11dp"
+                android:background="@drawable/btn_yellow_shape"
+                android:gravity="center"
+                android:text="下载"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/other_edit_del"
+                android:layout_width="88dp"
+                android:layout_height="31dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="28dp"
+                android:layout_marginTop="11dp"
+                android:background="@drawable/btn_yellow_shape"
+                android:gravity="center"
+                android:text="删除"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+
+            <Button
+                android:id="@+id/other_edit_cancel"
+                android:layout_width="305dp"
+                android:layout_height="35dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/btn_cancel_yellow_shape"
+                android:text="取消"
+                android:textColor="#feb902" />
+
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/other_btn_down"
+        android:layout_centerInParent="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:visibility="gone"
+        android:background="@drawable/iconfont_xiazai"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+</RelativeLayout>

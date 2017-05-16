@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/freedown_list_item_index"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:gravity="center"
+        android:text="" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_weight="1.0"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/freedown_list_item_img"
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="vertical" >
+            <TextView
+                android:id="@+id/freedown_list_item_appname"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text=""
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textColor="#333333"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/freedown_list_item_appintro"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text=""
+                android:singleLine="true"
+                android:textColor="#999999"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.chd.yunpan.view.circleimage.CircularProgressButton
+        android:id="@+id/freedown_list_item_btn"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="18dp"
+        app:cpb_selectorIdle="@drawable/down_idle_state_selector"
+        app:cpb_colorIndicator="@color/yellow"
+        app:cpb_colorIndicatorBackground="@color/cpb_grey"
+        app:cpb_colorProgress="@color/white"
+        app:cpb_selectorComplete="@drawable/down_idle_state_selector"
+        app:cpb_textIdle="获取"
+        app:cpb_textComplete="安装"
+        app:cpb_textError="重试"
+        app:cpb_cornerRadius="6dp"
+        android:textColor="#ffffff" />
+
+</LinearLayout>
