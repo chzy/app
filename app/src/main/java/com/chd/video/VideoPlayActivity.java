@@ -1,11 +1,13 @@
 package com.chd.video;
 
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -24,8 +26,8 @@ import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.share.ShareUtils;
 import com.chd.yunpan.view.ActionSheetDialog;
-import com.devbrackets.android.exomedia.listener.OnPreparedListener;
-import com.devbrackets.android.exomedia.ui.widget.EMVideoView;
+import com.universalvideoview.UniversalMediaController;
+import com.universalvideoview.UniversalVideoView;
 
 import java.io.File;
 
@@ -33,8 +35,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class VideoPlayActivity extends UILActivity implements OnPreparedListener {
+public class VideoPlayActivity extends UILActivity implements UniversalVideoView.VideoViewCallback{
 
+
+    private static final String SEEK_POSITION_KEY = "SEEK_POSITION_KEY";
 
     @BindView(R.id.iv_left)
     ImageView ivLeft;
@@ -42,14 +46,22 @@ public class VideoPlayActivity extends UILActivity implements OnPreparedListener
     TextView tvCenter;
     @BindView(R.id.tv_right)
     TextView tvRight;
-    @BindView(R.id.video_view)
-    EMVideoView videoView;
+    @BindView(R.id.videoView)
+    UniversalVideoView mVideoView;
 
-    @BindView(R.id.video_preview)
-    ImageView ivPreview;
+    @BindView(R.id.video_layout)
+    FrameLayout mVideoLayout;
+
+    @BindView(R.id.media_controller)
+    UniversalMediaController mMediaController;
+
+
 
     FileInfo fileInfo = null;
     private String videoPath = "";
+    private int mSeekPosition;
+    private int cachedHeight;
+    private boolean isFullscreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,10 +87,11 @@ public class VideoPlayActivity extends UILActivity implements OnPreparedListener
                     try {
                         final String s = TClient.getinstance().CreateShare(FTYPE.VIDEO, fileInfo.getObjid());
                         Log.d("liumj","地址："+s);
+                        videoPath=s;
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                videoView.setVideoURI(Uri.parse(s));
+                                mVideoView.setVideoURI(Uri.parse(s));
                             }
                         });
 
@@ -88,25 +101,24 @@ public class VideoPlayActivity extends UILActivity implements OnPreparedListener
                 }
             }).start();
         } else {
-            videoView.setVideoPath(url);
+            videoPath=url;
+            mVideoView.setVideoPath(url);
         }
-//        url="http://221.7.13.207:8080/netdisk/nd1101video/aaabbcss.mp4";
-//        url = "http://221.7.13.207:8080/netdisk/nd1101video/aaabbcss.mp4";
-//        HashMap<String,String> map=new HashMap<>();
-//        map.put("torrent","");
-//        map.put("AWSAccessKeyId","KHC1BRIC6D8YBNC30UMF");
-//        map.put("Expires","259200");
-//        map.put("Signature","QoXSBZZFpnRZBadTgtYMej%2B0IKs%3D");
-        MediaController mediaController = new MediaController(this);
-        videoView.setOnPreparedListener(this);
-        //For now we just picked an arbitrary item to play.  More can be found at
-        //https://archive.org/details/more_animation
 
-//		videoView.setVideoURI(Uri.parse("https://archive.org/download/Popeye_forPresident/Popeye_forPresident_512kb.mp4"));
-//        videoView.setVideoURI(Uri.parse(url));
-//        videoView.setMediaController(mediaController);
-        mediaController.show();
+        mVideoView.setMediaController(mMediaController);
+//        setVideoAreaSize();
+        mVideoView.setVideoViewCallback(this);
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mVideoView != null && mVideoView.isPlaying()) {
+            mSeekPosition = mVideoView.getCurrentPosition();
+            mVideoView.pause();
+        }
+    }
+
 
 
     @OnClick({R.id.iv_left, R.id.tv_right})
@@ -176,9 +188,80 @@ public class VideoPlayActivity extends UILActivity implements OnPreparedListener
         }).setCanceledOnTouchOutside(true).setCancelable(true).show();
     }
 
+    /**
+     * 置视频区域大小
+     */
+    private void setVideoAreaSize() {
+        mVideoLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                int width = mVideoLayout.getWidth();
+                cachedHeight = (int) (width * 405f / 720f);
+//                cachedHeight = (int) (width * 3f / 4f);
+//                cachedHeight = (int) (width * 9f / 16f);
+                ViewGroup.LayoutParams videoLayoutParams = mVideoLayout.getLayoutParams();
+                videoLayoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                videoLayoutParams.height = cachedHeight;
+                mVideoLayout.setLayoutParams(videoLayoutParams);
+                mVideoView.requestFocus();
+            }
+        });
+    }
 
     @Override
-    public void onPrepared() {
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(SEEK_POSITION_KEY, mSeekPosition);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle outState) {
+        super.onRestoreInstanceState(outState);
+        mSeekPosition = outState.getInt(SEEK_POSITION_KEY);
+    }
+
+    @Override
+    public void onScaleChange(boolean isFullscreen) {
+        this.isFullscreen = isFullscreen;
+        if (isFullscreen) {
+            ViewGroup.LayoutParams layoutParams = mVideoLayout.getLayoutParams();
+            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            mVideoLayout.setLayoutParams(layoutParams);
+
+        } else {
+            ViewGroup.LayoutParams layoutParams = mVideoLayout.getLayoutParams();
+            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            layoutParams.height = this.cachedHeight;
+            mVideoLayout.setLayoutParams(layoutParams);
+        }
 
     }
+
+
+    @Override
+    public void onPause(MediaPlayer mediaPlayer) {
+    }
+
+    @Override
+    public void onStart(MediaPlayer mediaPlayer) {
+    }
+
+    @Override
+    public void onBufferingStart(MediaPlayer mediaPlayer) {
+    }
+
+    @Override
+    public void onBufferingEnd(MediaPlayer mediaPlayer) {
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (this.isFullscreen) {
+            mVideoView.setFullscreen(false);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
 }
