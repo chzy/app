@@ -129,9 +129,11 @@ public class UILApplication extends Application {
 				.threadPoolSize(5)
 				//.memoryCache(new WeakMemoryCache())
 				.memoryCache(new LruMemoryCache(2*1024*1024))
+				.memoryCacheSize(2*1024*1024)
 				.denyCacheImageMultipleSizesInMemory()
 				.diskCacheFileNameGenerator(new HashCodeFileNameGenerator())
 				.diskCacheSize(500 * 1024 * 1024) // 500 Mb
+				.denyCacheImageMultipleSizesInMemory()
 				.tasksProcessingOrder(QueueProcessingType.LIFO)
 				.writeDebugLogs() // Remove for release app
 				.build();

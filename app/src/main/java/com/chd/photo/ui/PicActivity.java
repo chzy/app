@@ -71,7 +71,6 @@ public class PicActivity extends UILActivity implements OnClickListener {
     private boolean bIsUbkList;
     private ImageLoader imageLoader;
     private SyncTask syncTask;
-    //private List<PicBean<PicInfoBeanMonth>> localList = new ArrayList();
     private FilelistEntity filelistEntity;
     private PicAdapter adapter;
     private List<List<? extends FileInfo>> localList = new ArrayList();
