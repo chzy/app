@@ -1,1 +1,1 @@
-include ':app', ':record', ':xmimagepicker'
+include ':app', ':record'

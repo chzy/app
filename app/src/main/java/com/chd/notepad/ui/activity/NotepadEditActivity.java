@@ -1,13 +1,12 @@
 package com.chd.notepad.ui.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
+import com.chd.base.Ui.ActiveProcess;
 import com.chd.notepad.ui.adapter.NineAdapter;
 import com.chd.notepad.ui.db.FileDBmager;
 import com.chd.notepad.ui.item.NoteItem;
@@ -26,14 +26,16 @@ import com.chd.yunpan.R;
 import com.chd.yunpan.utils.Base64Utils;
 import com.chd.yunpan.utils.TimeUtils;
 import com.google.gson.Gson;
+import com.luck.picture.lib.model.FunctionConfig;
+import com.luck.picture.lib.model.PictureConfig;
+import com.yalantis.ucrop.entity.LocalMedia;
 
+import java.io.File;
 import java.util.ArrayList;
-
-import cn.iterlog.xmimagepicker.Configs;
-import cn.iterlog.xmimagepicker.PickerActivity;
+import java.util.List;
 
 
-public class NotepadEditActivity extends Activity {
+public class NotepadEditActivity extends ActiveProcess {
 
     public static final int CHECK_STATE = 0;
     public static final int EDIT_STATE = 1;
@@ -82,11 +84,80 @@ public class NotepadEditActivity extends Activity {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (position == (eatPath.size() - 1)) {
+                    PictureConfig.getInstance().options.setType(FunctionConfig.TYPE_IMAGE);
+                    PictureConfig.getInstance().options.setCompress(true);
+                    PictureConfig.getInstance().options.setSelectMode(FunctionConfig.MODE_MULTIPLE);
                     if (eatPath.contains("assets://add_photo.png")) {
-                        PickerActivity.chooseMultiPicture(NotepadEditActivity.this, FOOD_IMAGE, 5 - eatPath.size() + 1);
+                        PictureConfig.getInstance().options.setMaxSelectNum(5 - eatPath.size() + 1);
                     } else {
-                        PickerActivity.chooseMultiPicture(NotepadEditActivity.this, FOOD_IMAGE, 5 - eatPath.size());
+                        PictureConfig.getInstance().options.setMaxSelectNum(5 - eatPath.size());
                     }
+                    PictureConfig.getInstance().openPhoto(NotepadEditActivity.this, new PictureConfig.OnSelectResultCallback() {
+                        @Override
+                        public void onSelectSuccess(List<LocalMedia> list) {
+                            // Get the result list of select image paths
+//                eatPath.clear();
+                            eatPath.clear();
+                            for (LocalMedia media :
+                                    list) {
+                                String path = "";
+                                if (media.isCut() && !media.isCompressed()) {
+                                    // 裁剪过
+                                    path = media.getCutPath();
+                                } else if (media.isCompressed() || (media.isCut() && media.isCompressed())) {
+                                    // 压缩过,或者裁剪同时压缩过,以最终压缩过图片为准
+                                    path = media.getCompressPath();
+                                } else {
+                                    // 原图地址
+                                    path = media.getPath();
+                                }
+                                eatPhotoData.add("file:" + path);
+                            }
+                            for (int i = 0; i < eatPhotoData.size(); i++) {
+                                eatPath.add(eatPhotoData.get(i));
+                            }
+                            if (eatPath.size() < 5) {
+                                eatPath.add("assets://add_photo.png");
+                            }
+                            //eatPath.addAll(data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT));
+                            //eatPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                            //Log.w(TAG, eatPath.toString());
+                            //mPhotoAdapter.notifyDataSetChanged();
+                            //eatPath.add("assets://add_photo.png");
+                            nineGrid.setAdapter(new NineAdapter(eatPath));
+
+                        }
+
+                        @Override
+                        public void onSelectSuccess(LocalMedia media) {
+                            eatPath.clear();
+                            eatPhotoData.remove("assets://add_photo.png");
+                            String path = "";
+                            if (media.isCut() && !media.isCompressed()) {
+                                // 裁剪过
+                                path = media.getCutPath();
+                            } else if (media.isCompressed() || (media.isCut() && media.isCompressed())) {
+                                // 压缩过,或者裁剪同时压缩过,以最终压缩过图片为准
+                                path = media.getCompressPath();
+                            } else {
+                                // 原图地址
+                                path = media.getPath();
+                            }
+                            eatPhotoData.add(path);
+                            for (int i = 0; i < eatPhotoData.size(); i++) {
+                                eatPath.add(eatPhotoData.get(i));
+                            }
+                            if (eatPath.size() < 5) {
+                                eatPath.add("assets://add_photo.png");
+                            }
+                            //eatPath.addAll(data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT));
+                            //eatPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                            //Log.w(TAG, eatPath.toString());
+                            //mPhotoAdapter.notifyDataSetChanged();
+                            //eatPath.add("assets://add_photo.png");
+                            nineGrid.setAdapter(new NineAdapter(eatPath));
+                        }
+                    });
                 } else {
                     Intent intent = new Intent(mContext, PhotoBrowseActivity.class);
                     intent.putStringArrayListExtra("PhotoPath", eatPhotoData);
@@ -125,10 +196,19 @@ public class NotepadEditActivity extends Activity {
                 title.setText(noteItem.getTitle());
                 title.setSelection(noteItem.getTitle().length());
                 eatPath = noteItem.getPicList();
+                for (String item :
+                        eatPath) {
+                    if (!item.startsWith("file")) {
+                        String s = getCacheDir() + "/" + System.currentTimeMillis() + ".jpeg";
+                        Base64Utils.base64ToFile(item, s);
+                        eatPhotoData.add("file:" + s);
+                    } else {
+                        eatPhotoData.add(item);
+                    }
+                }
                 if (eatPath.size() < 5) {
                     eatPath.add("assets://add_photo.png");
                 }
-                eatPhotoData = eatPath;
                 mAdapter = new NineAdapter(eatPath);
                 nineGrid.setAdapter(mAdapter);
             } catch (Exception e) {
@@ -165,51 +245,11 @@ public class NotepadEditActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == FOOD_IMAGE) {
-            if (resultCode == RESULT_OK) {
-                // Get the result list of select image paths
-//                eatPath.clear();
-                eatPath.clear();
-                ArrayList<Uri> pictures = data.getParcelableArrayListExtra(Configs.OUT_PUT_IMAGES);
-                if (pictures == null) {
-                    Uri r = data.getParcelableExtra(Configs.OUT_PUT);
-                    pictures = new ArrayList<>();
-                    pictures.add(r);
-                }
-                for (Uri r :
-                        pictures) {
-                    eatPhotoData.add(r.toString());
-                }
-                for (int i = 0; i < eatPhotoData.size(); i++) {
-                    eatPath.add(eatPhotoData.get(i));
-//					LogUtils.e(eatPhotoData.get(i)+":路径");
-                }
-                if (eatPath.size() < 5) {
-                    eatPath.add("assets://add_photo.png");
-                }
-                //eatPath.addAll(data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT));
-                //eatPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-                //Log.w(TAG, eatPath.toString());
-                //mPhotoAdapter.notifyDataSetChanged();
-                //eatPath.add("assets://add_photo.png");
-                nineGrid.setAdapter(new NineAdapter(eatPath));
-
-            }
-        }
-        if (resultCode == 996) {
-            delList = data.getStringArrayListExtra("imgList");
-        }
-        if (requestCode == DELFOODIMG) {
+        if (resultCode == RESULT_OK && requestCode == DELFOODIMG) {
+            delList = (ArrayList<String>) data.getSerializableExtra("imgList");
             eatPath.clear();
             eatPhotoData = delList;
-            for (int i = 0; i < delList.size(); i++) {
-                String path = eatPhotoData.get(i);
-//                if(path.contains("storage")){
-//                    eatPath.add("file://" + eatPhotoData.get(i));
-//                }else{
-                eatPath.add(path);
-//                }
-            }
+            eatPath.addAll(eatPhotoData);
             if (!eatPath.contains("assets://add_photo.png") && eatPath.size() < 5) {
                 eatPath.add("assets://add_photo.png");
             }
@@ -218,6 +258,20 @@ public class NotepadEditActivity extends Activity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        for (String s :
+                eatPhotoData) {
+            if (s.contains("cache")) {
+                File f = new File(s.replace("file:", ""));
+                if (f.exists()) {
+                    boolean delete = f.delete();
+                    Log.d("liumj", "删除成功");
+                }
+            }
+        }
+    }
 
     /**
      * 监听完成按钮
@@ -229,13 +283,21 @@ public class NotepadEditActivity extends Activity {
         public void onClick(View v) {
             titleText = title.getText().toString();
             contentText = content.getText().toString();
-
-
-            ArrayList<String> food = new ArrayList<>();
-
-            for (int i = 0; i < eatPhotoData.size(); i++) {
-                String jpeg = Base64Utils.imgToBase64(eatPhotoData.get(i), null, "JPEG");
-                food.add(jpeg);
+            showDialog("正在上传");
+            final ArrayList<String> food = new ArrayList<>();
+            for (int i = 0; i < eatPath.size(); i++) {
+                String s = eatPath.get(i);
+                if (s.contains("assets")) {
+                    continue;
+                }
+                if (s.contains("file")) {
+                    String s1 = s.replace("file:", "");
+                    final File f = new File(s1);
+                    String jpeg = Base64Utils.imgToBase64(f, null, "JPEG");
+                    food.add(jpeg);
+                } else {
+                    food.add(s);
+                }
             }
 
             NoteItem item = new NoteItem();
@@ -259,7 +321,7 @@ public class NotepadEditActivity extends Activity {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-
+            dismissDialog();
             finish();
         }
 

@@ -42,7 +42,10 @@ import com.chd.yunpan.utils.TimeUtils;
 import com.chd.yunpan.utils.ToastUtils;
 import com.chd.yunpan.view.ActionSheetDialog;
 import com.gturedi.views.StatefulLayout;
+import com.luck.picture.lib.model.FunctionConfig;
+import com.luck.picture.lib.model.PictureConfig;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.yalantis.ucrop.entity.LocalMedia;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
@@ -52,8 +55,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -64,8 +65,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.iterlog.xmimagepicker.Configs;
-import cn.iterlog.xmimagepicker.PickerActivity;
 
 /**
  * User: Liumj(liumengjie@365tang.cn)
@@ -194,7 +193,55 @@ public class VideoListActivity extends UILActivity {
     }
 
     public void showVideoChoose() {
-        PickerActivity.chooseSingleMovie(this, 12, true);
+        PictureConfig.getInstance().options.setType(FunctionConfig.TYPE_VIDEO);
+        PictureConfig.getInstance().options.setPreviewVideo(true); // 是否预览视频(播放) mode or 多选有效
+        PictureConfig.getInstance().options.setSelectMode(FunctionConfig.MODE_SINGLE); // 单选 or 多选 FunctionConfig.MODE_SINGLE FunctionConfig.MODE_MULTIPLE
+
+        PictureConfig.getInstance().openPhoto(this, new PictureConfig.OnSelectResultCallback() {
+            @Override
+            public void onSelectSuccess(List<LocalMedia> list) {
+
+            }
+
+            @Override
+            public void onSelectSuccess(LocalMedia localMedia) {
+                FileUploadManager manager = FileUploadManager.getInstance();
+                //一张视频上传
+                try {
+                    final File tmpFile = new File(localMedia.getPath());
+                    FileLocal fileLocal = new FileLocal();
+                    int pathid = UILApplication.getFilelistEntity().addFilePath(tmpFile.getParent());
+                    fileLocal.setPathid(pathid);
+                    fileLocal.setFtype(FTYPE.VIDEO);
+                    fileLocal.setObjid(tmpFile.getName());
+                    boolean overwrite = true;
+                    boolean resume = true;
+                    UploadOptions options = new UploadOptions(overwrite, resume);
+                    final MaterialDialog.Builder builder = new MaterialDialog.Builder(VideoListActivity.this);
+                    builder.content("正在上传:0%");
+                    builder.progress(false, 100);
+                    final MaterialDialog build = builder.build();
+                    build.show();
+                    manager.uploadFile(new ProgressBarAware(build), null, fileLocal, new OnUploadListener() {
+                        @Override
+                        public void onError(FileUploadInfo uploadData, int errorType, String msg) {
+                            build.dismiss();
+                            ToastUtils.toast(VideoListActivity.this, "上传失败");
+                        }
+
+                        @Override
+                        public void onSuccess(FileUploadInfo uploadData, Object data) {
+                            build.dismiss();
+                            ToastUtils.toast(VideoListActivity.this, "上传成功");
+                            deleteDefaultFile(true, false,Uri.parse(tmpFile.getPath()));
+
+                        }
+                    }, options);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public void deleteVideo(View v) {
@@ -304,43 +351,7 @@ public class VideoListActivity extends UILActivity {
                 break;
             case 12:
                 //添加本地视频 上传
-                final Uri res = data.getParcelableExtra(Configs.OUT_PUT);
-                FileUploadManager manager = FileUploadManager.getInstance();
-                //一张视频上传
-                try {
-                    File tmpFile = new File(new URI(res.toString()));
-                    FileLocal fileLocal = new FileLocal();
-                    int pathid = UILApplication.getFilelistEntity().addFilePath(tmpFile.getParent());
-                    fileLocal.setPathid(pathid);
-                    fileLocal.setFtype(FTYPE.VIDEO);
-                    fileLocal.setObjid(tmpFile.getName());
-                    boolean overwrite = true;
-                    boolean resume = true;
-                    UploadOptions options = new UploadOptions(overwrite, resume);
-                    final MaterialDialog.Builder builder = new MaterialDialog.Builder(VideoListActivity.this);
-                    builder.content("正在上传:0%");
-                    builder.progress(false, 100);
-                    final MaterialDialog build = builder.build();
-                    build.show();
-                    manager.uploadFile(new ProgressBarAware(build), null, fileLocal, new OnUploadListener() {
-                        @Override
-                        public void onError(FileUploadInfo uploadData, int errorType, String msg) {
-                            build.dismiss();
-                            ToastUtils.toast(VideoListActivity.this, "上传失败");
-                        }
 
-                        @Override
-                        public void onSuccess(FileUploadInfo uploadData, Object data) {
-                            build.dismiss();
-                            ToastUtils.toast(VideoListActivity.this, "上传成功");
-                            deleteDefaultFile(true, false, res);
-
-                        }
-                    }, options);
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-                break;
             case 0x13:
                 //进入了详情,删除了视频
                 referData();

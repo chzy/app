@@ -186,7 +186,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.chd.base.FileProvider"
+            android:authorities="com.chd.yunpan.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -219,26 +219,6 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-
-
-        <activity
-            android:name="cn.iterlog.xmimagepicker.PickerActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/ImageTheme"></activity>
-        <activity
-            android:name="cn.iterlog.xmimagepicker.corp.CropImageActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/ImageTheme"></activity>
-
-        <activity
-            android:name="cn.iterlog.xmimagepicker.videoplay.VideoPlyerActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/ImageTheme"></activity>
-
-        <activity
-            android:name="cn.iterlog.xmimagepicker.MediasPreviewActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/ImageTheme.NoBack"></activity>
 
     </application>
 
