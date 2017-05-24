@@ -43,6 +43,8 @@ public class NotepadCheckActivity extends Activity {
     private NineAdapter adapter;
     private TextView checkTitle;
     private ArrayList<String> localPath;
+    private TextView mTvRight;
+    private NoteItemtag noteItemtag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +78,7 @@ public class NotepadCheckActivity extends Activity {
         //String content = intent.getStringExtra("content");
         //String fname=intent.getStringExtra("fname");
         //long t = Long.parseLong(time);
-        NoteItemtag noteItemtag = (NoteItemtag) intent.getSerializableExtra("item");
+        noteItemtag = (NoteItemtag) intent.getSerializableExtra("item");
         String path = new ShareUtils(this.getApplicationContext()).getStorePathStr();
         FileDBmager fileDBmager = new FileDBmager(this);
 //		Calendar cal = Calendar.getInstance();
@@ -113,10 +115,46 @@ public class NotepadCheckActivity extends Activity {
 
     }
 
+    public void editNotePad(View v) {
+        //跳转编辑
+        //用于Activity之间的通讯
+        Intent intent = new Intent();
+        //intent.putExtra("id", nt.id);
+        intent.putExtra("state", 2);
+        //intent.putExtra("fname", /*cursor.getLong(cursor.getColumnIndex("time"))*/nt.get_fname());
+        // intent.putExtra("content", /*cursor.getString(cursor.getColumnIndex("content"))*/nt.content);
+        intent.putExtra("item", noteItemtag);
+        intent.setClass(this, NotepadEditActivity.class);
+        startActivityForResult(intent, 0x1001);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (RESULT_OK == resultCode) {
+            switch (requestCode) {
+                case 0x1001:
+                    setResult(resultCode, data);
+                    finish();
+                    break;
+
+
+            }
+        }
+    }
+
     private void initTitle() {
         mIvLeft = (ImageView) findViewById(R.id.iv_left);
         mTvCenter = (TextView) findViewById(R.id.tv_center);
-
+        mTvRight = (TextView) findViewById(R.id.tv_right);
+        mTvRight.setText("删除");
+        mTvRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setResult(0x111, getIntent());
+                finish();
+            }
+        });
         mTvCenter.setText("心事详情");
         mIvLeft.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,12 +167,14 @@ public class NotepadCheckActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        for (String s:
-             localPath) {
-            File f=new File(s.replace("file:",""));
-            if(f.exists()){
-                boolean delete = f.delete();
-                Log.d("liumj","删除成功");
+        if (localPath != null && localPath.size() > 0) {
+            for (String s :
+                    localPath) {
+                File f = new File(s.replace("file:", ""));
+                if (f.exists()) {
+                    boolean delete = f.delete();
+                    Log.d("liumj", "删除成功");
+                }
             }
         }
     }

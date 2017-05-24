@@ -45,6 +45,8 @@ import org.apache.http.impl.client.HttpClients;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import im.fir.sdk.FIR;
 //import im.fir.sdk.FIR;
 
 /**
@@ -68,7 +70,7 @@ public class UILApplication extends Application {
         }
         filelistEntity = new FilelistEntity();
         super.onCreate();
-        //FIR.init(this);
+        FIR.init(this);
         CrashHandler.getInstance().init(this);
         mInstance = this;
         mLockPatternUtils = new LockPatternUtils(this);

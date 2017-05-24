@@ -33,7 +33,6 @@ import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
-import com.google.gson.Gson;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -59,14 +58,14 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
     private ListView listView;
     private ListViewAdapter adapter;// 数据源对象
     private Cursor cursor = null;
-    private int month=0;
+    private int month = 0;
     private SyncTask syncTask;
     private List<FileInfo> cloudUnits;
     private ArrayList<NoteItemtag> items;
     private SyncBackground syncBackground;
     private ProgressDialog dialog;
-    private  String  savepath;
-    private Handler mHandler= new Handler(Looper.getMainLooper()) {
+    private String savepath;
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -91,6 +90,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
         }
 
     };
+    private int clickPos;
 
     private void runfrist() {
 
@@ -106,7 +106,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                     // 0-100 分批取文件
                     cloudUnits = syncTask.getCloudUnits(0, 10000);
 
-                if (syncBackground==null) {
+                if (syncBackground == null) {
                     syncBackground = new SyncBackground(NotepadActivity.this, mHandler, cloudUnits, savepath);
                     syncBackground.start();
                 }
@@ -115,8 +115,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                 for (FileInfo fileInfo : cloudUnits) {
                     FileInfo0 fileInfo0 = new FileInfo0(fileInfo);
                     file = savepath + File.separator + fileInfo0.getObjid();
-                    if (fileInfo.filesize==0)
-                    {
+                    if (fileInfo.filesize == 0) {
                         try {
 
                             if (!TClient.getinstance().delObj(fileInfo0.getObjid(), fileInfo0.getFtype()))
@@ -147,20 +146,16 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
         setContentView(R.layout.notepad_main);
 
 
-            dialog = new ProgressDialog(this);
-            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.setMessage("正在加载");
-            dialog.show();
+        dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("正在加载");
+        dialog.show();
 
-            initTitle();
-            initResourceId();
-            initListener();
+        initTitle();
+        initResourceId();
+        initListener();
         runfrist();
     }
-
-
-
-
 
 
     private void initData() {
@@ -219,8 +214,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
             fname = fname.substring(0, fname.length() - 4);
             item.set_fname(fname);
             cal.setTimeInMillis(item.getStamp());
-            if (month != cal.get(Calendar.MONTH))
-            {
+            if (month != cal.get(Calendar.MONTH)) {
                 month = cal.get(Calendar.MONTH);
                 NoteItemtag head = new NoteItemtag();
                 //head.time = -1;
@@ -290,6 +284,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
 
     }
 
+    private NoteItemtag clickPosMenu;
     //---------------------------------------------------------------
 
     //响应长按弹出菜单的点击事件
@@ -310,7 +305,7 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                     //int i = dm.delete(adapter.getItemId(menuInfo.position));
                     //dm.close();
                     if (fileDBmager.delFile(nt.get_fname()))
-                        Log.d("notepad",nt.get_fname()+"删除文件成功！");
+                        Log.d("notepad", nt.get_fname() + "删除文件成功！");
                     adapter.removeListItem(menuInfo.position);//删除数据
                     adapter.notifyDataSetChanged();//通知数据源，数据已经改变，刷新界面
                     dialog.show();
@@ -343,9 +338,6 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
             case 2://查看
                 try {
                     Intent intent = new Intent();
-                    //intent.putExtra("id", nt.id);
-                    //intent.putExtra("time",nt.get_fname());
-                    //intent.putExtra("content", nt.content);
                     intent.putExtra("item", nt);
                     intent.setClass(NotepadActivity.this, NotepadCheckActivity.class);
                     NotepadActivity.this.startActivity(intent);
@@ -367,27 +359,41 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
 
 
         NoteItemtag item = adapter.getItem(position);
+        clickPosMenu = item;
+        clickPos = position;
         if (item.isHead)
             return;
         Intent intent = new Intent();
         intent.putExtra("item", item);
-
         intent.setClass(NotepadActivity.this, NotepadCheckActivity.class);
-        NotepadActivity.this.startActivity(intent);
+        NotepadActivity.this.startActivityForResult(intent, MODIFY_NOTPAD);
 
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (RESULT_OK == resultCode) {
-
             switch (requestCode) {
                 case MODIFY_NOTPAD:
                     dialog.show();
                     syncBackground.wakeup(1);
                     break;
-
-
+            }
+        } else if (resultCode == 0x111) {
+            try {
+                if (fileDBmager.delFile(clickPosMenu.get_fname()))
+                    Log.d("notepad", clickPosMenu.get_fname() + "删除文件成功！");
+                adapter.removeListItem(clickPos);//删除数据
+                adapter.notifyDataSetChanged();//通知数据源，数据已经改变，刷新界面
+                dialog.show();
+                //if (syncBackground==null) {
+                //     syncBackground=new SyncBackground(this, mHandler,cloudUnits);
+                //     syncBackground.start();
+                // }
+                syncBackground.wakeup(1);
+                cloudUnits.clear();
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         }
     }
