@@ -166,7 +166,7 @@ public class SyncBackground extends Thread {
 			//miss match element has right ftype ,should to del;
 			if (fileInfo.getFtype()==FTYPE.NOTEPAD)
 				try {
-					TClient.getinstance().delObj(fileInfo.getObjid(),fileInfo.getFtype());
+					boolean b = TClient.getinstance().delObj(fileInfo.getObjid(), fileInfo.getFtype());
 					cl=true;
 				} catch (Exception e) {
 					e.printStackTrace();

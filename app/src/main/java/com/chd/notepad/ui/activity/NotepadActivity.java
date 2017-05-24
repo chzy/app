@@ -304,8 +304,6 @@ public class NotepadActivity extends ListActivity implements OnScrollListener {
                     // dm.open();
                     //int i = dm.delete(adapter.getItemId(menuInfo.position));
                     //dm.close();
-                    if (fileDBmager.delFile(nt.get_fname()))
-                        Log.d("notepad", nt.get_fname() + "删除文件成功！");
                     adapter.removeListItem(menuInfo.position);//删除数据
                     adapter.notifyDataSetChanged();//通知数据源，数据已经改变，刷新界面
                     dialog.show();
