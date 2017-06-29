@@ -24,9 +24,7 @@
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <meta-data
-        android:name="UMENG_CHANNEL"
-        android:value="${UMENG_CHANNEL_VALUE}" />
+
     <application
         android:name="com.chd.yunpan.application.UILApplication"
         android:allowBackup="true"
@@ -34,6 +32,9 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="${UMENG_CHANNEL_VALUE}" />
 
         <meta-data
             android:name="BUG_HD_SDK_GENERAL_KEY"
@@ -41,10 +42,10 @@
 
         <meta-data
             android:name="design_width"
-            android:value="720"/>
+            android:value="720" />
         <meta-data
             android:name="design_height"
-            android:value="1280"/>
+            android:value="1280" />
 
         <activity
             android:name="com.chd.yunpan.ui.LoginActivity"
@@ -133,7 +134,7 @@
             android:name="com.chd.photo.ui.PicActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.chd.photo.ui.PicEditActivity"
+            android:name="com.chd.photo.ui.PicBackActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.chd.photo.ui.PicDetailActivity"

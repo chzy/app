@@ -3,6 +3,7 @@ package com.chd.photo.adapter;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chd.base.Entity.FileLocal;
@@ -25,11 +26,13 @@ class PicInfoAdapter<T extends FileInfo> extends BaseQuickAdapter<T, BaseViewHol
     private boolean showSelect;
     private boolean isVideo;
 
-    PicInfoAdapter(List<T> data, ImageLoader imageLoader, boolean showSelect, boolean isVideo) {
+
+    PicInfoAdapter(List<T> data, ImageLoader imageLoader, boolean showSelect, boolean isVideo,boolean isCheck) {
         super(R.layout.item_pic_info_adapter, data);
         this.imageLoader = imageLoader;
         this.showSelect = showSelect;
         this.isVideo = isVideo;
+        this.isCheck=isCheck;
         options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true).cacheOnDisk(true)
                 .considerExifParams(true)
@@ -43,6 +46,7 @@ class PicInfoAdapter<T extends FileInfo> extends BaseQuickAdapter<T, BaseViewHol
 
     @Override
     protected void convert(BaseViewHolder helper, T item) {
+        helper.addOnClickListener(R.id.iv_pic_edit_item_photo_check);
         if (showSelect) {
             helper.setVisible(R.id.iv_pic_edit_item_photo_check, true);
             if (isCheck) {
@@ -52,7 +56,6 @@ class PicInfoAdapter<T extends FileInfo> extends BaseQuickAdapter<T, BaseViewHol
                 //是未选中的,需要选中
                 helper.setImageResource(R.id.iv_pic_edit_item_photo_check, R.drawable.pic_edit_photo_checked);
             }
-
         } else {
             helper.setVisible(R.id.iv_pic_edit_item_photo_check, false);
         }
@@ -63,8 +66,10 @@ class PicInfoAdapter<T extends FileInfo> extends BaseQuickAdapter<T, BaseViewHol
             url = "ttrpc://" + item.getObjid();
             if (item instanceof FileLocal) {
                 url = "file://" + UILApplication.getFilelistEntity().getFilePath(((FileLocal) item).getPathid()) + "/" + item.getObjid();
+                Glide.with(mContext).load(url).placeholder(R.drawable.pic_test1).into((ImageView) helper.getView(R.id.iv_pic_info_photo));
+            } else {
+                imageLoader.displayImage(url, (ImageView) helper.getView(R.id.iv_pic_info_photo), options, new SimpleImageLoadingListener());
             }
-            imageLoader.displayImage(url, (ImageView) helper.getView(R.id.iv_pic_info_photo), options, new SimpleImageLoadingListener());
         } else {
             url = "ttrpc://yunpan_thumb_" + item.getObjid();
             url = url.replace("mp4", "jpg");

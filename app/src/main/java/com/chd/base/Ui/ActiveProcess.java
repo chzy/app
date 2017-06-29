@@ -7,6 +7,10 @@ import android.widget.Toast;
 import com.chd.photo.ui.CustomProgressDialog;
 import com.zhy.autolayout.AutoLayoutActivity;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 /**
  * Created by lxp1 on 2015/12/6.
  */
@@ -24,6 +28,8 @@ public abstract class ActiveProcess extends AutoLayoutActivity {
             dialog.setCancelable(false);
         }
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+
     }
 
     protected void showDialog(final String msg) {
@@ -123,6 +129,13 @@ public abstract class ActiveProcess extends AutoLayoutActivity {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(Object obj){
+
+
+
+    }
+
 
     //设置progressbar上的提示信息
     public void setParMessage(String message) {
@@ -132,6 +145,7 @@ public abstract class ActiveProcess extends AutoLayoutActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         dialog = null;
     }
 }

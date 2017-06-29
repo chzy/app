@@ -194,19 +194,17 @@ public class SyncTask {
 				int i = 0;
 				ArrayList<Integer> upload = new ArrayList<>();
 				try {
-					for (FileInfo item1 : files) {
-						FileInfo0 item = new FileInfo0(item1);
+					for (FileInfo0 item : files) {
 						if (Thread.currentThread().isInterrupted()) {
 							throw new InterruptedException();
 						}
 						i++;
-						final String name = item.getFilename();
+						final String name = item.getObjid();
 						final int finalI = i;
 						final int process = (int) ((float) (i - 1) / files.size() * 100);
 						activeProcess.runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
-								Log.d("liumj", "文件名:" + name);
 								dialog.setMessage(name);
 								dialog.setTitle("正在上传:" + finalI + "/" + files.size() + "  " + process + "%");
 							}
@@ -220,8 +218,8 @@ public class SyncTask {
 
 				} catch (Exception e) {
 					//中断线程
+//					e.printStackTrace();
 					Log.e("lmj", "上传中断");
-					return;
 				} finally {
 					activeProcess.runOnUiThread(new Runnable() {
 						@Override

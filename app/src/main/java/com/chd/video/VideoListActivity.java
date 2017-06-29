@@ -96,7 +96,8 @@ public class VideoListActivity extends UILActivity {
             switch (msg.what) {
                 case 0:
                     waitDialog.dismiss();
-                    picAdapter = new PicAdapter(VideoListActivity.this, cloudList, false, imageLoader, true);
+                    boolean showSelect = picAdapter.isShowSelect();
+                    picAdapter = new PicAdapter(VideoListActivity.this, cloudList, imageLoader, true,showSelect);
                     rvVideoListContent.setAdapter(picAdapter);
                     break;
             }
