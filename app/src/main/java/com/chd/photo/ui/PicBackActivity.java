@@ -3,29 +3,39 @@ package com.chd.photo.ui;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
 import com.chd.base.Entity.FileLocal;
+import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.UILActivity;
+import com.chd.base.backend.SyncTask;
 import com.chd.photo.adapter.PicAdapter;
 import com.chd.proto.FTYPE;
+import com.chd.proto.FileInfo;
 import com.chd.service.RPCchannel.upload.FileUploadInfo;
 import com.chd.service.RPCchannel.upload.FileUploadManager;
 import com.chd.service.RPCchannel.upload.UploadOptions;
 import com.chd.service.RPCchannel.upload.listener.OnUploadListener;
 import com.chd.service.RPCchannel.upload.progressaware.ProgressBarAware;
 import com.chd.yunpan.R;
+import com.chd.yunpan.application.UILApplication;
+import com.chd.yunpan.utils.TimeUtils;
 import com.chd.yunpan.utils.ToastUtils;
+import com.chd.yunpan.view.SuperRefreshRecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class PicBackActivity extends UILActivity implements View.OnClickListener {
 
-    private RecyclerView mPicRecyclerView;
+    private SuperRefreshRecyclerView mPicRecyclerView;
     private TextView mPicUploadTextView;
     private RelativeLayout mPicBottomRelativeLayout;
     private ArrayList<ArrayList<FileLocal>> localList = new ArrayList();
@@ -35,7 +45,7 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unbackup);
-        mPicRecyclerView = (RecyclerView) findViewById(R.id.lv_pic);
+        mPicRecyclerView = (SuperRefreshRecyclerView) findViewById(R.id.lv_pic);
         mPicUploadTextView = (TextView) findViewById(R.id.tv_pic_upload);
         mPicBottomRelativeLayout = (RelativeLayout) findViewById(R.id.rl_pic_bottom);
         TextView title = (TextView) findViewById(R.id.tv_center);
@@ -46,13 +56,86 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
         right.setText("全选");
         right.setOnClickListener(this);
         mPicUploadTextView.setOnClickListener(this);
-        localList.addAll((ArrayList<ArrayList<FileLocal>>) getIntent().getSerializableExtra("locallist"));
         adapter = new PicAdapter(PicBackActivity.this, localList, null, false, true);
         mPicRecyclerView.setAdapter(adapter);
         mPicRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mPicRecyclerView.setChangeScrollStateCallback(new SuperRefreshRecyclerView.ChangeScrollStateCallback() {
+            @Override
+            public void change(int c) {
+                switch (c) {
+                    case 2:
+                        Glide.with(PicBackActivity.this).pauseRequests();
+                        Log.d("AAAAAAAAAAAAAAA", "暂停加载" + c);
+
+                        break;
+                    case 0:
+                        Glide.with(PicBackActivity.this).resumeRequests();
+                        Log.d("AAAAAAAAAAAAAAA", "恢复加载" + c);
+
+                        break;
+                    case 1:
+                        Glide.with(PicBackActivity.this).resumeRequests();
+                        Log.d("AAAAAAAAAAAAAAA", "恢复加载" + c);
+
+                        break;
+                }
+            }
+        });
+        onNewThreadRequest();
     }
 
     TextView right;
+
+
+    private SyncTask syncTask;
+    private FilelistEntity filelistEntity;
+
+    private void onNewThreadRequest() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                localList.clear();
+                filelistEntity = UILApplication.getFilelistEntity();
+                if (syncTask == null)
+                    syncTask = new SyncTask(PicBackActivity.this, FTYPE.PICTURE);
+                //未备份文件 ==  backedlist . removeAll(localist);
+
+                List<FileInfo> cloudUnits = syncTask.getCloudUnits(0, 10000);
+                syncTask.analyPhotoUnits(cloudUnits, filelistEntity);
+                List<FileLocal> localUnits = filelistEntity.getLocallist();
+                if (localUnits != null && !localUnits.isEmpty()) {
+                    ArrayList<FileLocal> local = new ArrayList<>();
+                    int time = TimeUtils.getZeroTime(localUnits.get(0).getLastModified());
+                    local.add(localUnits.get(0));
+                    for (int i = 1; i < localUnits.size(); i++) {
+                        FileLocal fileInfo = localUnits.get(i);
+                        if (!fileInfo.bakuped) {
+                            if (fileInfo.lastModified <= ((localList.size() + 1) * 3 * 24 * 3600 + time)) {
+                                local.add(fileInfo);
+                            } else {
+                                Collections.reverse(local);
+                                localList.add(local);
+                                local = new ArrayList<>();
+                                local.add(fileInfo);
+                                time = TimeUtils.getZeroTime(fileInfo.getLastModified());
+                            }
+                        }
+                    }
+                    localList.add(local);
+                    Collections.reverse(localList);
+                    local = null;
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
+            }
+        });
+        thread.start();
+    }
 
     @Override
     public void onEventMainThread(Object obj) {
@@ -91,6 +174,10 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
             case R.id.tv_pic_upload:
                 //上传
                 final ArrayList<String> selectData = adapter.getSelectData();
+                if (selectData.isEmpty()) {
+                    ToastUtils.toast(this, "请选择上传文件");
+                    return;
+                }
                 FileUploadManager manager = FileUploadManager.getInstance();
                 boolean overwrite = true;
                 boolean resume = true;
@@ -127,17 +214,13 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                                     String[] split = s.split(" ");
                                     int pos1 = Integer.parseInt(split[0]);
                                     int pos2 = Integer.parseInt(split[1]);
-                                    ArrayList<FileLocal> fileLocals = localList.get(pos1);
-                                    fileLocals.remove(pos2);
-                                    if (fileLocals.isEmpty()) {
-                                        localList.remove(pos1);
-                                    }
+                                    adapter.remove(pos1, pos2);
+                                    RecyclerView recyclerview = (RecyclerView) mPicRecyclerView.getChildAt(pos1).findViewById(R.id.mlv_pic);
+                                    recyclerview.getAdapter().notifyItemRemoved(pos2);
                                 }
                                 adapter.setSelectList(new ArrayList<String>());
-                                adapter.notifyDataSetChanged();
                                 setResult(RESULT_OK);
                             }
-
                         }
                     }, options);
                 }

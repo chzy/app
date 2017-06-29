@@ -66,7 +66,7 @@ class PicInfoAdapter<T extends FileInfo> extends BaseQuickAdapter<T, BaseViewHol
             url = "ttrpc://" + item.getObjid();
             if (item instanceof FileLocal) {
                 url = "file://" + UILApplication.getFilelistEntity().getFilePath(((FileLocal) item).getPathid()) + "/" + item.getObjid();
-                Glide.with(mContext).load(url).placeholder(R.drawable.pic_test1).into((ImageView) helper.getView(R.id.iv_pic_info_photo));
+                Glide.with(mContext).load(url).placeholder(R.drawable.pic_test1).centerCrop().into((ImageView) helper.getView(R.id.iv_pic_info_photo));
             } else {
                 imageLoader.displayImage(url, (ImageView) helper.getView(R.id.iv_pic_info_photo), options, new SimpleImageLoadingListener());
             }

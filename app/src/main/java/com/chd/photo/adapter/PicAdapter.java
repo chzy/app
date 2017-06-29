@@ -140,8 +140,6 @@ public class PicAdapter<E extends FileInfo> extends BaseQuickAdapter<List<E>, Ba
 
     public void remove(int pos1, int pos2) {
         getItem(pos1).remove(pos2);
-        RecyclerView recyclerView = (RecyclerView) getViewByPosition(pos1, R.id.mlv_pic);
-        recyclerView.getAdapter().notifyItemChanged(pos2);
     }
 
     public E getFileInfo(int pos1, int pos2) {

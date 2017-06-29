@@ -9,7 +9,6 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -77,7 +76,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
             int size = 0;
             size = filelistEntity.getUnbakNumber();
             mTvNumber.setText(String.format("上传未备份照片（%d）", size));
-            adapter = new PicAdapter(PicActivity.this, cloudList, imageLoader, false,false);
+            adapter = new PicAdapter(PicActivity.this, cloudList, imageLoader, false, false);
             mLvPic.setAdapter(adapter);
         }
 
@@ -246,7 +245,6 @@ public class PicActivity extends UILActivity implements OnClickListener {
 
     private void initLocal() {
         Intent intent = new Intent(this, PicBackActivity.class);
-        intent.putExtra("locallist", localList);
         startActivityForResult(intent, 0x123);
     }
 
@@ -256,7 +254,6 @@ public class PicActivity extends UILActivity implements OnClickListener {
         if (RESULT_OK == resultCode) {
             switch (requestCode) {
                 case 0x11:
-                    Log.i("lmj", "返回执行了");
                     onNewThreadRequest(bIsUbkList);
                     break;
                 case FunctionConfig.CAMERA_RESULT:
@@ -286,7 +283,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
                             cloudUnits.clear();
                             onNewThreadRequest(false);
                         }
-                    },500);
+                    }, 500);
                     break;
             }
         }

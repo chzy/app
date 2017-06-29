@@ -7,13 +7,13 @@
     <include layout="@layout/title_bar" />
 
 
-    <android.support.v7.widget.RecyclerView
+    <com.chd.yunpan.view.SuperRefreshRecyclerView
         android:id="@+id/lv_pic"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:divider="@null" >
-    </android.support.v7.widget.RecyclerView>
+    </com.chd.yunpan.view.SuperRefreshRecyclerView>
 
     <RelativeLayout
         android:id="@+id/rl_pic_bottom"
