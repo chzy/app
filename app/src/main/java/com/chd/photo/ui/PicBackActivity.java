@@ -2,7 +2,6 @@ package com.chd.photo.ui;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -208,18 +207,8 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                             count++;
                             if (count == selectData.size()) {
                                 ToastUtils.toast(PicBackActivity.this, "上传成功");
-                                build.dismiss();
-                                for (String s :
-                                        selectData) {
-                                    String[] split = s.split(" ");
-                                    int pos1 = Integer.parseInt(split[0]);
-                                    int pos2 = Integer.parseInt(split[1]);
-                                    adapter.remove(pos1, pos2);
-                                    RecyclerView recyclerview = (RecyclerView) mPicRecyclerView.getChildAt(pos1).findViewById(R.id.mlv_pic);
-                                    recyclerview.getAdapter().notifyItemRemoved(pos2);
-                                }
-                                adapter.setSelectList(new ArrayList<String>());
                                 setResult(RESULT_OK);
+                                onBackPressed();
                             }
                         }
                     }, options);

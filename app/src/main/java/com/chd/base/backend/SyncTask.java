@@ -345,7 +345,7 @@ public class SyncTask {
 								dialog.setTitle("正在下载:" + finalI + "/" + files.size() + "  " + process + "%");
 							}
 						});
-						boolean result = download(item, null, false, dialog);
+						boolean result = download(item, activeProcess, false, dialog);
 						if (!result) {
 							download.add(i);
 						}
@@ -353,6 +353,7 @@ public class SyncTask {
 					}
 				} catch (Exception e) {
 					//中断线程
+					e.printStackTrace();
 					Log.e("lmj", "下载中断");
 					return;
 				} finally {

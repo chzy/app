@@ -77,7 +77,12 @@ public class PicActivity extends UILActivity implements OnClickListener {
             size = filelistEntity.getUnbakNumber();
             mTvNumber.setText(String.format("上传未备份照片（%d）", size));
             adapter = new PicAdapter(PicActivity.this, cloudList, imageLoader, false, false);
+            adapter.setShowSelect(false);
             mLvPic.setAdapter(adapter);
+            rlBottom.setVisibility(View.GONE);
+            mTvRight.setText("编辑");
+
+
         }
 
     };
@@ -470,12 +475,11 @@ public class PicActivity extends UILActivity implements OnClickListener {
                 f.setFtype(FTYPE.PICTURE);
                 info0s.add(f);
             }
-
         }
         if (bIsUbkList) {
-            syncTask.uploadList(info0s, this, handler);
+            syncTask.uploadList(info0s, PicActivity.this, handler);
         } else {
-            syncTask.downloadList(info0s, this, handler);
+            syncTask.downloadList(info0s, PicActivity.this, handler);
         }
 
     }
