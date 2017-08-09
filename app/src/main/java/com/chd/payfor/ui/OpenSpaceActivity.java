@@ -39,6 +39,7 @@ public class OpenSpaceActivity extends Activity implements OnClickListener,PayFo
 	private Button mBtnTenOpen;
 	private LinearLayout mSixLayout;
 	private LinearLayout mNineLayout;
+	private String phone;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -51,6 +52,7 @@ public class OpenSpaceActivity extends Activity implements OnClickListener,PayFo
 		initResourceId();
 
 		ShareUtils sareUtils = new ShareUtils(this);
+		phone=sareUtils.getUsername();
 		LoginResult loginEntity = sareUtils.getLoginEntity();
 		if(loginEntity.getSpace()>(60*1024*1024*1024l)&&loginEntity.getSpace()<70l*1024*1024*1024){
 			mSixLayout.setVisibility(View.VISIBLE);
@@ -172,7 +174,7 @@ public class OpenSpaceActivity extends Activity implements OnClickListener,PayFo
 			@Override
 			public void run() {
 				try {
-					final RetHead retHead = TClient.getinstance().OrderByVac(false);
+					final RetHead retHead = TClient.getinstance().Cancel(phone);
 					if(Errcode.SUCCESS==retHead.getRet()){
 						//成功
 						runOnUiThread(new Runnable() {

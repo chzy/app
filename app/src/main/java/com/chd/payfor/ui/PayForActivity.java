@@ -16,6 +16,7 @@ import com.chd.payfor.entity.PayForFlag;
 import com.chd.payfor.ui.dialog.PayForOpenSpaceDlg;
 import com.chd.payfor.ui.dialog.PayForOpenSpaceDlg.OnConfirmListener;
 import com.chd.proto.Errcode;
+import com.chd.proto.PTYPE;
 import com.chd.proto.RetHead;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
@@ -118,7 +119,7 @@ public class PayForActivity extends Activity implements OnClickListener, OnConfi
 			@Override
 			public void run() {
 				try {
-					final RetHead retHead = TClient.getinstance().OrderByVac(true);
+					final RetHead retHead = TClient.getinstance().Order(PTYPE.TEN);
 
 					if(Errcode.SUCCESS==retHead.getRet()){
 						//成功
