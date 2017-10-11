@@ -99,7 +99,7 @@ public class PicDetailActivity extends UILActivity implements OnClickListener {
 
     private void initData() {
         /*int nPicId = getIntent().getIntExtra("picid", -1);
-		if (nPicId < 0)
+        if (nPicId < 0)
 		{
 			return;
 		}*/
@@ -203,17 +203,23 @@ public class PicDetailActivity extends UILActivity implements OnClickListener {
                                     String strData = bSucc ? "删除成功" : "删除失败";
                                     ToastUtils.toast(PicDetailActivity.this, strData);
                                     if (bSucc) {
-                                        if (StringUtils.isNullOrEmpty(fileInfo0.getFilePath())) {
+                                        if (!StringUtils.isNullOrEmpty(fileInfo0.getFilePath())) {
                                             new MaterialDialog.Builder(PicDetailActivity.this).title("温馨提示").content("是否将本地资源同步删除").positiveText("删除").negativeText("取消").onPositive(new MaterialDialog.SingleButtonCallback() {
                                                 @Override
                                                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                                    File f = new File(fileInfo0.getFilePath());
-                                                    f.delete();
-                                                    Intent intent = new Intent();
-                                                    intent.putExtra("pos1", pos1);
-                                                    intent.putExtra("pos2", pos2);
-                                                    setResult(RESULT_OK, intent);
-                                                    finish();
+                                                    try{
+                                                        File f = new File(fileInfo0.getFilePath());
+                                                        f.delete();
+                                                    }catch (Exception ignored){
+
+                                                    }finally {
+                                                        Intent intent = new Intent();
+                                                        intent.putExtra("pos1", pos1);
+                                                        intent.putExtra("pos2", pos2);
+                                                        setResult(RESULT_OK, intent);
+                                                        finish();
+                                                    }
+
                                                 }
                                             }).onNegative(new MaterialDialog.SingleButtonCallback() {
                                                 @Override
