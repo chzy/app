@@ -90,7 +90,7 @@ public class PicAdapter<E extends FileInfo> extends BaseQuickAdapter<List<E>, Ba
                 intent.putExtra("ubklist", bIsUbkList);
                 context.startActivityForResult(intent, 0x12);
             } else {
-                //非视频，即图片进去
+                //视频进去
                 Intent intent = new Intent(context, VideoPlayActivity.class);
                 intent.putExtra("bean", infoAdapter.getItem(position));
                 context.startActivityForResult(intent, 0x13);

@@ -276,6 +276,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
                             return;
                         }
                         adapter.remove(pos1, pos2);
+                        adapter.notifyItemChanged(pos1);
                         setResult(RESULT_OK);
                     }
                     break;

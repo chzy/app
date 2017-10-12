@@ -108,11 +108,12 @@ public class PicDetailActivity extends UILActivity implements OnClickListener {
         Serializable bean = getIntent().getSerializableExtra("bean");
         if (bean instanceof FileLocal) {
             url = "file://" + UILApplication.getFilelistEntity().getFilePath(((FileLocal) bean).getPathid()) + "/" + ((FileLocal) bean).getObjid();
-            fileInfo0.setFilename(url);
+//            fileInfo0.setFilename(url);
             fileInfo0.setSysid(((FileLocal) bean).getPathid());
         } else {
-            url = "trpc://" + ((FileInfo) bean).getObjid();
-            fileInfo0.setFilename(url);
+            FileInfo f= (FileInfo) bean;
+            url = "trpc://" + f.getObjid();
+            fileInfo0=new FileInfo0(f);
         }
 
         if (StringUtils.isNullOrEmpty(url)) {
@@ -133,7 +134,7 @@ public class PicDetailActivity extends UILActivity implements OnClickListener {
                         @Override
                         public void onLoadingFailed(String imageUri, View view,
                                                     FailReason failReason) {
-							/*vh.progressBar.setVisibility(View.GONE);*/
+                            /*vh.progressBar.setVisibility(View.GONE);*/
                             dismissWaitDialog();
                             Toast.makeText(PicDetailActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
                         }
@@ -207,12 +208,12 @@ public class PicDetailActivity extends UILActivity implements OnClickListener {
                                             new MaterialDialog.Builder(PicDetailActivity.this).title("温馨提示").content("是否将本地资源同步删除").positiveText("删除").negativeText("取消").onPositive(new MaterialDialog.SingleButtonCallback() {
                                                 @Override
                                                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                                    try{
+                                                    try {
                                                         File f = new File(fileInfo0.getFilePath());
                                                         f.delete();
-                                                    }catch (Exception ignored){
+                                                    } catch (Exception ignored) {
 
-                                                    }finally {
+                                                    } finally {
                                                         Intent intent = new Intent();
                                                         intent.putExtra("pos1", pos1);
                                                         intent.putExtra("pos2", pos2);
@@ -253,12 +254,15 @@ public class PicDetailActivity extends UILActivity implements OnClickListener {
                 if (fileInfo0 != null) {
                     List<FileInfo0> info0s = new ArrayList<>();
                     if (StringUtils.isNullOrEmpty(fileInfo0.getFilePath())) {
-                        fileInfo0.setFilePath(new ShareUtils(this).getPhotoFile().getPath() + "/" + fileInfo0.getObjid());
+                        String objid = fileInfo0.getObjid();
+                        if (objid.contains("//")) {
+                            objid = objid.split("//")[1];
+                        }
+                        fileInfo0.setFilePath(new ShareUtils(this).getPhotoFile().getPath() + "/" + objid);
                     }
                     info0s.add(fileInfo0);
                     if (syncTask != null) {
                         syncTask.downloadList(info0s, PicDetailActivity.this, handler);
-                        ToastUtils.toast(PicDetailActivity.this, "保存成功!");
                     }
                 }
 
