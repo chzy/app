@@ -1,5 +1,6 @@
 package com.chd.yunpan.ui;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -32,9 +34,16 @@ import com.chd.yunpan.net.ExecRunable;
 import com.chd.yunpan.net.NetworkUtils;
 import com.chd.yunpan.share.ShareUtils;
 import com.chd.yunpan.ui.dialog.UpdateDialog;
+import com.chd.yunpan.utils.AppUtils;
 import com.chd.yunpan.utils.Logs;
 import com.chd.yunpan.utils.ToastUtils;
 import com.chd.yunpan.view.circleimage.CircularProgressButton;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.PermissionListener;
+import com.yanzhenjie.permission.Rationale;
+import com.yanzhenjie.permission.RationaleListener;
+
+import java.util.List;
 
 
 public class LoginActivity extends Activity implements OnClickListener {
@@ -73,7 +82,7 @@ public class LoginActivity extends Activity implements OnClickListener {
                     shareUtils.setAutoLogin(switcherState);
                     shareUtils.setUsername(et_name.getText().toString());
                     shareUtils.setPwd(et_pwd.getText().toString());
-                    if(isUnlock){
+                    if (isUnlock) {
                         UILApplication.getInstance().getLockPatternUtils().clearLock();
                     }
                     gotoMain();
@@ -93,30 +102,52 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 
     };
-    private  String verName;
+    private String verName;
+    private static final int REQUEST_CODE_PERMISSION_SD = 100;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        verName=getVersion();
-        shareUtils=new ShareUtils(this);
+        verName = getVersion();
+        shareUtils = new ShareUtils(this);
+        AndPermission.with(this)
+                .requestCode(REQUEST_CODE_PERMISSION_SD)
+                .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_PHONE_STATE)
+                // rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框，避免用户勾选不再提示。
+                .rationale(new RationaleListener() {
+                    @Override
+                    public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
+                    }
+                }).callback(new PermissionListener() {
+            @Override
+            public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
+                imei = AppUtils.getIMEI(LoginActivity.this);
+            }
+
+            @Override
+            public void onFailed(int requestCode, @NonNull List<String> deniedPermissions) {
+
+            }
+        }).start();
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     final VersionResult result = TClient.getinstance().CheckVer(verName);
-                    if(result!=null){
-                        Log.d("更新:",result.getVersion());
-                    loginHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            new UpdateDialog(LoginActivity.this,result).show();
-                        }
-                    });
+                    if (result != null) {
+                        Log.d("更新:", result.getVersion());
+                        loginHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                new UpdateDialog(LoginActivity.this, result).show();
+                            }
+                        });
                     }
 
                 } catch (Exception e) {
-                    Log.e("liumj","更新异常");
+                    Log.e("liumj", "更新异常");
                 }
             }
         }).start();
@@ -125,7 +156,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         dialog = new ProgressDialog(LoginActivity.this);
 
         Intent intent = getIntent();
-        isUnlock=intent.getBooleanExtra("Unlock",false);
+        isUnlock = intent.getBooleanExtra("Unlock", false);
 
         if (intent.getBooleanExtra("isReg", false)) {
             et_name.setText(intent.getStringExtra("phone"));
@@ -147,6 +178,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 
     }
+
+    String imei = "";
 
     private void setListener() {
 
@@ -176,6 +209,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 //				dialog.show();
                 isLogining = true;
                 //ExecRunable.execRun(new LoginThread());
+
                 ExecRunable.execRun(new Thread() {
                     @Override
                     public void run() {
@@ -191,7 +225,7 @@ public class LoginActivity extends Activity implements OnClickListener {
                                 pwd = shareUtils.getPwd();
 
                             }
-                            entity = th.loginAuth(username, pwd, 1);
+                            entity = th.loginAuth(username, pwd, imei.hashCode());
                             if (entity.isSetToken()) {
                                 msg.what = 0;
                                 msg.obj = entity;
@@ -355,7 +389,7 @@ public class LoginActivity extends Activity implements OnClickListener {
             Message msg = new Message();
             LoginResult entity = null;
             try {
-                String username =et_name .getText().toString();
+                String username = et_name.getText().toString();
                 String pwd = et_pwd.getText().toString();
                 TClient th = TClient.getinstance();
                 if (shareUtils.isAutoLogin()) {
@@ -386,19 +420,20 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 
     /**
-     2  * 获取版本号
-     3  * @return 当前应用的版本号
-     4  */
-     public String getVersion() {
-         try {
-                     PackageManager manager = this.getPackageManager();
-                     PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
-                     String version = info.versionName;
-                     return version;
-                 } catch (Exception e) {
-                     e.printStackTrace();
-                     return "2.1.1";
-                 }
+     * 2  * 获取版本号
+     * 3  * @return 当前应用的版本号
+     * 4
+     */
+    public String getVersion() {
+        try {
+            PackageManager manager = this.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
+            String version = info.versionName;
+            return version;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "2.1.1";
         }
+    }
 
 }

@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -122,8 +121,8 @@ public class MyspaceActivity extends UILActivity implements OnClickListener, OnI
 						@Override
 						public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
 						}
-					})
-					.send();
+					}).callback(listener)
+					.start();
 		} else if (arg2 == 4) {
 			//短信
 			AndPermission.with(this)
@@ -135,7 +134,8 @@ public class MyspaceActivity extends UILActivity implements OnClickListener, OnI
 						public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
 						}
 					})
-					.send();
+					.callback(listener)
+					.start();
 
 		}else{
 			Intent pageintent = new Intent();
@@ -198,12 +198,7 @@ public class MyspaceActivity extends UILActivity implements OnClickListener, OnI
 			}
 		}
 	};
-	@Override
-	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		// 只需要调用这一句，其它的交给AndPermission吧，最后一个参数是PermissionListener。
-		AndPermission.onRequestPermissionsResult(requestCode, permissions, grantResults, listener);
-	}
+
 
 
 

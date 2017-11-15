@@ -112,30 +112,40 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="15dp"
                     android:gravity="center"
-                    android:text="@string/Atile2"
+                    android:text="心期天"
                     android:textColor="#333333"
                     android:textSize="15sp" />
 
-                <com.chd.yunpan.ui.progressbar.McircleProgressBar
-                    android:id="@+id/netdisk_free3gapp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="30dp"
-                    android:layout_marginTop="25dp"
-                    android:layout_weight="1.0"
-                    android:background="@color/white" />
-
-                <TextView
-                    android:id="@+id/netdisk_fee_apptitle"
+                <ImageView
+                    android:id="@+id/netdisk_main_xinqitian"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center"
-                    android:text=""
-                    android:textColor="#fb9540"
-                    android:textSize="24sp" />
+                    android:layout_gravity="center"
+                    android:layout_marginTop="40dp"
+                    android:padding="20dp"
+                    android:src="@drawable/ic_xinqitian"
+                    />
+
+                <!--<com.chd.yunpan.ui.progressbar.McircleProgressBar-->
+                    <!--android:id="@+id/netdisk_free3gapp"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="0dp"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_marginLeft="30dp"-->
+                    <!--android:layout_marginRight="30dp"-->
+                    <!--android:layout_marginTop="25dp"-->
+                    <!--android:layout_weight="1.0"-->
+                    <!--android:background="@color/white" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/netdisk_fee_apptitle"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center_horizontal"-->
+                    <!--android:gravity="center"-->
+                    <!--android:text=""-->
+                    <!--android:textColor="#fb9540"-->
+                    <!--android:textSize="24sp" />-->
             </LinearLayout>
         </LinearLayout>
 

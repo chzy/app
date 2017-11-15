@@ -3,7 +3,6 @@ package com.chd.strongbox;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -108,7 +107,8 @@ public class StrongBoxActivity extends UILActivity {
 							public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
 							}
 						})
-						.send();
+						.callback(listener)
+						.start();
 
 				break;
 			case R.id.ll_two:
@@ -268,10 +268,4 @@ public class StrongBoxActivity extends UILActivity {
 		}
 	};
 
-	@Override
-	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		// 只需要调用这一句，其它的交给AndPermission吧，最后一个参数是PermissionListener。
-		AndPermission.onRequestPermissionsResult(requestCode, permissions, grantResults, listener);
-	}
 }

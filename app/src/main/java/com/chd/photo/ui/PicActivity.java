@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -315,7 +314,8 @@ public class PicActivity extends UILActivity implements OnClickListener {
                             public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
                             }
                         })
-                        .send();
+                        .callback(listener)
+                        .start();
             }
         }).addSheetItem("从本地添加", ActionSheetDialog.SheetItemColor.Blue, new ActionSheetDialog.OnSheetItemClickListener() {
             @Override
@@ -546,13 +546,6 @@ public class PicActivity extends UILActivity implements OnClickListener {
             }
         }
     };
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        // 只需要调用这一句，其它的交给AndPermission吧，最后一个参数是PermissionListener。
-        AndPermission.onRequestPermissionsResult(requestCode, permissions, grantResults, listener);
-    }
 
 
     @Override

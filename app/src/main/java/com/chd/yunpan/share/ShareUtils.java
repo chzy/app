@@ -37,13 +37,12 @@ public class ShareUtils {
         this.context = context;
         sp = context.getSharedPreferences("data", Context.MODE_PRIVATE);
         editor = sp.edit();
-        if(getUserid()!=0){
-            initFilePath();
-        }
+        initFilePath();
     }
 
     private void initFilePath() {
-        DOWNLOAD=DOWNLOAD+"/"+getUserid();
+        String s = getUserid() == 0 ? "" : getUserid()+"";
+        DOWNLOAD=DOWNLOAD+"/"+s;
         PHOTO = DOWNLOAD + "/" + "pic";
         MUSIC = DOWNLOAD + "/" + "music";
         NOTEPAD = DOWNLOAD + "/" + "notepad";

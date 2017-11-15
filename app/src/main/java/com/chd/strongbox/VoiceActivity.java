@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -195,7 +194,8 @@ public class VoiceActivity extends UILActivity {
                             public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
                             }
                         })
-                        .send();
+                        .callback(listener)
+                        .start();
                 break;
         }
     }
@@ -299,12 +299,6 @@ public class VoiceActivity extends UILActivity {
         }
     };
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        // 只需要调用这一句，其它的交给AndPermission吧，最后一个参数是PermissionListener。
-        AndPermission.onRequestPermissionsResult(requestCode, permissions, grantResults, listener);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
