@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -15,8 +16,12 @@ import android.widget.TextView;
 import com.chd.app.backend.AppInfo0;
 import com.chd.app.backend.PakageInfoProvider;
 import com.chd.yunpan.R;
+import com.chd.yunpan.share.ShareUtils;
 import com.chd.yunpan.ui.adapter.FreeDownGridAdapter;
 import com.chd.yunpan.ui.adapter.FreeDownListAdapter;
+import com.chd.yunpan.utils.AppUtils;
+import com.chd.yunpan.utils.update.UpdateAppUtils;
+import com.chd.yunpan.utils.update.VersionModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +46,6 @@ public class FreeDownActivity extends Activity implements OnClickListener
 	private FreeDownGridAdapter gridAdapter;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
-
 			mAppList.clear();
 			if(isDown){
 				mAppList.addAll(appProvider.getDownApps());
@@ -69,6 +73,25 @@ public class FreeDownActivity extends Activity implements OnClickListener
 		initListener();
 		initData();
 
+		mViewLeftGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+				AppInfo0 appInfo0 = mAppList.get(i);
+				String packageName = appInfo0.getPackageName();
+				if(AppUtils.isAppInstallen(FreeDownActivity.this,packageName)){
+					ShareUtils shareUtils = new ShareUtils(FreeDownActivity.this);
+					Bundle bundle=new Bundle();
+					bundle.putString("phone",shareUtils.getUsername());
+					bundle.putString("pwd",shareUtils.getPwd());
+					AppUtils.openApp(FreeDownActivity.this,packageName,bundle);
+
+				}else{
+					VersionModel vm=new VersionModel();
+					vm.url=appInfo0.getUrl();
+					UpdateAppUtils.launch(FreeDownActivity.this,vm);
+				}
+			}
+		});
 
 	}
 	
@@ -81,7 +104,13 @@ public class FreeDownActivity extends Activity implements OnClickListener
 				public void run() {
 					boolean b = appProvider.queryRemoteApps();
 					if(b){
-						handler.sendEmptyMessage(0);
+
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								mTabLeft.performClick();
+							}
+						});
 					}
 				}
 			}).start();

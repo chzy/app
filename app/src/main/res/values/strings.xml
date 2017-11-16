@@ -31,7 +31,15 @@
     <string name="Atile1">私属空间</string>
     <string name="Atile2">免流量应用</string>
 
-
+    <string name="update_check">检测到新版本</string>
+    <string name="update_title">版本更新</string>
+    <string name="update_sure">更新</string>
+    <string name="update_cancel">取消</string>
+    <string name="update_ing">正在更新</string>
+    <string name="download_progress">下载进度:%d%%/100%%</string>
+    <string name="download_finish">下载完成，点击安装</string>
+    <string name="downloading">正在下载中...</string>
+    <string name="download_success">下载完成</string>
 
     <string name="mysapce_menu">照片</string>
 

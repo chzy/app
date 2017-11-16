@@ -13,14 +13,11 @@ import android.widget.Toast;
 
 import com.chd.payfor.ui.OpenSpaceActivity;
 import com.chd.proto.LoginResult;
-import com.chd.proto.VersionResult;
 import com.chd.strongbox.StrongBoxActivity;
 import com.chd.userinfo.ui.UserInfoActivity;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
-import com.chd.yunpan.ui.dialog.UpdateDialog;
 import com.chd.yunpan.ui.progressbar.McircleProgressBar;
-import com.chd.yunpan.utils.AppUtils;
 import com.chd.yunpan.utils.TimeAndSizeUtil;
 import com.chd.yunpan.utils.ToastUtils;
 import com.chd.yunpan.view.circleimage.CircularProgressButton;
@@ -38,8 +35,8 @@ public class netdiskActivity extends Activity implements OnClickListener {
     private TextView mTextUserSpace;
 
     private View mViewFreeapp;
-//	private McircleProgressBar mProFreeapp;
-//	private TextView mTextFreeapp;
+	private McircleProgressBar mProFreeapp;
+	private TextView mTextFreeapp;
 
     private TextView mTextRemainder;
 
@@ -83,9 +80,9 @@ public class netdiskActivity extends Activity implements OnClickListener {
 
         int freePro = uflow == 00 ? 0 : (int) (uflow * 100 / flow);
         String freeStr = TimeAndSizeUtil.getSize((flow - uflow) + "");
-//		mProFreeapp.setProgress(freePro);
-//		mProFreeapp.setTxt(freeStr );
-//		mTextFreeapp.setText(String.format("%d%%", freePro));
+		mProFreeapp.setProgress(freePro);
+		mProFreeapp.setTxt(freeStr );
+		mTextFreeapp.setText(String.format("%d%%", freePro));
         String spaceS = TimeAndSizeUtil.getSize(space + "");
         String flowS = TimeAndSizeUtil.getSize(flow + "");
         mTextTitle.setText(String.format(spaceS + "空间"));
@@ -101,13 +98,13 @@ public class netdiskActivity extends Activity implements OnClickListener {
         mViewMenu1.setOnClickListener(this);
         mViewMenu2.setOnClickListener(this);
         mViewMenu3.setOnClickListener(this);
-        mImgXinQiTian.setOnClickListener(this);
+//        mImgXinQiTian.setOnClickListener(this);
     }
 
     private void initResourceId() {
         mTextTitle = (TextView) findViewById(R.id.netdisk_title);
         mImgCurves = (ImageView) findViewById(R.id.netdisk_curves);
-        mImgXinQiTian = (ImageView) findViewById(R.id.netdisk_main_xinqitian);
+//        mImgXinQiTian = (ImageView) findViewById(R.id.netdisk_main_xinqitian);
 
         mViewSpace = findViewById(R.id.netdisk_space_layout);
         mProSpace = (McircleProgressBar) findViewById(R.id.netdisk_myspacegbar);
@@ -115,9 +112,9 @@ public class netdiskActivity extends Activity implements OnClickListener {
         mTextUserSpace = (TextView) findViewById(R.id.netdisk_txtspace_usage);
 
         mViewFreeapp = findViewById(R.id.netdisk_freedown_layout);
-//		mProFreeapp = (McircleProgressBar) findViewById(R.id.netdisk_free3gapp);
-//		mProFreeapp.setlinecolor(Color.rgb(247, 117, 89));
-//		mTextFreeapp = (TextView) findViewById(R.id.netdisk_fee_apptitle);
+		mProFreeapp = (McircleProgressBar) findViewById(R.id.netdisk_free3gapp);
+		mProFreeapp.setlinecolor(Color.rgb(247, 117, 89));
+		mTextFreeapp = (TextView) findViewById(R.id.netdisk_fee_apptitle);
 
 //		mTextRemainder = (TextView) findViewById(R.id.netdisk_remainder);
 
@@ -132,22 +129,23 @@ public class netdiskActivity extends Activity implements OnClickListener {
 
 
         switch (v.getId()) {
-            case R.id.netdisk_main_xinqitian:
-                //跳转心期天
-                if(AppUtils.isInstallApp(getApplicationContext(),"cn.heartfree.xinqing")){
-                    ShareUtils shareUtils=new ShareUtils(this);
-                    Bundle bundle=new Bundle();
-                    bundle.putString("phone",shareUtils.getUsername());
-                    bundle.putString("pwd",shareUtils.getPwd());
-                    AppUtils.openApp(getApplicationContext(),"cn.heartfree.xinqing",bundle);
-                }else{
-                    VersionResult result=new VersionResult();
-                    result.setUrl("");
-                    result.setWhatsnew("心期天，不止于心");
-                    new UpdateDialog(netdiskActivity.this, result).show();
-                }
-
-                break;
+//            case R.id.netdisk_main_xinqitian:
+//                //跳转心期天
+//                if(AppUtils.isAppInstallen(getApplicationContext(),"cn.heartfree.xinqing")){
+//                    ShareUtils shareUtils=new ShareUtils(this);
+//                    Bundle bundle=new Bundle();
+//                    bundle.putString("phone",shareUtils.getUsername());
+//                    bundle.putString("pwd",shareUtils.getPwd());
+//                    AppUtils.openApp(getApplicationContext(),"cn.heartfree.xinqing",bundle);
+//                }else{
+//                    VersionModel vm=new VersionModel();
+//                    vm.desc="心期天，不止于心";
+//                    vm.url="http://221.7.13.207:8080/App/heartfree110.apk";
+//                    vm.forced=1;
+//                    UpdateAppUtils.launch(netdiskActivity.this,vm);
+//                }
+//
+//                break;
             case R.id.netdisk_menu0: {
                 Intent i = new Intent(getApplicationContext(), OpenSpaceActivity.class);
                 startActivity(i);

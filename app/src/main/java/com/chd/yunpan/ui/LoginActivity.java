@@ -33,10 +33,11 @@ import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.net.ExecRunable;
 import com.chd.yunpan.net.NetworkUtils;
 import com.chd.yunpan.share.ShareUtils;
-import com.chd.yunpan.ui.dialog.UpdateDialog;
 import com.chd.yunpan.utils.AppUtils;
 import com.chd.yunpan.utils.Logs;
 import com.chd.yunpan.utils.ToastUtils;
+import com.chd.yunpan.utils.update.UpdateAppUtils;
+import com.chd.yunpan.utils.update.VersionModel;
 import com.chd.yunpan.view.circleimage.CircularProgressButton;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -138,12 +139,23 @@ public class LoginActivity extends Activity implements OnClickListener {
                     final VersionResult result = TClient.getinstance().CheckVer(verName);
                     if (result != null) {
                         Log.d("更新:", result.getVersion());
-                        loginHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                new UpdateDialog(LoginActivity.this, result).show();
-                            }
-                        });
+                        String old_ver = verName.replace(".", "");
+                        final String new_ver=result.getVersion().replace(".","");
+                        int i = Integer.parseInt(old_ver);
+                        int i1 = Integer.parseInt(new_ver);
+                        if(i<i1){
+                            loginHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    VersionModel vm=new VersionModel();
+                                    vm.versionName=new_ver;
+                                    vm.desc=result.getWhatsnew();
+                                    vm.url=result.getUrl();
+                                    vm.forced=1;
+                                    UpdateAppUtils.launch(LoginActivity.this,vm);
+                                }
+                            });
+                        }
                     }
 
                 } catch (Exception e) {

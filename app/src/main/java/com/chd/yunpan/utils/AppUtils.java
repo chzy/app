@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 
@@ -35,35 +36,42 @@ public class AppUtils {
     /**
      * 打开APP
      */
-    public static void openApp(Context ctx, String packageName, Bundle bundle){
+    public static void openApp(Context ctx, String packageName, Bundle bundle) {
         //要调用另一个APP的activity名字
-        String activity = "com.xinqing.login.Login";
-        ComponentName component = new ComponentName(packageName, activity);
+        ComponentName component = null;
         Intent intent = new Intent();
-        intent.setComponent(component);
+        if ("cn.heartfree.xinqing".equals(packageName)) {
+            String activity = "com.xinqing.login.Login";
+            component = new ComponentName(packageName, activity);
+        } else {
+            intent = ctx.getPackageManager().getLaunchIntentForPackage(packageName);
+        }
+        if (component != null)
+            intent.setComponent(component);
         intent.setFlags(101);
         intent.putExtras(bundle);
         ctx.startActivity(intent);
     }
 
-
     /**
-     * 判断App是否安装
+     * 判断手机是否安装某个应用
      *
-     * @param packageName 包名
-     * @return {@code true}: 已安装<br>{@code false}: 未安装
+     * @param context
+     * @param packageName 应用包名
+     * @return true：安装，false：未安装
+     * 该方法容易报错：java.lang.RuntimeException: Package manager has died
      */
-    public static boolean isInstallApp(Context ctx,final String packageName) {
-        return !isSpace(packageName) && getLaunchAppIntent(ctx,packageName) != null;
-    }
+    public static boolean isAppInstallen(Context context, String packageName) {
+        PackageManager pm = context.getPackageManager();
+        boolean installed = false;
+        try {
+            pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
+            installed = true;
+        } catch (PackageManager.NameNotFoundException e) {
+//            e.printStackTrace();
+            installed = false;
+        }
+        return installed;
 
-    /**
-     * 获取打开App的意图
-     *
-     * @param packageName 包名
-     * @return intent
-     */
-    public static Intent getLaunchAppIntent(Context ctx,final String packageName) {
-        return ctx.getPackageManager().getLaunchIntentForPackage(packageName);
     }
 }

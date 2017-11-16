@@ -1,13 +1,11 @@
 package com.chd.app.backend;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 
 import com.chd.TClient;
 import com.chd.proto.AppInfo;
+import com.chd.yunpan.R;
+import com.chd.yunpan.utils.AppUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,48 +29,24 @@ public class PakageInfoProvider {
         unDownApps=new ArrayList();
 
     }
-    public List<AppInfo0> compareApps() {
-        PackageManager pm = context.getPackageManager();
-        List<PackageInfo> pakageinfos = pm.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES);
-        unDownApps = new ArrayList<AppInfo0>();
-        for (PackageInfo packageInfo : pakageinfos) {
-            appInfo = new AppInfo0();
-            appInfo.setIndex(localApps.size());
-            if ( (packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) !=0)
-                continue;
-            //获取字符串方法
-            //context.getString(R.string.app_name);
-            // context.getResources().getString(R.string.app_name);
-            //获取尺寸资源方法
-            //context.getResources().getDimension(R.dimen.test);
-            //获取xml文件并且返回的是XmlResourceParse类，其继承与XmlPullParse
-           // XmlResourceParser xmlrp = context.getResources().getXml(R.xml.yo);
-            // 获取应用程序的名称，不是包名，而是清单文件中的labelname
-            //appInfo.setPackageName(packageInfo.packageName);
-            String str_name = packageInfo.applicationInfo.loadLabel(pm).toString();
-            appInfo.setAppName(str_name);
-            // 获取应用程序的版本号码
-            String version = packageInfo.versionName;
-            appInfo.setAppVersion(version);
-            //给一同程序设置包名
-            appInfo.setPackageName(packageInfo.packageName);
-
-            // 获取应用程序的快捷方式图标
-            Drawable drawable = packageInfo.applicationInfo.loadIcon(pm);
-            appInfo.setDrawable(drawable);
-            // 获取应用程序是否是第三方应用程序
-            if (filterApp(appInfo)){
-                downApps.add(appInfo);
+    private void compareApps() {
+        for (int i = 0; i < remoteApps.size(); i++) {
+            AppInfo0 appInfo0 = remoteApps.get(i);
+            String packageName = appInfo0.getPackageName();
+            boolean appInstallen = AppUtils.isAppInstallen(context, packageName);
+            if(appInstallen){
+                downApps.add(appInfo0);
+            }else{
+                unDownApps.add(appInfo0);
             }
-            //else
-             //   appInfo.setIsUserApp(filterApp(packageInfo.applicationInfo));
-
-            //Logger.i(tag, "版本号:" + version + "程序名称:" + str_name);
-
         }
-        unDownApps.addAll(remoteApps);
-        unDownApps.removeAll(downApps);
-        return downApps;
+        AppInfo0 appInfo0=new AppInfo0();
+        appInfo0.setInstalled(true);
+        appInfo0.setDrawable(context.getResources().getDrawable(R.drawable.ic_xinqitian));
+        appInfo0.setAppName("心期天");
+        appInfo0.setPackageName("cn.heartfree.xinqing");
+        appInfo0.setUrl("http://221.7.13.207:8080/App/heartfree110.apk");
+        downApps.add(0,appInfo0);
     }
 
 
@@ -85,47 +59,6 @@ public class PakageInfoProvider {
         return remoteApps;
     }
 
-    /**
-     * 三方应用程序的过滤器
-     *
-     * @param info
-     * @return true 三方应用 false 系统应用
-     */
-    public boolean filterApp(AppInfo0 info) {
-        if (remoteApps==null){
-                return false;
-        }
-
-        for (AppInfo0 item:remoteApps)
-        {
-            if (item.getAppName().equalsIgnoreCase(info.getAppName() ) || item.getPackageName().equalsIgnoreCase(info.getPackageName()) )
-            {
-                item.setInstalled(true);
-                int len=Math.min(info.getAppVersion().length(), item.getAppVersion().length());
-                String remote=item.getAppVersion();
-                String local=info.getAppName();
-                for (int idx=0;idx<len;idx++)
-                {
-
-                    if (remote.charAt(idx)>local.charAt(idx)) {
-                        item.setNeedUp(true);
-                        break;
-                    }
-                }
-                break;
-            }
-        }
-        return remoteApps.contains(info);
-      /*  if ((info.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
-            // 代表的是系统的应用,但是被用户升级了. 用户应用
-            return true;
-        } else if ((info.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
-                // 代表的用户的应用
-            return true;
-        }
-        return false;*/
-
-    }
 
 
     public List<AppInfo0> getLocalApps() {
@@ -172,6 +105,7 @@ public class PakageInfoProvider {
             }
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
            return false;
         }
     }

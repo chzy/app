@@ -104,7 +104,6 @@ public class FreeDownListAdapter extends BaseAdapter {
 
                     if(btn.getProgress()==0||btn.getProgress()==-1){
 
-
                     new Thread(new Runnable() {
                         @Override
                         public void run() {

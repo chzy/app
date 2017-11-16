@@ -373,5 +373,14 @@ public class ShareUtils {
         return sp.getString("pwd", "");
     }
 
+    public String getInstalledUrl() {
+        return sp.getString("apk_path", "");
+    }
+
+    public void setInstalledUrl(String path) {
+        editor.putString("apk_path",path);
+        editor.commit();
+    }
+
 
 }
