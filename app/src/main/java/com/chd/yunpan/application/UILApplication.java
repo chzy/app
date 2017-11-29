@@ -39,6 +39,7 @@ import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -68,6 +69,7 @@ public class UILApplication extends Application {
         }
         filelistEntity = new FilelistEntity();
         super.onCreate();
+        CrashReport.initCrashReport(getApplicationContext(), "14a809b6e8", false);
         CrashHandler.getInstance().init(this);
         mInstance = this;
         mLockPatternUtils = new LockPatternUtils(this);

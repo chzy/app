@@ -220,8 +220,6 @@ public class LoginActivity extends Activity implements OnClickListener {
                 btn_login.setProgress(50);
 //				dialog.show();
                 isLogining = true;
-                //ExecRunable.execRun(new LoginThread());
-
                 ExecRunable.execRun(new Thread() {
                     @Override
                     public void run() {
@@ -408,7 +406,7 @@ public class LoginActivity extends Activity implements OnClickListener {
                     username = shareUtils.getUsername();
                     pwd = shareUtils.getPwd();
                 }
-                entity = th.loginAuth(username, pwd, 1);
+                entity = th.loginAuth(username, pwd, imei.hashCode());
 
                 if (entity.isSetToken()) {
                     msg.what = 0;

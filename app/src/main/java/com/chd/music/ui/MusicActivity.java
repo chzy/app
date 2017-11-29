@@ -57,7 +57,6 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_music);
         initTitle();
         initResourceId();
@@ -65,7 +64,6 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
         musicPath = new ShareUtils(this).getMusicFile().getPath();
         syncTask = new SyncTask(MusicActivity.this, FTYPE.MUSIC);
         onNewThreadRequest();
-        EventBus.getDefault().register(this);
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.

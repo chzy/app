@@ -19,6 +19,7 @@ import com.chd.proto.RetHead;
 import com.chd.yunpan.R;
 import com.chd.yunpan.utils.TimeCount;
 import com.chd.yunpan.view.circleimage.CircularProgressButton;
+import com.mob.MobSDK;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,7 +48,7 @@ public class FindPwdActivity extends Activity implements View.OnClickListener {
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
 		this.setContentView(R.layout.lz_find_password);
-		SMSSDK.initSDK(this, "f40f0f41f1d1", "8542792ca37ec28ce85a0ce024c957b2",true);
+		MobSDK.init(this, "22b36239ac552", "1d832cf5d4af820e48e9f6bd244dcf1c");
 		mRegEdAccountEditText = (EditText) findViewById(R.id.reg_ed_account);
 		mRegAccountLinearLayout = (LinearLayout) findViewById(R.id.reg_account);
 		mRegEdConfirmPwdEditText = (EditText) findViewById(R.id.reg_ed_confirm_pwd);
@@ -68,6 +69,8 @@ public class FindPwdActivity extends Activity implements View.OnClickListener {
 
 		time=new TimeCount(60*1000,1000,mBtnCodeCircularProgressButton);
 
+		// 如果希望在读取通信录的时候提示用户，可以添加下面的代码，并且必须在其他代码调用之前，否则不起作用；如果没这个需求，可以不加这行代码
+		SMSSDK.setAskPermisionOnReadContact(true);
 		EventHandler eh = new EventHandler() {
 			@Override
 			public void afterEvent(int event, int result, final Object data) {

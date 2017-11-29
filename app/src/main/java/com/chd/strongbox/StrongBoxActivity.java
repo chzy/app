@@ -123,7 +123,8 @@ public class StrongBoxActivity extends UILActivity {
 							public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
 							}
 						})
-						.send();
+						.callback(listener)
+						.start();
 
 				break;
 			case R.id.ll_three:
@@ -138,7 +139,8 @@ public class StrongBoxActivity extends UILActivity {
 							public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
 							}
 						})
-						.send();
+						.callback(listener)
+						.start();
 
 				break;
 			case R.id.ll_four:
@@ -153,7 +155,8 @@ public class StrongBoxActivity extends UILActivity {
 							public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
 							}
 						})
-						.send();
+						.callback(listener)
+						.start();
 
 				break;
 			case R.id.ll_five:
@@ -167,7 +170,8 @@ public class StrongBoxActivity extends UILActivity {
 							public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
 							}
 						})
-						.send();
+						.callback(listener)
+						.start();
 
 				break;
 			case R.id.ll_six:
@@ -182,7 +186,8 @@ public class StrongBoxActivity extends UILActivity {
 							public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
 							}
 						})
-						.send();
+						.callback(listener)
+						.start();
 
 				break;
 			case R.id.ll_seven:
@@ -197,7 +202,8 @@ public class StrongBoxActivity extends UILActivity {
 							public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
 							}
 						})
-						.send();
+						.callback(listener)
+						.start();
 				break;
 			case R.id.ll_eight:
 				//记事本
@@ -211,7 +217,8 @@ public class StrongBoxActivity extends UILActivity {
 							public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
 							}
 						})
-						.send();
+						.callback(listener)
+						.start();
 				break;
 			case R.id.ll_nine:
 				ToastUtils.toast(this, "敬请期待");

@@ -3,7 +3,6 @@ package com.chd.yunpan.ui;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -46,11 +45,7 @@ public class MyspaceActivity extends UILActivity implements OnClickListener, OnI
 	private String space;
 	List<MySpaceBean> meumList = new ArrayList<MySpaceBean>();
 
-	private Handler handler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
-			mGvSpace.setAdapter(new MenuGridAdapter(MyspaceActivity.this, meumList));
-		}
-	};
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +55,8 @@ public class MyspaceActivity extends UILActivity implements OnClickListener, OnI
 
 		initTitle();
 		initResourceId();
-		initListener();
 		initData();
+		initListener();
 	}
 
 	private void initData() {
@@ -81,7 +76,7 @@ public class MyspaceActivity extends UILActivity implements OnClickListener, OnI
 		meumList.add(mySpaceBean4);
 		meumList.add(mySpaceBean5);
 
-		handler.sendEmptyMessage(0);
+		mGvSpace.setAdapter(new MenuGridAdapter(MyspaceActivity.this, meumList));
 
 		mTvSpaceNumber.setText(space);
 	}

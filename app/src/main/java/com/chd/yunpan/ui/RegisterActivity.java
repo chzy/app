@@ -20,6 +20,7 @@ import com.chd.yunpan.R;
 import com.chd.yunpan.utils.TimeCount;
 import com.chd.yunpan.view.circleimage.CircularProgressButton;
 import com.google.gson.Gson;
+import com.mob.MobSDK;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,22 +61,14 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 	private TextView mTvTitle;
 	private CircularProgressButton mBtnCodeCircularProgressButton;
 
-	/**
-	 * ATTENTION: This was auto-generated to implement the App Indexing API.
-	 * See https://g.co/AppIndexing/AndroidStudio for more information.
-	 */
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
-		SMSSDK.initSDK(this, "f40f0f41f1d1", "8542792ca37ec28ce85a0ce024c957b2",true);
+		MobSDK.init(this, "22b36239ac552", "1d832cf5d4af820e48e9f6bd244dcf1c");
 		initView();
 		initListener();
-
-
-		// ATTENTION: This was auto-generated to implement the App Indexing API.
-		// See https://g.co/AppIndexing/AndroidStudio for more information.
 	}
 
 	private TimeCount time;
