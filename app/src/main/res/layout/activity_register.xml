@@ -113,7 +113,6 @@
             android:layout_width="100dp"
             android:layout_height="45dp"
             android:layout_marginLeft="30dp"
-
             android:textColor="@color/white"
             android:textSize="13sp"
             app:cpb_cornerRadius="30dp"

@@ -21,12 +21,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chd.TClient;
 import com.chd.contacts.vcard.StringUtils;
 import com.chd.proto.LoginResult;
+import com.chd.proto.RetHead;
 import com.chd.proto.VersionResult;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
@@ -35,16 +37,24 @@ import com.chd.yunpan.net.NetworkUtils;
 import com.chd.yunpan.share.ShareUtils;
 import com.chd.yunpan.utils.AppUtils;
 import com.chd.yunpan.utils.Logs;
+import com.chd.yunpan.utils.TimeCount;
 import com.chd.yunpan.utils.ToastUtils;
 import com.chd.yunpan.utils.update.UpdateAppUtils;
 import com.chd.yunpan.utils.update.VersionModel;
 import com.chd.yunpan.view.circleimage.CircularProgressButton;
+import com.mob.MobSDK;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
 import com.yanzhenjie.permission.RationaleListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
+
+import cn.smssdk.EventHandler;
+import cn.smssdk.SMSSDK;
 
 
 public class LoginActivity extends Activity implements OnClickListener {
@@ -62,7 +72,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
     private Button show;
     private boolean switcherState = false;
-    private ImageView mgb = null;
+//    private ImageView mgb = null;
 
     private boolean isLogining = false;
     private boolean f = true;
@@ -94,6 +104,12 @@ public class LoginActivity extends Activity implements OnClickListener {
                     Logs.log(msg.obj.toString());
                     ToastUtils.toast(LoginActivity.this, msg.obj.toString());
                     break;
+                case 3:
+                    btn_login.setProgress(-1);
+                    loginHandler.sendEmptyMessageDelayed(2, 2000);
+                    ToastUtils.toast(LoginActivity.this, msg.obj.toString());
+                    ll_smss_code.setVisibility(View.VISIBLE);
+                    break;
                 case 2:
                     btn_login.setProgress(0);
                     break;
@@ -105,6 +121,10 @@ public class LoginActivity extends Activity implements OnClickListener {
     };
     private String verName;
     private static final int REQUEST_CODE_PERMISSION_SD = 100;
+    private EditText et_Code;
+    private CircularProgressButton btn_code;
+    private TimeCount time;
+    private LinearLayout ll_smss_code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +185,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         }).start();
         initViews();
         setListener();
+        initCode();
         dialog = new ProgressDialog(LoginActivity.this);
 
         Intent intent = getIntent();
@@ -191,10 +212,94 @@ public class LoginActivity extends Activity implements OnClickListener {
 
     }
 
+    private void initCode(){
+        EventHandler eh = new EventHandler() {
+
+
+            @Override
+            public void afterEvent(int event, int result, final Object data) {
+                Log.d("lmj", result + "");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(dialog!=null&&dialog.isShowing()){
+                            dialog.dismiss();
+                        }
+                    }
+                });
+                if (result == SMSSDK.RESULT_COMPLETE) {
+                    //回调完成
+                    if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
+                        //提交验证码成功
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(LoginActivity.this, "提交验证码成功", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                    } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
+                        //获取验证码成功
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                Toast.makeText(LoginActivity.this, "获取验证码成功", Toast.LENGTH_SHORT).show();
+                                time.start();
+                            }
+                        });
+
+
+                    } else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {
+                        //返回支持发送验证码的国家列表
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(LoginActivity.this, "支持国家成功", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+
+                    }
+                } else {
+//					Log.d("liumj",((Throwable)data).getLocalizedMessage());
+//					Log.d("liumj",((Throwable)data).getMessage());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                JSONObject obj = new JSONObject(((Throwable)data).getLocalizedMessage());
+                                String msg = obj.getString("detail");
+                                Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
+                            } catch (JSONException e) {
+
+                            }
+
+                        }
+                    });
+//					((Throwable) data).printStackTrace();
+                }
+            }
+        };
+        SMSSDK.registerEventHandler(eh);
+    }
+
     String imei = "";
 
     private void setListener() {
 
+        MobSDK.init(this, "22b36239ac552", "1d832cf5d4af820e48e9f6bd244dcf1c");
+        time = new TimeCount(60 * 1000, 1000, btn_code);
+        btn_code.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String phone = et_name.getText().toString();
+                dialog=new ProgressDialog(LoginActivity.this);
+                dialog.setMessage("正在获取验证码");
+                dialog.show();
+                SMSSDK.getVerificationCode("86", phone);
+            }
+        });
         btn_login.setIndeterminateProgressMode(true);
         btn_login.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -210,13 +315,14 @@ public class LoginActivity extends Activity implements OnClickListener {
                     share(et_pwd.getId());
                     return;
                 }
-
+                if(ll_smss_code.getVisibility()==View.VISIBLE&&et_Code.getText().toString().length()==0){
+                    share(et_Code.getId());
+                    return;
+                }
                 if (!NetworkUtils.isNetworkAvailable(LoginActivity.this)) {
                     ToastUtils.toast(LoginActivity.this, "网络开小差了!!!");
                     return;
                 }
-
-
                 btn_login.setProgress(50);
 //				dialog.show();
                 isLogining = true;
@@ -226,29 +332,52 @@ public class LoginActivity extends Activity implements OnClickListener {
                         Message msg = new Message();
                         LoginResult entity = null;
                         try {
-                            //new TClient();
                             String pwd = et_pwd.getText().toString();
                             String username = et_name.getText().toString();
+                            String code = et_Code.getText().toString();
                             TClient th = TClient.getinstance();
                             if (shareUtils.isAutoLogin()) {
                                 username = shareUtils.getUsername();
                                 pwd = shareUtils.getPwd();
 
                             }
-                            entity = th.loginAuth(username, pwd, imei.hashCode());
-                            if (entity.isSetToken()) {
-                                msg.what = 0;
-                                msg.obj = entity;
-
-                                //loginEntity 里面有用户容量,多少空间等属性. 需要显示在 Myspace里面
-                                shareUtils.setLoginEntity(entity);
-
-
-                            } else {
-                                msg.what = -1;
-                                msg.obj = "验证失败";
+                            if(ll_smss_code.getVisibility()==View.VISIBLE){
+                                RetHead resetimie = th.Resetimie(imei, pwd, code);
+                                if(resetimie.getRet().getValue()==0){
+                                    entity = th.loginAuth(username, pwd, imei);
+                                    if (entity.isSetToken()) {
+                                        msg.what = 0;
+                                        msg.obj = entity;
+                                        //loginEntity 里面有用户容量,多少空间等属性. 需要显示在 Myspace里面
+                                        shareUtils.setLoginEntity(entity);
+                                    }else if(entity.getResult().getRet().getValue() == 10) {
+                                        //IMEI号错误
+                                        msg.what = 3;
+                                        msg.obj = "已绑定其他手机，请输入验证码重新绑定";
+                                    }else {
+                                        msg.what = -1;
+                                        msg.obj = "验证失败";
+                                    }
+                                }else{
+                                    msg.what = -1;
+                                    msg.obj = "登录异常,请稍候再试";
+                                }
+                            }else{
+                                entity = th.loginAuth(username, pwd, imei);
+                                if (entity.isSetToken()) {
+                                    msg.what = 0;
+                                    msg.obj = entity;
+                                    //loginEntity 里面有用户容量,多少空间等属性. 需要显示在 Myspace里面
+                                    shareUtils.setLoginEntity(entity);
+                                }else if(entity.getResult().getRet().getValue() == 10) {
+                                    //IMEI号错误
+                                    msg.what = 3;
+                                    msg.obj = "已绑定其他手机，请输入验证码重新绑定";
+                                }else {
+                                    msg.what = -1;
+                                    msg.obj = "验证失败";
+                                }
                             }
-
                         } catch (Exception e) {
                             msg.what = -1;
                             msg.obj = "登录异常,请稍候再试";
@@ -296,12 +425,12 @@ public class LoginActivity extends Activity implements OnClickListener {
             }
         });
 
-        mgb.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switcherChange();
-            }
-        });
+//        mgb.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                switcherChange();
+//            }
+//        });
     }
 
     @Override
@@ -328,22 +457,24 @@ public class LoginActivity extends Activity implements OnClickListener {
         startActivity(i);
         finish();
     }
-
-    private void switcherChange() {
-        switcherState = !switcherState;
-        if (switcherState) {
-            mgb.setImageResource(R.drawable.check_on);
-        } else {
-            mgb.setImageResource(R.drawable.check_off);
-        }
-    }
+//
+//    private void switcherChange() {
+//        switcherState = !switcherState;
+//        if (switcherState) {
+//            mgb.setImageResource(R.drawable.check_on);
+//        } else {
+//            mgb.setImageResource(R.drawable.check_off);
+//        }
+//    }
 
     private void initViews() {
         btn_login = (CircularProgressButton) findViewById(R.id.log_btn_log);
+        btn_code = (CircularProgressButton) findViewById(R.id.log_btn_code);
         et_name = (EditText) findViewById(R.id.log_name);
+        ll_smss_code = (LinearLayout) findViewById(R.id.ll_smss_code);
         et_pwd = (EditText) findViewById(R.id.log_pwd);
+        et_Code = (EditText) findViewById(R.id.login_et_code);
         tv_forgot = (TextView) findViewById(R.id.log_tv_forgrt);
-        mgb = (ImageView) this.findViewById(R.id.tv_forget_password);
         show = (Button) findViewById(R.id.log_btn_show);
         TextView ll_head_help = (TextView) findViewById(R.id.ll_head_help);
         TextView register = (TextView) findViewById(R.id.log_tv_register);
@@ -356,7 +487,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         if (shareUtils.isAutoLogin()) {
             et_name.setText(shareUtils.getUsername());
             et_pwd.setText(shareUtils.getPwd());
-            switcherChange();
+//            switcherChange();
         }
 
     }
@@ -391,6 +522,7 @@ public class LoginActivity extends Activity implements OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        SMSSDK.unregisterAllEventHandler();
     }
 
     class LoginThread extends Thread {
@@ -406,7 +538,7 @@ public class LoginActivity extends Activity implements OnClickListener {
                     username = shareUtils.getUsername();
                     pwd = shareUtils.getPwd();
                 }
-                entity = th.loginAuth(username, pwd, imei.hashCode());
+                entity = th.loginAuth(username, pwd, imei);
 
                 if (entity.isSetToken()) {
                     msg.what = 0;
