@@ -101,7 +101,6 @@ public class LoginActivity extends Activity implements OnClickListener {
                 case -1:
                     btn_login.setProgress(-1);
                     loginHandler.sendEmptyMessageDelayed(2, 2000);
-                    Logs.log(msg.obj.toString());
                     ToastUtils.toast(LoginActivity.this, msg.obj.toString());
                     break;
                 case 3:
@@ -132,6 +131,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         setContentView(R.layout.activity_login);
         verName = getVersion();
         shareUtils = new ShareUtils(this);
+
         AndPermission.with(this)
                 .requestCode(REQUEST_CODE_PERMISSION_SD)
                 .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_PHONE_STATE)
@@ -342,7 +342,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
                             }
                             if(ll_smss_code.getVisibility()==View.VISIBLE){
-                                RetHead resetimie = th.Resetimie(imei, pwd, code);
+                                RetHead resetimie = th.Resetimie(imei, username, code);
                                 if(resetimie.getRet().getValue()==0){
                                     entity = th.loginAuth(username, pwd, imei);
                                     if (entity.isSetToken()) {

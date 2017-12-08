@@ -75,6 +75,11 @@ public class UILApplication extends Application {
         mLockPatternUtils = new LockPatternUtils(this);
         initImageLoader(getApplicationContext());
         initDownUP(getApplicationContext());
+        try {
+            TClient tClient=new TClient(new String[]{"http://221.7.13.207:8079/chdserver.php"});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         CloseableHttpClient httpClient = HttpClients.createSystem();
         // application 初始化
         FunctionOptions options = new FunctionOptions.Builder()
