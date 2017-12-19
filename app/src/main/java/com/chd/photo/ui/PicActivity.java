@@ -286,6 +286,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
                         public void run() {
                             localList.clear();
                             cloudUnits.clear();
+                            cloudList.clear();
                             onNewThreadRequest(false);
                         }
                     }, 500);

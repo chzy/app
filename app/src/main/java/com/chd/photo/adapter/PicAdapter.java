@@ -41,6 +41,14 @@ public class PicAdapter<E extends FileInfo> extends BaseQuickAdapter<List<E>, Ba
         this.showSelect = showSelect;
     }
 
+    public boolean isbIsUbkList() {
+        return bIsUbkList;
+    }
+
+    public void setbIsUbkList(boolean bIsUbkList) {
+        this.bIsUbkList = bIsUbkList;
+    }
+
     private boolean showSelect;
 
     public void setShowSelect(boolean showSelect) {

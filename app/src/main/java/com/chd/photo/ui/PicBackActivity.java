@@ -2,7 +2,6 @@ package com.chd.photo.ui;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -56,6 +55,7 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
         right.setOnClickListener(this);
         mPicUploadTextView.setOnClickListener(this);
         adapter = new PicAdapter(PicBackActivity.this, localList, null, false, true);
+        adapter.setbIsUbkList(true);
         mPicRecyclerView.setAdapter(adapter);
         mPicRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mPicRecyclerView.setChangeScrollStateCallback(new SuperRefreshRecyclerView.ChangeScrollStateCallback() {
@@ -64,18 +64,14 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                 switch (c) {
                     case 2:
                         Glide.with(PicBackActivity.this).pauseRequests();
-                        Log.d("AAAAAAAAAAAAAAA", "暂停加载" + c);
 
                         break;
                     case 0:
                         Glide.with(PicBackActivity.this).resumeRequests();
-                        Log.d("AAAAAAAAAAAAAAA", "恢复加载" + c);
 
                         break;
                     case 1:
                         Glide.with(PicBackActivity.this).resumeRequests();
-                        Log.d("AAAAAAAAAAAAAAA", "恢复加载" + c);
-
                         break;
                 }
             }
@@ -98,7 +94,6 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                 if (syncTask == null)
                     syncTask = new SyncTask(PicBackActivity.this, FTYPE.PICTURE);
                 //未备份文件 ==  backedlist . removeAll(localist);
-
                 List<FileInfo> cloudUnits = syncTask.getCloudUnits(0, 10000);
                 syncTask.analyPhotoUnits(cloudUnits, filelistEntity);
                 List<FileLocal> localUnits = filelistEntity.getLocallist();
@@ -140,7 +135,6 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
     public void onEventMainThread(Object obj) {
         super.onEventMainThread(obj);
         mPicUploadTextView.setText(String.format("备份（%d）", obj));
-
     }
 
     int count = 0;
