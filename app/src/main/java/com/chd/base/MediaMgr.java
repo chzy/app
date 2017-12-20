@@ -341,7 +341,6 @@ public class MediaMgr {
         //filelistEntity.setLocallist(LocalUnits);
         t1 = System.currentTimeMillis();
         long z = t1 - t0;
-        Log.i("111111111", "cost : " + (z));
         return;
     }
 
@@ -364,7 +363,10 @@ public class MediaMgr {
                 File file = new File(c.getString(COLUMN_PATH));
                 String objname = file.getName();
                 String path = file.getParent();
+                fileLocal.setFilesize(file.length());
+                fileLocal.setFtype(FTYPE.NORMAL);
                 fileLocal.setLastModified((int) c.getLong(COLUMN_DATE));
+//                int pathid = c.getInt(COLUMN_ID);
                 int pathid = filelistEntity.addFilePath(path);
                 fileLocal.setPathid(pathid);
                 file = null;
@@ -441,7 +443,6 @@ public class MediaMgr {
             Log.e("", "invalid uri, category:" + fc.name());
             return ret;
         }
-
         String[] columns = new String[]{
                 MediaStore.Files.FileColumns._ID, MediaStore.Files.FileColumns.DATA, MediaStore.Files.FileColumns.SIZE, MediaStore.Files.FileColumns.DATE_MODIFIED
         };
@@ -451,7 +452,6 @@ public class MediaMgr {
             if (fileInfo0.getObjid() != null)
                 Log.d(TAG, "is a  remote obj");
             fileInfo0.setObjid(MediaFileUtil.getNameFromFilepath(cursor.getString(COLUMN_PATH)));
-
             fileInfo0.setFilesize(cursor.getInt(COLUMN_SIZE));
             fileInfo0.setLastModified(cursor.getInt(COLUMN_DATE));
             fileInfo0.setSysid(sysid);
@@ -462,53 +462,6 @@ public class MediaMgr {
         cursor.close();
         return ret;
     }
-//
-//	public List<PicDBitem> getUploadUnits(){
-//		open();
-//		Cursor cursor = db.rawQuery("select sysid,path,time from upload_finish union  select sysid,time from upload_inter order by time desc", null);
-//		//Cursor cursor = db.rawQuery("select sysid,time from upload_finish, upload_inter order by time desc", null);
-//		List<PicDBitem> lists = new ArrayList<PicDBitem>();
-//		while (cursor.moveToNext()) {
-//			PicDBitem item=new PicDBitem();
-//			item.setSysid(cursor.getInt(0));
-//			item.setPath(cursor.getString(1));
-//			lists.add(item);
-//		}
-//		cursor.close();
-//		close();
-//		//Collections.sort(lists,new SortBydesc());
-//		return lists;
-//	}
-
-    public List<Integer> getUploadUnits_() {
-        open();
-        Cursor cursor = db.rawQuery("select sysid,path,time from upload_finish where type=? union  select sysid,time from upload_inter where type=? order by time desc", new String[]{"" + this._ftype, "" + this._ftype});
-        //Cursor cursor = db.rawQuery("select sysid,time from upload_finish, upload_inter order by time desc", null);
-        List<Integer> lists = new ArrayList<Integer>();
-        while (cursor.moveToNext()) {
-            lists.add(cursor.getInt(0));
-        }
-        cursor.close();
-        close();
-        //Collections.sort(lists,new SortBydesc());
-        return lists;
-    }
-
-//	public List<PicDBitem> getdownoadUnits(){
-//		open();
-//		Cursor cursor = db.rawQuery("select path,time from download_finish where type=? order by time desc", new String[]{""/*+wheresection*/});
-//		//Cursor cursor = db.rawQuery("select sysid,time from upload_finish, upload_inter order by time desc", null);
-//		List<PicDBitem> lists = new ArrayList<PicDBitem>();
-//		while (cursor.moveToNext()) {
-//			PicDBitem item=new PicDBitem();
-//			item.setPath(cursor.getString(0));
-//			lists.add(item);
-//		}
-//		cursor.close();
-//		close();
-//		//Collections.sort(lists,new SortBydesc());
-//		return lists;
-//	}
 
     public FileInfo0 getPiceParam(int picId) {
         return null;
@@ -565,13 +518,16 @@ public class MediaMgr {
                 uri = MediaStore.Files.getContentUri(volumeName);
                 break;
             case Music:
-                uri = MediaStore.Audio.Media.getContentUri(volumeName);
+//                uri = MediaStore.Audio.Media.getContentUri(volumeName);
+                uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
                 break;
             case Video:
-                uri = MediaStore.Video.Media.getContentUri(volumeName);
+//                uri = MediaStore.Video.Media.getContentUri(volumeName);
+                uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
                 break;
             case Picture:
-                uri = MediaStore.Images.Media.getContentUri(volumeName);
+//                uri = MediaStore.Images.Media.getContentUri(volumeName);
+                uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
                 break;
             default:
                 uri = null;

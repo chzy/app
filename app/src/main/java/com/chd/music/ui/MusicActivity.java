@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
-import com.chd.base.Entity.MessageEvent;
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.backend.SyncTask;
 import com.chd.contacts.vcard.StringUtils;
@@ -24,9 +23,6 @@ import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.share.ShareUtils;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,13 +76,6 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
             }
         });
         thread.start();
-    }
-
-    @Subscribe
-    public void onEventMainThread(MessageEvent event) {
-        if (event.type == FTYPE.MUSIC) {
-//            onNewThreadRequest();
-        }
     }
 
     FilelistEntity filelistEntity;
@@ -177,12 +166,14 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
             switch (requestCode) {
                 case 0x99:
                     //删除成功了
+                    cloudList.clear();
                     cloudUnits.clear();
                     mTvNumber.setText("未备份音乐0首");
                     onNewThreadRequest();
                     break;
                 case 0x02:
                     //有备份问题
+                    cloudList.clear();
                     cloudUnits.clear();
                     mTvNumber.setText("未备份音乐0首");
                     onNewThreadRequest();
@@ -194,6 +185,5 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 }

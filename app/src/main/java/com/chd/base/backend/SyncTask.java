@@ -129,10 +129,9 @@ public class SyncTask {
 	}
 
 	public FilelistEntity analyOtherUnits(List<FileInfo> remotelist, FilelistEntity filelistEntity) {
-		//filelistEntity = new FilelistEntity();
 		dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Other, new String[]{"pdf", "xls", "doc", "docx"}, true, filelistEntity);
 		dbManager.anlayLocalUnits(remotelist, filelistEntity);
-		//filelistEntity.setLocallist(dbManager.getLocalUnits());
+//		filelistEntity.setLocallist(dbManager.getLocalUnits());
 		return filelistEntity;
 	}
 

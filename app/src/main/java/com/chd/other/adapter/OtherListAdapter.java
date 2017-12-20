@@ -50,7 +50,7 @@ public class OtherListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         MenuItem item = null;
         if (convertView == null) {
@@ -93,11 +93,7 @@ public class OtherListAdapter extends BaseAdapter {
                 boolean check=((CheckBox)view).isChecked();
                 int pos= (Integer) view.getTag();
                 FileInfo0 checkItem = _list.get(pos);
-                for (FileInfo0 info :
-                        checkList) {
-                    //info.setIsChecked(false);
-                }
-                //checkItem.setIsChecked(check);
+//                checkItem.set(check);
                 if(check){
                     //选中
                     checkList.add(checkItem);

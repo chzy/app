@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.chd.MediaMgr.utils.MFileFilter;
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
-import com.chd.base.Ui.ActiveProcess;
+import com.chd.base.UILActivity;
 import com.chd.base.Ui.DownListActivity;
 import com.chd.base.backend.SyncTask;
 import com.chd.contacts.vcard.StringUtils;
@@ -27,12 +27,14 @@ import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
+import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.share.ShareUtils;
+import com.chd.yunpan.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class OtherActivity extends ActiveProcess implements OnClickListener {
+public class OtherActivity extends UILActivity implements OnClickListener {
 
     List<FileInfo0> tmpFileInfo = new ArrayList<FileInfo0>();
     String path;
@@ -51,30 +53,40 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
     private OtherListAdapter adapter;
     private Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(android.os.Message msg) {
-
-            tmpFileInfo.clear();
-            if (isLocal) {
-                if (!StringUtils.isNullOrEmpty(filetype) && !FileInfoL.FILE_TYPE_ALL.equals(filetype)) {
-                    for (FileInfo0 fileInfo : mFileLocalList) {
-                        if (fileInfo.getObjid().contains(filetype)) {
-                            tmpFileInfo.add(fileInfo);
+            switch (msg.what) {
+                case 998:
+                    ToastUtils.toast(OtherActivity.this,"执行成功");
+                    dismissWaitDialog();
+                    dismissDialog();
+                    onNewThreadRequest();
+                    break;
+                default:
+                    tmpFileInfo.clear();
+                    if (isLocal) {
+                        if (!StringUtils.isNullOrEmpty(filetype) && !FileInfoL.FILE_TYPE_ALL.contains(filetype)) {
+                            for (FileInfo0 fileInfo : mFileLocalList) {
+                                if (fileInfo.getObjid().contains(filetype)) {
+                                    tmpFileInfo.add(fileInfo);
+                                }
+                            }
+                        } else {
+                            tmpFileInfo.addAll(mFileLocalList);
+                        }
+                    } else {
+                        if (!StringUtils.isNullOrEmpty(filetype) && !FileInfoL.FILE_TYPE_ALL.contains(filetype)) {
+                            for (FileInfo0 fileInfo : mFileInfoList) {
+                                if (fileInfo.getObjid().contains(filetype)) {
+                                    tmpFileInfo.add(fileInfo);
+                                }
+                            }
+                        } else {
+                            tmpFileInfo.addAll(mFileInfoList);
                         }
                     }
-                } else {
-                    tmpFileInfo.addAll(mFileLocalList);
-                }
-            } else {
-                if (!StringUtils.isNullOrEmpty(filetype) && !FileInfoL.FILE_TYPE_ALL.equals(filetype)) {
-                    for (FileInfo0 fileInfo : mFileInfoList) {
-                        if (fileInfo.getObjid().contains(filetype)) {
-                            tmpFileInfo.add(fileInfo);
-                        }
-                    }
-                } else {
-                    tmpFileInfo.addAll(mFileInfoList);
-                }
+                    adapter.notifyDataSetChanged();
+                    break;
             }
-            adapter.notifyDataSetChanged();
+
         }
     };
 
@@ -86,6 +98,8 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
     private SyncTask syncTask;
     private TextView mTvNumber;
     private Button mBtnDown;
+    private int count;
+    private ArrayList<FileLocal> mFileLocalLists = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,45 +143,59 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
         thread.start();
     }
 
+    FilelistEntity filelistEntity;
+
     private void initData(List<FileInfo> cloudUnits) {
         if (cloudUnits == null) {
             System.out.print("query remote failed");
         }
-
-        FilelistEntity filelistEntity = syncTask.analyUnits(cloudUnits);
-//        cloudUnits  是网存的文件
-//        cloudUnits.clear();
-//        cloudUnits = null;
+        filelistEntity = UILApplication.getFilelistEntity();
+        filelistEntity = syncTask.analyOtherUnits(cloudUnits, filelistEntity);
+        //显示的时候过滤文件类型
+        MFileFilter fileFilter = new MFileFilter();
+        fileFilter.setCustomCategory(new String[]{FileInfoL.FILE_TYPE_DOC, FileInfoL.FILE_TYPE_DOCX, FileInfoL.FILE_TYPE_PDF, FileInfoL.FILE_TYPE_PPT, FileInfoL.FILE_TYPE_XLS}, true);
+        if (cloudUnits != null) {
+            for (FileInfo f :
+                    cloudUnits) {
+                FileInfo0 info0 = new FileInfo0(f);
+                if (!fileFilter.contains(info0.getObjid())) {
+                  continue;
+                }
+                int sysid = filelistEntity.queryLocalSysid(info0.getObjid());
+                if (sysid > 0) {
+                    info0.setSysid(sysid);
+                    info0.setFilePath(filelistEntity.getFilePath(sysid));
+                } else {
+                    info0.setFilePath(path + "/" + info0.getObjid());
+                    info0.setSysid(sysid);
+                }
+                mFileInfoList.add(info0);
+            }
+        }
         List<FileLocal> fileLocals = filelistEntity.getLocallist();
         mTvNumber.setText("未备份文件" + filelistEntity.getUnbakNumber() + "个");
 
-//        cloudUnits = filelistEntity.getBklist();
-        //显示的时候过滤文件类型
-        MFileFilter fileFilter = new MFileFilter();
-        fileFilter.setCustomCategory(new String[]{FileInfoL.FILE_TYPE_DOC, FileInfoL.FILE_TYPE_PDF, FileInfoL.FILE_TYPE_PPT, FileInfoL.FILE_TYPE_XLS}, true);
 
-//        for (FileInfo item : cloudUnits) {
-//            // mFileInfoList.add(item);
-//            if (!fileFilter.contains(item.getObjid()))
-//                continue;
-//            //已备份文件
-//            // if (syncTask.haveLocalCopy(item)) {
-//            //      String path = item.getFilePath();
-//            // }
-//
-//        }
         if (fileLocals != null) {
             for (FileLocal fileLocal : fileLocals) {
                 if (fileLocal.bakuped)
                     continue;
-
-                FileInfo0 fileInfo0 = syncTask.queryLocalInfo(fileLocal.getPathid());
-                if (fileInfo0 == null) {
-                    continue;
+                FileInfo0 fileInfo0 = new FileInfo0();
+                fileInfo0.setObjid(fileLocal.getObjid());
+                fileInfo0.setFilesize(fileLocal.getFilesize());
+                fileInfo0.setLastModified(fileLocal.getLastModified());
+                fileInfo0.setFtype(FTYPE.NORMAL);
+                int sysid = filelistEntity.queryLocalSysid(fileLocal.getObjid());
+                if (sysid > 0) {
+                    fileInfo0.setSysid(sysid);
+                    fileInfo0.setFilePath(filelistEntity.getFilePath(fileLocal.getPathid()));
+                } else {
+                    fileInfo0.setFilePath(path + "/" + fileLocal.getObjid());
+                    fileInfo0.setSysid(sysid);
                 }
-
                 if (fileFilter.contains(fileInfo0.getFilePath())) {
                     mFileLocalList.add(fileInfo0);
+                    mFileLocalLists.add(fileLocal);
                 }
             }
         }
@@ -248,19 +276,17 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        for (final FileInfo0 info :
+                        for (final FileInfo0 i :
                                 checkList) {
-                            if (syncTask != null && info != null) {
-
-                                boolean delS = syncTask.DelRemoteObj(info);
+                            if (syncTask != null && i != null) {
+                                boolean delS = syncTask.DelRemoteObj(i);
                                 if (delS) {
-
                                     handler.post(new Runnable() {
                                         @Override
 
                                         public void run() {
                                             Toast.makeText(OtherActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
-                                            tmpFileInfo.remove(info);
+                                            tmpFileInfo.remove(i);
                                             adapter.notifyDataSetChanged();
                                         }
                                     });
@@ -284,42 +310,14 @@ public class OtherActivity extends ActiveProcess implements OnClickListener {
                 checkList = adapter.getCheckList();
                 if (isLocal) {
                     //上传
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            for (final FileInfo0 info :
-                                    checkList) {
-                                if (info.getSysid() <= 0) {
-                                    info.setFilePath(path + "/" + info.getObjid());
-                                }
-
-                                if (syncTask != null && info != null) {
-                                    syncTask.upload(info, OtherActivity.this, true, null);
-                                }
-                            }
-
-
-                        }
-                    }).start();
-
+                    if (checkList.isEmpty()) {
+                        ToastUtils.toast(this, "请选择上传文件");
+                        return;
+                    }
+                    syncTask.uploadList(checkList, OtherActivity.this, handler);
                 } else {
                     //下载
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            for (final FileInfo0 info :
-                                    checkList) {
-                                if (info.getSysid() <= 0) {
-                                    info.setFilePath(path + "/" + info.getObjid());
-                                }
-
-                                if (syncTask != null && info != null) {
-                                    syncTask.download(info, OtherActivity.this, true, null);
-                                }
-                            }
-                        }
-                    }).start();
+                    syncTask.downloadList(checkList, OtherActivity.this, handler);
 
 
                 }

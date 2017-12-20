@@ -17,8 +17,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.chd.base.Entity.FileLocal;
-import com.chd.base.Entity.MessageEvent;
 import com.chd.base.UILActivity;
 import com.chd.base.Ui.DownListActivity;
 import com.chd.base.backend.SyncTask;
@@ -26,12 +26,14 @@ import com.chd.music.adapter.MusicBackupAdapter;
 import com.chd.music.backend.MediaUtil;
 import com.chd.music.entity.MusicBackupBean;
 import com.chd.proto.FTYPE;
-import com.chd.proto.FileInfo0;
+import com.chd.service.RPCchannel.upload.FileUploadInfo;
+import com.chd.service.RPCchannel.upload.FileUploadManager;
+import com.chd.service.RPCchannel.upload.UploadOptions;
+import com.chd.service.RPCchannel.upload.listener.OnUploadListener;
+import com.chd.service.RPCchannel.upload.progressaware.ProgressBarAware;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
+import com.chd.yunpan.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,9 +47,9 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
     private Button mBtnBackup;
     private ListView mGvMusic;
 
-    private MusicBackupAdapter adapter = null;
     private List<MusicBackupBean> mMusicBackupList = new ArrayList<MusicBackupBean>();
 
+    private MusicBackupAdapter musicBackupAdapter;
     private Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(android.os.Message msg) {
             try {
@@ -61,7 +63,8 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
                 } else {
                     dismissDialog();
                     dismissWaitDialog();
-                    mGvMusic.setAdapter(new MusicBackupAdapter(MusicBackupActivity.this, mMusicBackupList));
+                     musicBackupAdapter = new MusicBackupAdapter(MusicBackupActivity.this, mMusicBackupList);
+                    mGvMusic.setAdapter(musicBackupAdapter);
                     mTvNumber.setText(String.format("共：%d首", mMusicBackupList.size()));
                 }
             } catch (Exception e) {
@@ -70,6 +73,7 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
 
         }
     };
+    private int count;
 
     private void processMsg(Message msg) {
         //删除
@@ -111,7 +115,6 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_music_backup);
-        EventBus.getDefault().register(this);
 
         syncTask = new SyncTask(this, FTYPE.MUSIC);
         initTitle();
@@ -127,15 +130,6 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
     }
 
     private boolean isUpdate = false;
-
-    @Subscribe
-    public void onEventMainThread(MessageEvent event) {
-        if (event.type == FTYPE.MUSIC) {
-//            isUpdate = true;
-//            mMusicBackupList.remove(uploadBean);
-//            handler.sendEmptyMessage(0);
-        }
-    }
 
 
     @Override
@@ -234,17 +228,47 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
             Toast.makeText(MusicBackupActivity.this, "请选择需要上传的文件", Toast.LENGTH_SHORT).show();
             return;
         }
-        List<FileInfo0> info0s = new ArrayList<>();
+        final List<FileLocal> info0s = new ArrayList<>();
         uploadList.clear();
         for (final MusicBackupBean musicBackupBean : mMusicBackupList) {
             if (musicBackupBean.isSelect()) {
                 uploadList.add(musicBackupBean);
-                FileInfo0 fileInfo0=new FileInfo0(musicBackupBean.getFileInfo0());
+                FileLocal fileInfo0=musicBackupBean.getFileInfo0();
                 info0s.add(fileInfo0);
             }
         }
-        syncTask.uploadList(info0s, this, handler);
+        FileUploadManager manager = FileUploadManager.getInstance();
+        boolean overwrite = true;
+        boolean resume = true;
+        UploadOptions options = new UploadOptions(overwrite, resume);
+        final MaterialDialog.Builder builder = new MaterialDialog.Builder(MusicBackupActivity.this);
+        builder.content("正在上传");
+        builder.progress(true, 100);
+        final MaterialDialog build = builder.build();
+        build.show();
+        count = 0;
+        for (FileLocal local :
+                info0s) {
+            local.setFtype(FTYPE.MUSIC);
+            manager.uploadFile(new ProgressBarAware(build), null, local, new OnUploadListener() {
+                @Override
+                public void onError(FileUploadInfo uploadData, int errorType, String msg) {
+                    ToastUtils.toast(MusicBackupActivity.this, "上传失败");
+                    build.dismiss();
+                }
 
+                @Override
+                public void onSuccess(FileUploadInfo uploadData, Object data) {
+                    build.dismiss();
+                    count++;
+                    if (count == info0s.size()) {
+                        ToastUtils.toast(MusicBackupActivity.this, "上传成功");
+                        setResult(RESULT_OK);
+                        onBackPressed();
+                    }
+                }
+            }, options);
+        }
     }
 
     @Override
@@ -254,16 +278,8 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
             musicBackupBean.setSelect(true);
         } else {
             musicBackupBean.setSelect(false);
-
         }
-        handler.sendEmptyMessage(0);
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
+        musicBackupAdapter.notifyDataSetChanged();
     }
 
     @Override

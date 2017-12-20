@@ -4,6 +4,7 @@ public class FileInfoL
 {
 	public static final String FILE_TYPE_ALL = "all";
 	public static final String FILE_TYPE_DOC = "doc";
+	public static final String FILE_TYPE_DOCX = "docx";
 	public static final String FILE_TYPE_XLS = "xls";
 	public static final String FILE_TYPE_PDF = "pdf";
 	public static final String FILE_TYPE_PPT = "ppt";
