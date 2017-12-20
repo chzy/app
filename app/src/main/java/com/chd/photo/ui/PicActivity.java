@@ -93,6 +93,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pic);
         bIsUbkList = false;
+        UILApplication.ClearFileEntity();
         imageLoader = ImageLoader.getInstance();
         initTitle();
         initResourceId();

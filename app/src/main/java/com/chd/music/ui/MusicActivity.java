@@ -57,6 +57,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
         initTitle();
         initResourceId();
         initListener();
+        UILApplication.ClearFileEntity();
         musicPath = new ShareUtils(this).getMusicFile().getPath();
         syncTask = new SyncTask(MusicActivity.this, FTYPE.MUSIC);
         onNewThreadRequest();

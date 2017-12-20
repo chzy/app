@@ -113,8 +113,12 @@ public class UILApplication extends Application {
 
     public static void ClearFileEntity() {
         if (filelistEntity != null) {
-            filelistEntity.getBklist().clear();
-            filelistEntity.getLocallist().clear();
+            if(filelistEntity.getBklist()!=null){
+                filelistEntity.getBklist().clear();
+            }
+            if(filelistEntity.getLocallist()!=null){
+                filelistEntity.getLocallist().clear();
+            }
         }
 
     }

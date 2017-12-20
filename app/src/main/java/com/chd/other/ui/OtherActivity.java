@@ -110,7 +110,7 @@ public class OtherActivity extends UILActivity implements OnClickListener {
 */
         setContentView(R.layout.activity_other);
 
-
+        UILApplication.ClearFileEntity();
         initTitle();
         initResourceId();
         initListener();
@@ -173,8 +173,6 @@ public class OtherActivity extends UILActivity implements OnClickListener {
             }
         }
         List<FileLocal> fileLocals = filelistEntity.getLocallist();
-        mTvNumber.setText("未备份文件" + filelistEntity.getUnbakNumber() + "个");
-
 
         if (fileLocals != null) {
             for (FileLocal fileLocal : fileLocals) {
@@ -199,6 +197,9 @@ public class OtherActivity extends UILActivity implements OnClickListener {
                 }
             }
         }
+        mTvNumber.setText("未备份文件" + mFileLocalList.size() + "个");
+
+
         handler.sendEmptyMessage(0);
     }
 
