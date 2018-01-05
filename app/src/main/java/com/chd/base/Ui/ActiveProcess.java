@@ -1,15 +1,19 @@
 package com.chd.base.Ui;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.chd.photo.ui.CustomProgressDialog;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zhy.autolayout.AutoLayoutActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by lxp1 on 2015/12/6.
@@ -22,12 +26,13 @@ public abstract class ActiveProcess extends AutoLayoutActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if (dialog == null) {
-            dialog = CustomProgressDialog.createDialog(this);
+            WeakReference<Activity> mWeakAct=new WeakReference<Activity>(this);
+            dialog = CustomProgressDialog.createDialog(mWeakAct.get());
             dialog.setCanceledOnTouchOutside(false);
             dialog.setCancelable(false);
         }
-        super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
 
     }
@@ -88,7 +93,6 @@ public abstract class ActiveProcess extends AutoLayoutActivity {
         @Override
         public void run() {
             if(dialog!=null){
-            Log.d("lmj", msg + ":" + progress);
             if (progress < max && dialog.isShowing()) {
                 dialog.setMessage(msg + progress + "/" + max);
             } else if (progress > 0 && !dialog.isShowing()) {
@@ -128,6 +132,19 @@ public abstract class ActiveProcess extends AutoLayoutActivity {
             dialog.dismiss();
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ImageLoader.getInstance().resume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ImageLoader.getInstance().pause();
+    }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(Object obj){

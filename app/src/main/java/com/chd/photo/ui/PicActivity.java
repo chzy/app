@@ -122,12 +122,12 @@ public class PicActivity extends UILActivity implements OnClickListener {
 
                     List<FileLocal> localUnits = filelistEntity.getLocallist();
 
-                    if (cloudUnits != null && !localUnits.isEmpty()) {
+                    if (cloudUnits != null && !cloudUnits.isEmpty()) {
                         List<FileInfo> local = new ArrayList<>();
-
                         int time = TimeUtils.getZeroTime(cloudUnits.get(0).getLastModified());
                         local.add(cloudUnits.get(0));
-                        for (int i = 1; i < cloudUnits.size(); i++) {
+                        for (int i = 1; i < cloudUnits.size(); i++)
+                        {
                             FileInfo fileInfo = cloudUnits.get(i);
 
                             if (fileInfo.lastModified <= ((cloudList.size() + 1) * 3 * 24 * 3600 + time)) {

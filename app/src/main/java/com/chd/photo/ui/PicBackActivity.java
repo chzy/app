@@ -8,7 +8,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.bumptech.glide.Glide;
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.UILActivity;
@@ -26,6 +25,7 @@ import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.utils.TimeUtils;
 import com.chd.yunpan.utils.ToastUtils;
 import com.chd.yunpan.view.SuperRefreshRecyclerView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,6 +38,7 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
     private RelativeLayout mPicBottomRelativeLayout;
     private ArrayList<ArrayList<FileLocal>> localList = new ArrayList();
     private PicAdapter adapter;
+    private ImageLoader instance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,30 +58,24 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
         adapter = new PicAdapter(PicBackActivity.this, localList, null, false, true);
         adapter.setbIsUbkList(true);
         mPicRecyclerView.setAdapter(adapter);
+       instance = ImageLoader.getInstance();
         mPicRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mPicRecyclerView.setChangeScrollStateCallback(new SuperRefreshRecyclerView.ChangeScrollStateCallback() {
-            @Override
-            public void change(int c) {
-                switch (c) {
-                    case 2:
-                        Glide.with(PicBackActivity.this).pauseRequests();
 
-                        break;
-                    case 0:
-                        Glide.with(PicBackActivity.this).resumeRequests();
-
-                        break;
-                    case 1:
-                        Glide.with(PicBackActivity.this).resumeRequests();
-                        break;
-                }
-            }
-        });
         onNewThreadRequest();
     }
 
     TextView right;
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
     private SyncTask syncTask;
     private FilelistEntity filelistEntity;

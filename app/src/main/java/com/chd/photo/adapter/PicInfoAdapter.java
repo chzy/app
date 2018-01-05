@@ -10,6 +10,7 @@ import com.chd.base.Entity.FileLocal;
 import com.chd.proto.FileInfo;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
+import com.chd.yunpan.utils.DensityUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
@@ -66,7 +67,8 @@ class PicInfoAdapter<T extends FileInfo> extends BaseQuickAdapter<T, BaseViewHol
             url = "ttrpc://" + item.getObjid();
             if (item instanceof FileLocal) {
                 url = "file://" + UILApplication.getFilelistEntity().getFilePath(((FileLocal) item).getPathid()) + "/" + item.getObjid();
-                Glide.with(mContext).load(url).placeholder(R.drawable.pic_test1).centerCrop().into((ImageView) helper.getView(R.id.iv_pic_info_photo));
+                int i = DensityUtil.dip2px(mContext, 90);
+                Glide.with(mContext).load(url).skipMemoryCache(true).placeholder(R.drawable.pic_test1).centerCrop().override(i,i).into((ImageView) helper.getView(R.id.iv_pic_info_photo));
             } else {
                 imageLoader.displayImage(url, (ImageView) helper.getView(R.id.iv_pic_info_photo), options, new SimpleImageLoadingListener());
             }

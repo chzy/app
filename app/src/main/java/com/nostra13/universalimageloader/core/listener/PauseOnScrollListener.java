@@ -20,6 +20,7 @@ import android.widget.AbsListView;
 import android.widget.GridView;
 import android.widget.ListView;
 
+import com.bumptech.glide.Glide;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
