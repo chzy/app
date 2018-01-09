@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.jakewharton.butterknife'
 android {
     compileSdkVersion 25
-    buildToolsVersion '26.0.2'
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.chd.yunpan"
@@ -31,9 +30,9 @@ android {
 
 
     productFlavors {
-        测试 {
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "test"]
-        }
+       测试 {
+           manifestPlaceholders = [UMENG_CHANNEL_VALUE: "test"]
+       }
         productFlavors.all {
             flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
         }
@@ -52,6 +51,11 @@ configurations.all {
     }
 }
 
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -62,8 +66,8 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     //运行时权限 https://github.com/yanzhenjie/AndPermission
     compile 'com.yanzhenjie:permission:1.1.2'
-    compile name: 'chdclnetapi-release', ext: 'aar'
-    compile name: 'thriftlib-debug', ext: 'aar'
+    //compile name: 'chdclnetapi-release', ext: 'aar'
+    // compile name: 'thriftlib-debug', ext: 'aar'
     compile name: 'SMSSDK-3.0.0', ext: 'aar'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.android.support:multidex:1.0.1'
@@ -77,8 +81,9 @@ dependencies {
     compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
     compile 'com.zhy:autolayout:1.3.6'
     compile 'com.linsea:universalvideoview:1.1.0@aar'
-
     compile 'com.liulishuo.filedownloader:library:1.6.4'
     compile 'com.github.iammert:MusicPlayerView:e3b937c729'
     compile 'com.github.LuckSiege.PictureSelector:picture_library:v1.5.7'
+    //compile 'com.github.User:Repo:Tag'
+    implementation project(':chdclnetapi')
 }
