@@ -67,6 +67,8 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
 		MobSDK.init(this, "22b36239ac552", "1d832cf5d4af820e48e9f6bd244dcf1c");
+
+
 		initView();
 		initListener();
 	}
@@ -189,6 +191,10 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 //					return;
 //				}
 				final String phone = mEdAccountEditText.getText().toString();
+				if(phone.length()!=11){
+					Toast.makeText(RegisterActivity.this, "请输入正确的手机号", Toast.LENGTH_SHORT).show();
+					return ;
+				}
 				dialog=new ProgressDialog(this);
 				dialog.setMessage("正在获取验证码");
 				dialog.show();
@@ -200,8 +206,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 				onBackPressed();
 				break;
 			case R.id.log_btn_log:
-
-
 				//登陆
 				final String name = mEdAccountEditText.getText().toString();
 				final String pass1 = mEdPwdEditText.getText().toString();

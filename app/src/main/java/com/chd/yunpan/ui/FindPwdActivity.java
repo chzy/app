@@ -49,6 +49,7 @@ public class FindPwdActivity extends Activity implements View.OnClickListener {
 		super.onCreate(arg0);
 		this.setContentView(R.layout.lz_find_password);
 		MobSDK.init(this, "22b36239ac552", "1d832cf5d4af820e48e9f6bd244dcf1c");
+
 		mRegEdAccountEditText = (EditText) findViewById(R.id.reg_ed_account);
 		mRegAccountLinearLayout = (LinearLayout) findViewById(R.id.reg_account);
 		mRegEdConfirmPwdEditText = (EditText) findViewById(R.id.reg_ed_confirm_pwd);
@@ -105,8 +106,6 @@ public class FindPwdActivity extends Activity implements View.OnClickListener {
 								Toast.makeText(FindPwdActivity.this, "支持国家成功", Toast.LENGTH_SHORT).show();
 							}
 						});
-
-
 					}
 				} else {
 					runOnUiThread(new Runnable() {
@@ -122,8 +121,6 @@ public class FindPwdActivity extends Activity implements View.OnClickListener {
 
 						}
 					});
-
-					((Throwable) data).printStackTrace();
 				}
 			}
 		};
@@ -138,7 +135,12 @@ public class FindPwdActivity extends Activity implements View.OnClickListener {
 		switch (id){
 			case R.id.log_btn_code:
 				//验证码
+
 				String phone = mRegEdAccountEditText.getText().toString();
+				if(StringUtils.isNullOrEmpty(phone)||!(phone.length()==11)){
+					Toast.makeText(FindPwdActivity.this, "请输入正确的手机号", Toast.LENGTH_SHORT).show();
+					return ;
+				}
 				SMSSDK.getVerificationCode("86", phone);
 				break;
 			case R.id.iv_left:

@@ -23,10 +23,12 @@ public abstract class ActiveProcess extends AutoLayoutActivity {
 
     //public abstract void updateProgress(final int progress);
     protected CustomProgressDialog dialog;
+    protected Activity mAct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.mAct=this;
         if (dialog == null) {
             WeakReference<Activity> mWeakAct=new WeakReference<Activity>(this);
             dialog = CustomProgressDialog.createDialog(mWeakAct.get());

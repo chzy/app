@@ -48,9 +48,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import static com.chd.yunpan.R.id.iv_left;
 
 /**
  * User: Liumj(liumengjie@365tang.cn)
@@ -58,20 +56,15 @@ import butterknife.OnClick;
  * Time: 13:41
  * describe:
  */
-public class VoiceActivity extends UILActivity {
+public class VoiceActivity extends UILActivity implements View.OnClickListener {
 
 
-    @BindView(R.id.rv_voice_content)
     RecyclerView rvVoiceContent;
-    @BindView(R.id.tv_voice_time)
     TextView tvVoiceTime;
-    @BindView(R.id.iv_voice_status)
     ImageView ivVoiceStatus;
 
-    @BindView(R.id.iv_left)
     ImageView ivLeft;
 
-    @BindView(R.id.tv_center)
     TextView tvCenter;
 
 
@@ -83,7 +76,7 @@ public class VoiceActivity extends UILActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voice);
-        ButterKnife.bind(this);
+        initView();
         tvCenter.setText("录音");
 
         recordPath = new ShareUtils(this).getRecordFile().getPath();
@@ -123,6 +116,19 @@ public class VoiceActivity extends UILActivity {
             }
         });
         onNewThreadRequest();
+    }
+
+    private void initView() {
+
+         rvVoiceContent= (RecyclerView) findViewById(R.id.rv_voice_content);
+         tvVoiceTime= (TextView) findViewById(R.id.tv_voice_time);
+         ivVoiceStatus= (ImageView) findViewById(R.id.iv_voice_status);
+
+         ivLeft= (ImageView) findViewById(iv_left);
+
+         tvCenter= (TextView) findViewById(R.id.tv_center);
+         ivLeft.setOnClickListener(this);
+         ivVoiceStatus.setOnClickListener(this);
     }
 
     private List<FileInfo> cloudUnits = new ArrayList<>();
@@ -175,10 +181,10 @@ public class VoiceActivity extends UILActivity {
 
     private final static int REQUEST_CODE_PERMISSION_RECORD = 100;
 
-    @OnClick({R.id.iv_left, R.id.iv_voice_status})
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.iv_left:
+            case iv_left:
                 onBackPressed();
                 break;
             case R.id.iv_voice_status:
