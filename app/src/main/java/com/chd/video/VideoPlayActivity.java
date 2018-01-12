@@ -31,28 +31,21 @@ import com.universalvideoview.UniversalVideoView;
 
 import java.io.File;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import static com.chd.yunpan.R.id.tv_center;
 
-public class VideoPlayActivity extends UILActivity implements UniversalVideoView.VideoViewCallback{
+
+public class VideoPlayActivity extends UILActivity implements UniversalVideoView.VideoViewCallback, View.OnClickListener {
 
 
     private static final String SEEK_POSITION_KEY = "SEEK_POSITION_KEY";
 
-    @BindView(R.id.iv_left)
     ImageView ivLeft;
-    @BindView(R.id.tv_center)
     TextView tvCenter;
-    @BindView(R.id.tv_right)
     TextView tvRight;
-    @BindView(R.id.videoView)
     UniversalVideoView mVideoView;
 
-    @BindView(R.id.video_layout)
     FrameLayout mVideoLayout;
 
-    @BindView(R.id.media_controller)
     UniversalMediaController mMediaController;
 
 
@@ -67,7 +60,7 @@ public class VideoPlayActivity extends UILActivity implements UniversalVideoView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_play);
-        ButterKnife.bind(this);
+       initView();
         tvCenter.setText("视频播放");
         tvRight.setText("编辑");
         fileInfo = (FileInfo) getIntent().getSerializableExtra("bean");
@@ -110,6 +103,20 @@ public class VideoPlayActivity extends UILActivity implements UniversalVideoView
         mVideoView.setVideoViewCallback(this);
     }
 
+    private void initView() {
+         ivLeft= (ImageView) findViewById(R.id.iv_left);
+         tvCenter= (TextView) findViewById(tv_center);
+         tvRight= (TextView) findViewById(R.id.tv_right);
+         mVideoView= (UniversalVideoView) findViewById(R.id.videoView);
+
+         mVideoLayout= (FrameLayout) findViewById(R.id.video_layout);
+
+         mMediaController= (UniversalMediaController) findViewById(R.id.media_controller);
+
+        ivLeft.setOnClickListener(this);
+        tvRight.setOnClickListener(this);
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -121,7 +128,7 @@ public class VideoPlayActivity extends UILActivity implements UniversalVideoView
 
 
 
-    @OnClick({R.id.iv_left, R.id.tv_right})
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_left:

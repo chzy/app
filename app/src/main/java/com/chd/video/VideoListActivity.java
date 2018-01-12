@@ -62,9 +62,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * User: Liumj(liumengjie@365tang.cn)
@@ -72,17 +69,13 @@ import butterknife.OnClick;
  * Time: 10:11
  * describe:
  */
-public class VideoListActivity extends UILActivity {
+public class VideoListActivity extends UILActivity implements View.OnClickListener {
 
 
     private static final int RECORD_VIDEO = 1000;
-    @BindView(R.id.iv_left)
     ImageView ivLeft;
-    @BindView(R.id.tv_center)
     TextView tvCenter;
-    @BindView(R.id.rv_video_list_content)
     RecyclerView rvVideoListContent;
-    @BindView(R.id.sl_video_list_layout)
     StatefulLayout slVideoListLayout;
 
 
@@ -109,7 +102,7 @@ public class VideoListActivity extends UILActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_list);
-        ButterKnife.bind(this);
+        initView();
         imageLoader = ImageLoader.getInstance();
         tvCenter.setText("视频");
         File f = new File(
@@ -119,6 +112,14 @@ public class VideoListActivity extends UILActivity {
         }
         rvVideoListContent.setLayoutManager(new LinearLayoutManager(this));
         referData();
+    }
+
+    private void initView() {
+        ivLeft = (ImageView) findViewById(R.id.iv_left);
+        tvCenter = (TextView) findViewById(R.id.tv_center);
+        rvVideoListContent = (RecyclerView) findViewById(R.id.rv_video_list_content);
+        slVideoListLayout = (StatefulLayout) findViewById(R.id.sl_video_list_layout);
+        ivLeft.setOnClickListener(this);
     }
 
     private void referData() {
@@ -251,7 +252,7 @@ public class VideoListActivity extends UILActivity {
 
     }
 
-    @OnClick({R.id.iv_left})
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_left:

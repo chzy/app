@@ -7,19 +7,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.listener.SimpleClickListener;
-import com.chd.photo.ui.PicBackActivity;
 import com.chd.photo.ui.PicDetailActivity;
 import com.chd.proto.FileInfo;
 import com.chd.video.VideoPlayActivity;
 import com.chd.yunpan.R;
 import com.chd.yunpan.utils.TimeUtils;
-import com.chd.yunpan.view.SuperRefreshRecyclerView;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -79,27 +75,7 @@ public class PicAdapter<E extends FileInfo> extends BaseQuickAdapter<List<E>, Ba
         infoAdapter.setPosition(helper.getAdapterPosition());
         recyclerView.setAdapter(infoAdapter);
         recyclerView.setHasFixedSize(true);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                switch (newState) {
-                    case 2:
-                        Glide.with(context).pauseRequests();
-                        break;
-                    case 0:
-                        Glide.with(context).resumeRequests();
-                        break;
-                    case 1:
-                        Glide.with(context).resumeRequests();
-                        break;
-                }
-            }
-        });
-        if (imageLoader != null)
-            recyclerView.addOnScrollListener(new PauseOnScrollListener(imageLoader, true, true));
         recyclerView.addOnItemTouchListener(onItemClickListener);
-
     }
 
 

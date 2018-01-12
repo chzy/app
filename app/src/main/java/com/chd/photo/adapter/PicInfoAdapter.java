@@ -3,11 +3,12 @@ package com.chd.photo.adapter;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chd.base.Entity.FileLocal;
 import com.chd.proto.FileInfo;
+import com.chd.yunpan.GlideApp;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.utils.DensityUtil;
@@ -28,12 +29,12 @@ class PicInfoAdapter<T extends FileInfo> extends BaseQuickAdapter<T, BaseViewHol
     private boolean isVideo;
 
 
-    PicInfoAdapter(List<T> data, ImageLoader imageLoader, boolean showSelect, boolean isVideo,boolean isCheck) {
+    PicInfoAdapter(List<T> data, ImageLoader imageLoader, boolean showSelect, boolean isVideo, boolean isCheck) {
         super(R.layout.item_pic_info_adapter, data);
         this.imageLoader = imageLoader;
         this.showSelect = showSelect;
         this.isVideo = isVideo;
-        this.isCheck=isCheck;
+        this.isCheck = isCheck;
         options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true).cacheOnDisk(true)
                 .considerExifParams(true)
@@ -68,7 +69,9 @@ class PicInfoAdapter<T extends FileInfo> extends BaseQuickAdapter<T, BaseViewHol
             if (item instanceof FileLocal) {
                 url = "file://" + UILApplication.getFilelistEntity().getFilePath(((FileLocal) item).getPathid()) + "/" + item.getObjid();
                 int i = DensityUtil.dip2px(mContext, 90);
-                Glide.with(mContext).load(url).skipMemoryCache(true).placeholder(R.drawable.pic_test1).centerCrop().override(i,i).into((ImageView) helper.getView(R.id.iv_pic_info_photo));
+
+//                Glide.with(mContext).load(url).thumbnail(0.3f).into((ImageView) helper.getView(R.id.iv_pic_info_photo));
+                GlideApp.with(mContext).asDrawable().load(url).thumbnail(0.3f).centerCrop().placeholder(R.drawable.pic_test1).dontAnimate().skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).override(i,i).into((ImageView) helper.getView(R.id.iv_pic_info_photo));
             } else {
                 imageLoader.displayImage(url, (ImageView) helper.getView(R.id.iv_pic_info_photo), options, new SimpleImageLoadingListener());
             }

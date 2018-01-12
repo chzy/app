@@ -14,7 +14,6 @@ import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -74,17 +73,13 @@ public class LoginActivity extends Activity implements OnClickListener {
     private boolean switcherState = false;
 //    private ImageView mgb = null;
 
-    private boolean isLogining = false;
     private boolean f = true;
     private boolean isUnlock;
-    private boolean canLogin = true;
     private ShareUtils shareUtils;
     private Handler loginHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
-            if (!canLogin) {
-                return;
-            }
-            isLogining = false;
+            System.out.println("发送之后：");
+
             switch (msg.what) {
                 case 0://sucess
                     Logs.log(msg.obj.toString());
@@ -259,7 +254,6 @@ public class LoginActivity extends Activity implements OnClickListener {
                             }
                         });
 
-
                     }
                 } else {
 //					Log.d("liumj",((Throwable)data).getLocalizedMessage());
@@ -303,10 +297,6 @@ public class LoginActivity extends Activity implements OnClickListener {
         btn_login.setIndeterminateProgressMode(true);
         btn_login.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                if (isLogining) {
-                    return;
-                }
-
                 if (TextUtils.isEmpty(et_name.getText().toString())) {
                     share(et_name.getId());
                     return;
@@ -324,69 +314,69 @@ public class LoginActivity extends Activity implements OnClickListener {
                     return;
                 }
                 btn_login.setProgress(50);
-//				dialog.show();
-                isLogining = true;
-                ExecRunable.execRun(new Thread() {
-                    @Override
-                    public void run() {
-                        Message msg = new Message();
-                        LoginResult entity = null;
-                        try {
-                            String pwd = et_pwd.getText().toString();
-                            String username = et_name.getText().toString();
-                            String code = et_Code.getText().toString();
-                            TClient th = TClient.getinstance();
-                            if (shareUtils.isAutoLogin()) {
-                                username = shareUtils.getUsername();
-                                pwd = shareUtils.getPwd();
+                System.out.println("没进去");
+               new Thread(new Runnable() {
+                   @Override
+                   public void run() {
+                       System.out.println("跑进来了");
+                       Message msg = new Message();
+                       LoginResult entity = null;
+                       try {
+                           String pwd = et_pwd.getText().toString();
+                           String username = et_name.getText().toString();
+                           String code = et_Code.getText().toString();
+                           TClient th = TClient.getinstance();
+                           if (shareUtils.isAutoLogin()) {
+                               username = shareUtils.getUsername();
+                               pwd = shareUtils.getPwd();
 
-                            }
-                            if(ll_smss_code.getVisibility()==View.VISIBLE){
-                                RetHead resetimie = th.Resetimie(imei, username, code);
-                                if(resetimie.getRet().getValue()==0){
-                                    entity = th.loginAuth(username, pwd, imei);
-                                    if (entity.isSetToken()) {
-                                        msg.what = 0;
-                                        msg.obj = entity;
-                                        //loginEntity 里面有用户容量,多少空间等属性. 需要显示在 Myspace里面
-                                        shareUtils.setLoginEntity(entity);
-                                    }else if(entity.getResult().getRet().getValue() == 10) {
-                                        //IMEI号错误
-                                        msg.what = 3;
-                                        msg.obj = "已绑定其他手机，请输入验证码重新绑定";
-                                    }else {
-                                        msg.what = -1;
-                                        msg.obj = "验证失败";
-                                    }
-                                }else{
-                                    msg.what = -1;
-                                    msg.obj = "登录异常,请稍候再试";
-                                }
-                            }else{
-                                entity = th.loginAuth(username, pwd, imei);
-                                if (entity.isSetToken()) {
-                                    msg.what = 0;
-                                    msg.obj = entity;
-                                    //loginEntity 里面有用户容量,多少空间等属性. 需要显示在 Myspace里面
-                                    shareUtils.setLoginEntity(entity);
-                                }else if(entity.getResult().getRet().getValue() == 10) {
-                                    //IMEI号错误
-                                    msg.what = 3;
-                                    msg.obj = "已绑定其他手机，请输入验证码重新绑定";
-                                }else {
-                                    msg.what = -1;
-                                    msg.obj = "验证失败";
-                                }
-                            }
-                        } catch (Exception e) {
-                            msg.what = -1;
-                            msg.obj = "登录异常,请稍候再试";
-                        }
-
-                        loginHandler.sendMessage(msg);
-
-                    }
-                });
+                           }
+                           if(ll_smss_code.getVisibility()==View.VISIBLE){
+                               RetHead resetimie = th.Resetimie(imei, username, code);
+                               if(resetimie.getRet().getValue()==0){
+                                   entity = th.loginAuth(username, pwd, imei);
+                                   if (entity.isSetToken()) {
+                                       msg.what = 0;
+                                       msg.obj = entity;
+                                       //loginEntity 里面有用户容量,多少空间等属性. 需要显示在 Myspace里面
+                                       shareUtils.setLoginEntity(entity);
+                                   }else if(entity.getResult().getRet().getValue() == 10) {
+                                       //IMEI号错误
+                                       msg.what = 3;
+                                       msg.obj = "已绑定其他手机，请输入验证码重新绑定";
+                                   }else {
+                                       msg.what = -1;
+                                       msg.obj = "验证失败";
+                                   }
+                               }else{
+                                   msg.what = -1;
+                                   msg.obj = "登录异常,请稍候再试";
+                               }
+                           }else{
+                               System.out.println("登录之前");
+                               entity = th.loginAuth(username, pwd, imei);
+                               if (entity.isSetToken()) {
+                                   msg.what = 0;
+                                   msg.obj = entity;
+                                   //loginEntity 里面有用户容量,多少空间等属性. 需要显示在 Myspace里面
+                                   shareUtils.setLoginEntity(entity);
+                               }else if(entity.getResult().getRet().getValue() == 10) {
+                                   //IMEI号错误
+                                   msg.what = 3;
+                                   msg.obj = "已绑定其他手机，请输入验证码重新绑定";
+                               }else {
+                                   msg.what = -1;
+                                   msg.obj = "验证失败";
+                               }
+                           }
+                       } catch (Exception e) {
+                           msg.what = -1;
+                           msg.obj = "登录异常,请稍候再试";
+                       }
+                       System.out.println("发送了么");
+                       loginHandler.sendMessage(msg);
+                   }
+               }).start();
 
             }
         });
@@ -497,27 +487,6 @@ public class LoginActivity extends Activity implements OnClickListener {
         findViewById(_id).startAnimation(shake);
     }
 
-    @Override
-    protected void onPause() {
-        // TODO Auto-generated method stub
-        canLogin = false;
-        super.onPause();
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // TODO Auto-generated method stub
-        if (keyCode == KeyEvent.KEYCODE_BACK && isLogining) {
-            if (!canLogin) {
-            } else {
-                isLogining = false;
-                canLogin = false;
-                btn_login.setProgress(0);
-                return false;
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }
 
     @Override
     protected void onDestroy() {
@@ -552,10 +521,6 @@ public class LoginActivity extends Activity implements OnClickListener {
                 msg.what = -1;
                 msg.obj = "登录异常,请稍候再试";
             }
-
-            if (canLogin)
-                loginHandler.sendMessage(msg);
-
         }
 
     }

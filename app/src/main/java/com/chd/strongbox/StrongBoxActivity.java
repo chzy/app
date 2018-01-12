@@ -28,9 +28,6 @@ import com.yanzhenjie.permission.RationaleListener;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * User: Liumj(liumengjie@365tang.cn)
@@ -38,33 +35,29 @@ import butterknife.OnClick;
  * Time: 14:01
  * describe:
  */
-public class StrongBoxActivity extends UILActivity {
+public class StrongBoxActivity extends UILActivity implements View.OnClickListener {
 
 
-	@BindView(R.id.iv_left)
 	ImageView ivLeft;
 
-	@BindView(R.id.tv_center)
 	TextView tvTitle;
-	@BindView(R.id.ll_one)
 	LinearLayout llOne;
-	@BindView(R.id.ll_two)
 	LinearLayout llTwo;
-	@BindView(R.id.ll_three)
 	LinearLayout llThree;
-	@BindView(R.id.ll_four)
 	LinearLayout llFour;
-	@BindView(R.id.ll_five)
 	LinearLayout llFive;
-	@BindView(R.id.ll_six)
 	LinearLayout llSix;
+	LinearLayout llSeven;
+	LinearLayout llEight;
+	LinearLayout llNine;
 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_strongbox);
-		ButterKnife.bind(this);
+		initView();
+
 		tvTitle.setText("小心事");
 		if (UILApplication.getInstance().getLockPatternUtils().savedPatternExists()) {
 			if (!getIntent().getBooleanExtra("unlock", false)) {
@@ -81,6 +74,32 @@ public class StrongBoxActivity extends UILActivity {
 
 	}
 
+	private void initView() {
+		ivLeft= (ImageView) findViewById(R.id.iv_left);
+		tvTitle= (TextView) findViewById(R.id.tv_center);
+		llOne= (LinearLayout) findViewById(R.id.ll_one);
+		llTwo= (LinearLayout) findViewById(R.id.ll_two);
+		llThree= (LinearLayout) findViewById(R.id.ll_three);
+		llFour= (LinearLayout) findViewById(R.id.ll_four);
+		llFive= (LinearLayout) findViewById(R.id.ll_five);
+		llSix= (LinearLayout) findViewById(R.id.ll_six);
+		llSeven= (LinearLayout) findViewById(R.id.ll_seven);
+		llEight= (LinearLayout) findViewById(R.id.ll_eight);
+		llNine= (LinearLayout) findViewById(R.id.ll_nine);
+
+
+		ivLeft.setOnClickListener(this);
+		llOne.setOnClickListener(this);
+		llTwo.setOnClickListener(this);
+		llThree.setOnClickListener(this);
+		llFour.setOnClickListener(this);
+		llFive.setOnClickListener(this);
+		llSix.setOnClickListener(this);
+		llSeven.setOnClickListener(this);
+		llEight.setOnClickListener(this);
+		llNine.setOnClickListener(this);
+	}
+
 
 	private static final int REQUEST_CODE_PERMISSION_CONTACTS = 100;
 	private static final int REQUEST_CODE_PERMISSION_SMS = 101;
@@ -88,7 +107,7 @@ public class StrongBoxActivity extends UILActivity {
 	private static final int REQUEST_CODE_SETTING = 300;
 	Class cls;
 
-	@OnClick({R.id.iv_left, R.id.ll_one, R.id.ll_two, R.id.ll_three, R.id.ll_four, R.id.ll_five, R.id.ll_six,R.id.ll_seven,R.id.ll_eight,R.id.ll_nine})
+	@Override
 	public void onClick(View view) {
 		Intent intent = null;
 		switch (view.getId()) {

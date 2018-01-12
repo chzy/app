@@ -25,7 +25,6 @@ import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.utils.TimeUtils;
 import com.chd.yunpan.utils.ToastUtils;
 import com.chd.yunpan.view.SuperRefreshRecyclerView;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,7 +37,7 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
     private RelativeLayout mPicBottomRelativeLayout;
     private ArrayList<ArrayList<FileLocal>> localList = new ArrayList();
     private PicAdapter adapter;
-    private ImageLoader instance;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,14 +57,18 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
         adapter = new PicAdapter(PicBackActivity.this, localList, null, false, true);
         adapter.setbIsUbkList(true);
         mPicRecyclerView.setAdapter(adapter);
-       instance = ImageLoader.getInstance();
         mPicRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
         onNewThreadRequest();
     }
 
     TextView right;
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
     @Override
     protected void onPause() {
