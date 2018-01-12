@@ -15,19 +15,31 @@ import java.io.RandomAccessFile;
 public class TrpcUploader extends BaseUploader {
     private final String TAG = "TrpcUploader";
     private final int Maxbuflen = 1024 * 1024;
-    TrpcOutputstream transport;
+    private TrpcOutputstream transport;
 
     @Override
     public String upload(FileUploadInfo fileUploadInfo, OnFileTransferredListener fileTransferredListener) throws IOException {
+        boolean ret=false;
         try {
             FileInfo0 item = fileUploadInfo._item;
             Log.d("liumj",item.getFilePath()+"/"+item.getObjid());
-            transport = new TrpcOutputstream(fileUploadInfo._item, fileUploadInfo.getDescAttribMap());
-            if (upload(fileUploadInfo, transport, fileTransferredListener))
-                return null;
+            int loops=3;
+
+            while(--loops>0)
+            {
+                if (transport == null)
+                    transport = new TrpcOutputstream(fileUploadInfo._item, fileUploadInfo.getDescAttribMap());
+                ret=upload(fileUploadInfo, transport, fileTransferredListener);
+                if (ret) {
+                    break;
+                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if (ret)
+            return null;
         return "upload failed !";
     }
 
@@ -145,8 +157,9 @@ public class TrpcUploader extends BaseUploader {
             Log.d(TAG, objid + " upload finished !!");
         } else {
             Log.d(TAG, objid + " upload commit failed  !!");
-            succed = false;
+            //succed = false;
             trpcOutputstream.cancel();
+            trpcOutputstream=null;
         }
         return succed;
     }
