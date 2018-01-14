@@ -60,8 +60,7 @@ public class TrpcUploader extends BaseUploader {
         long size = fileUploadInfo._item.getFilesize();
         String objid = "";
         FileInfo0 entity = fileUploadInfo._item;
-        System.out.println("开始上传喽");
-        //先检查 云端是否 有同名文件
+         //先检查 云端是否 有同名文件
         long start = -1l;
         long oft = 0l;
         if (trpcOutputstream.ObjExist()) {
@@ -151,18 +150,17 @@ public class TrpcUploader extends BaseUploader {
             try {
                 trpcOutputstream.flush();
                 trpcOutputstream.close();
-                succed = true;
+                //succed = true;
             } catch (IOException e) {
                 Log.i(TAG, e.getMessage());
             }
-            Log.d(TAG, objid + " upload finished !!");
+            Log.i(TAG, objid + " upload finished !!");
         } else {
-            Log.d(TAG, objid + " upload commit failed  !!");
+            Log.i(TAG, objid + " upload commit failed  !!");
             //succed = false;
             trpcOutputstream.cancel();
 
         }
-        trpcOutputstream=null;
         return succed;
     }
 }
