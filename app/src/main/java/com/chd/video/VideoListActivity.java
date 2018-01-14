@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,13 +23,16 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chd.TClient;
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
+import com.chd.base.Entity.PicFile;
 import com.chd.base.UILActivity;
 import com.chd.base.backend.SyncTask;
 import com.chd.contacts.vcard.StringUtils;
-import com.chd.photo.adapter.PicAdapter;
+import com.chd.photo.adapter.PicInfoAdapter2;
+import com.chd.photo.ui.PicDetailActivity;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
 import com.chd.service.RPCchannel.upload.FileUploadInfo;
@@ -58,6 +62,8 @@ import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -79,24 +85,11 @@ public class VideoListActivity extends UILActivity implements View.OnClickListen
     StatefulLayout slVideoListLayout;
 
 
-    private PicAdapter picAdapter = null;
+    private PicInfoAdapter2<FileInfo> picAdapter = null;
 
     private ImageLoader imageLoader;
+    private ArrayList<PicFile<FileInfo>> picFiles = new ArrayList<>();
     private List<FileInfo> cloudUnits = new ArrayList<>();
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    waitDialog.dismiss();
-                    boolean showSelect = picAdapter.isShowSelect();
-                    picAdapter = new PicAdapter(VideoListActivity.this, cloudList, imageLoader, true,showSelect);
-                    rvVideoListContent.setAdapter(picAdapter);
-                    break;
-            }
-        }
-    };
-    private List<List<FileInfo>> cloudList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +103,48 @@ public class VideoListActivity extends UILActivity implements View.OnClickListen
         if (!f.exists()) {
             f.mkdir();
         }
-        rvVideoListContent.setLayoutManager(new LinearLayoutManager(this));
+        picAdapter = new PicInfoAdapter2<>( picFiles, true);
+        rvVideoListContent.setAdapter(picAdapter);
+
+
+        rvVideoListContent.setHasFixedSize(true);
+        GridLayoutManager manager = new GridLayoutManager(this, 4);
+        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                PicFile<FileInfo> file = picFiles.get(position);
+                if (file.isHeader) {
+                    return 4;
+                }
+                return 1;
+            }
+        });
+        rvVideoListContent.setLayoutManager(manager);
+        picAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                //非视频，即图片进去
+                PicFile<FileInfo> file = picFiles.get(position);
+                //视频进去
+                Intent intent = new Intent(mAct, VideoPlayActivity.class);
+                intent.putExtra("bean", file.t);
+                startActivityForResult(intent, 0x13);
+            }
+        });
+        picAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                if (view.getId() == R.id.iv_pic_edit_item_photo_check) {
+                    PicFile<FileInfo> file = picFiles.get(position);
+                    if (file.isSelect) {
+                        file.isSelect = false;
+                    } else {
+                        file.isSelect = true;
+                    }
+                    adapter.notifyItemChanged(position);
+                }
+            }
+        });
         referData();
     }
 
@@ -130,7 +164,7 @@ public class VideoListActivity extends UILActivity implements View.OnClickListen
             @Override
             public void run() {
                 // 0-100 分批取文件
-                cloudList.clear();
+                picFiles.clear();
                 SyncTask syncTask = new SyncTask(VideoListActivity.this, FTYPE.VIDEO);
                 cloudUnits = syncTask.getCloudUnits(0, 10000);
                 if (cloudUnits == null) {
@@ -139,25 +173,66 @@ public class VideoListActivity extends UILActivity implements View.OnClickListen
                 }
                 syncTask.analyVideoUnits(cloudUnits, filelistEntity);
                 if (cloudUnits != null && !cloudUnits.isEmpty()) {
-                    List<FileInfo> local = new ArrayList<>();
+                    Collections.sort(cloudUnits, new Comparator<FileInfo>() {
+                        @Override
+                        public int compare(FileInfo fileLocal, FileInfo t1) {
+                            int lastModified = fileLocal.getLastModified();
+                            int lastModified1 = t1.getLastModified();
+                            if (lastModified < lastModified1) {
+                                return 1;
+                            } else if (lastModified > lastModified1) {
+                                return -1;
+                            }
+                            return 0;
+                        }
+                    });
+                    PicFile<FileInfo> heads = new PicFile<>(true, "");
                     int time = TimeUtils.getZeroTime(cloudUnits.get(0).getLastModified());
-                    local.add(cloudUnits.get(0));
+                    int index = 0;
+                    picFiles.add(heads);
+                    picFiles.add(new PicFile<FileInfo>(cloudUnits.get(0)));
                     for (int i = 1; i < cloudUnits.size(); i++) {
                         FileInfo fileInfo = cloudUnits.get(i);
-                        if (fileInfo.lastModified <= ((cloudList.size() + 1) * 3 * 24 * 3600 + time)) {
-                            local.add(fileInfo);
+                        if (Math.abs(fileInfo.lastModified - time) <= (3 * 24 * 3600)) {
+                            picFiles.add(new PicFile<FileInfo>(fileInfo));
+                            if(i==cloudUnits.size()-1){
+                                PicFile<FileInfo> fileLocalPicFile = picFiles.get(index);
+                                String start = TimeUtils.getDay(time);
+                                String end = TimeUtils.getDay(fileInfo.getLastModified());
+                                if (start.equals(end)) {
+                                    fileLocalPicFile.header = start;
+                                } else {
+                                    fileLocalPicFile.header = end + "至" + start;
+                                }
+                                picFiles.set(index, fileLocalPicFile);
+                            }
                         } else {
-                            cloudList.add(local);
-                            local = new ArrayList<>();
-                            local.add(fileInfo);
+                            PicFile<FileInfo> fileLocalPicFile = picFiles.get(index);
+                            String start = TimeUtils.getDay(time);
+                            String end = TimeUtils.getDay(cloudUnits.get(i - 1).getLastModified());
+                            if (start.equals(end)) {
+                                fileLocalPicFile.header = start;
+                            } else {
+                                fileLocalPicFile.header = end + "至" + start;
+                            }
+                            picFiles.set(index, fileLocalPicFile);
                             time = TimeUtils.getZeroTime(fileInfo.getLastModified());
+                            heads = new PicFile<>(true, "");
+                            index = picFiles.size();
+                            picFiles.add(heads);
+                            picFiles.add(new PicFile<FileInfo>(fileInfo));
                         }
                     }
-                    cloudList.add(local);
-                    local = null;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            waitDialog.dismiss();
+                            picAdapter.notifyDataSetChanged();
+                        }
+                    });
                 }
 
-                mHandler.sendEmptyMessage(0);
+
 
             }
         }).start();
@@ -236,7 +311,7 @@ public class VideoListActivity extends UILActivity implements View.OnClickListen
                         public void onSuccess(FileUploadInfo uploadData, Object data) {
                             build.dismiss();
                             ToastUtils.toast(VideoListActivity.this, "上传成功");
-                            deleteDefaultFile(true, false,Uri.parse(tmpFile.getPath()));
+                            deleteDefaultFile(true, false, Uri.parse(tmpFile.getPath()));
 
                         }
                     }, options);

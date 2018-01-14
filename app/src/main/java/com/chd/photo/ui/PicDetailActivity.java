@@ -50,8 +50,7 @@ public class PicDetailActivity extends UILActivity implements OnClickListener {
     protected ImageLoader imageLoader = ImageLoader.getInstance();
     DisplayImageOptions options;
     private boolean bIsUbkList;
-    private int pos1;
-    private int pos2;
+    private int pos;
     private SyncTask syncTask;
     private FileInfo0 fileInfo0 = new FileInfo0();
     private final String TAG = this.getClass().getName();
@@ -79,8 +78,8 @@ public class PicDetailActivity extends UILActivity implements OnClickListener {
         if (bIsUbkList) {
             findViewById(R.id.pic_detail_btm_layout).setVisibility(View.GONE);
         }
-        pos1 = getIntent().getIntExtra("pos1", 0);
-        pos2 = getIntent().getIntExtra("pos2", 0);
+
+        pos = getIntent().getIntExtra("pos", 0);
         options = new DisplayImageOptions.Builder()
 //		.showImageOnLoading(R.drawable.pic_test1)
                 .cacheInMemory(false)
@@ -215,8 +214,7 @@ public class PicDetailActivity extends UILActivity implements OnClickListener {
 
                                                     } finally {
                                                         Intent intent = new Intent();
-                                                        intent.putExtra("pos1", pos1);
-                                                        intent.putExtra("pos2", pos2);
+                                                        intent.putExtra("pos", pos);
                                                         setResult(RESULT_OK, intent);
                                                         finish();
                                                     }
@@ -226,16 +224,14 @@ public class PicDetailActivity extends UILActivity implements OnClickListener {
                                                 @Override
                                                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                                     Intent intent = new Intent();
-                                                    intent.putExtra("pos1", pos1);
-                                                    intent.putExtra("pos2", pos2);
+                                                    intent.putExtra("pos", pos);
                                                     setResult(RESULT_OK, intent);
                                                     finish();
                                                 }
                                             }).show();
                                         } else {
                                             Intent intent = new Intent();
-                                            intent.putExtra("pos1", pos1);
-                                            intent.putExtra("pos2", pos2);
+                                            intent.putExtra("pos", pos);
                                             setResult(RESULT_OK, intent);
                                             finish();
                                         }

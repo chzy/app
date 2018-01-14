@@ -1,1 +1,1 @@
-include ':app', ':record',':chdclnetapi',':thriftlib', ':chdclnetapi'
+include ':app', ':record'

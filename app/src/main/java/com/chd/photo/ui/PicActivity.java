@@ -6,8 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -15,11 +14,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
+import com.chd.base.Entity.PicFile;
 import com.chd.base.UILActivity;
 import com.chd.base.backend.SyncTask;
-import com.chd.photo.adapter.PicAdapter;
+import com.chd.photo.adapter.PicInfoAdapter2;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
@@ -33,6 +34,7 @@ import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.utils.TimeUtils;
 import com.chd.yunpan.utils.ToastUtils;
 import com.chd.yunpan.view.ActionSheetDialog;
+import com.chd.yunpan.view.SuperRefreshRecyclerView;
 import com.luck.picture.lib.model.FunctionConfig;
 import com.luck.picture.lib.model.PictureConfig;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -46,6 +48,7 @@ import com.yanzhenjie.permission.RationaleListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -58,14 +61,13 @@ public class PicActivity extends UILActivity implements OnClickListener {
     private TextView mTvCenter;
     private TextView mTvRight;
     private TextView mTvNumber;
-    private RecyclerView mLvPic;
+    private SuperRefreshRecyclerView mLvPic;
     private boolean bIsUbkList;
     private ImageLoader imageLoader;
     private SyncTask syncTask;
     private FilelistEntity filelistEntity;
-    private PicAdapter adapter;
-    private ArrayList<ArrayList<FileLocal>> localList = new ArrayList();
-    private List<List<? extends FileInfo>> cloudList = new ArrayList<>();
+    private PicInfoAdapter2<FileInfo> adapter;
+    private ArrayList<PicFile<FileInfo>> cloudList = new ArrayList<>();
     private List<FileInfo> cloudUnits /*= new ArrayList<>()*/;
 
     private Handler handler = new Handler(Looper.getMainLooper()) {
@@ -75,13 +77,9 @@ public class PicActivity extends UILActivity implements OnClickListener {
             int size = 0;
             size = filelistEntity.getUnbakNumber();
             mTvNumber.setText(String.format("上传未备份照片（%d）", size));
-            adapter = new PicAdapter(PicActivity.this, cloudList, imageLoader, false, false);
-            adapter.setShowSelect(false);
-            mLvPic.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
             rlBottom.setVisibility(View.GONE);
             mTvRight.setText("编辑");
-
-
         }
 
     };
@@ -123,48 +121,56 @@ public class PicActivity extends UILActivity implements OnClickListener {
                     List<FileLocal> localUnits = filelistEntity.getLocallist();
 
                     if (cloudUnits != null && !cloudUnits.isEmpty()) {
-                        List<FileInfo> local = new ArrayList<>();
-                        int time = TimeUtils.getZeroTime(cloudUnits.get(0).getLastModified());
-                        local.add(cloudUnits.get(0));
-                        for (int i = 1; i < cloudUnits.size(); i++)
-                        {
-                            FileInfo fileInfo = cloudUnits.get(i);
-
-                            if (fileInfo.lastModified <= ((cloudList.size() + 1) * 3 * 24 * 3600 + time)) {
-                                local.add(fileInfo);
-                            } else {
-                                Collections.reverse(local);
-                                cloudList.add(local);
-                                local = new ArrayList<>();
-                                local.add(fileInfo);
-                                time = TimeUtils.getZeroTime(fileInfo.getLastModified());
-                            }
-                        }
-                        cloudList.add(local);
-                        Collections.reverse(cloudList);
-                        local = null;
-                    }
-                    if (localUnits != null && !localUnits.isEmpty()) {
-                        ArrayList<FileLocal> local = new ArrayList<>();
-                        int time = TimeUtils.getZeroTime(localUnits.get(0).getLastModified());
-                        local.add(localUnits.get(0));
-                        for (int i = 1; i < localUnits.size(); i++) {
-                            FileLocal fileInfo = localUnits.get(i);
-                            if (!fileInfo.bakuped) {
-                                if (fileInfo.lastModified <= ((localList.size() + 1) * 3 * 24 * 3600 + time)) {
-                                    local.add(fileInfo);
-                                } else {
-                                    Collections.reverse(local);
-                                    localList.add(local);
-                                    local = new ArrayList<>();
-                                    local.add(fileInfo);
-                                    time = TimeUtils.getZeroTime(fileInfo.getLastModified());
+                        Collections.sort(cloudUnits, new Comparator<FileInfo>() {
+                            @Override
+                            public int compare(FileInfo fileLocal, FileInfo t1) {
+                                int lastModified = fileLocal.getLastModified();
+                                int lastModified1 = t1.getLastModified();
+                                if(lastModified<lastModified1){
+                                    return 1;
+                                }else if(lastModified>lastModified1){
+                                    return -1;
                                 }
+                                return 0;
+                            }
+                        });
+                        PicFile<FileInfo> heads = new PicFile<>(true, "");
+                        int time = TimeUtils.getZeroTime(cloudUnits.get(0).getLastModified());
+                        int index = 0;
+                        cloudList.add(heads);
+                        cloudList.add(new PicFile<FileInfo>(cloudUnits.get(0)));
+                        for (int i = 1; i < cloudUnits.size(); i++) {
+                            FileInfo fileInfo = cloudUnits.get(i);
+                            if (Math.abs(fileInfo.lastModified - time) <= (3 * 24 * 3600)) {
+                                cloudList.add(new PicFile<FileInfo>(fileInfo));
+                                if(i==cloudUnits.size()-1){
+                                    PicFile<FileInfo> fileLocalPicFile = cloudList.get(index);
+                                    String start = TimeUtils.getDay(time);
+                                    String end = TimeUtils.getDay(fileInfo.getLastModified());
+                                    if (start.equals(end)) {
+                                        fileLocalPicFile.header = start;
+                                    } else {
+                                        fileLocalPicFile.header = end + "至" + start;
+                                    }
+                                    cloudList.set(index, fileLocalPicFile);
+                                }
+                            } else {
+                                PicFile<FileInfo> fileLocalPicFile = cloudList.get(index);
+                                String start = TimeUtils.getDay(time);
+                                String end = TimeUtils.getDay(localUnits.get(i - 1).getLastModified());
+                                if (start.equals(end)) {
+                                    fileLocalPicFile.header = start;
+                                } else {
+                                    fileLocalPicFile.header = end + "至" + start;
+                                }
+                                cloudList.set(index, fileLocalPicFile);
+                                time = TimeUtils.getZeroTime(fileInfo.getLastModified());
+                                heads = new PicFile<>(true, "");
+                                index = cloudList.size();
+                                cloudList.add(heads);
+                                cloudList.add(new PicFile<FileInfo>(fileInfo));
                             }
                         }
-                        localList.add(local);
-                        Collections.reverse(localList);
-                        local = null;
                     }
                 }
                 if (bIsUbkList) {
@@ -186,13 +192,53 @@ public class PicActivity extends UILActivity implements OnClickListener {
 
     private void initResourceId() {
         mTvNumber = (TextView) findViewById(R.id.tv_pic_number);
-        mLvPic = (RecyclerView) findViewById(R.id.lv_pic);
+        mLvPic = (SuperRefreshRecyclerView) findViewById(R.id.lv_pic);
         rlBottom = (RelativeLayout) findViewById(R.id.rl_pic_bottom);
         tvUpload = (TextView) findViewById(R.id.tv_pic_upload);
         mTvNumber.setText("未备份照片0张");
         mTvRight.setVisibility(View.VISIBLE);
         mTvRight.setText("编辑");
-        mLvPic.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new PicInfoAdapter2<>(cloudList, false);
+        mLvPic.setAdapter(adapter);
+        mLvPic.setHasFixedSize(true);
+        GridLayoutManager manager = new GridLayoutManager(this, 4);
+        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                PicFile<FileInfo> file = cloudList.get(position);
+                if (file.isHeader) {
+                    return 4;
+                }
+                return 1;
+            }
+        });
+        mLvPic.setLayoutManager(manager);
+        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                //非视频，即图片进去
+                PicFile<FileInfo> file = cloudList.get(position);
+                Intent intent = new Intent(mAct, PicDetailActivity.class);
+                intent.putExtra("bean", file.t);
+                intent.putExtra("pos", position);
+                intent.putExtra("ubklist", false);
+                startActivityForResult(intent, 0x12);
+            }
+        });
+        adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                if (view.getId() == R.id.iv_pic_edit_item_photo_check) {
+                    PicFile<FileInfo> file = cloudList.get(position);
+                    if (file.isSelect) {
+                        file.isSelect = false;
+                    } else {
+                        file.isSelect = true;
+                    }
+                    adapter.notifyItemChanged(position);
+                }
+            }
+        });
     }
 
     private void initListener() {
@@ -217,30 +263,32 @@ public class PicActivity extends UILActivity implements OnClickListener {
                 onBackPressed();
                 break;
             case R.id.tv_right: // 编辑
-                if (bIsUbkList) {
-                    //未备份页面
-                    tvUpload.setText("上传");
-                    if ("编辑".equals(mTvRight.getText())) {
-                        rlBottom.setVisibility(View.VISIBLE);
-                        adapter.setShowSelect(true);
-                        mTvRight.setText("取消");
-                    } else {
-                        rlBottom.setVisibility(View.GONE);
-                        mTvRight.setText("编辑");
-                        adapter.setShowSelect(false);
-                    }
+//                if (bIsUbkList) {
+//                    //未备份页面
+//                    tvUpload.setText("上传");
+//                    if ("编辑".equals(mTvRight.getText())) {
+//                        rlBottom.setVisibility(View.VISIBLE);
+//                        adapter.setShowSelect(true);
+//                        mTvRight.setText("取消");
+//                    } else {
+//                        rlBottom.setVisibility(View.GONE);
+//                        mTvRight.setText("编辑");
+//                        adapter.setShowSelect(false);
+//                    }
+//                } else {
+                tvUpload.setText("下载");
+                if ("编辑".equals(mTvRight.getText())) {
+                    rlBottom.setVisibility(View.VISIBLE);
+                    adapter.setShowEdit(true);
+                    adapter.notifyDataSetChanged();
+                    mTvRight.setText("取消");
                 } else {
-                    tvUpload.setText("下载");
-                    if ("编辑".equals(mTvRight.getText())) {
-                        rlBottom.setVisibility(View.VISIBLE);
-                        adapter.setShowSelect(true);
-                        mTvRight.setText("取消");
-                    } else {
-                        rlBottom.setVisibility(View.GONE);
-                        mTvRight.setText("编辑");
-                        adapter.setShowSelect(false);
-                    }
+                    rlBottom.setVisibility(View.GONE);
+                    mTvRight.setText("编辑");
+                    adapter.setShowEdit(false);
+                    adapter.notifyDataSetChanged();
                 }
+//                }
                 break;
             case R.id.tv_pic_number:
                 initLocal();
@@ -270,13 +318,8 @@ public class PicActivity extends UILActivity implements OnClickListener {
                 case 0x12:
                     //删除成功
                     if (data != null) {
-                        int pos1 = data.getIntExtra("pos1", -1);
-                        int pos2 = data.getIntExtra("pos2", -1);
-                        if (pos1 == -1 || pos2 == -1) {
-                            return;
-                        }
-                        adapter.remove(pos1, pos2);
-                        adapter.notifyItemChanged(pos1);
+                        int pos1 = data.getIntExtra("pos", -1);
+                        adapter.notifyItemRemoved(pos1);
                         setResult(RESULT_OK);
                     }
                     break;
@@ -285,7 +328,6 @@ public class PicActivity extends UILActivity implements OnClickListener {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            localList.clear();
                             cloudUnits.clear();
                             cloudList.clear();
                             onNewThreadRequest(false);
@@ -449,35 +491,34 @@ public class PicActivity extends UILActivity implements OnClickListener {
 
     public void uploadPic(View v) {
         //上传图片
-        ArrayList<String> selectData = adapter.getSelectData();
-        if (selectData.size() > 0) {
-            uploadPic(selectData);
-        } else {
-            ToastUtils.toast(this, "暂无选中");
-        }
+
+        uploadPic();
+
     }
 
-    public void uploadPic(List<String> selectData) {
+    public void uploadPic() {
         //多张上传下载
         ArrayList<FileInfo0> info0s = new ArrayList<>();
-        for (String s :
-                selectData) {
-            String[] split = s.split(" ");
-            int pos1 = Integer.parseInt(split[0]);
-            int pos2 = Integer.parseInt(split[1]);
-
-            if (bIsUbkList) {
-                FileLocal local = (FileLocal) localList.get(pos1).get(pos2);
-                FileInfo0 f = new FileInfo0(local);
-                String s1 = "file://" + UILApplication.getFilelistEntity().getFilePath(local.getPathid()) + "/" + f.getObjid();
-                f.setFilePath(s1);
-                f.setFtype(FTYPE.PICTURE);
-                info0s.add(f);
-            } else {
-                FileInfo0 f = new FileInfo0(cloudList.get(pos1).get(pos2));
-                f.setFtype(FTYPE.PICTURE);
-                info0s.add(f);
+        for (PicFile<FileInfo> s :
+                cloudList) {
+            if (s.isSelect) {
+                if (bIsUbkList) {
+                    FileLocal local = (FileLocal) s.t;
+                    FileInfo0 f = new FileInfo0(local);
+                    String s1 = "file://" + UILApplication.getFilelistEntity().getFilePath(local.getPathid()) + "/" + f.getObjid();
+                    f.setFilePath(s1);
+                    f.setFtype(FTYPE.PICTURE);
+                    info0s.add(f);
+                } else {
+                    FileInfo0 f = new FileInfo0(s.t);
+                    f.setFtype(FTYPE.PICTURE);
+                    info0s.add(f);
+                }
             }
+        }
+        if (info0s.isEmpty()) {
+            ToastUtils.toast(this, "暂无选中图片");
+            return;
         }
         if (bIsUbkList) {
             syncTask.uploadList(info0s, PicActivity.this, handler);
@@ -489,24 +530,22 @@ public class PicActivity extends UILActivity implements OnClickListener {
 
     public void deletePic(View v) {
         //删除图片
-        ArrayList<String> selectData = adapter.getSelectData();
-        if (selectData.size() > 0) {
-            delete(selectData);
-        } else {
-            ToastUtils.toast(this, "暂无选中");
-        }
+
+        delete();
     }
 
-    private void delete(List<String> selectItem) {
+    private void delete() {
         //多选删除
         ArrayList<FileInfo> info0s = new ArrayList<>();
-        for (String s :
-                selectItem) {
-            String[] split = s.split(" ");
-            int pos1 = Integer.parseInt(split[0]);
-            int pos2 = Integer.parseInt(split[1]);
-            FileInfo f = adapter.getFileInfo(pos1, pos2);
-            info0s.add(f);
+        for (PicFile<FileInfo> s :
+                cloudList) {
+            if (s.isSelect) {
+                info0s.add(s.t);
+            }
+        }
+        if (info0s.isEmpty()) {
+            toastMain("暂无选中图片");
+            return;
         }
         syncTask.delList(info0s, PicActivity.this, handler, bIsUbkList);
     }

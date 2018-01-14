@@ -1,18 +1,21 @@
 package com.chd.photo.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
+import com.chd.base.Entity.PicFile;
 import com.chd.base.UILActivity;
 import com.chd.base.backend.SyncTask;
-import com.chd.photo.adapter.PicAdapter;
+import com.chd.photo.adapter.PicInfoAdapter2;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
 import com.chd.service.RPCchannel.upload.FileUploadInfo;
@@ -28,6 +31,7 @@ import com.chd.yunpan.view.SuperRefreshRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class PicBackActivity extends UILActivity implements View.OnClickListener {
@@ -35,8 +39,8 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
     private SuperRefreshRecyclerView mPicRecyclerView;
     private TextView mPicUploadTextView;
     private RelativeLayout mPicBottomRelativeLayout;
-    private ArrayList<ArrayList<FileLocal>> localList = new ArrayList();
-    private PicAdapter adapter;
+    private PicInfoAdapter2 adapter;
+    private ArrayList<PicFile<FileLocal>> picFiles=new ArrayList<>();
 
 
     @Override
@@ -54,31 +58,63 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
         right.setText("全选");
         right.setOnClickListener(this);
         mPicUploadTextView.setOnClickListener(this);
-        adapter = new PicAdapter(PicBackActivity.this, localList, null, false, true);
-        adapter.setbIsUbkList(true);
+        adapter = new PicInfoAdapter2<FileLocal>(picFiles,false);
+        adapter.setShowEdit(true);
         mPicRecyclerView.setAdapter(adapter);
-        mPicRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
+        mPicRecyclerView.setHasFixedSize(true);
+        GridLayoutManager manager = new GridLayoutManager(this, 4);
+        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                PicFile<FileLocal> file = picFiles.get(position);
+               if(file.isHeader){
+                   return 4;
+               }
+               return 1;
+            }
+        });
+        mPicRecyclerView.setLayoutManager(manager);
+        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                    //非视频，即图片进去
+                PicFile<FileLocal> file = picFiles.get(position);
+                Intent intent = new Intent(mAct, PicDetailActivity.class);
+                    intent.putExtra("bean", file.t);
+                    intent.putExtra("pos", position);
+                    intent.putExtra("ubklist", false);
+                    startActivityForResult(intent, 0x12);
+            }
+        });
+        adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                if (view.getId() == R.id.iv_pic_edit_item_photo_check) {
+                        PicFile<FileLocal> file = picFiles.get(position);
+                    if (file.isSelect) {
+                        file.isSelect=false;
+                    }else{
+                        file.isSelect=true;
+                    }
+                    adapter.notifyItemChanged(position);
+                }
+            }
+        });
+//       adapter.setSpanSizeLookup(new BaseQuickAdapter.SpanSizeLookup() {
+//           @Override
+//           public int getSpanSize(GridLayoutManager gridLayoutManager, int position) {
+//               PicFile<FileLocal> file = picFiles.get(position);
+//               if(file.isHeader){
+//                   return 4;
+//               }
+//               return 1;
+//           }
+//       });
         onNewThreadRequest();
     }
 
     TextView right;
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 
     private SyncTask syncTask;
     private FilelistEntity filelistEntity;
@@ -87,7 +123,7 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                localList.clear();
+                picFiles.clear();
                 filelistEntity = UILApplication.getFilelistEntity();
                 if (syncTask == null)
                     syncTask = new SyncTask(PicBackActivity.this, FTYPE.PICTURE);
@@ -96,26 +132,58 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                 syncTask.analyPhotoUnits(cloudUnits, filelistEntity);
                 List<FileLocal> localUnits = filelistEntity.getLocallist();
                 if (localUnits != null && !localUnits.isEmpty()) {
-                    ArrayList<FileLocal> local = new ArrayList<>();
-                    int time = TimeUtils.getZeroTime(localUnits.get(0).getLastModified());
-                    local.add(localUnits.get(0));
+                    Collections.sort(localUnits, new Comparator<FileLocal>() {
+                        @Override
+                        public int compare(FileLocal fileLocal, FileLocal t1) {
+                            int lastModified = fileLocal.getLastModified();
+                            int lastModified1 = t1.getLastModified();
+                            if(lastModified<lastModified1){
+                                return 1;
+                            }else if(lastModified>lastModified1){
+                                return -1;
+                            }
+                            return 0;
+                        }
+                    });
+                    PicFile<FileLocal> heads=new PicFile<>(true,"");
+                    int time= TimeUtils.getZeroTime(localUnits.get(0).getLastModified());
+                    int index=0;
+                    picFiles.add(heads);
+                    picFiles.add(new PicFile<FileLocal>(localUnits.get(0)));
                     for (int i = 1; i < localUnits.size(); i++) {
                         FileLocal fileInfo = localUnits.get(i);
                         if (!fileInfo.bakuped) {
-                            if (fileInfo.lastModified <= ((localList.size() + 1) * 3 * 24 * 3600 + time)) {
-                                local.add(fileInfo);
+                            if (Math.abs(fileInfo.lastModified-time) <= ( 3 * 24 * 3600 )) {
+                                picFiles.add(new PicFile<FileLocal>(fileInfo));
+                                if(i==cloudUnits.size()-1){
+                                    PicFile<FileLocal> fileLocalPicFile = picFiles.get(index);
+                                    String start = TimeUtils.getDay(time);
+                                    String end = TimeUtils.getDay(fileInfo.getLastModified());
+                                    if (start.equals(end)) {
+                                        fileLocalPicFile.header = start;
+                                    } else {
+                                        fileLocalPicFile.header = end + "至" + start;
+                                    }
+                                    picFiles.set(index, fileLocalPicFile);
+                                }
                             } else {
-                                Collections.reverse(local);
-                                localList.add(local);
-                                local = new ArrayList<>();
-                                local.add(fileInfo);
+                                PicFile<FileLocal> fileLocalPicFile = picFiles.get(index);
+                                String start = TimeUtils.getDay(time);
+                                String end = TimeUtils.getDay(localUnits.get(i-1).getLastModified());
+                                if (start.equals(end)) {
+                                    fileLocalPicFile.header=start;
+                                } else {
+                                    fileLocalPicFile.header=end + "至" + start;
+                                }
+                                picFiles.set(index,fileLocalPicFile);
                                 time = TimeUtils.getZeroTime(fileInfo.getLastModified());
+                                heads=new PicFile<>(true,"");
+                                index=picFiles.size();
+                                picFiles.add(heads);
+                                picFiles.add(new PicFile<FileLocal>(fileInfo));
                             }
                         }
                     }
-                    localList.add(local);
-                    Collections.reverse(localList);
-                    local = null;
                 }
                 runOnUiThread(new Runnable() {
                     @Override
@@ -146,47 +214,46 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                 break;
             case R.id.tv_right:
                 //全选
-                if ("取消全选".equals(right.getText().toString())) {
-                    ArrayList<String> lists = new ArrayList<>();
-                    adapter.setSelectList(lists);
+                boolean isSelect="取消全选".equals(right.getText().toString());
+                adapter.setShowEdit(true);
+                for (PicFile<FileLocal> file:
+                        picFiles) {
+                    file.isSelect=isSelect;
+                }
+                adapter.notifyDataSetChanged();
+                if (!isSelect) {
                     right.setText("全选");
                 } else {
-                    ArrayList<String> lists = new ArrayList<>();
-                    for (int i = 0; i < localList.size(); i++) {
-                        ArrayList<FileLocal> fileLocals = localList.get(i);
-                        for (int j = 0; j < fileLocals.size(); j++) {
-                            lists.add(i + " " + j);
-                        }
-                    }
-                    adapter.setSelectList(lists);
                     right.setText("取消全选");
                 }
                 break;
             case R.id.tv_pic_upload:
                 //上传
-                final ArrayList<String> selectData = adapter.getSelectData();
-                if (selectData.isEmpty()) {
+                final ArrayList<FileLocal> fileLocals=new ArrayList<>();
+                for (PicFile<FileLocal> f:
+                     picFiles) {
+                    if(f.isSelect){
+                        fileLocals.add(f.t);
+                    }
+                }
+                if (fileLocals.isEmpty()) {
                     ToastUtils.toast(this, "请选择上传文件");
                     return;
                 }
                 FileUploadManager manager = FileUploadManager.getInstance();
                 boolean overwrite = true;
                 boolean resume = true;
-                UploadOptions options = new UploadOptions(overwrite, resume);
+                UploadOptions options = new UploadOptions(true, true);
                 final MaterialDialog.Builder builder = new MaterialDialog.Builder(PicBackActivity.this);
                 builder.content("正在上传");
                 builder.progress(true, 100);
                 final MaterialDialog build = builder.build();
                 build.show();
                 count = 0;
-                for (String s :
-                        selectData) {
-                    String[] split = s.split(" ");
-                    int pos1 = Integer.parseInt(split[0]);
-                    int pos2 = Integer.parseInt(split[1]);
-                    final FileLocal local = localList.get(pos1).get(pos2);
-                    local.setFtype(FTYPE.PICTURE);
-                    manager.uploadFile(new ProgressBarAware(build), null, local, new OnUploadListener() {
+                for (FileLocal f :
+                        fileLocals) {
+                    f.setFtype(FTYPE.PICTURE);
+                    manager.uploadFile(new ProgressBarAware(build), null, f, new OnUploadListener() {
                         @Override
                         public void onError(FileUploadInfo uploadData, int errorType, String msg) {
                             ToastUtils.toast(PicBackActivity.this, "上传失败");
@@ -197,7 +264,7 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                         public void onSuccess(FileUploadInfo uploadData, Object data) {
                             build.dismiss();
                             count++;
-                            if (count == selectData.size()) {
+                            if (count == fileLocals.size()) {
                                 ToastUtils.toast(PicBackActivity.this, "上传成功");
                                 setResult(RESULT_OK);
                                 onBackPressed();

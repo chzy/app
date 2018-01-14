@@ -12,9 +12,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.chd.yunpan.GlideApp;
 import com.chd.yunpan.R;
 import com.chd.yunpan.utils.Base64Utils;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +65,7 @@ public class PhotoBrowseActivity extends Activity implements View.OnClickListene
 //                }
 //                Picasso.with(this).load(uri).resize(500,500).error(R.drawable.load_failure).into(photo);
                 if (photoPath.get(i).startsWith("file")) {
-                    Picasso.with(this)
+                    GlideApp.with(this)
                             .load(photoPath.get(i))
                             .into(photo);
                 } else {

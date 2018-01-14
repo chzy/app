@@ -5,9 +5,9 @@ import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.chd.yunpan.GlideApp;
 import com.chd.yunpan.R;
 import com.chd.yunpan.utils.Base64Utils;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -36,14 +36,14 @@ public class NineAdapter extends BaseQuickAdapter<String,BaseViewHolder> {
                 helper.setVisible(R.id.iv_gv_item,false);
             } else {
                 helper.setVisible(R.id.iv_gv_item,true);
-                Picasso.with(mContext)
+                GlideApp.with(mContext)
                         .load(R.drawable.add_photo)
                         .into((ImageView) helper.getView(R.id.iv_gv_item));
             }
         } else {
             if(item.startsWith("file")){
                 helper.setVisible(R.id.iv_gv_item,true);
-                Picasso.with(mContext)
+                GlideApp.with(mContext)
                         .load(item)
                         .into((ImageView) helper.getView(R.id.iv_gv_item));
             }else{

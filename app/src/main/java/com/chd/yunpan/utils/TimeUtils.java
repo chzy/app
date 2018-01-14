@@ -30,7 +30,7 @@ public class TimeUtils {
      */
     public static String getTime(long timeInMillis, SimpleDateFormat dateFormat) {
         //long ttt;
-        if (timeInMillis<1499999999)
+        if (timeInMillis<9999999999L)
            timeInMillis=timeInMillis*1000;
 
         return dateFormat.format(new Date(timeInMillis));
@@ -107,10 +107,10 @@ public class TimeUtils {
     public static int getZeroTime(int timeInMillis){
         Calendar date=Calendar.getInstance();
         date.setTimeInMillis(timeInMillis*1000L);
-        date.set(Calendar.HOUR,0);
+        date.set(Calendar.HOUR_OF_DAY,0);
         date.set(Calendar.MINUTE,0);
-        date.set(Calendar.MILLISECOND,0);
-        return (int)(date.getTimeInMillis()/1000);
+        date.set(Calendar.SECOND,0);
+        return (int) (date.getTimeInMillis()/1000);
     }
 
     public static String getDay(long timeInMillis){
