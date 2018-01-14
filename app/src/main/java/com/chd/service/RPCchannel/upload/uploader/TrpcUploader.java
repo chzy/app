@@ -27,9 +27,10 @@ public class TrpcUploader extends BaseUploader {
 
             while(--loops>0)
             {
-                if (transport == null)
-                    transport = new TrpcOutputstream(fileUploadInfo._item, fileUploadInfo.getDescAttribMap());
+                //if (transport == null)
+                transport = new TrpcOutputstream(fileUploadInfo._item, fileUploadInfo.getDescAttribMap());
                 ret=upload(fileUploadInfo, transport, fileTransferredListener);
+                transport=null;
                 if (ret) {
                     break;
                 }
@@ -159,8 +160,9 @@ public class TrpcUploader extends BaseUploader {
             Log.d(TAG, objid + " upload commit failed  !!");
             //succed = false;
             trpcOutputstream.cancel();
-            trpcOutputstream=null;
+
         }
+        trpcOutputstream=null;
         return succed;
     }
 }

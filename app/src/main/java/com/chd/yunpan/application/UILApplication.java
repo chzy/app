@@ -168,7 +168,7 @@ public class UILApplication extends Application {
 
         FileUploadConfiguration fileUploadConfiguration = new FileUploadConfiguration.Builder(context)
                 .setResponseProcessor(new TrpcResponseParse())  //设置http response字符串的结果解析器，如果不设置，则默认返回response字符串
-                .setThreadPoolSize(2)         //设置线程池大小，如果采用默认的线程池则有效
+                .setThreadPoolSize(1)         //设置线程池大小，如果采用默认的线程池则有效
                 .setThreadPriority(Thread.NORM_PRIORITY - 1)  //设置线程优先级，如果采用默认的线程池则有效
                // .setTaskExecutor(exService)     //设置自定义的线程池
                 .setFileUploader(new TrpcUploader())    //设置自定义的文件上传功能，如果不设置则采用默认的文件上传功能
@@ -179,7 +179,7 @@ public class UILApplication extends Application {
                 //.setCacheDir()        //设置下载缓存目录，必须设置
                 //.setTaskExecutor(...)    //同上传类似
                 //.setThreadPriority(...)  //同上传类似
-                .setThreadPoolCoreSize(2)  //同上传类似
+                .setThreadPoolCoreSize(1)  //同上传类似
                 .build();
         DownloadManager.getInstance(context).init(downloadConfiguration);
     }
