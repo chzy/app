@@ -82,7 +82,7 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                 Intent intent = new Intent(mAct, PicDetailActivity.class);
                     intent.putExtra("bean", file.t);
                     intent.putExtra("pos", position);
-                    intent.putExtra("ubklist", false);
+                    intent.putExtra("ubklist", true);
                     startActivityForResult(intent, 0x12);
             }
         });
@@ -241,19 +241,18 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                     return;
                 }
                 FileUploadManager manager = FileUploadManager.getInstance();
-                boolean overwrite = true;
-                boolean resume = true;
                 UploadOptions options = new UploadOptions(true, true);
                 final MaterialDialog.Builder builder = new MaterialDialog.Builder(PicBackActivity.this);
-                builder.content("正在上传");
+                builder.content("第1个文件正在上传");
+                builder.cancelable(false);
                 builder.progress(true, 100);
                 final MaterialDialog build = builder.build();
                 build.show();
                 count = 0;
-                for (FileLocal f :
-                        fileLocals) {
+                for (int i = 0; i < fileLocals.size(); i++) {
+                    FileLocal f = fileLocals.get(i);
                     f.setFtype(FTYPE.PICTURE);
-                    manager.uploadFile(new ProgressBarAware(build), null, f, new OnUploadListener() {
+                    manager.uploadFile(new ProgressBarAware(build,i+1),null,f, new OnUploadListener() {
                         @Override
                         public void onError(FileUploadInfo uploadData, int errorType, String msg) {
                             ToastUtils.toast(PicBackActivity.this, "上传失败");
@@ -262,9 +261,9 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
 
                         @Override
                         public void onSuccess(FileUploadInfo uploadData, Object data) {
-                            build.dismiss();
                             count++;
                             if (count == fileLocals.size()) {
+                                build.dismiss();
                                 ToastUtils.toast(PicBackActivity.this, "上传成功");
                                 setResult(RESULT_OK);
                                 onBackPressed();
