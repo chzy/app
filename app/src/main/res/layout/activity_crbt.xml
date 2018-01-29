@@ -14,13 +14,14 @@
         android:layout_marginTop="50dp"
         android:textColor="#000"
         android:textSize="18sp"
+        android:visibility="gone"
         android:text="尽请期待!"
         />
-    <!--<WebView-->
-        <!--android:id="@+id/crbt_webview"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
+    <WebView
+        android:id="@+id/crbt_webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <!--</WebView>-->
+    </WebView>
 
 </LinearLayout>
