@@ -39,7 +39,7 @@ public class OtherActivity extends UILActivity implements OnClickListener {
 
     List<FileInfo0> tmpFileInfo = new ArrayList<FileInfo0>();
     String path;
-    final  String TAG="OtherActivity";
+    final String TAG = "OtherActivity";
     ArrayList<FileInfo0> checkList;
     private ImageView mIvLeft;
     private TextView mTvCenter;
@@ -57,7 +57,7 @@ public class OtherActivity extends UILActivity implements OnClickListener {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
                 case 998:
-                    ToastUtils.toast(OtherActivity.this,"执行成功");
+                    ToastUtils.toast(OtherActivity.this, "执行成功");
                     dismissWaitDialog();
                     dismissDialog();
                     onNewThreadRequest();
@@ -148,7 +148,6 @@ public class OtherActivity extends UILActivity implements OnClickListener {
     }
 
 
-
     private void initData(List<FileInfo> cloudUnits) {
 
         if (cloudUnits == null) {
@@ -157,7 +156,7 @@ public class OtherActivity extends UILActivity implements OnClickListener {
         filelistEntity = UILApplication.getFilelistEntity();
 
         // 找到10个以后 先返回, 剩下的 在线程里面继续找
-        syncTask.dbManager.GetLocalFiles0( new String[]{"pdf", "xls", "doc", "docx"}, true, filelistEntity, new DataCallBack() {
+        syncTask.dbManager.GetLocalFiles0(new String[]{"pdf", "xls", "doc", "docx"}, true, filelistEntity, new DataCallBack() {
             @Override
             /*
             * @count 当前list的最后下标
@@ -171,10 +170,10 @@ public class OtherActivity extends UILActivity implements OnClickListener {
     }
 
 
-    private void refreshData(List<FileLocal> datas){
-        long t1,t0=System.currentTimeMillis();
-        t1=System.currentTimeMillis();
-        Log.i(TAG, "initData: "+(t1-t0));
+    private void refreshData(List<FileLocal> datas) {
+        long t1, t0 = System.currentTimeMillis();
+        t1 = System.currentTimeMillis();
+        Log.i(TAG, "initData: " + (t1 - t0));
         //显示的时候过滤文件类型
         //MFileFilter fileFilter = new MFileFilter();
         //fileFilter.setCustomCategory(new String[]{FileInfoL.FILE_TYPE_DOC, FileInfoL.FILE_TYPE_DOCX, FileInfoL.FILE_TYPE_PDF, FileInfoL.FILE_TYPE_PPT, FileInfoL.FILE_TYPE_XLS}, true);
@@ -195,7 +194,7 @@ public class OtherActivity extends UILActivity implements OnClickListener {
                 mFileInfoList.add(info0);
             }
         }
-        t1=System.currentTimeMillis();
+        t1 = System.currentTimeMillis();
         List<FileLocal> fileLocals = filelistEntity.getLocallist();
         if (fileLocals != null) {
             for (FileLocal fileLocal : fileLocals) {
@@ -218,8 +217,8 @@ public class OtherActivity extends UILActivity implements OnClickListener {
             }
         }
         mTvNumber.setText("未备份文件" + mFileLocalList.size() + "个");
-        t1=System.currentTimeMillis();
-        Log.i("OtherActivity", "initData: cost"+ (t1-t0));
+        t1 = System.currentTimeMillis();
+        Log.i("OtherActivity", "initData: cost" + (t1 - t0));
         handler.sendEmptyMessage(0);
     }
 

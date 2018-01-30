@@ -30,7 +30,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 public class MediaMgr {
 
@@ -421,7 +420,7 @@ public class MediaMgr {
                         fileLocal.setObjid(objname+fpath.substring(idx+objname.length()));
                         LocalUnits.add(fileLocal);
                         count++;
-                        if (dataCallBack!=null && count%10==1 ) {
+                        if (dataCallBack!=null && count%100==0 ) {
                             dataCallBack.success(LocalUnits, count);
                         }
                             //countDownLatch.countDown();
