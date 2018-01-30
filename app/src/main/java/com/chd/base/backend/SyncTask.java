@@ -26,13 +26,16 @@ import com.chd.yunpan.share.ShareUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 
 public class SyncTask {
 	private Context context;
-	MediaMgr dbManager;
+	public  MediaMgr dbManager;
 	public List<FileInfo> _CloudList;
 	private FilelistEntity filelistEntity;
 	private final FTYPE _ftype;
@@ -45,7 +48,7 @@ public class SyncTask {
 		this.context = context;
 		_ftype = tp;
 
-		_CloudList = new ArrayList<FileInfo>();
+		//_CloudList = new ArrayList<FileInfo>();
 		dbManager = new MediaMgr(context, _ftype);
 		syncLocalFileBackground = new SyncLocalFileBackground(context);
 		//dbManager.open();
@@ -65,7 +68,10 @@ public class SyncTask {
 	public synchronized List<FileInfo> getCloudUnits(int begin, int max) {
 		/*if (filelistEntity!=null && filelistEntity.getBklist()!=null)
 			return filelistEntity.getBklist();*/
-		List<FileInfo> flist = new ArrayList<>();
+//		List<FileInfo> flist = new ArrayList<>();
+		List<FileInfo> flist =  Collections.synchronizedList(new ArrayList<FileInfo>());
+
+		long t1,t0=System.currentTimeMillis();
 		try {
 			final CloudListEntity cloudListEntity = TClient.getinstance().queryFileList(_ftype, begin, max);
 			flist = cloudListEntity.getList();
@@ -78,6 +84,8 @@ public class SyncTask {
 			e.printStackTrace();
 			flist = new ArrayList<FileInfo>();
 		}
+		t1=System.currentTimeMillis();
+		Log.i(TAG, "getCloudUnits: query remote cost :"+ (t1-t0));
 		return flist;
 	}
 
@@ -133,6 +141,14 @@ public class SyncTask {
 		dbManager.anlayLocalUnits(remotelist, filelistEntity);
 //		filelistEntity.setLocallist(dbManager.getLocalUnits());
 		return filelistEntity;
+	}
+
+	public void analyOtherUnits0(List<FileInfo> remotelist, FilelistEntity filelistEntity) {
+		//dbManager.GetLocalFiles(MediaFileUtil.FileCategory.File, new String[]{"pdf", "xls", "doc", "docx"}, true, filelistEntity);
+		dbManager.GetLocalFiles0( new String[]{"pdf", "xls", "doc", "docx"}, true, filelistEntity);
+		dbManager.anlayLocalUnits(remotelist, filelistEntity);
+//		filelistEntity.setLocallist(dbManager.getLocalUnits());
+		//return filelistEntity;
 	}
 
 	public FilelistEntity analyUnits(List<FileInfo> remotelist) {

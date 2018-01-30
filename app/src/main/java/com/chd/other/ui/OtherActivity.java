@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -38,6 +39,7 @@ public class OtherActivity extends UILActivity implements OnClickListener {
 
     List<FileInfo0> tmpFileInfo = new ArrayList<FileInfo0>();
     String path;
+    final  String TAG="OtherActivity";
     ArrayList<FileInfo0> checkList;
     private ImageView mIvLeft;
     private TextView mTvCenter;
@@ -100,10 +102,12 @@ public class OtherActivity extends UILActivity implements OnClickListener {
     private Button mBtnDown;
     private int count;
     private ArrayList<FileLocal> mFileLocalLists = new ArrayList<>();
+    private FilelistEntity filelistEntity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
 		/*StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectNetwork().penaltyLog().build());
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
@@ -143,24 +147,30 @@ public class OtherActivity extends UILActivity implements OnClickListener {
         thread.start();
     }
 
-    FilelistEntity filelistEntity;
+
 
     private void initData(List<FileInfo> cloudUnits) {
+        long t1,t0=System.currentTimeMillis();
         if (cloudUnits == null) {
             System.out.print("query remote failed");
         }
         filelistEntity = UILApplication.getFilelistEntity();
-        filelistEntity = syncTask.analyOtherUnits(cloudUnits, filelistEntity);
+
+        // 找到10个以后 先返回, 剩下的 在线程里面继续找
+        syncTask.dbManager.GetLocalFiles0( new String[]{"pdf", "xls", "doc", "docx"}, true, filelistEntity,callback);
+
+        syncTask.analyOtherUnits0(cloudUnits, filelistEntity);
+        t1=System.currentTimeMillis();
+        Log.i(TAG, "initData: "+(t1-t0));
         //显示的时候过滤文件类型
-        MFileFilter fileFilter = new MFileFilter();
-        fileFilter.setCustomCategory(new String[]{FileInfoL.FILE_TYPE_DOC, FileInfoL.FILE_TYPE_DOCX, FileInfoL.FILE_TYPE_PDF, FileInfoL.FILE_TYPE_PPT, FileInfoL.FILE_TYPE_XLS}, true);
+        //MFileFilter fileFilter = new MFileFilter();
+        //fileFilter.setCustomCategory(new String[]{FileInfoL.FILE_TYPE_DOC, FileInfoL.FILE_TYPE_DOCX, FileInfoL.FILE_TYPE_PDF, FileInfoL.FILE_TYPE_PPT, FileInfoL.FILE_TYPE_XLS}, true);
         if (cloudUnits != null) {
-            for (FileInfo f :
-                    cloudUnits) {
+            for (FileInfo f : cloudUnits) {
                 FileInfo0 info0 = new FileInfo0(f);
-                if (!fileFilter.contains(info0.getObjid())) {
+               /* if (!fileFilter.contains(info0.getObjid())) {
                   continue;
-                }
+                }*/
                 int sysid = filelistEntity.queryLocalSysid(info0.getObjid());
                 if (sysid > 0) {
                     info0.setSysid(sysid);
@@ -172,6 +182,8 @@ public class OtherActivity extends UILActivity implements OnClickListener {
                 mFileInfoList.add(info0);
             }
         }
+        t1=System.currentTimeMillis();
+        Log.i(TAG, "initData: "+(t1-t0));
         List<FileLocal> fileLocals = filelistEntity.getLocallist();
 
         if (fileLocals != null) {
@@ -191,14 +203,16 @@ public class OtherActivity extends UILActivity implements OnClickListener {
                     fileInfo0.setFilePath(path + "/" + fileLocal.getObjid());
                     fileInfo0.setSysid(sysid);
                 }
-                if (fileFilter.contains(fileInfo0.getFilePath())) {
+               /* if (fileFilter.contains(fileInfo0.getFilePath())) {
                     mFileLocalList.add(fileInfo0);
                     mFileLocalLists.add(fileLocal);
-                }
+                }*/
+                mFileLocalLists.add(fileLocal);
             }
         }
         mTvNumber.setText("未备份文件" + mFileLocalList.size() + "个");
-
+        t1=System.currentTimeMillis();
+        Log.i("OtherActivity", "initData: cost"+ (t1-t0));
 
         handler.sendEmptyMessage(0);
     }

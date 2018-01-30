@@ -5,6 +5,7 @@ import android.util.Log;
 import com.chd.proto.FileInfo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class FilelistEntity {
         backmap = new HashMap<>();
         pathmap = new HashMap<>();
         // bklist=new ArrayList<>();
-        locallist = new ArrayList<>();
+        locallist = Collections.synchronizedList(new ArrayList()) ;
         _GroupCpLocal = new ArrayList<>();
         _GroupCpCloud = new ArrayList<>();
     }

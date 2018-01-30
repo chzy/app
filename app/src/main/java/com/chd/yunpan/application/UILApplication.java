@@ -80,7 +80,7 @@ public class UILApplication extends Application {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-        CloseableHttpClient httpClient = HttpClients.createSystem();
+       // CloseableHttpClient httpClient = HttpClients.createSystem();
         // application 初始化
         FunctionOptions options = new FunctionOptions.Builder()
                 .setType(FunctionConfig.TYPE_IMAGE)
@@ -88,12 +88,12 @@ public class UILApplication extends Application {
                 .setGrade(Luban.THIRD_GEAR)
                 .create();
         PictureConfig.getInstance().init(options);
-        try {
-            TClient.getinstance(httpClient);
+       /* try {
+            //TClient.getinstance(httpClient);
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("Application", e.getMessage());
-        }
+        }*/
 
     }
 
