@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 public class MediaMgr {
 
@@ -315,17 +316,25 @@ public class MediaMgr {
         int idx_cld = 0;
         int idx_lcl = 0;
         int vl = 0;
-        FileInfo fileInfo;
+        //FileInfo fileInfo;
         while (idx_cld < couldlist.size() && idx_lcl < LocalUnits.size()) {
             //fileInfo=couldlist.get(idx_cld);
             //fileInfo.setLastModified(TimeUtils.getDayWithTimeMillis0(fileInfo.getLastModified()));
 
-            if ((fileInfo = couldlist.get(idx_cld)).getObjid().compareTo(LocalUnits.get(idx_lcl).getObjid()) < 0) {
+            /*if ((fileInfo = couldlist.get(idx_cld)).getObjid().compareTo(LocalUnits.get(idx_lcl).getObjid()) < 0) {
                 //fileInfo.setLastModified(TimeUtils.getDayWithTimeMillis0(fileInfo.getLastModified()));
                 idx_cld++;
             } else if (couldlist.get(idx_cld).getObjid().compareTo(LocalUnits.get(idx_lcl).getObjid()) > 0) {
                 idx_lcl++;
-            } else {
+            }*/
+            vl =  couldlist.get(idx_cld).getObjid().compareTo(LocalUnits.get(idx_lcl).getObjid());
+            if (vl < 0) {
+                //fileInfo.setLastModified(TimeUtils.getDayWithTimeMillis0(fileInfo.getLastModified()));
+                idx_cld++;
+            } else if (vl > 0) {
+                idx_lcl++;
+            }
+            else {
                 local_item = LocalUnits.get(idx_lcl);
                 local_item.bakuped = true;
                 filelistEntity.addbakups(local_item.getObjid(),/*local_item.getSysid()*/ 1);
@@ -335,8 +344,9 @@ public class MediaMgr {
                 idx_lcl++;
             }
         }
-
-        Collections.sort(couldlist, new ComparatorByDate());
+        t1=System.currentTimeMillis();
+        Log.i(TAG, "anlayLocalUnits: compare cost :"+(t1-t0)+" ms");
+       // Collections.sort(couldlist, new ComparatorByDate());
         filelistEntity.setBklist(couldlist);
         //filelistEntity.setLocallist(LocalUnits);
         t1 = System.currentTimeMillis();
@@ -344,12 +354,101 @@ public class MediaMgr {
         return;
     }
 
+    public void GetLocalFiles0(String[] exts, boolean include, final FilelistEntity filelistEntity) {
+        //setCustomCategory(new String[]{"doc", "pdf", "xls", "zip", "rar"}, true);
+
+        Uri fileUri= MediaStore.Files.getContentUri("external");
+        final List<FileLocal> LocalUnits = filelistEntity.getLocallist();
+        if (LocalUnits != null && !LocalUnits.isEmpty())
+            return;
+
+        String[] projection=new String[]{
+                MediaStore.Files.FileColumns.DATA, MediaStore.Files.FileColumns.TITLE,MediaStore.Files.FileColumns.SIZE,MediaStore.Files.FileColumns.DATE_MODIFIED
+        };
+        String selection="";
+        for(int i=0;i<exts.length;i++)
+        {
+            if(i!=0)
+            {
+                selection=selection+" OR ";
+            }
+            selection=selection+ MediaStore.Files.FileColumns.DATA+" LIKE '%"+"."+exts[i]+"'";
+        }
+        //按时间递增顺序对结果进行排序;待会从后往前移动游标就可实现时间递减
+        String sortOrder= MediaStore.Files.FileColumns.TITLE;
+        //获取内容解析器对象
+        ContentResolver resolver=context.getContentResolver();
+        //获取游标
+        final Cursor cursor=resolver.query(fileUri, projection, selection, null, sortOrder);
+        if(cursor==null)
+            return;
+        //游标从最后开始往前递减，以此实现时间递减顺序（最近访问的文件，优先显示）
+        int count=cursor.getCount();
+        final CountDownLatch countDownLatch=new CountDownLatch( Math.min(10,count));//at least 10 items;
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                int idx=0;
+                long t1,t0=System.currentTimeMillis();
+                if(cursor.moveToLast())
+                {
+                    do{
+                        //输出文件的完整路径
+                        String fpath=cursor.getString(0);
+                        //String name=
+                        //Log.d("tag", data);
+                        FileLocal fileLocal = new FileLocal();
+                        //fileLocal.setSysid(c.getInt(COLUMN_ID));
+                        // File file = new File(fpath);
+                        String objname = cursor.getString(1);
+                        if (objname==null)
+                            continue;
+                        idx=fpath.lastIndexOf(objname);
+                        if (idx<2)
+                            continue;
+
+
+                        fileLocal.setFilesize(cursor.getInt(2));
+                        fileLocal.setFtype(FTYPE.NORMAL);
+                        fileLocal.setLastModified((int) cursor.getLong(3));
+//                int pathid = c.getInt(COLUMN_ID);
+                        String path =fpath.substring(0,idx);
+                        int pathid = filelistEntity.addFilePath(path);
+                        fileLocal.setPathid(pathid);
+                        //file = null;
+                        //String objname=MediaFileUtil.getFnameformPath(c.getString(COLUMN_PATH));
+                        fileLocal.setObjid(objname+fpath.substring(idx+objname.length()));
+                        LocalUnits.add(fileLocal);
+                        countDownLatch.countDown();
+                    }while(cursor.moveToPrevious());
+                }
+                cursor.close();
+
+                t1=System.currentTimeMillis();
+                Log.i(TAG, "GetLocalFiles: cost time :"+ (t1 -t0 ) );
+
+
+            }
+        }).run();
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return;
+
+    }
+
     public void GetLocalFiles(MediaFileUtil.FileCategory fc, String[] exts, boolean include, FilelistEntity filelistEntity) {
         //setCustomCategory(new String[]{"doc", "pdf", "xls", "zip", "rar"}, true);
+        long t1,t0=System.currentTimeMillis();
         List<FileLocal> LocalUnits = filelistEntity.getLocallist();
         if (LocalUnits != null && !LocalUnits.isEmpty())
             return;
         setCustomCategory(exts, include);
+
+
         Cursor c = query(fc, MediaFileUtil.FileCategory.All, MediaFileUtil.SortMethod.name  /*date null*/);
 
         if (c != null) {
@@ -358,12 +457,16 @@ public class MediaMgr {
                 if (filters.contains(fpath) == false) {
                     continue;
                 }
-                FileLocal fileLocal = new FileLocal();
+                else {
+                    if (1==1)
+                        continue;
+                }
+                    FileLocal fileLocal = new FileLocal();
                 //fileLocal.setSysid(c.getInt(COLUMN_ID));
                 File file = new File(c.getString(COLUMN_PATH));
                 String objname = file.getName();
                 String path = file.getParent();
-                fileLocal.setFilesize(file.length());
+                //fileLocal.setFilesize(file.length());
                 fileLocal.setFtype(FTYPE.NORMAL);
                 fileLocal.setLastModified((int) c.getLong(COLUMN_DATE));
 //                int pathid = c.getInt(COLUMN_ID);
@@ -377,6 +480,8 @@ public class MediaMgr {
             }
             c.close();
         }
+        t1=System.currentTimeMillis();
+        Log.i(TAG, "GetLocalFiles: cost time :"+ (t1 -t0 ) );
         if (c == null) {
             Log.e(TAG, "fail to query uri");
         }
