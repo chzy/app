@@ -407,8 +407,6 @@ public class MediaMgr {
                         idx=fpath.lastIndexOf(objname);
                         if (idx<2)
                             continue;
-
-
                         fileLocal.setFilesize(cursor.getInt(2));
                         fileLocal.setFtype(FTYPE.NORMAL);
                         fileLocal.setLastModified((int) cursor.getLong(3));
@@ -416,8 +414,8 @@ public class MediaMgr {
                         String path =fpath.substring(0,idx);
                         int pathid = filelistEntity.addFilePath(path);
                         fileLocal.setPathid(pathid);
-                        //file = null;
-                        //String objname=MediaFileUtil.getFnameformPath(c.getString(COLUMN_PATH));
+                            //file = null;
+                            //String objname=MediaFileUtil.getFnameformPath(c.getString(COLUMN_PATH));
                         fileLocal.setObjid(objname+fpath.substring(idx+objname.length()));
                         LocalUnits.add(fileLocal);
                         countDownLatch.countDown();

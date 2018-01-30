@@ -15,13 +15,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chd.MediaMgr.utils.MFileFilter;
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.UILActivity;
 import com.chd.base.Ui.DownListActivity;
 import com.chd.base.backend.SyncTask;
 import com.chd.contacts.vcard.StringUtils;
+import com.chd.listener.DataCallBack;
 import com.chd.other.adapter.OtherListAdapter;
 import com.chd.other.entity.FileInfoL;
 import com.chd.proto.FTYPE;
@@ -150,23 +150,33 @@ public class OtherActivity extends UILActivity implements OnClickListener {
 
 
     private void initData(List<FileInfo> cloudUnits) {
-        long t1,t0=System.currentTimeMillis();
+
         if (cloudUnits == null) {
             System.out.print("query remote failed");
         }
         filelistEntity = UILApplication.getFilelistEntity();
 
         // 找到10个以后 先返回, 剩下的 在线程里面继续找
-        syncTask.dbManager.GetLocalFiles0( new String[]{"pdf", "xls", "doc", "docx"}, true, filelistEntity,callback);
-
+        syncTask.dbManager.GetLocalFiles0( new String[]{"pdf", "xls", "doc", "docx"}, true, filelistEntity, new DataCallBack() {
+            @Override
+            public void success(List<FileLocal> datas) {
+                //接收到的数据
+                refreshData(datas);
+            }
+        });
         syncTask.analyOtherUnits0(cloudUnits, filelistEntity);
+    }
+
+
+    private void refreshData(List<FileLocal> datas){
+        long t1,t0=System.currentTimeMillis();
         t1=System.currentTimeMillis();
         Log.i(TAG, "initData: "+(t1-t0));
         //显示的时候过滤文件类型
         //MFileFilter fileFilter = new MFileFilter();
         //fileFilter.setCustomCategory(new String[]{FileInfoL.FILE_TYPE_DOC, FileInfoL.FILE_TYPE_DOCX, FileInfoL.FILE_TYPE_PDF, FileInfoL.FILE_TYPE_PPT, FileInfoL.FILE_TYPE_XLS}, true);
-        if (cloudUnits != null) {
-            for (FileInfo f : cloudUnits) {
+        if (datas != null) {
+            for (FileInfo f : datas) {
                 FileInfo0 info0 = new FileInfo0(f);
                /* if (!fileFilter.contains(info0.getObjid())) {
                   continue;
@@ -183,9 +193,7 @@ public class OtherActivity extends UILActivity implements OnClickListener {
             }
         }
         t1=System.currentTimeMillis();
-        Log.i(TAG, "initData: "+(t1-t0));
         List<FileLocal> fileLocals = filelistEntity.getLocallist();
-
         if (fileLocals != null) {
             for (FileLocal fileLocal : fileLocals) {
                 if (fileLocal.bakuped)
@@ -203,17 +211,12 @@ public class OtherActivity extends UILActivity implements OnClickListener {
                     fileInfo0.setFilePath(path + "/" + fileLocal.getObjid());
                     fileInfo0.setSysid(sysid);
                 }
-               /* if (fileFilter.contains(fileInfo0.getFilePath())) {
-                    mFileLocalList.add(fileInfo0);
-                    mFileLocalLists.add(fileLocal);
-                }*/
                 mFileLocalLists.add(fileLocal);
             }
         }
         mTvNumber.setText("未备份文件" + mFileLocalList.size() + "个");
         t1=System.currentTimeMillis();
         Log.i("OtherActivity", "initData: cost"+ (t1-t0));
-
         handler.sendEmptyMessage(0);
     }
 
