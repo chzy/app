@@ -159,7 +159,10 @@ public class OtherActivity extends UILActivity implements OnClickListener {
         // 找到10个以后 先返回, 剩下的 在线程里面继续找
         syncTask.dbManager.GetLocalFiles0( new String[]{"pdf", "xls", "doc", "docx"}, true, filelistEntity, new DataCallBack() {
             @Override
-            public void success(List<FileLocal> datas) {
+            /*
+            * @count 当前list的最后下标
+            * */
+            public void success(List<FileLocal> datas, int pos) {
                 //接收到的数据
                 refreshData(datas);
             }

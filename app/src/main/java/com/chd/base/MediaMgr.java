@@ -15,6 +15,7 @@ import com.chd.MediaMgr.utils.MFileFilter;
 import com.chd.MediaMgr.utils.MediaFileUtil;
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
+import com.chd.listener.DataCallBack;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
@@ -354,7 +355,7 @@ public class MediaMgr {
         return;
     }
 
-    public void GetLocalFiles0(String[] exts, boolean include, final FilelistEntity filelistEntity) {
+    public void GetLocalFiles0(String[] exts, boolean include, final FilelistEntity filelistEntity, final DataCallBack dataCallBack) {
         //setCustomCategory(new String[]{"doc", "pdf", "xls", "zip", "rar"}, true);
 
         Uri fileUri= MediaStore.Files.getContentUri("external");
@@ -384,12 +385,13 @@ public class MediaMgr {
             return;
         //游标从最后开始往前递减，以此实现时间递减顺序（最近访问的文件，优先显示）
         int count=cursor.getCount();
-        final CountDownLatch countDownLatch=new CountDownLatch( Math.min(10,count));//at least 10 items;
+       // final CountDownLatch countDownLatch=new CountDownLatch( Math.min(10,count));//at least 10 items;
         new Thread(new Runnable() {
 
             @Override
             public void run() {
-                int idx=0;
+                int idx=0,count=-1;
+
                 long t1,t0=System.currentTimeMillis();
                 if(cursor.moveToLast())
                 {
@@ -418,7 +420,11 @@ public class MediaMgr {
                             //String objname=MediaFileUtil.getFnameformPath(c.getString(COLUMN_PATH));
                         fileLocal.setObjid(objname+fpath.substring(idx+objname.length()));
                         LocalUnits.add(fileLocal);
-                        countDownLatch.countDown();
+                        count++;
+                        if (dataCallBack!=null && count%10==1 ) {
+                            dataCallBack.success(LocalUnits, count);
+                        }
+                            //countDownLatch.countDown();
                     }while(cursor.moveToPrevious());
                 }
                 cursor.close();
@@ -429,12 +435,12 @@ public class MediaMgr {
 
             }
         }).run();
-        try {
+    /*    try {
             countDownLatch.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return;
+        return;*/
 
     }
 
