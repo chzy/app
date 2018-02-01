@@ -183,7 +183,7 @@ public class OtherActivity extends UILActivity implements OnClickListener {
                 //接收到的数据
 
                 syncTask.dbManager.anlayLocalUnits(cloudUnits, filelistEntity,offset,count);
-                refreshData(datas,offset,count);
+                refreshData(filelistEntity.getUnbak_idx_lst().size());
             }
         });
        // Unbak_idx_lst.clear();
@@ -191,7 +191,7 @@ public class OtherActivity extends UILActivity implements OnClickListener {
     }
 
 
-    private void refreshData(List<FileInfo0> datas,int offset,int count){
+    private void refreshData(int count){
 
       /*  if (datas != null) {
             //for (FileInfo f : datas)
@@ -210,7 +210,7 @@ public class OtherActivity extends UILActivity implements OnClickListener {
       /*TODO
       * */
       // 问题:  数量显示未更新,只有全部文件取完以后 才显示出个数
-        mTvNumber.setText("未备份文件" + /*mFileLocalList.size()*/filelistEntity.getUnbak_idx_lst().size() + "个");
+        mTvNumber.setText("未备份文件" + count + "个");
         handler.sendEmptyMessage(0);
     }
 
