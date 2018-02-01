@@ -3,10 +3,12 @@ package com.chd.base.Entity;
 import android.util.Log;
 
 import com.chd.proto.FileInfo;
+import com.chd.proto.FileInfo0;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -14,7 +16,8 @@ import java.util.List;
  */
 public class FilelistEntity {
     private List<FileInfo> bklist;
-    private final List<FileLocal> locallist;
+    private final List<FileInfo0> locallist;
+    private List<Integer> Unbak_idx_lst;
     private int bakNumber = 0;
     private int unBakNumber = 0;
     private HashMap<String, Integer> backmap;
@@ -34,9 +37,10 @@ public class FilelistEntity {
         backmap = new HashMap<>();
         pathmap = new HashMap<>();
         // bklist=new ArrayList<>();
-        locallist = Collections.synchronizedList(new ArrayList()) ;
+        locallist = Collections.synchronizedList(new ArrayList<FileInfo0>(300)) ;
         _GroupCpLocal = new ArrayList<>();
         _GroupCpCloud = new ArrayList<>();
+        Unbak_idx_lst=new LinkedList<>();
     }
 
     public void ReSet() {
@@ -45,6 +49,7 @@ public class FilelistEntity {
         locallist.clear();
         _GroupCpLocal.clear();
         _GroupCpLocal.clear();
+        Unbak_idx_lst.clear();
         _gpinterval = 0;
     }
 
@@ -54,7 +59,7 @@ public class FilelistEntity {
     }
 
     public void setBklist(List<FileInfo> list) {
-        setBklist(list, false);
+        setBklist(list, true);
     }
 
     public void setBklist(List<FileInfo> list, boolean copy) {
@@ -64,15 +69,15 @@ public class FilelistEntity {
             }
             this.bklist.addAll(list);
         } else {
-           /* if (this.bklist != null) {
+            if (this.bklist != null) {
                 this.bklist.clear();
-            }*/
+            }
             this.bklist = list;
         }
     }
 
 
-    public List<FileLocal> getLocallist() {
+    public List<FileInfo0> getLocallist() {
         return locallist;
     }
 
@@ -232,6 +237,10 @@ public class FilelistEntity {
 
 
         return ret;
+    }
+
+    public List<Integer> getUnbak_idx_lst() {
+        return Unbak_idx_lst;
     }
 }
 

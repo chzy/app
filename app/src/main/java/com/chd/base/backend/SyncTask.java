@@ -52,9 +52,9 @@ public class SyncTask {
 		//dbManager.open();
 	}
 
-	public FileInfo getUnitinfo(int id) {
+	/*public FileInfo getUnitinfo(int id) {
 		return filelistEntity.getBklist().get(id);
-	}
+	}*/
 
 
 	public void flush() {
@@ -89,7 +89,7 @@ public class SyncTask {
 
 	public FileInfo0 queryLocalInfo(int sysid) {
 		FileInfo0 FileInfo = new FileInfo0();
-		FileInfo.setSysid(sysid);
+		//FileInfo.setSysid(sysid);
 		FileInfo.setFtype(_ftype);
 		if ( dbManager.queryLocalInfo(sysid,FileInfo))
 			return FileInfo;
@@ -149,6 +149,11 @@ public class SyncTask {
 		//return filelistEntity;
 	}
 
+	/*public void analyOtherUnits0(List<FileInfo> remotelist, FilelistEntity filelistEntity, int offset,int count) {
+		dbManager.anlayLocalUnits(remotelist, filelistEntity,pos);
+
+	}*/
+
 	public FilelistEntity analyUnits(List<FileInfo> remotelist) {
 		filelistEntity = new FilelistEntity();
 		//dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Music, new String[]{"mp3", "wav" }, true);
@@ -163,6 +168,8 @@ public class SyncTask {
 		dbManager.close();
 		return lst;
 	}
+
+
 
 	protected class SortBydesc implements Comparator<Object> {
 		@Override
@@ -181,7 +188,7 @@ public class SyncTask {
 	activeProcess 对象 实现进度条展现
 	beeque  放入数据库 做队列 通过服务方式后台下载
 	* */
-	public void uploadList(final List<FileInfo0> files, final ActiveProcess activeProcess, final Handler mHandler) {
+	public void uploadList(final List<FileInfo> files, final ActiveProcess activeProcess, final Handler mHandler) {
 		dialog = new AlertDialog.Builder(activeProcess)
 				.setTitle("正在上传")
 				.setMessage("")
@@ -204,10 +211,14 @@ public class SyncTask {
 		netThread = new Thread() {
 			@Override
 			public void run() {
-				int i = 0;
+				int i = 0,ct=files.size();
 				ArrayList<Integer> upload = new ArrayList<>();
 				try {
-					for (FileInfo0 item : files) {
+					//for (FileInfo0 item : files)
+
+					for (;i<ct;)
+					{
+						FileInfo0 item= (FileInfo0) files.get(i);
 						if (Thread.currentThread().isInterrupted()) {
 							throw new InterruptedException();
 						}
@@ -314,7 +325,7 @@ public class SyncTask {
 	activeProcess 对象 实现进度条展现
 	beeque  放入数据库 做队列 通过服务方式后台下载
 	* */
-	public void downloadList(final List<FileInfo0> files, final ActiveProcess activeProcess, final Handler mHandler) {
+	public void downloadList(final List<FileInfo> files, final ActiveProcess activeProcess, final Handler mHandler) {
 		dialog = new AlertDialog.Builder(activeProcess)
 				.setTitle("正在下载")
 				.setMessage("")

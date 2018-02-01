@@ -147,7 +147,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
                 break;
             case R.id.iv_music_num_layout:
                 Intent intent = new Intent(this, MusicBackupActivity.class);
-                ArrayList<FileLocal> fileLocals = new ArrayList<>(filelistEntity.getLocallist());
+                ArrayList<FileInfo0> fileLocals = new ArrayList<>(filelistEntity.getLocallist());
                 intent.putExtra("locallist", fileLocals);
                 startActivityForResult(intent, 0x02);
                 break;

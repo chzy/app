@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -52,12 +53,14 @@ public class MediaMgr {
     public final int COLUMN_DATE = 3;
     private final String TAG = this.getClass().getName();
 
+    int idx_cld ;
+
     public enum DBTAB {
         Dling, UPing, DLed, UPed
     }
 
 
-    public List<FileLocal> getLocalUnits() {
+    public List getLocalUnits() {
         return UILApplication.getFilelistEntity().getLocallist();
         //return this.LocalUnits;
     }
@@ -90,6 +93,7 @@ public class MediaMgr {
         shareUtils = new ShareUtils(context);
         //PicCache=new HashMap<Integer, FileInfo0>(20);
         _ftype = ftype;
+        idx_cld=0;
         //if (LocalUnits==null)
         //	LocalUnits=new ArrayList<FileLocal>();
         /*HashSet<FileLocal> fileLocalHashSet=new HashSet<FileLocal>();
@@ -309,14 +313,15 @@ public class MediaMgr {
         long t1, t0 = System.currentTimeMillis();
         //List<FileInfo> couldlist=filelistEntity.getBklist();
 
-        List<FileLocal> LocalUnits = filelistEntity.getLocallist();
+        List<FileInfo0> LocalUnits = filelistEntity.getLocallist();
         Collections.sort(couldlist, new ComparatorByName());
-        FileLocal local_item;
+        FileInfo0 local_item;
         //FileInfo cld_item;
 
         int idx_cld = 0;
         int idx_lcl = 0;
-        int vl = 0;
+        int vl = 0,unbackups=0;
+        List<Integer> Unbak_idx_lst=filelistEntity.getUnbak_idx_lst();
         //FileInfo fileInfo;
         while (idx_cld < couldlist.size() && idx_lcl < LocalUnits.size()) {
             //fileInfo=couldlist.get(idx_cld);
@@ -332,12 +337,16 @@ public class MediaMgr {
             if (vl < 0) {
                 //fileInfo.setLastModified(TimeUtils.getDayWithTimeMillis0(fileInfo.getLastModified()));
                 idx_cld++;
-            } else if (vl > 0) {
+            }
+            else
+            if (vl > 0) {
+                Unbak_idx_lst.add(idx_lcl);
                 idx_lcl++;
             }
             else {
                 local_item = LocalUnits.get(idx_lcl);
-                local_item.bakuped = true;
+                local_item.backuped = true;
+
                 filelistEntity.addbakups(local_item.getObjid(),/*local_item.getSysid()*/ 1);
                 //fileInfo=couldlist.get(idx_cld);
                 //fileInfo.setLastModified(TimeUtils.getDayWithTimeMillis0(fileInfo.getLastModified()));
@@ -349,7 +358,57 @@ public class MediaMgr {
         Log.i(TAG, "anlayLocalUnits: compare cost :"+(t1-t0)+" ms");
        // Collections.sort(couldlist, new ComparatorByDate());
         filelistEntity.setBklist(couldlist);
+
         //filelistEntity.setLocallist(LocalUnits);
+        t1 = System.currentTimeMillis();
+        long z = t1 - t0;
+        return;
+    }
+
+
+    public void anlayLocalUnits(final List<FileInfo> couldlist, FilelistEntity filelistEntity,int offset,int count) {
+
+        long t1, t0 = System.currentTimeMillis();
+        List<FileInfo0> LocalUnits = filelistEntity.getLocallist();
+
+        List<Integer> Unbak_idx_lst=filelistEntity.getUnbak_idx_lst();
+        if( Unbak_idx_lst.isEmpty())
+            Collections.sort(couldlist, new ComparatorByName());
+        FileInfo0 local_item;
+        int vl = 0;
+        int idx_lcl=offset;
+
+        while (idx_cld < couldlist.size() && idx_lcl < LocalUnits.size()) {
+
+            vl =  couldlist.get(idx_cld).getObjid().compareTo(LocalUnits.get(idx_lcl).getObjid());
+            if (vl < 0) {
+                idx_cld++;
+            }
+            else
+            if (vl > 0) {
+                Unbak_idx_lst.add(idx_lcl);
+                idx_lcl++;
+            }
+            else {
+                local_item = LocalUnits.get(idx_lcl);
+                local_item.backuped = true;
+
+                filelistEntity.addbakups(local_item.getObjid(),/*local_item.getSysid()*/ 1);
+                idx_cld++;
+                idx_lcl++;
+            }
+        }
+        if (couldlist.isEmpty())
+        {
+            for( ; idx_lcl<count  ;idx_lcl++)
+            {
+                Unbak_idx_lst.add(idx_lcl);
+            }
+        }
+        t1=System.currentTimeMillis();
+        Log.i(TAG, "anlayLocalUnits: compare cost :"+(t1-t0)+" ms");
+        // Collections.sort(couldlist, new ComparatorByDate());
+        filelistEntity.setBklist(couldlist);
         t1 = System.currentTimeMillis();
         long z = t1 - t0;
         return;
@@ -359,12 +418,13 @@ public class MediaMgr {
         //setCustomCategory(new String[]{"doc", "pdf", "xls", "zip", "rar"}, true);
 
         Uri fileUri= MediaStore.Files.getContentUri("external");
-        final List<FileLocal> LocalUnits = filelistEntity.getLocallist();
+        final List LocalUnits = filelistEntity.getLocallist();
+        filelistEntity.getUnbak_idx_lst().clear();
         if (LocalUnits != null && !LocalUnits.isEmpty())
             return;
 
         String[] projection=new String[]{
-                MediaStore.Files.FileColumns.DATA, MediaStore.Files.FileColumns.TITLE,MediaStore.Files.FileColumns.SIZE,MediaStore.Files.FileColumns.DATE_MODIFIED
+                MediaStore.Files.FileColumns.DATA, MediaStore.Files.FileColumns.TITLE,MediaStore.Files.FileColumns.SIZE,MediaStore.Files.FileColumns.DATE_MODIFIED,MediaStore.Files.FileColumns._ID
         };
         String selection="";
         for(int i=0;i<exts.length;i++)
@@ -384,13 +444,13 @@ public class MediaMgr {
         if(cursor==null)
             return;
         //游标从最后开始往前递减，以此实现时间递减顺序（最近访问的文件，优先显示）
-        int count=cursor.getCount();
+        //int count=cursor.getCount();
        // final CountDownLatch countDownLatch=new CountDownLatch( Math.min(10,count));//at least 10 items;
         new Thread(new Runnable() {
 
             @Override
             public void run() {
-                int idx=0,count=-1;
+                int idx=0,count=0,offset=0;
 
                 long t1,t0=System.currentTimeMillis();
                 if(cursor.moveToLast())
@@ -400,7 +460,7 @@ public class MediaMgr {
                         String fpath=cursor.getString(0);
                         //String name=
                         //Log.d("tag", data);
-                        FileLocal fileLocal = new FileLocal();
+                        FileInfo0 fileLocal = new FileInfo0();
                         //fileLocal.setSysid(c.getInt(COLUMN_ID));
                         // File file = new File(fpath);
                         String objname = cursor.getString(1);
@@ -415,20 +475,23 @@ public class MediaMgr {
 //                int pathid = c.getInt(COLUMN_ID);
                         String path =fpath.substring(0,idx);
                         int pathid = filelistEntity.addFilePath(path);
-                        fileLocal.setPathid(pathid);
+                        fileLocal.pathid=pathid;
                             //file = null;
                             //String objname=MediaFileUtil.getFnameformPath(c.getString(COLUMN_PATH));
                         fileLocal.setObjid(objname+fpath.substring(idx+objname.length()));
                         LocalUnits.add(fileLocal);
                         count++;
-                        if (dataCallBack!=null && count%10==0 ) {
-                            dataCallBack.success(LocalUnits, count);
+                        if ( count>1 && dataCallBack!=null && count%10==0 ) {
+                            t1=System.currentTimeMillis();
+                            Log.i(TAG, "GetLocalFiles: cost time :"+ (t1 -t0 ) );
+                            dataCallBack.success(LocalUnits, offset,count);
+                            offset=count;
                         }
                             //countDownLatch.countDown();
                     }while(cursor.moveToPrevious());
                 }
                 cursor.close();
-
+                dataCallBack.success(LocalUnits, offset,LocalUnits.size());
                 t1=System.currentTimeMillis();
                 Log.i(TAG, "GetLocalFiles: cost time :"+ (t1 -t0 ) );
 
@@ -447,7 +510,7 @@ public class MediaMgr {
     public void GetLocalFiles(MediaFileUtil.FileCategory fc, String[] exts, boolean include, FilelistEntity filelistEntity) {
         //setCustomCategory(new String[]{"doc", "pdf", "xls", "zip", "rar"}, true);
         long t1,t0=System.currentTimeMillis();
-        List<FileLocal> LocalUnits = filelistEntity.getLocallist();
+        List LocalUnits = filelistEntity.getLocallist();
         if (LocalUnits != null && !LocalUnits.isEmpty())
             return;
         setCustomCategory(exts, include);
@@ -563,7 +626,7 @@ public class MediaMgr {
             fileInfo0.setObjid(MediaFileUtil.getNameFromFilepath(cursor.getString(COLUMN_PATH)));
             fileInfo0.setFilesize(cursor.getInt(COLUMN_SIZE));
             fileInfo0.setLastModified(cursor.getInt(COLUMN_DATE));
-            fileInfo0.setSysid(sysid);
+           // fileInfo0.setSysid(sysid);
 
             ret = true;
 
@@ -605,12 +668,12 @@ public class MediaMgr {
     //public abstract ArrayList<Integer> anlayLocalUnits(List<FileInfo0> couldlist);
 
 
-    public void setUploadinfFile0(FileInfo0 entity) {
+   /* public void setUploadinfFile0(FileInfo0 entity) {
         ContentValues values = new ContentValues();
         values.put("objid", entity.getObjid());
         //values.put("offset",entity.getOffset());
         db.update("upload_inter", values, "sysid=?", new String[]{entity.getSysid() + ""});
-    }
+    }*/
 
 
     private Uri getContentUriByCategory(MediaFileUtil.FileCategory cat) {
@@ -897,7 +960,7 @@ public class MediaMgr {
             try {
                 int cid = 0;
                 cid = cursor.getColumnIndexOrThrow("sysid");
-                info0.setSysid(cursor.getInt(cid));
+               // info0.setSysid(cursor.getInt(cid));
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
             }
@@ -922,13 +985,13 @@ public class MediaMgr {
         db.insertWithOnConflict("upload_inter", null, values, SQLiteDatabase.CONFLICT_IGNORE);
     }
 
-    public void setUploadStatus(FileInfo0 entity) {
+    /*public void setUploadStatus(FileInfo0 entity) {
         ContentValues values = new ContentValues();
         values.put("sysid", entity.getSysid());
         values.put("objid", entity.getObjid());
         values.put("offset", entity.getOffset());
         int ret = db.update("upload_inter", values, "type=? and objid=?", new String[]{String.valueOf(entity.getFtype()), entity.getObjid()});
-    }
+    }*/
 
 
     public void addDownloadingFile(FileInfo0 entity) {
@@ -991,7 +1054,7 @@ public class MediaMgr {
         values.put("objid", entity.getObjid());
         values.put("size", entity.getFilesize());
         values.put("path", entity.getFilePath());
-        values.put("sysid", entity.getSysid());
+       // values.put("sysid", entity.getSysid());
         values.put("type", entity.getFtype().getValue());
         values.put("time", entity.getLastModified());
         deleteUpLoadingFile(entity.getObjid());

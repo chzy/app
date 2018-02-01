@@ -37,13 +37,13 @@ public class FileUploadInfo {
 
     private String preProcessedFile;     //上传前对文件预处理后，生成的临时文件
 
-    public FileUploadInfo(HashMap<String, String> descmap, /*String id, String filePath, String mimeType, String url*/FileLocal info0,
+    public FileUploadInfo(HashMap<String, String> descmap, /*String id, String filePath, String mimeType, String url*/FileInfo0 info0,
                           OnUploadListener apiCallback, OnUploadProgressListener progressListener,UploadOptions uploadOptions ) {
         if (filelistEntity==null)
             filelistEntity=UILApplication.getFilelistEntity();
         this.descAttribMap = descmap;
         _item=new FileInfo0(info0);
-        _item.setFilePath(filelistEntity.getFilePath(info0.getPathid()));
+        _item.setFilePath(filelistEntity.getFilePath(info0.pathid));
         this.apiCallback = apiCallback;
         this.progressListener = progressListener;
         this.uploadOptions = uploadOptions;

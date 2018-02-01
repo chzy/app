@@ -82,7 +82,7 @@ public class FileUploadManager {
      * @param apiCallback     回调对象
      * @param options          上传的选项，覆盖，续传
      * */
-    public void uploadFile(ProgressAware progressAware, HashMap<String, String> attrib,FileLocal fileinfo0, OnUploadListener apiCallback, UploadOptions options) {
+    public void uploadFile(ProgressAware progressAware, HashMap<String, String> attrib,FileInfo0 fileinfo0, OnUploadListener apiCallback, UploadOptions options) {
         uploadFile(progressAware,attrib,fileinfo0, apiCallback, null, options);
     }
 
@@ -94,14 +94,14 @@ public class FileUploadManager {
      * @param apiCallback
      * @param uploadProgressListener
      */
-    public void uploadFile(ProgressAware progressAware,HashMap<String, String> attrib,FileLocal fileInfo0, OnUploadListener apiCallback, OnUploadProgressListener uploadProgressListener, UploadOptions options) {
+    public void uploadFile(ProgressAware progressAware,HashMap<String, String> attrib,FileInfo0 fileInfo0, OnUploadListener apiCallback, OnUploadProgressListener uploadProgressListener, UploadOptions options) {
         checkConfiguration();
 
         if(progressAware != null) {
             mFileUploadEngine.prepareUpdateProgressTaskFor(progressAware, fileInfo0.getId());
         }
         //是否上传任务已经存在，如果已经存在，则返回
-        if(checkUploadTaskExistsAndResetProgressAware(/*id, filePath*/fileInfo0.getId(), UILApplication.getFilelistEntity().getFilePath(fileInfo0.getPathid()), progressAware)) {
+        if(checkUploadTaskExistsAndResetProgressAware(/*id, filePath*/fileInfo0.getId(), UILApplication.getFilelistEntity().getFilePath(fileInfo0.pathid), progressAware)) {
             return;
         }
         FileUploadInfo fileUploadInfo = createFileUploadInfo(attrib,fileInfo0, apiCallback, uploadProgressListener, options);
@@ -154,7 +154,7 @@ public class FileUploadManager {
      * @param uploadProgressListener 上传进度监听
      * @return
      */
-    private FileUploadInfo createFileUploadInfo(HashMap<String,String> attriMap , FileLocal fileInfo0, OnUploadListener apiCallback, OnUploadProgressListener uploadProgressListener, UploadOptions options) {
+    private FileUploadInfo createFileUploadInfo(HashMap<String,String> attriMap , FileInfo0 fileInfo0, OnUploadListener apiCallback, OnUploadProgressListener uploadProgressListener, UploadOptions options) {
         FileUploadInfo fileUploadInfo = new FileUploadInfo(attriMap,fileInfo0, apiCallback, uploadProgressListener, options);
         return fileUploadInfo;
     }

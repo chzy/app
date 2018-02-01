@@ -105,10 +105,11 @@ public class PicDetailActivity extends UILActivity implements OnClickListener {
         if (syncTask == null)
             syncTask = new SyncTask(this, FTYPE.PICTURE);
         Serializable bean = getIntent().getSerializableExtra("bean");
-        if (bean instanceof FileLocal) {
-            url = "file://" + UILApplication.getFilelistEntity().getFilePath(((FileLocal) bean).getPathid()) + "/" + ((FileLocal) bean).getObjid();
+        if (bean instanceof FileInfo0 && ((FileInfo0) bean).islocal) {
+            FileInfo0 item=(FileInfo0) bean;
+            url = "file://" + UILApplication.getFilelistEntity().getFilePath(item.pathid) + "/" + item.getObjid();
 //            fileInfo0.setFilename(url);
-            fileInfo0.setSysid(((FileLocal) bean).getPathid());
+           // fileInfo0.setSysid(((FileLocal) bean).getPathid());
         } else {
             FileInfo f= (FileInfo) bean;
             url = "trpc://" + f.getObjid();
@@ -248,7 +249,7 @@ public class PicDetailActivity extends UILActivity implements OnClickListener {
             break;
             case R.id.pic_detail_savelocal: {
                 if (fileInfo0 != null) {
-                    List<FileInfo0> info0s = new ArrayList<>();
+                    List<FileInfo> info0s = new ArrayList<>();
                     if (StringUtils.isNullOrEmpty(fileInfo0.getFilePath())) {
                         String objid = fileInfo0.getObjid();
                         if (objid.contains("//")) {

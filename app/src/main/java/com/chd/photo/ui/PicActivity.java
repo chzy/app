@@ -118,7 +118,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
                     }
                     syncTask.analyPhotoUnits(cloudUnits, filelistEntity);
 
-                    List<FileLocal> localUnits = filelistEntity.getLocallist();
+                    List<FileInfo0> localUnits = filelistEntity.getLocallist();
 
                     if (cloudUnits != null && !cloudUnits.isEmpty()) {
                         Collections.sort(cloudUnits, new Comparator<FileInfo>() {
@@ -498,9 +498,8 @@ public class PicActivity extends UILActivity implements OnClickListener {
 
     public void uploadPic() {
         //多张上传下载
-        ArrayList<FileInfo0> info0s = new ArrayList<>();
-        for (PicFile<FileInfo> s :
-                cloudList) {
+        ArrayList<FileInfo> info0s = new ArrayList<>();
+        for (PicFile<FileInfo> s : cloudList) {
             if (s.isSelect) {
                 if (bIsUbkList) {
                     FileLocal local = (FileLocal) s.t;
