@@ -192,9 +192,6 @@ public class OtherActivity extends UILActivity implements OnClickListener {
 
 
     private void refreshData(List<FileInfo0> datas,int offset,int count){
-        long t1,t0=System.currentTimeMillis();
-        t1=System.currentTimeMillis();
-        Log.i(TAG, "initData: "+(t1-t0));
 
       /*  if (datas != null) {
             //for (FileInfo f : datas)
@@ -209,9 +206,11 @@ public class OtherActivity extends UILActivity implements OnClickListener {
                     Unbak_idx_lst.add(i);
                 }
               */
+
+      /*TODO
+      * */
+      // 问题:  数量显示未更新,只有全部文件取完以后 才显示出个数
         mTvNumber.setText("未备份文件" + /*mFileLocalList.size()*/filelistEntity.getUnbak_idx_lst().size() + "个");
-        t1=System.currentTimeMillis();
-        Log.i("OtherActivity", "initData: cost"+ (t1-t0));
         handler.sendEmptyMessage(0);
     }
 

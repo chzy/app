@@ -176,6 +176,7 @@ public class OtherListAdapter extends BaseAdapter {
 
     public void setList(List lst) {
         _list=lst;
+        // 加不加 不确定  执行未看出变化
         //notifyDataSetInvalidated();
     }
 
