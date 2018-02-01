@@ -32,9 +32,9 @@ public class MusicBean /*extends FileInfo*/ implements Serializable {
 		this.pic = pic;
 	}
 
-	public int getId() {
+	/*public int getId() {
 		return fileInfo0.getSysid();
-	}
+	}*/
 
 	/*public void setId(int id) {
 		this.id = id;

@@ -18,6 +18,7 @@ import com.chd.base.backend.SyncTask;
 import com.chd.photo.adapter.PicInfoAdapter2;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
+import com.chd.proto.FileInfo0;
 import com.chd.service.RPCchannel.upload.FileUploadInfo;
 import com.chd.service.RPCchannel.upload.FileUploadManager;
 import com.chd.service.RPCchannel.upload.UploadOptions;
@@ -40,7 +41,7 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
     private TextView mPicUploadTextView;
     private RelativeLayout mPicBottomRelativeLayout;
     private PicInfoAdapter2 adapter;
-    private ArrayList<PicFile<FileLocal>> picFiles=new ArrayList<>();
+    private ArrayList<PicFile<FileInfo0>> picFiles=new ArrayList<>();
 
 
     @Override
@@ -58,7 +59,7 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
         right.setText("全选");
         right.setOnClickListener(this);
         mPicUploadTextView.setOnClickListener(this);
-        adapter = new PicInfoAdapter2<FileLocal>(picFiles,false);
+        adapter = new PicInfoAdapter2<FileInfo0>(picFiles,false);
         adapter.setShowEdit(true);
         mPicRecyclerView.setAdapter(adapter);
         mPicRecyclerView.setHasFixedSize(true);
@@ -66,7 +67,7 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                PicFile<FileLocal> file = picFiles.get(position);
+                PicFile<FileInfo0> file = picFiles.get(position);
                if(file.isHeader){
                    return 4;
                }
@@ -78,7 +79,7 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                     //非视频，即图片进去
-                PicFile<FileLocal> file = picFiles.get(position);
+                PicFile<FileInfo0> file = picFiles.get(position);
                 Intent intent = new Intent(mAct, PicDetailActivity.class);
                     intent.putExtra("bean", file.t);
                     intent.putExtra("pos", position);
@@ -90,7 +91,7 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 if (view.getId() == R.id.iv_pic_edit_item_photo_check) {
-                        PicFile<FileLocal> file = picFiles.get(position);
+                        PicFile<FileInfo0> file = picFiles.get(position);
                     if (file.isSelect) {
                         file.isSelect=false;
                     }else{
@@ -130,12 +131,12 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                 //未备份文件 ==  backedlist . removeAll(localist);
                 List<FileInfo> cloudUnits = syncTask.getCloudUnits(0, 10000);
                 syncTask.analyPhotoUnits(cloudUnits, filelistEntity);
-                List<FileLocal> localUnits = filelistEntity.getLocallist();
+                List<FileInfo0> localUnits = filelistEntity.getLocallist();
                 if (localUnits != null && !localUnits.isEmpty()) {
-                    Collections.sort(localUnits, new Comparator<FileLocal>() {
+                    Collections.sort(localUnits, new Comparator<FileInfo0>() {
                         @Override
-                        public int compare(FileLocal fileLocal, FileLocal t1) {
-                            int lastModified = fileLocal.getLastModified();
+                        public int compare(FileInfo0 fileLocal, FileInfo0 t1) {
+                            int lastModified = fileLocal.lastModified;
                             int lastModified1 = t1.getLastModified();
                             if(lastModified<lastModified1){
                                 return 1;
@@ -145,18 +146,18 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                             return 0;
                         }
                     });
-                    PicFile<FileLocal> heads=new PicFile<>(true,"");
+                    PicFile<FileInfo0> heads=new PicFile<>(true,"");
                     int time= TimeUtils.getZeroTime(localUnits.get(0).getLastModified());
                     int index=0;
                     picFiles.add(heads);
-                    picFiles.add(new PicFile<FileLocal>(localUnits.get(0)));
+                    picFiles.add(new PicFile<FileInfo0>(localUnits.get(0)));
                     for (int i = 1; i < localUnits.size(); i++) {
-                        FileLocal fileInfo = localUnits.get(i);
-                        if (!fileInfo.bakuped) {
+                        FileInfo0 fileInfo = localUnits.get(i);
+                        if (!fileInfo.backuped) {
                             if (Math.abs(fileInfo.lastModified-time) <= ( 3 * 24 * 3600 )) {
-                                picFiles.add(new PicFile<FileLocal>(fileInfo));
+                                picFiles.add(new PicFile<FileInfo0>(fileInfo));
                                 if(i==cloudUnits.size()-1){
-                                    PicFile<FileLocal> fileLocalPicFile = picFiles.get(index);
+                                    PicFile<FileInfo0> fileLocalPicFile = picFiles.get(index);
                                     String start = TimeUtils.getDay(time);
                                     String end = TimeUtils.getDay(fileInfo.getLastModified());
                                     if (start.equals(end)) {
@@ -167,7 +168,7 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                                     picFiles.set(index, fileLocalPicFile);
                                 }
                             } else {
-                                PicFile<FileLocal> fileLocalPicFile = picFiles.get(index);
+                                PicFile<FileInfo0> fileLocalPicFile = picFiles.get(index);
                                 String start = TimeUtils.getDay(time);
                                 String end = TimeUtils.getDay(localUnits.get(i-1).getLastModified());
                                 if (start.equals(end)) {
@@ -180,7 +181,7 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                                 heads=new PicFile<>(true,"");
                                 index=picFiles.size();
                                 picFiles.add(heads);
-                                picFiles.add(new PicFile<FileLocal>(fileInfo));
+                                picFiles.add(new PicFile<FileInfo0>(fileInfo));
                             }
                         }
                     }
@@ -216,7 +217,7 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                 //全选
                 boolean isSelect="取消全选".equals(right.getText().toString());
                 adapter.setShowEdit(true);
-                for (PicFile<FileLocal> file:
+                for (PicFile<FileInfo0> file:
                         picFiles) {
                     file.isSelect=isSelect;
                 }
@@ -229,8 +230,8 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                 break;
             case R.id.tv_pic_upload:
                 //上传
-                final ArrayList<FileLocal> fileLocals=new ArrayList<>();
-                for (PicFile<FileLocal> f:
+                final ArrayList<FileInfo0> fileLocals=new ArrayList<>();
+                for (PicFile<FileInfo0> f:
                      picFiles) {
                     if(f.isSelect){
                         fileLocals.add(f.t);
@@ -250,7 +251,7 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                 build.show();
                 count = 0;
                 for (int i = 0; i < fileLocals.size(); i++) {
-                    FileLocal f = fileLocals.get(i);
+                    FileInfo0 f = fileLocals.get(i);
                     f.setFtype(FTYPE.PICTURE);
                     manager.uploadFile(new ProgressBarAware(build,i+1),null,f, new OnUploadListener() {
                         @Override

@@ -15,7 +15,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.UILActivity;
 import com.chd.base.Ui.DownListActivity;
@@ -33,14 +32,15 @@ import com.chd.yunpan.share.ShareUtils;
 import com.chd.yunpan.utils.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class OtherActivity extends UILActivity implements OnClickListener {
 
-    List<FileInfo0> tmpFileInfo = new ArrayList<FileInfo0>();
+    List<Integer> Unbak_idx_lst = new ArrayList();
     String path;
     final  String TAG="OtherActivity";
-    ArrayList<FileInfo0> checkList;
+    ArrayList<FileInfo> checkList;
     private ImageView mIvLeft;
     private TextView mTvCenter;
     private TextView mTvRight;
@@ -48,8 +48,8 @@ public class OtherActivity extends UILActivity implements OnClickListener {
     private int nRgbColorSel = Color.rgb(255, 255, 255);
     private TextView mTabAll, mTabDOC, mTabXLS, mTabPPT, mTabPDF;
     private ListView mListView;
-    private List<FileInfo0> mFileInfoList = new ArrayList<FileInfo0>();
-    private List<FileInfo0> mFileLocalList = new ArrayList<FileInfo0>();
+    private List<FileInfo0> mFileInfoList = new LinkedList<>();
+    private List<FileInfo0> mFileLocalList = new LinkedList<>();
     private String filetype = "";
     private boolean isLocal = false;
     private OtherListAdapter adapter;
@@ -63,26 +63,42 @@ public class OtherActivity extends UILActivity implements OnClickListener {
                     onNewThreadRequest();
                     break;
                 default:
-                    tmpFileInfo.clear();
+                    //tmpFileInfo.clear();
+                   // tmpFileInfo=mFileInfoList;
+                    List list=filelistEntity.getLocallist();
+                    if (list.size()<1)
+                        return;
                     if (isLocal) {
+                        adapter.setList(filelistEntity.getLocallist());
+                        adapter.setShowUnbakedfile(true);
                         if (!StringUtils.isNullOrEmpty(filetype) && !FileInfoL.FILE_TYPE_ALL.contains(filetype)) {
-                            for (FileInfo0 fileInfo : mFileLocalList) {
+                            /*for (FileInfo0 fileInfo : mFileLocalList) {
                                 if (fileInfo.getObjid().contains(filetype)) {
                                     tmpFileInfo.add(fileInfo);
                                 }
-                            }
+                            }*/
+
+
+                            adapter.setShowfiletype(filetype);
                         } else {
-                            tmpFileInfo.addAll(mFileLocalList);
+                            //tmpFileInfo.addAll(mFileLocalList);
+                            adapter.setShowfiletype(null);
+                           // adapter.setShowUnbakedfile(false);
                         }
                     } else {
+                        adapter.setList(filelistEntity.getBklist());
+                        adapter.setShowUnbakedfile(false);
                         if (!StringUtils.isNullOrEmpty(filetype) && !FileInfoL.FILE_TYPE_ALL.contains(filetype)) {
-                            for (FileInfo0 fileInfo : mFileInfoList) {
+                           /* for (FileInfo0 fileInfo : mFileInfoList) {
                                 if (fileInfo.getObjid().contains(filetype)) {
                                     tmpFileInfo.add(fileInfo);
                                 }
-                            }
+                            }*/
+                           adapter.setShowfiletype(filetype);
+
                         } else {
-                            tmpFileInfo.addAll(mFileInfoList);
+                           // tmpFileInfo.addAll(mFileInfoList);
+                            adapter.setShowfiletype("");
                         }
                     }
                     adapter.notifyDataSetChanged();
@@ -101,7 +117,7 @@ public class OtherActivity extends UILActivity implements OnClickListener {
     private TextView mTvNumber;
     private Button mBtnDown;
     private int count;
-    private ArrayList<FileLocal> mFileLocalLists = new ArrayList<>();
+    //private ArrayList<FileLocal> mFileLocalLists = new ArrayList<>();
     private FilelistEntity filelistEntity;
 
     @Override
@@ -118,9 +134,10 @@ public class OtherActivity extends UILActivity implements OnClickListener {
         initTitle();
         initResourceId();
         initListener();
+        filelistEntity = UILApplication.getFilelistEntity();
         syncTask = new SyncTask(OtherActivity.this, FTYPE.NORMAL);
         path = new ShareUtils(this).getOtherFile().getPath();
-        adapter = new OtherListAdapter(OtherActivity.this, tmpFileInfo);
+        adapter = new OtherListAdapter(OtherActivity.this, null);
         mListView.setAdapter(adapter);
         onNewThreadRequest();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -137,6 +154,7 @@ public class OtherActivity extends UILActivity implements OnClickListener {
                 //未备份文件 ==  backedlist . removeAll(localist);
 
                 final List<FileInfo> cloudUnits = syncTask.getCloudUnits(0, 10000);
+                filelistEntity.setBklist(cloudUnits);
                 runOnUiThread(new Runnable() {
                     public void run() {
                         initData(cloudUnits);
@@ -149,12 +167,12 @@ public class OtherActivity extends UILActivity implements OnClickListener {
 
 
 
-    private void initData(List<FileInfo> cloudUnits) {
+    private void initData(final List<FileInfo> cloudUnits) {
 
         if (cloudUnits == null) {
             System.out.print("query remote failed");
         }
-        filelistEntity = UILApplication.getFilelistEntity();
+
 
         // 找到10个以后 先返回, 剩下的 在线程里面继续找
         syncTask.dbManager.GetLocalFiles0( new String[]{"pdf", "xls", "doc", "docx"}, true, filelistEntity, new DataCallBack() {
@@ -162,62 +180,37 @@ public class OtherActivity extends UILActivity implements OnClickListener {
             /*
             * @count 当前list的最后下标
             * */
-            public void success(List<FileLocal> datas, int pos) {
+            public void success(List<FileInfo0> datas, int offset,int count) {
                 //接收到的数据
-                refreshData(datas);
+
+                syncTask.dbManager.anlayLocalUnits(cloudUnits, filelistEntity,offset,count);
+                refreshData(datas,offset,count);
             }
         });
-        syncTask.analyOtherUnits0(cloudUnits, filelistEntity);
+       // Unbak_idx_lst.clear();
+       // syncTask.analyOtherUnits0(cloudUnits, filelistEntity, pos);
     }
 
 
-    private void refreshData(List<FileLocal> datas){
+    private void refreshData(List<FileInfo0> datas,int offset,int count){
         long t1,t0=System.currentTimeMillis();
         t1=System.currentTimeMillis();
         Log.i(TAG, "initData: "+(t1-t0));
-        //显示的时候过滤文件类型
-        //MFileFilter fileFilter = new MFileFilter();
-        //fileFilter.setCustomCategory(new String[]{FileInfoL.FILE_TYPE_DOC, FileInfoL.FILE_TYPE_DOCX, FileInfoL.FILE_TYPE_PDF, FileInfoL.FILE_TYPE_PPT, FileInfoL.FILE_TYPE_XLS}, true);
-        if (datas != null) {
-            for (FileInfo f : datas) {
-                FileInfo0 info0 = new FileInfo0(f);
-               /* if (!fileFilter.contains(info0.getObjid())) {
-                  continue;
-                }*/
-                int sysid = filelistEntity.queryLocalSysid(info0.getObjid());
-                if (sysid > 0) {
-                    info0.setSysid(sysid);
-                    info0.setFilePath(filelistEntity.getFilePath(sysid));
-                } else {
-                    info0.setFilePath(path + "/" + info0.getObjid());
-                    info0.setSysid(sysid);
-                }
-                mFileInfoList.add(info0);
-            }
-        }
-        t1=System.currentTimeMillis();
-        List<FileLocal> fileLocals = filelistEntity.getLocallist();
-        if (fileLocals != null) {
-            for (FileLocal fileLocal : fileLocals) {
-                if (fileLocal.bakuped)
+
+      /*  if (datas != null) {
+            //for (FileInfo f : datas)
+            int i=Math.max(0,end-10);
+            FileInfo0 item=null;
+            for (; i<end;i++)
+            {
+                item=datas.get(i);
+                if (item==null)
                     continue;
-                FileInfo0 fileInfo0 = new FileInfo0();
-                fileInfo0.setObjid(fileLocal.getObjid());
-                fileInfo0.setFilesize(fileLocal.getFilesize());
-                fileInfo0.setLastModified(fileLocal.getLastModified());
-                fileInfo0.setFtype(FTYPE.NORMAL);
-                int sysid = filelistEntity.queryLocalSysid(fileLocal.getObjid());
-                if (sysid > 0) {
-                    fileInfo0.setSysid(sysid);
-                    fileInfo0.setFilePath(filelistEntity.getFilePath(fileLocal.getPathid()));
-                } else {
-                    fileInfo0.setFilePath(path + "/" + fileLocal.getObjid());
-                    fileInfo0.setSysid(sysid);
+                if (!item.backuped) {
+                    Unbak_idx_lst.add(i);
                 }
-                mFileLocalLists.add(fileLocal);
-            }
-        }
-        mTvNumber.setText("未备份文件" + mFileLocalList.size() + "个");
+              */
+        mTvNumber.setText("未备份文件" + /*mFileLocalList.size()*/filelistEntity.getUnbak_idx_lst().size() + "个");
         t1=System.currentTimeMillis();
         Log.i("OtherActivity", "initData: cost"+ (t1-t0));
         handler.sendEmptyMessage(0);
@@ -297,7 +290,7 @@ public class OtherActivity extends UILActivity implements OnClickListener {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        for (final FileInfo0 i :
+                        for (final FileInfo i :
                                 checkList) {
                             if (syncTask != null && i != null) {
                                 boolean delS = syncTask.DelRemoteObj(i);
@@ -307,7 +300,7 @@ public class OtherActivity extends UILActivity implements OnClickListener {
 
                                         public void run() {
                                             Toast.makeText(OtherActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
-                                            tmpFileInfo.remove(i);
+                                            //tmpFileInfo.remove(i);
                                             adapter.notifyDataSetChanged();
                                         }
                                     });
