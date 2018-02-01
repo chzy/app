@@ -37,7 +37,6 @@ import java.util.List;
 
 public class OtherActivity extends UILActivity implements OnClickListener {
 
-    List<Integer> Unbak_idx_lst = new ArrayList();
     String path;
     final  String TAG="OtherActivity";
     ArrayList<FileInfo> checkList;

@@ -70,13 +70,17 @@ public class OtherListAdapter extends BaseAdapter {
         if (convertView == null) {
             item = new MenuItem();
             convertView = View.inflate(mContext, R.layout.other_listitem, null);
+            convertView.clearAnimation();
             item.text_appname = (TextView) convertView.findViewById(R.id.other_list_item_appname);
             item.text_appintro = (TextView) convertView.findViewById(R.id.other_list_item_appintro);
             item.img_url = (ImageView) convertView.findViewById(R.id.other_list_item_img);
             item.cb = (CheckBox) convertView.findViewById(R.id.cb_edit_check);
             convertView.setTag(item);
         } else {
+            convertView.clearAnimation();
             item = (MenuItem) convertView.getTag();
+            item.cb.clearAnimation();
+            item.img_url.clearAnimation();
         }
        // convertView.setVisibility(View.INVISIBLE);
         //convertView.setEnabled(false);
@@ -89,13 +93,14 @@ public class OtherListAdapter extends BaseAdapter {
             FileInfo0 it = (FileInfo0) fileItem;
             if (fileItem != null) {
                 if (it.backuped ) {
+                    //隐藏已经备份上传过的文件
                     return convertView;
                 }
             }
         }
 
             if (this.Showftype != null && !fileItem.getObjid().contains(Showftype))
-                return convertView;;
+                return convertView;//隐藏非特定类型的文件
             String name = fileItem.getObjid();
             int last = name.lastIndexOf(".") + 1;
             String substring = name.substring(last);
@@ -171,6 +176,7 @@ public class OtherListAdapter extends BaseAdapter {
 
     public void setList(List lst) {
         _list=lst;
+        //notifyDataSetInvalidated();
     }
 
     public void setShowfiletype(String type) {
