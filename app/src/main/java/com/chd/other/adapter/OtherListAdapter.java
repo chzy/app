@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -24,8 +25,8 @@ public class OtherListAdapter extends BaseAdapter {
     private List<FileInfo> _list;
     private List<Integer> _unbak_idx_lst;
     private boolean isShow;
-    private boolean ShowUnbak =false;
-    private String Showftype=null;
+    private boolean ShowUnbak = false;
+    private String Showftype = null;
     private ArrayList<FileInfo> checkList;
     private Resources mResources;
     private FilelistEntity filelistEntity;
@@ -33,18 +34,18 @@ public class OtherListAdapter extends BaseAdapter {
     public OtherListAdapter(Context context, List<FileInfo> list) {
         mContext = context;
         _list = list;
-        checkList=new ArrayList();
-        mResources=mContext.getResources();
-        filelistEntity= UILApplication.getFilelistEntity();
+        checkList = new ArrayList();
+        mResources = mContext.getResources();
+        filelistEntity = UILApplication.getFilelistEntity();
     }
 
     @Override
     public int getCount() {
 
-            if (ShowUnbak)
-               return filelistEntity.getUnbak_idx_lst().size();
-            else
-                return _list==null?0:_list.size();
+        if (ShowUnbak)
+            return filelistEntity.getUnbak_idx_lst().size();
+        else
+            return _list == null ? 0 : _list.size();
 
     }
 
@@ -67,44 +68,64 @@ public class OtherListAdapter extends BaseAdapter {
 
 
         MenuItem item = null;
-        if (convertView == null) {
-            item = new MenuItem();
+        if (convertView == null)
+        {
+           item = new MenuItem();
             convertView = View.inflate(mContext, R.layout.other_listitem, null);
             item.text_appname = (TextView) convertView.findViewById(R.id.other_list_item_appname);
             item.text_appintro = (TextView) convertView.findViewById(R.id.other_list_item_appintro);
             item.img_url = (ImageView) convertView.findViewById(R.id.other_list_item_img);
             item.cb = (CheckBox) convertView.findViewById(R.id.cb_edit_check);
             convertView.setTag(item);
-        } else {
-            item = (MenuItem) convertView.getTag();
         }
-       // convertView.setVisibility(View.INVISIBLE);
+        else {
+            convertView.clearAnimation();
+            item = (MenuItem) convertView.getTag();
+            item.cb.clearAnimation();
+            item.img_url.clearAnimation();
+        }
+        // convertView.setVisibility(View.INVISIBLE);
         //convertView.setEnabled(false);
         convertView.setVisibility(View.GONE);
-        item.cb.setVisibility(View.GONE);
-        FileInfo fileItem =  _list.get(position);
-        if (fileItem==null)
-            return convertView;;
+
+        if(item!=null && item.cb!=null )
+        {
+            item.cb.setVisibility(View.GONE);
+            item.text_appintro.setVisibility(View.GONE);
+            item.text_appname.setVisibility(View.GONE);
+            item.img_url.setVisibility(View.GONE);
+        }
+        // - --------
+        //设置item的weidth和height都为0
+        AbsListView.LayoutParams param = new AbsListView.LayoutParams(
+                 0,
+                0);
+        //将设置好的布局属性应用到GridView的Item上
+        convertView.setLayoutParams(param);
+
+        // - --------
+        FileInfo fileItem = _list.get(position);
+        if (fileItem == null)
+            return convertView;
         if (ShowUnbak) {
             FileInfo0 it = (FileInfo0) fileItem;
-            if (fileItem != null) {
-                if (it.backuped ) {
-                    return convertView;
-                }
+            if (it.backuped) {
+                //隐藏已经备份上传过的文件
+                return convertView;
             }
         }
 
-            if (this.Showftype != null && !fileItem.getObjid().contains(Showftype))
-                return convertView;;
-            String name = fileItem.getObjid();
-            int last = name.lastIndexOf(".") + 1;
-            String substring = name.substring(last);
-            int id = getResId("ft_" + substring, "drawable");
+        if (this.Showftype != null && !fileItem.getObjid().contains(Showftype))
+            return convertView;//隐藏非特定类型的文件
+        String name = fileItem.getObjid();
+        int last = name.lastIndexOf(".") + 1;
+        String substring = name.substring(last);
+        int id = getResId("ft_" + substring, "drawable");
 
-            if (id == 0) {
-                id = getResId("ft_unknow", "drawable");
-            }
-
+        if (id == 0) {
+            id = getResId("ft_unknow", "drawable");
+        }
+        if (item!=null) {
             item.text_appname.setText(name);
             String time = TimeUtils.getTime(fileItem.getLastModified());
             item.text_appintro.setText(time);
@@ -117,7 +138,7 @@ public class OtherListAdapter extends BaseAdapter {
                     boolean check = ((CheckBox) view).isChecked();
                     int pos = (Integer) view.getTag();
                     FileInfo checkItem = _list.get(pos);
-//                checkItem.set(check);
+                    //                checkItem.set(check);
                     if (check) {
                         //选中
                         checkList.add(checkItem);
@@ -128,31 +149,45 @@ public class OtherListAdapter extends BaseAdapter {
                     notifyDataSetChanged();
                 }
             });
+
+            if(item!=null && item.cb!=null )
+            {
+                //item.cb.setVisibility(View.VISIBLE);
+                item.text_appintro.setVisibility(View.VISIBLE);
+                item.text_appname.setVisibility(View.VISIBLE);
+                item.img_url.setVisibility(View.VISIBLE);
+            }
             if (isShow) {
                 item.cb.setVisibility(View.VISIBLE);
             } else {
                 item.cb.setVisibility(View.GONE);
             }
-
-
+        }
+        // - --------
+        param = new AbsListView.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        //将设置好的布局属性应用到GridView的Item上
+        convertView.setLayoutParams(param);
+// - --------
         convertView.setVisibility(View.VISIBLE);
+
         return convertView;
     }
 
     /**
-     14
+     * 14
      * 根据资源的名字获取它的ID
-     15
-     * @param name
-    16
-     *            要获取的资源的名字
-    17
-     * @param defType
-    18
-     *            资源的类型，如drawable, string 。。。
-    19
+     * 15
+     *
+     * @param name    16
+     *                要获取的资源的名字
+     *                17
+     * @param defType 18
+     *                资源的类型，如drawable, string 。。。
+     *                19
      * @return 资源的id
-    20
+     * 20
      */
     public int getResId(String name, String defType) {
         String packageName = mContext.getApplicationInfo().packageName;
@@ -160,24 +195,23 @@ public class OtherListAdapter extends BaseAdapter {
     }
 
 
-
-    public void showCB(boolean isShow){
-        this.isShow=isShow;
+    public void showCB(boolean isShow) {
+        this.isShow = isShow;
     }
 
-    public void setShowUnbakedfile(boolean show ) {
-        ShowUnbak = show ;
+    public void setShowUnbakedfile(boolean show) {
+        ShowUnbak = show;
     }
 
     public void setList(List lst) {
-        _list=lst;
+        _list = lst;
+        // 加不加 不确定  执行未看出变化
+        //notifyDataSetInvalidated();
     }
 
     public void setShowfiletype(String type) {
         this.Showftype = type;
     }
-
-
 
 
     class MenuItem {
