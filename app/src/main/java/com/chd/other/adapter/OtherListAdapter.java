@@ -68,15 +68,18 @@ public class OtherListAdapter extends BaseAdapter {
 
 
         MenuItem item = null;
-        if (convertView == null) {
-            item = new MenuItem();
+        if (convertView == null)
+        {
+           item = new MenuItem();
             convertView = View.inflate(mContext, R.layout.other_listitem, null);
             item.text_appname = (TextView) convertView.findViewById(R.id.other_list_item_appname);
             item.text_appintro = (TextView) convertView.findViewById(R.id.other_list_item_appintro);
             item.img_url = (ImageView) convertView.findViewById(R.id.other_list_item_img);
             item.cb = (CheckBox) convertView.findViewById(R.id.cb_edit_check);
             convertView.setTag(item);
-        } else {
+        }
+        else {
+            convertView.clearAnimation();
             item = (MenuItem) convertView.getTag();
             item.cb.clearAnimation();
             item.img_url.clearAnimation();
@@ -84,7 +87,14 @@ public class OtherListAdapter extends BaseAdapter {
         // convertView.setVisibility(View.INVISIBLE);
         //convertView.setEnabled(false);
         convertView.setVisibility(View.GONE);
-        item.cb.setVisibility(View.GONE);
+
+        if(item!=null && item.cb!=null )
+        {
+            item.cb.setVisibility(View.GONE);
+            item.text_appintro.setVisibility(View.GONE);
+            item.text_appname.setVisibility(View.GONE);
+            item.img_url.setVisibility(View.GONE);
+        }
         // - --------
         //设置item的weidth和height都为0
         AbsListView.LayoutParams param = new AbsListView.LayoutParams(
@@ -92,6 +102,7 @@ public class OtherListAdapter extends BaseAdapter {
                 0);
         //将设置好的布局属性应用到GridView的Item上
         convertView.setLayoutParams(param);
+
         // - --------
         FileInfo fileItem = _list.get(position);
         if (fileItem == null)
@@ -114,34 +125,43 @@ public class OtherListAdapter extends BaseAdapter {
         if (id == 0) {
             id = getResId("ft_unknow", "drawable");
         }
+        if (item!=null) {
+            item.text_appname.setText(name);
+            String time = TimeUtils.getTime(fileItem.getLastModified());
+            item.text_appintro.setText(time);
+            item.img_url.setImageResource(id);
 
-        item.text_appname.setText(name);
-        String time = TimeUtils.getTime(fileItem.getLastModified());
-        item.text_appintro.setText(time);
-        item.img_url.setImageResource(id);
-
-        item.cb.setTag(position);
-        item.cb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                boolean check = ((CheckBox) view).isChecked();
-                int pos = (Integer) view.getTag();
-                FileInfo checkItem = _list.get(pos);
-//                checkItem.set(check);
-                if (check) {
-                    //选中
-                    checkList.add(checkItem);
-                } else {
-                    //未选中
-                    checkList.remove(checkItem);
+            item.cb.setTag(position);
+            item.cb.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    boolean check = ((CheckBox) view).isChecked();
+                    int pos = (Integer) view.getTag();
+                    FileInfo checkItem = _list.get(pos);
+                    //                checkItem.set(check);
+                    if (check) {
+                        //选中
+                        checkList.add(checkItem);
+                    } else {
+                        //未选中
+                        checkList.remove(checkItem);
+                    }
+                    notifyDataSetChanged();
                 }
-                notifyDataSetChanged();
+            });
+
+            if(item!=null && item.cb!=null )
+            {
+                //item.cb.setVisibility(View.VISIBLE);
+                item.text_appintro.setVisibility(View.VISIBLE);
+                item.text_appname.setVisibility(View.VISIBLE);
+                item.img_url.setVisibility(View.VISIBLE);
             }
-        });
-        if (isShow) {
-            item.cb.setVisibility(View.VISIBLE);
-        } else {
-            item.cb.setVisibility(View.GONE);
+            if (isShow) {
+                item.cb.setVisibility(View.VISIBLE);
+            } else {
+                item.cb.setVisibility(View.GONE);
+            }
         }
         // - --------
         param = new AbsListView.LayoutParams(
@@ -151,6 +171,7 @@ public class OtherListAdapter extends BaseAdapter {
         convertView.setLayoutParams(param);
 // - --------
         convertView.setVisibility(View.VISIBLE);
+
         return convertView;
     }
 
