@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -181,7 +180,6 @@ public class OtherActivity extends UILActivity implements OnClickListener {
             * */
             public void success(List<FileInfo0> datas, int offset,int count) {
                 //接收到的数据
-
                 syncTask.dbManager.anlayLocalUnits(cloudUnits, filelistEntity,offset,count);
                 refreshData(filelistEntity.getUnbak_idx_lst().size());
             }
@@ -190,6 +188,7 @@ public class OtherActivity extends UILActivity implements OnClickListener {
        // syncTask.analyOtherUnits0(cloudUnits, filelistEntity, pos);
     }
 
+    private int unBackCount=0;
 
     private void refreshData(int count){
 
@@ -206,11 +205,11 @@ public class OtherActivity extends UILActivity implements OnClickListener {
                     Unbak_idx_lst.add(i);
                 }
               */
-
+        unBackCount+=count;
       /*TODO
       * */
       // 问题:  数量显示未更新,只有全部文件取完以后 才显示出个数
-        mTvNumber.setText("未备份文件" + count + "个");
+        mTvNumber.setText("未备份文件" + unBackCount + "个");
         handler.sendEmptyMessage(0);
     }
 

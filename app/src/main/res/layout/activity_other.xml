@@ -124,7 +124,9 @@
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
             android:layout_marginTop="10dp"
-            android:layout_weight="1"></ListView>
+            android:layout_weight="1"
+            android:divider="@null"
+            android:dividerHeight="0px"/>
 
         <RelativeLayout
             android:id="@+id/other_edit_rl"
