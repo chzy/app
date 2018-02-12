@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.UILActivity;
 import com.chd.base.Ui.DownListActivity;
@@ -25,11 +26,21 @@ import com.chd.other.entity.FileInfoL;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
+import com.chd.service.RPCchannel.download.DownloadManager;
+import com.chd.service.RPCchannel.download.FileDownloadTask;
+import com.chd.service.RPCchannel.download.listener.OnDownloadProgressListener;
+import com.chd.service.RPCchannel.download.listener.OnDownloadingListener;
+import com.chd.service.RPCchannel.upload.FileUploadInfo;
+import com.chd.service.RPCchannel.upload.FileUploadManager;
+import com.chd.service.RPCchannel.upload.UploadOptions;
+import com.chd.service.RPCchannel.upload.listener.OnUploadListener;
+import com.chd.service.RPCchannel.upload.progressaware.ProgressBarAware;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.share.ShareUtils;
 import com.chd.yunpan.utils.ToastUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -319,18 +330,21 @@ public class OtherActivity extends UILActivity implements OnClickListener {
                 break;
             case R.id.other_edit_down:
                 checkList = adapter.getCheckList();
+
                 if (isLocal) {
                     //上传
                     if (checkList.isEmpty()) {
                         ToastUtils.toast(this, "请选择上传文件");
                         return;
                     }
-                    syncTask.uploadList(checkList, OtherActivity.this, handler);
+                    upload(checkList);
                 } else {
                     //下载
-                    syncTask.downloadList(checkList, OtherActivity.this, handler);
-
-
+                    if (checkList.isEmpty()) {
+                        ToastUtils.toast(this, "请选择下载文件");
+                        return;
+                    }
+                    download(checkList);
                 }
 
                 break;
@@ -439,6 +453,97 @@ public class OtherActivity extends UILActivity implements OnClickListener {
             default:
                 break;
         }
+    }
+
+    /**
+     * 下载
+     *
+     * @param checkList
+     */
+    private void download(final ArrayList<FileInfo> checkList) {
+        DownloadManager manager = DownloadManager.getInstance(mAct);
+        final MaterialDialog.Builder builder = new MaterialDialog.Builder(OtherActivity.this);
+        builder.content("第1个文件正在下载");
+        builder.cancelable(false);
+        builder.progress(true, 100);
+        final MaterialDialog build = builder.build();
+        build.show();
+        count = 0;
+        for (int i = 0; i < checkList.size(); i++) {
+            FileInfo f = checkList.get(i);
+            f.setFtype(FTYPE.NORMAL);
+            File outFile = new File(path + "/" + f.objid);
+            manager.downloadFile(f, outFile, new ProgressBarAware(build, i + 1), new OnDownloadingListener() {
+                @Override
+                public void onDownloadFailed(FileDownloadTask task, int errorType, String msg) {
+                    ToastUtils.toast(OtherActivity.this, "下载失败");
+                    build.dismiss();
+                }
+
+                @Override
+                public void onDownloadSucc(FileDownloadTask task, File outFile) {
+                    count++;
+                    if (count == checkList.size()) {
+                        build.dismiss();
+                        ToastUtils.toast(OtherActivity.this, "下载成功");
+                        setResult(RESULT_OK);
+                        onBackPressed();
+                    }
+                }
+            }, new OnDownloadProgressListener() {
+                @Override
+                public void onProgressUpdate(FileDownloadTask downloadInfo, long current, long totalSize) {
+
+                }
+            });
+        }
+
+    }
+
+    /**
+     * 上传
+     *
+     * @param checkList
+     */
+    private void upload(ArrayList<FileInfo> checkList) {
+        final ArrayList<FileInfo0> fileLocals = new ArrayList<>();
+        for (FileInfo f :
+                checkList) {
+            FileInfo0 fileInfo0 = new FileInfo0(f);
+            fileLocals.add(fileInfo0);
+        }
+        FileUploadManager manager = FileUploadManager.getInstance();
+        UploadOptions options = new UploadOptions(true, true);
+        final MaterialDialog.Builder builder = new MaterialDialog.Builder(OtherActivity.this);
+        builder.content("第1个文件正在上传");
+        builder.cancelable(false);
+        builder.progress(true, 100);
+        final MaterialDialog build = builder.build();
+        build.show();
+        count = 0;
+        for (int i = 0; i < fileLocals.size(); i++) {
+            FileInfo0 f = fileLocals.get(i);
+            f.setFtype(FTYPE.NORMAL);
+            manager.uploadFile(new ProgressBarAware(build, i + 1), null, f, new OnUploadListener() {
+                @Override
+                public void onError(FileUploadInfo uploadData, int errorType, String msg) {
+                    ToastUtils.toast(OtherActivity.this, "上传失败");
+                    build.dismiss();
+                }
+
+                @Override
+                public void onSuccess(FileUploadInfo uploadData, Object data) {
+                    count++;
+                    if (count == fileLocals.size()) {
+                        build.dismiss();
+                        ToastUtils.toast(OtherActivity.this, "上传成功");
+                        setResult(RESULT_OK);
+                        onBackPressed();
+                    }
+                }
+            }, options);
+        }
+
     }
 
 }
