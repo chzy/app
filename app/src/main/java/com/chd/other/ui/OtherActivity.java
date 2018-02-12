@@ -188,7 +188,7 @@ public class OtherActivity extends UILActivity implements OnClickListener {
        // syncTask.analyOtherUnits0(cloudUnits, filelistEntity, pos);
     }
 
-    private int unBackCount=0;
+
 
     private void refreshData(int count){
 
@@ -205,11 +205,11 @@ public class OtherActivity extends UILActivity implements OnClickListener {
                     Unbak_idx_lst.add(i);
                 }
               */
-        unBackCount+=count;
+        //count;
       /*TODO
       * */
       // 问题:  数量显示未更新,只有全部文件取完以后 才显示出个数
-        mTvNumber.setText("未备份文件" + unBackCount + "个");
+        mTvNumber.setText("未备份文件" + count + "个");
         handler.sendEmptyMessage(0);
     }
 

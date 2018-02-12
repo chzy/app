@@ -7,12 +7,14 @@ import android.util.Log;
 import com.chd.MediaMgr.utils.MediaFileUtil;
 import com.chd.TClient;
 import com.chd.Transform.InputTrasnport;
+import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.Entity.MessageEvent;
 import com.chd.base.MediaMgr;
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
+import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.net.NetworkUtils;
 
 import org.apache.thrift.TException;
@@ -37,7 +39,8 @@ public class SyncLocalFileBackground implements Runnable {
     private List<FileInfo0> files = new ArrayList<>();
     private MediaMgr su = null;
     private Context context = null;
-    private FileInfo0 _item;
+    private FilelistEntity filelistEntity;
+
 
     /**
      * _itme!=null：立即上传  _item==null：自动备份0
@@ -51,7 +54,7 @@ public class SyncLocalFileBackground implements Runnable {
         this.context = context;
         //this.upLoadType = upLoadType;
         su = new MediaMgr(context);
-        //su.open();
+        filelistEntity= UILApplication.getFilelistEntity();
     }
 
 	/*public SyncLocalFileBackground(Context context,FileInfo0 fileInfo0) {
@@ -65,7 +68,7 @@ public class SyncLocalFileBackground implements Runnable {
         this.context = context;
         //this.upLoadType = upLoadType;
         su = new MediaMgr(context);
-        //su.open();
+        filelistEntity=UILApplication.getFilelistEntity();
     }
 
     public void run() {
@@ -155,6 +158,10 @@ public class SyncLocalFileBackground implements Runnable {
             Log.e(TAG,"invalid remote obj size 0");
 			return false;
 		}*/
+        if (filelistEntity.getFilePath(fileInfo0)&& fileInfo0.getFilePath()==null)
+        {
+            return false;
+        }
         File f = new File(fileInfo0.getFilePath());
         if (f.isDirectory()) {
             return false;
@@ -289,6 +296,11 @@ public class SyncLocalFileBackground implements Runnable {
             Log.w(TAG, e.getLocalizedMessage());
             return false;
         }
+        if (!filelistEntity.getFilePath(entity))
+        {
+            Log.d(TAG, entity.getObjid()+" FilePath not exsits");
+            return false;
+        }
         file = new File(entity.getFilePath());
         if (!file.exists()) {
             Log.d(TAG, entity.getFilePath() + " not exsits");
@@ -298,10 +310,10 @@ public class SyncLocalFileBackground implements Runnable {
             Log.d(TAG, entity.getFilePath() + " not a file");
             return false;
         }
-        if (size < 1) {
+       /* if (size < 1) {
             size = file.length();
             entity.setFilesize(size);
-        }
+        }*/
         if (size < 1)
             return false;
 
@@ -421,7 +433,7 @@ public class SyncLocalFileBackground implements Runnable {
         try {
             String fname = entity.getObjid() == null ? MediaFileUtil.getFnameformPath(entity.getFilePath()) : entity.getObjid();
             //filebuilder = tClient.new TFilebuilder(fname, entity.getFtype(),(int)size);
-            String objid = null;
+            String objid = entity.getObjid();
             if (start == -1) {
                 //objid = filebuilder.ApplyObj();
                 if (objid == null) {

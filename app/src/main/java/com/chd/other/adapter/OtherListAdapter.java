@@ -79,9 +79,9 @@ public class OtherListAdapter extends BaseAdapter {
             convertView.setTag(item);
         }
         else {
-            convertView.clearAnimation();
+            //convertView.clearAnimation();
             item = (MenuItem) convertView.getTag();
-            item.cb.clearAnimation();
+            //item.cb.clearAnimation();
             item.img_url.clearAnimation();
         }
         // convertView.setVisibility(View.INVISIBLE);
@@ -97,11 +97,11 @@ public class OtherListAdapter extends BaseAdapter {
         }
         // - --------
         //设置item的weidth和height都为0
-        AbsListView.LayoutParams param = new AbsListView.LayoutParams(
+    /*    AbsListView.LayoutParams param = new AbsListView.LayoutParams(
                  0,
                 0);
         //将设置好的布局属性应用到GridView的Item上
-        convertView.setLayoutParams(param);
+        convertView.setLayoutParams(param);*/
 
         // - --------
         FileInfo fileItem = _list.get(position);
@@ -164,11 +164,11 @@ public class OtherListAdapter extends BaseAdapter {
             }
         }
         // - --------
-        param = new AbsListView.LayoutParams(
+        /*param = new AbsListView.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         //将设置好的布局属性应用到GridView的Item上
-        convertView.setLayoutParams(param);
+        convertView.setLayoutParams(param);*/
 // - --------
         convertView.setVisibility(View.VISIBLE);
 

@@ -2,9 +2,11 @@ package com.chd.base.Entity;
 
 import android.util.Log;
 
+import com.chd.Interface.PathStore;
 import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,7 +23,7 @@ public class FilelistEntity {
     private int bakNumber = 0;
     private int unBakNumber = 0;
     private HashMap<String, Integer> backmap;
-    private HashMap<Integer, String> pathmap;
+    private HashMap< Integer,String> pathmap;
     private final List<Integer> _GroupCpLocal;
     private final List<Integer> _GroupCpCloud;
     private final String classname = "FilelistEntity";
@@ -35,7 +37,7 @@ public class FilelistEntity {
 
     public FilelistEntity() {
         backmap = new HashMap<>();
-        pathmap = new HashMap<>();
+        pathmap=new HashMap<>();
         // bklist=new ArrayList<>();
         locallist = Collections.synchronizedList(new ArrayList<FileInfo0>(300)) ;
         _GroupCpLocal = new ArrayList<>();
@@ -81,30 +83,7 @@ public class FilelistEntity {
         return locallist;
     }
 
-   /* public void setLocallist(List<FileLocal> locallist) {
-        setLocallist(locallist,false);
-    }
-*/
-    /*public void setLocallist(List<FileLocal> locallist,boolean copy) {
-        if (copy )
-        {
-            if (this.locallist==null)
-                this.locallist=new ArrayList<>();
-            this.locallist.addAll(locallist);
-        }
-        else {
-            if (this.locallist!=null)
-                this.locallist.clear();
-            this.locallist = locallist;
-        }
-    }*/
 
-/*
-
-    public void addbakNumber() {
-        this.bakNumber++;
-    }
-*/
 
     public void addbakups(String obj, int sid) {
         if (!backmap.containsKey(obj))
@@ -119,11 +98,21 @@ public class FilelistEntity {
         }
     }
 
-    public String getFilePath(int pathid) {
+
+   public String getFilePath(int pathid) {
         if (pathmap.containsKey(pathid)) {
             return pathmap.get(pathid);
         }else {
             return null;
+        }
+    }
+
+    public boolean getFilePath(FileInfo0 it) {
+        if (pathmap.containsKey(it.pathid)) {
+            it.setFilePath(pathmap.get(it.pathid));
+            return true;
+        }else {
+            return false;
         }
     }
 
