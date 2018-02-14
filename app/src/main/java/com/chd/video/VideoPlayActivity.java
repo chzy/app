@@ -64,7 +64,7 @@ public class VideoPlayActivity extends UILActivity implements UniversalVideoView
         tvCenter.setText("视频播放");
         tvRight.setText("编辑");
         fileInfo = (FileInfo) getIntent().getSerializableExtra("bean");
-        int sysid = UILApplication.getFilelistEntity().queryLocalSysid(fileInfo.getObjid());
+        int sysid =0 ;//UILApplication.getFilelistEntity().queryLocalSysid(fileInfo.getObjid());
         String url = null;
         videoPath = new ShareUtils(this).getVideoFile().getPath();
         if (sysid > 0) {

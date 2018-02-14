@@ -61,7 +61,7 @@ public class FilelistEntity {
     }
 
     public void setBklist(List<FileInfo> list) {
-        setBklist(list, true);
+        setBklist(list, false);
     }
 
     public void setBklist(List<FileInfo> list, boolean copy) {
@@ -85,18 +85,18 @@ public class FilelistEntity {
 
 
 
-    public void addbakups(String obj, int sid) {
+    /*public void addbakups(String obj, int sid) {
         if (!backmap.containsKey(obj))
             backmap.put(obj, sid);
     }
-
-    public int queryLocalSysid(String objname) {
+*/
+    /*public int queryLocalSysid(String objname) {
         if (backmap.containsKey(objname)) {
             return backmap.get(objname);
         } else {
             return 0;
         }
-    }
+    }*/
 
 
    public String getFilePath(int pathid) {

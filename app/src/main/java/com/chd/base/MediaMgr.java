@@ -170,144 +170,7 @@ public class MediaMgr {
     }
 
 
-	/*public void   anlayLocalUnits(List<FileInfo0> couldlist, FilelistEntity filelistEntity) {
-		int count= filelistEntity.getLocallist().size();
-		int count2=couldlist.size();
 
-		ArrayList<FileInfo0> baklist=new ArrayList(count2);
-		int idx=0;
-		int j=0,i=0;
-		FileInfo0 item = null;
-		BitSet bm=new BitSet(count);
-		//for(i=0;i<bm.length();i++)
-	    		bm.set(i,false);
-		for(j=0;idx<count2;j++)
-		{
-			FileInfo fileInfo= couldlist.get(j);
-			if (idx==j) {
-				item=new FileInfo0(fileInfo);
-				baklist.add(item);
-				idx++;
-			}
-			for (i=0;i<count;i++)
-			{
-				FileLocal fileLocal=LocalUnits.get(i);
-				if (fileLocal.getSysid()==1 *//*bakuped*//* ) {
-					if (!bm.get(i))
-					{
-						bm.set(i,true);
-						if (filelistEntity != null)
-							filelistEntity.addbakNumber();
-					}
-					continue;
-				}
-				if (fileLocal.getFilename().equalsIgnoreCase(fileInfo.getObjid())) {
-					item.setSysid(fileLocal.getSysid());
-					//fileLocal.bakuped = true;
-					if (filelistEntity != null)
-						filelistEntity.addbakNumber();
-					break;
-				}
-			}
-		}
-		for (i=0;i<count;i++)
-		{
-			FileLocal fileLocal=LocalUnits.get(i);
-			if ( fileLocal.getSysid()>1   *//*.bakuped*//* ) {
-				filelistEntity.addUnBakNumber();
-			}
-		}
-
-		couldlist.clear();
-		//bm.clear();
-		bm=null;
-	//	filelistEntity.setBklist(baklist);
-		//return  null;
-	}*/
-
-    /*public void   anlayLocalUnits90(List<FileInfo0> couldlist, FilelistEntity filelistEntity) {
-
-        int count_lc= LocalUnits.size();
-
-        int count2_cld=couldlist.size();
-        long t1 ,t0 = System.currentTimeMillis();
-        HashSet hashSet=new HashSet<FileInfo>(couldlist);
-
-                //couldlist.
-        ArrayList<FileInfo0>  backlist=new ArrayList<>();
-        //Collections.sort(couldlist,new  ComparatorObj());
-        //ArrayList<FileInfo0> baklist=new ArrayList(count2);
-        //int idx=0;
-        int j=0,i=0;
-        //FileInfo0 item = null;
-        //BitSet bm=new BitSet(count_lc);
-        //for(i=0;i<bm.length();i++)
-        //bm.set(i,false);
-        FileLocal local_item;
-        FileInfo cld_item;
-
-        for(j=0;j<count_lc;j++)
-        {
-            local_item=LocalUnits.get(j);
-            //if (local_item.bakuped )
-            //	continue;
-            if (hashSet.contains(local_item))
-            {
-                //local_item.bakuped=true;
-                //bm.set(j,true);
-                if (filelistEntity != null)
-                    filelistEntity.addbakNumber();
-            }
-        *//*	for (i=0;i<count2_cld;i++)
-			{
-				if (bm.get(i))
-					continue;
-				cld_item=couldlist.get(i);
-
-				if ( local_item.fname.equalsIgnoreCase(cld_item.getObjid()))
-				{
-
-					FileInfo0 newfileinfo=new FileInfo0();
-					newfileinfo.setObjid(local_item.fname);
-					newfileinfo.setFtype(FTYPE.PICTURE);
-					newfileinfo.setSysid(local_item.sysid);
-					//
-					backlist.add((FileInfo0) newfileinfo);
-					LocalUnits.remove(j);
-					j--;
-					count_lc--;
-					local_item.bakuped = true;
-					bm.set(i,true);
-					if (filelistEntity != null)
-						filelistEntity.addbakNumber();
-					break;
-				}
-			}*//*
-		}
-		*//*for (i=0;i<count;i++)
-		{
-			FileLocal fileLocal=LocalUnits.get(i);
-			if (!fileLocal.bakuped ) {
-				filelistEntity.addUnBakNumber();
-			}
-		}*//*
-		//int z= count_lc-bm.cardinality();
-		//filelistEntity.addUnBakNumber();
-
-		//couldlist.clear();
-		//couldlist.addAll(backlist);
-		//bm.clear();
-		//bm=null;
-		//filelistEntity.setBklist(couldlist);
-		//filelistEntity.setLocallist(LocalUnits);
-		//filelistEntity.setUnBakNumber(LocalUnits.size()-bm.cardinality());
-		t1=System.currentTimeMillis();
-		//Toast.makeText(this.context,this.getClass().getName()+"cost : "+ (t1-t0),Toast.LENGTH_SHORT);
-		long z=t1-t0;
-		Log.i("111111111","cost : "+ (z));
-		return  ;
-	}
-*/
     public void anlayLocalUnits(final List<FileInfo> couldlist, FilelistEntity filelistEntity) {
 
         long t1, t0 = System.currentTimeMillis();
@@ -347,7 +210,7 @@ public class MediaMgr {
                 local_item = LocalUnits.get(idx_lcl);
                 local_item.backuped = true;
 
-                filelistEntity.addbakups(local_item.getObjid(),/*local_item.getSysid()*/ 1);
+                //filelistEntity.addbakups(local_item.getObjid(),/*local_item.getSysid()*/ 1);
                 //fileInfo=couldlist.get(idx_cld);
                 //fileInfo.setLastModified(TimeUtils.getDayWithTimeMillis0(fileInfo.getLastModified()));
                 idx_cld++;
@@ -366,37 +229,49 @@ public class MediaMgr {
     }
 
 
-    public void anlayLocalUnits(final List<FileInfo> couldlist, FilelistEntity filelistEntity,int offset,int count) {
+    public void anlayLocalUnits( final List<FileInfo> couldlist, FilelistEntity filelistEntity,int offset,int count) {
 
         long t1, t0 = System.currentTimeMillis();
         List<FileInfo0> LocalUnits = filelistEntity.getLocallist();
 
         List<Integer> Unbak_idx_lst=filelistEntity.getUnbak_idx_lst();
-        if( Unbak_idx_lst.isEmpty())
+        if( Unbak_idx_lst.isEmpty() && couldlist.size()>1)
             Collections.sort(couldlist, new ComparatorByName());
         FileInfo0 local_item;
         int vl = 0;
         int idx_lcl=offset;
-
-        while (idx_cld < couldlist.size() && idx_lcl < LocalUnits.size()) {
-
-            vl =  couldlist.get(idx_cld).getObjid().compareTo(LocalUnits.get(idx_lcl).getObjid());
-            if (vl < 0) {
-                idx_cld++;
+        String cldobj ,lclobj;
+        //while (idx_cld+1 < couldlist.size() || idx_lcl+1 < LocalUnits.size())
+        while (offset<count)
+        {
+            idx_cld=Math.min(idx_cld,couldlist.size()-1);
+            idx_lcl=Math.min(idx_lcl,LocalUnits.size()-1);
+            cldobj=couldlist.get(idx_cld).getObjid();
+            lclobj=LocalUnits.get(idx_lcl).getObjid();
+             vl =  cldobj.compareTo(lclobj);
+            //vl =  couldlist.get(idx_cld).getObjid().compareTo(LocalUnits.get(idx_lcl).getObjid());
+            if (vl < 0 ) {
+                Unbak_idx_lst.add(idx_lcl);
+                if (idx_cld>=couldlist.size()-1)
+                {
+                    idx_lcl++;
+                }else
+                    idx_cld++;
             }
             else
             if (vl > 0) {
                 Unbak_idx_lst.add(idx_lcl);
                 idx_lcl++;
             }
-            else {
+            else
+                {
                 local_item = LocalUnits.get(idx_lcl);
                 local_item.backuped = true;
-
-                filelistEntity.addbakups(local_item.getObjid(),/*local_item.getSysid()*/ 1);
+                //filelistEntity.addbakups(local_item.getObjid(),/*local_item.getSysid()*/ 1);
                 idx_cld++;
                 idx_lcl++;
             }
+            offset++;
         }
         if (couldlist.isEmpty())
         {
@@ -408,7 +283,7 @@ public class MediaMgr {
         t1=System.currentTimeMillis();
         Log.i(TAG, "anlayLocalUnits: compare cost :"+(t1-t0)+" ms");
         // Collections.sort(couldlist, new ComparatorByDate());
-        filelistEntity.setBklist(couldlist);
+       // filelistEntity.setBklist(couldlist);
         t1 = System.currentTimeMillis();
         long z = t1 - t0;
         return;
@@ -1098,9 +973,10 @@ public class MediaMgr {
     private class ComparatorByName implements Comparator {
 
         public int compare(Object arg0, Object arg1) {
-            String item0 = arg0.toString();
-            String item1 = arg1.toString();
-            int flag = item0.compareTo(item1);
+            String item0 = ((FileInfo)arg0).getObjid();
+            String item1 = ((FileInfo)arg1).getObjid();
+           // int flag = item0.compareTo(item1);
+            int flag = item1.compareTo(item0);
             return flag;
         }
     }

@@ -505,13 +505,15 @@ public class OtherActivity extends UILActivity implements OnClickListener {
      *
      * @param checkList
      */
-    private void upload(ArrayList<FileInfo> checkList) {
-        final ArrayList<FileInfo0> fileLocals = new ArrayList<>();
+    private void upload(final ArrayList<FileInfo> fileLocals) {
+     /*
+       final ArrayList<FileInfo0> fileLocals = new ArrayList<>();
         for (FileInfo f :
                 checkList) {
             FileInfo0 fileInfo0 = new FileInfo0(f);
             fileLocals.add(fileInfo0);
         }
+        */
         FileUploadManager manager = FileUploadManager.getInstance();
         UploadOptions options = new UploadOptions(true, true);
         final MaterialDialog.Builder builder = new MaterialDialog.Builder(OtherActivity.this);
@@ -522,7 +524,7 @@ public class OtherActivity extends UILActivity implements OnClickListener {
         build.show();
         count = 0;
         for (int i = 0; i < fileLocals.size(); i++) {
-            FileInfo0 f = fileLocals.get(i);
+            FileInfo0 f = (FileInfo0) fileLocals.get(i);
             f.setFtype(FTYPE.NORMAL);
             manager.uploadFile(new ProgressBarAware(build, i + 1), null, f, new OnUploadListener() {
                 @Override

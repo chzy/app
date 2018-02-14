@@ -96,12 +96,12 @@ public class VoiceActivity extends UILActivity implements View.OnClickListener {
                 FileInfo voiceEntity = cloudUnits.get(position);
                 HashMap<String, String> map = cloudHashMap.get(position);
                 title = map.get("title");
-                int sysid = filelistEntity.queryLocalSysid(voiceEntity.getObjid());
-                if (sysid > 0) {
+                //int sysid = filelistEntity.queryLocalSysid(voiceEntity.getObjid());
+                /*if (sysid > 0) {
                     filePath = filelistEntity.getFilePath(sysid);
                 } else {
                    filePath="null"+voiceEntity.getObjid();
-                }
+                }*/
                 isNew = false;
                 AndPermission.with(VoiceActivity.this)
                         .requestCode(REQUEST_CODE_PERMISSION_RECORD)

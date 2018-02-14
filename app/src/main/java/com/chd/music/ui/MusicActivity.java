@@ -94,12 +94,12 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
             String path = item.getFilePath();
             String name = item.getFilename();
             if (StringUtils.isNullOrEmpty(path)) {
-                int sysid = filelistEntity.queryLocalSysid(item.getObjid());
+                /*int sysid = filelistEntity.queryLocalSysid(item.getObjid());
                 if (sysid > 0) {
                     item.setFilePath(filelistEntity.getFilePath(sysid));
                 } else {
                     item.setFilePath(musicPath + "/" + item.getObjid());
-                }
+                }*/
             }
             if (name == null) {
                 item.setFilename(item.getObjid());

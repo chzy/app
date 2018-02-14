@@ -66,7 +66,7 @@ public class FileUploadInfo {
     }*/
 
     public String getOriginalFilePath() {
-        return _item.getFilePath()+ File.separator+_item.getObjid();
+        return _item.getFilePath() ;
     }
 
     public String getUploadFilePath() {
