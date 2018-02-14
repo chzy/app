@@ -57,8 +57,6 @@ public class OtherActivity extends UILActivity implements OnClickListener {
     private int nRgbColorSel = Color.rgb(255, 255, 255);
     private TextView mTabAll, mTabDOC, mTabXLS, mTabPPT, mTabPDF;
     private ListView mListView;
-    private List<FileInfo0> mFileInfoList = new LinkedList<>();
-    private List<FileInfo0> mFileLocalList = new LinkedList<>();
     private String filetype = "";
     private boolean isLocal = false;
     private OtherListAdapter adapter;
@@ -307,9 +305,9 @@ public class OtherActivity extends UILActivity implements OnClickListener {
                                         @Override
 
                                         public void run() {
-                                            Toast.makeText(OtherActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
-                                            //tmpFileInfo.remove(i);
+                                            adapter.getList().remove(i);
                                             adapter.notifyDataSetChanged();
+                                            Toast.makeText(OtherActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
                                         }
                                     });
                                 } else {
