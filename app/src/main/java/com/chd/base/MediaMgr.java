@@ -246,6 +246,8 @@ public class MediaMgr {
         {
             idx_cld=Math.min(idx_cld,couldlist.size()-1);
             idx_lcl=Math.min(idx_lcl,LocalUnits.size()-1);
+            if (idx_lcl<0 || idx_cld<0)
+                break;
             cldobj=couldlist.get(idx_cld).getObjid();
             lclobj=LocalUnits.get(idx_lcl).getObjid();
              vl =  cldobj.compareTo(lclobj);

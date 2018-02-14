@@ -130,14 +130,13 @@ public class TrpcUploader extends BaseUploader {
                 try {
                     trpcOutputstream.write(buffer, 0, len);
                     t00 = System.currentTimeMillis();
-
                     Log.i(TAG, "speed : " + (float) ((len / 1024) / (t00 - t0) / 1024) + "K/S");
                 } catch (IOException ex) {
                     Log.i(TAG, "upload write failed ");
                     succed = false;
                     break;
                 }
-                entity.setOffset(pz);
+               // entity.setOffset(pz);
                 fileTransferredListener.transferred(pz, size);
                 succed = true;
             }
