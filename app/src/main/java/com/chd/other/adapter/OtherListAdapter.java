@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -208,6 +207,11 @@ public class OtherListAdapter extends BaseAdapter {
         // 加不加 不确定  执行未看出变化
         //notifyDataSetInvalidated();
     }
+    public List getList(){
+        return _list;
+    }
+
+
 
     public void setShowfiletype(String type) {
         this.Showftype = type;
