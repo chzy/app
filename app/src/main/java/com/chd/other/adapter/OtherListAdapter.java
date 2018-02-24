@@ -21,8 +21,8 @@ import java.util.List;
 
 public class OtherListAdapter extends BaseAdapter {
     private Context mContext;
-    private List<FileInfo> _list;
-    private List<Integer> _unbak_idx_lst;
+    private List<Object> _list;
+    //private List<Integer> _unbak_idx_lst;
     private boolean isShow;
     private boolean ShowUnbak = false;
     private String Showftype = null;
@@ -30,7 +30,7 @@ public class OtherListAdapter extends BaseAdapter {
     private Resources mResources;
     private FilelistEntity filelistEntity;
 
-    public OtherListAdapter(Context context, List<FileInfo> list) {
+    public OtherListAdapter(Context context, List list) {
         mContext = context;
         _list = list;
         checkList = new ArrayList();
@@ -40,7 +40,6 @@ public class OtherListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-
         if (ShowUnbak)
             return filelistEntity.getUnbak_idx_lst().size();
         else
@@ -103,16 +102,21 @@ public class OtherListAdapter extends BaseAdapter {
         convertView.setLayoutParams(param);*/
 
         // - --------
-        FileInfo fileItem = _list.get(position);
-        if (fileItem == null)
+        FileInfo fileItem;
+        Object obj = _list.get(position);
+        if (obj == null)
             return convertView;
         if (ShowUnbak) {
-            FileInfo0 it = (FileInfo0) fileItem;
+            int idx=(int)obj;
+            fileItem = filelistEntity.getLocalFileByIdx(idx);
+            FileInfo0 it=(FileInfo0) fileItem;
             if (it.backuped) {
                 //隐藏已经备份上传过的文件
                 return convertView;
             }
-        }
+        }else
+            fileItem=(FileInfo) obj;
+
 
         if (this.Showftype != null && !fileItem.getObjid().contains(Showftype))
             return convertView;//隐藏非特定类型的文件
@@ -136,7 +140,15 @@ public class OtherListAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     boolean check = ((CheckBox) view).isChecked();
                     int pos = (Integer) view.getTag();
-                    FileInfo checkItem = _list.get(pos);
+                    FileInfo checkItem;
+                    if (ShowUnbak) {
+                        Object obj = _list.get(pos);
+                        checkItem=filelistEntity.getLocalFileByIdx((int) obj);
+                    }
+                    else
+                    {
+                        checkItem=(FileInfo) _list.get(pos);
+                    }
                     //                checkItem.set(check);
                     if (check) {
                         //选中
@@ -198,12 +210,13 @@ public class OtherListAdapter extends BaseAdapter {
         this.isShow = isShow;
     }
 
-    public void setShowUnbakedfile(boolean show) {
+    private void setShowUnbakedfile(boolean show) {
         ShowUnbak = show;
     }
 
-    public void setList(List lst) {
+    public void setList(List lst,boolean b) {
         _list = lst;
+        setShowUnbakedfile(b);
         // 加不加 不确定  执行未看出变化
         //notifyDataSetInvalidated();
     }
@@ -216,6 +229,7 @@ public class OtherListAdapter extends BaseAdapter {
     public void setShowfiletype(String type) {
         this.Showftype = type;
     }
+
 
 
     class MenuItem {

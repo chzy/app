@@ -76,8 +76,9 @@ public class OtherActivity extends UILActivity implements OnClickListener {
                     if (list.size()<1)
                         return;
                     if (isLocal) {
-                        adapter.setList(filelistEntity.getLocallist());
-                        adapter.setShowUnbakedfile(true);
+                        //adapter.setList(filelistEntity.getLocallist());
+                        adapter.setList(filelistEntity.getUnbak_idx_lst(),true);
+                       // adapter.setShowUnbakedfile(true);
                         if (!StringUtils.isNullOrEmpty(filetype) && !FileInfoL.FILE_TYPE_ALL.contains(filetype)) {
                             /*for (FileInfo0 fileInfo : mFileLocalList) {
                                 if (fileInfo.getObjid().contains(filetype)) {
@@ -93,8 +94,8 @@ public class OtherActivity extends UILActivity implements OnClickListener {
                            // adapter.setShowUnbakedfile(false);
                         }
                     } else {
-                        adapter.setList(filelistEntity.getBklist());
-                        adapter.setShowUnbakedfile(false);
+                        adapter.setList(filelistEntity.getBklist(),false);
+                       // adapter.setShowUnbakedfile(false);
                         if (!StringUtils.isNullOrEmpty(filetype) && !FileInfoL.FILE_TYPE_ALL.contains(filetype)) {
                            /* for (FileInfo0 fileInfo : mFileInfoList) {
                                 if (fileInfo.getObjid().contains(filetype)) {
