@@ -231,6 +231,14 @@ public class FilelistEntity {
     public List<Integer> getUnbak_idx_lst() {
         return Unbak_idx_lst;
     }
+
+    public FileInfo0 getLocalFileByIdx(int idx)
+    {
+        if (locallist==null || locallist.isEmpty())
+            return null;
+        return  locallist.get(idx);
+
+    }
 }
 
 
