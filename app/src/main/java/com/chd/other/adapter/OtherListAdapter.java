@@ -21,8 +21,7 @@ import java.util.List;
 
 public class OtherListAdapter extends BaseAdapter {
     private Context mContext;
-    private List<Object> _list;
-    //private List<Integer> _unbak_idx_lst;
+    private List<Integer> _list;
     private boolean isShow;
     private boolean ShowUnbak = false;
     private String Showftype = null;
@@ -40,10 +39,7 @@ public class OtherListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        if (ShowUnbak)
-            return filelistEntity.getUnbak_idx_lst().size();
-        else
-            return _list == null ? 0 : _list.size();
+        return _list == null ? 0 : _list.size();
 
     }
 
@@ -77,13 +73,9 @@ public class OtherListAdapter extends BaseAdapter {
             convertView.setTag(item);
         }
         else {
-            //convertView.clearAnimation();
             item = (MenuItem) convertView.getTag();
-            //item.cb.clearAnimation();
             item.img_url.clearAnimation();
         }
-        // convertView.setVisibility(View.INVISIBLE);
-        //convertView.setEnabled(false);
         convertView.setVisibility(View.GONE);
 
         if(item!=null && item.cb!=null )
@@ -103,19 +95,11 @@ public class OtherListAdapter extends BaseAdapter {
 
         // - --------
         FileInfo fileItem;
-        Object obj = _list.get(position);
-        if (obj == null)
-            return convertView;
+        int idx = _list.get(position);
         if (ShowUnbak) {
-            int idx=(int)obj;
             fileItem = filelistEntity.getLocalFileByIdx(idx);
-            FileInfo0 it=(FileInfo0) fileItem;
-            if (it.backuped) {
-                //隐藏已经备份上传过的文件
-                return convertView;
-            }
         }else
-            fileItem=(FileInfo) obj;
+            fileItem=filelistEntity.getBklist().get(idx);
 
 
         if (this.Showftype != null && !fileItem.getObjid().contains(Showftype))
@@ -142,12 +126,12 @@ public class OtherListAdapter extends BaseAdapter {
                     int pos = (Integer) view.getTag();
                     FileInfo checkItem;
                     if (ShowUnbak) {
-                        Object obj = _list.get(pos);
-                        checkItem=filelistEntity.getLocalFileByIdx((int) obj);
+                       int idx = _list.get(pos);
+                        checkItem=filelistEntity.getLocalFileByIdx(idx);
                     }
                     else
                     {
-                        checkItem=(FileInfo) _list.get(pos);
+                        checkItem=filelistEntity.getBklist().get(pos);
                     }
                     //                checkItem.set(check);
                     if (check) {
@@ -228,6 +212,7 @@ public class OtherListAdapter extends BaseAdapter {
 
     public void setShowfiletype(String type) {
         this.Showftype = type;
+
     }
 
 

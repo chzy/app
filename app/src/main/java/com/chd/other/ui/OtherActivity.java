@@ -60,8 +60,10 @@ public class OtherActivity extends UILActivity implements OnClickListener {
     private String filetype = "";
     private boolean isLocal = false;
     private OtherListAdapter adapter;
+    List<Integer> list1;
     private Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(android.os.Message msg) {
+
             switch (msg.what) {
                 case 998:
                     ToastUtils.toast(OtherActivity.this,"执行成功");
@@ -70,44 +72,37 @@ public class OtherActivity extends UILActivity implements OnClickListener {
                     onNewThreadRequest();
                     break;
                 default:
-                    //tmpFileInfo.clear();
-                   // tmpFileInfo=mFileInfoList;
+                    if (list1==null)
+                        list1=new ArrayList<>();
+                    else
+                        list1.clear();
                     List list=filelistEntity.getLocallist();
                     if (list.size()<1)
                         return;
+                    FileInfo item;
                     if (isLocal) {
-                        //adapter.setList(filelistEntity.getLocallist());
-                        adapter.setList(filelistEntity.getUnbak_idx_lst(),true);
-                       // adapter.setShowUnbakedfile(true);
-                        if (!StringUtils.isNullOrEmpty(filetype) && !FileInfoL.FILE_TYPE_ALL.contains(filetype)) {
-                            /*for (FileInfo0 fileInfo : mFileLocalList) {
-                                if (fileInfo.getObjid().contains(filetype)) {
-                                    tmpFileInfo.add(fileInfo);
+                            for (int idx : filelistEntity.getUnbak_idx_lst())
+                            {
+                                item=filelistEntity.getLocalFileByIdx(idx);
+                                if (item.getObjid().contains(filetype)) {
+                                    list1.add(idx);
                                 }
-                            }*/
-
-
-                            adapter.setShowfiletype(filetype);
-                        } else {
-                            //tmpFileInfo.addAll(mFileLocalList);
-                            adapter.setShowfiletype(null);
-                           // adapter.setShowUnbakedfile(false);
-                        }
-                    } else {
-                        adapter.setList(filelistEntity.getBklist(),false);
-                       // adapter.setShowUnbakedfile(false);
-                        if (!StringUtils.isNullOrEmpty(filetype) && !FileInfoL.FILE_TYPE_ALL.contains(filetype)) {
-                           /* for (FileInfo0 fileInfo : mFileInfoList) {
-                                if (fileInfo.getObjid().contains(filetype)) {
-                                    tmpFileInfo.add(fileInfo);
+                            }
+                            adapter.setList(list1,true);
+                    }
+                    /**
+                     * 云端文件
+                     */
+                    else
+                        {
+                            int size=filelistEntity.getBklist().size();
+                            for (int idx=0; idx<size ;idx++ ) {
+                                item=filelistEntity.getBklist().get(idx);
+                                if (item.getObjid().contains(filetype)) {
+                                    list1.add(idx);
                                 }
-                            }*/
-                           adapter.setShowfiletype(filetype);
-
-                        } else {
-                           // tmpFileInfo.addAll(mFileInfoList);
-                            adapter.setShowfiletype("");
-                        }
+                            }
+                            adapter.setList(list1,false);
                     }
                     adapter.notifyDataSetChanged();
                     break;
@@ -125,17 +120,11 @@ public class OtherActivity extends UILActivity implements OnClickListener {
     private TextView mTvNumber;
     private Button mBtnDown;
     private int count;
-    //private ArrayList<FileLocal> mFileLocalLists = new ArrayList<>();
     private FilelistEntity filelistEntity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-		/*StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectNetwork().penaltyLog().build());
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
-*/
         setContentView(R.layout.activity_other);
 
         UILApplication.ClearFileEntity();
@@ -158,8 +147,6 @@ public class OtherActivity extends UILActivity implements OnClickListener {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-
-                //未备份文件 ==  backedlist . removeAll(localist);
 
                 final List<FileInfo> cloudUnits = syncTask.getCloudUnits(0, 10000);
                 filelistEntity.setBklist(cloudUnits);

@@ -2,7 +2,7 @@ package com.chd.other.entity;
 
 public class FileInfoL
 {
-	public static final String FILE_TYPE_ALL = "all";
+	public static final String FILE_TYPE_ALL = ".";
 	public static final String FILE_TYPE_DOC = "doc";
 	public static final String FILE_TYPE_DOCX = "docx";
 	public static final String FILE_TYPE_XLS = "xls";
