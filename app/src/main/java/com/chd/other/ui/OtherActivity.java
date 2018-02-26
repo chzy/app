@@ -19,7 +19,6 @@ import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.UILActivity;
 import com.chd.base.Ui.DownListActivity;
 import com.chd.base.backend.SyncTask;
-import com.chd.contacts.vcard.StringUtils;
 import com.chd.listener.DataCallBack;
 import com.chd.other.adapter.OtherListAdapter;
 import com.chd.other.entity.FileInfoL;
@@ -42,13 +41,12 @@ import com.chd.yunpan.utils.ToastUtils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class OtherActivity extends UILActivity implements OnClickListener {
 
     String path;
-    final  String TAG="OtherActivity";
+    final String TAG = "OtherActivity";
     ArrayList<FileInfo> checkList;
     private ImageView mIvLeft;
     private TextView mTvCenter;
@@ -66,43 +64,41 @@ public class OtherActivity extends UILActivity implements OnClickListener {
 
             switch (msg.what) {
                 case 998:
-                    ToastUtils.toast(OtherActivity.this,"执行成功");
+                    ToastUtils.toast(OtherActivity.this, "执行成功");
                     dismissWaitDialog();
                     dismissDialog();
                     onNewThreadRequest();
                     break;
                 default:
-                    if (list1==null)
-                        list1=new ArrayList<>();
+                    if (list1 == null)
+                        list1 = new ArrayList<>();
                     else
                         list1.clear();
-                    List list=filelistEntity.getLocallist();
-                    if (list.size()<1)
+                    List list = filelistEntity.getLocallist();
+                    if (list.size() < 1)
                         return;
                     FileInfo item;
                     if (isLocal) {
-                            for (int idx : filelistEntity.getUnbak_idx_lst())
-                            {
-                                item=filelistEntity.getLocalFileByIdx(idx);
-                                if (item.getObjid().contains(filetype)) {
-                                    list1.add(idx);
-                                }
+                        for (int idx : filelistEntity.getUnbak_idx_lst()) {
+                            item = filelistEntity.getLocalFileByIdx(idx);
+                            if (item.getObjid().contains(filetype)) {
+                                list1.add(idx);
                             }
-                            adapter.setList(list1,true);
+                        }
+                        adapter.setList(list1, true);
                     }
                     /**
                      * 云端文件
                      */
-                    else
-                        {
-                            int size=filelistEntity.getBklist().size();
-                            for (int idx=0; idx<size ;idx++ ) {
-                                item=filelistEntity.getBklist().get(idx);
-                                if (item.getObjid().contains(filetype)) {
-                                    list1.add(idx);
-                                }
+                    else {
+                        int size = filelistEntity.getBklist().size();
+                        for (int idx = 0; idx < size; idx++) {
+                            item = filelistEntity.getBklist().get(idx);
+                            if (item.getObjid().contains(filetype)) {
+                                list1.add(idx);
                             }
-                            adapter.setList(list1,false);
+                        }
+                        adapter.setList(list1, false);
                     }
                     adapter.notifyDataSetChanged();
                     break;
@@ -144,22 +140,15 @@ public class OtherActivity extends UILActivity implements OnClickListener {
 
     private void onNewThreadRequest() {
 
-        Thread thread = new Thread(new Runnable() {
+         new Thread(new Runnable() {
             @Override
             public void run() {
-
                 final List<FileInfo> cloudUnits = syncTask.getCloudUnits(0, 10000);
                 filelistEntity.setBklist(cloudUnits);
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        initData(cloudUnits);
-                    }
-                });
+                initData(cloudUnits);
             }
-        });
-        thread.start();
+        }).start();
     }
-
 
 
     private void initData(final List<FileInfo> cloudUnits) {
@@ -170,24 +159,23 @@ public class OtherActivity extends UILActivity implements OnClickListener {
 
 
         // 找到10个以后 先返回, 剩下的 在线程里面继续找
-        syncTask.dbManager.GetLocalFiles0( new String[]{"pdf", "xls", "doc", "docx"}, true, filelistEntity, new DataCallBack() {
+        syncTask.dbManager.GetLocalFiles0(new String[]{"pdf", "xls", "doc", "docx"}, true, filelistEntity, new DataCallBack() {
             @Override
             /*
             * @count 当前list的最后下标
             * */
-            public void success(List<FileInfo0> datas, int offset,int count) {
+            public void success(List<FileInfo0> datas, int offset, int count) {
                 //接收到的数据
-                syncTask.dbManager.anlayLocalUnits(cloudUnits, filelistEntity,offset,count);
+                syncTask.dbManager.anlayLocalUnits(cloudUnits, filelistEntity, offset, count);
                 refreshData(filelistEntity.getUnbak_idx_lst().size());
             }
         });
-       // Unbak_idx_lst.clear();
-       // syncTask.analyOtherUnits0(cloudUnits, filelistEntity, pos);
+        // Unbak_idx_lst.clear();
+        // syncTask.analyOtherUnits0(cloudUnits, filelistEntity, pos);
     }
 
 
-
-    private void refreshData(int count){
+    private void refreshData(final int count) {
 
       /*  if (datas != null) {
             //for (FileInfo f : datas)
@@ -205,8 +193,13 @@ public class OtherActivity extends UILActivity implements OnClickListener {
         //count;
       /*TODO
       * */
-      // 问题:  数量显示未更新,只有全部文件取完以后 才显示出个数
-        mTvNumber.setText("未备份文件" + count + "个");
+        // 问题:  数量显示未更新,只有全部文件取完以后 才显示出个数
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mTvNumber.setText("未备份文件" + count + "个");
+            }
+        });
         handler.sendEmptyMessage(0);
     }
 
