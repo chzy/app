@@ -126,13 +126,17 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
             public void run() {
                 picFiles.clear();
                 filelistEntity = UILApplication.getFilelistEntity();
-                if (syncTask == null)
+                /*if (syncTask == null)
                     syncTask = new SyncTask(PicBackActivity.this, FTYPE.PICTURE);
                 //未备份文件 ==  backedlist . removeAll(localist);
                 List<FileInfo> cloudUnits = syncTask.getCloudUnits(0, 10000);
-                syncTask.analyPhotoUnits(cloudUnits, filelistEntity);
+                syncTask.analyPhotoUnits(cloudUnits, filelistEntity);*/
+                /***
+                 * 不需要 再次跟云端文件列表比较
+                 */
                 List<FileInfo0> localUnits = filelistEntity.getLocallist();
                 if (localUnits != null && !localUnits.isEmpty()) {
+                    /*
                     Collections.sort(localUnits, new Comparator<FileInfo0>() {
                         @Override
                         public int compare(FileInfo0 fileLocal, FileInfo0 t1) {
@@ -146,17 +150,45 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                             return 0;
                         }
                     });
+                    */
+                    List<Integer> unbaklist=filelistEntity.getUnbak_idx_lst();
+                    if (unbaklist.isEmpty())
+                        return;
+
+                    Collections.sort(unbaklist, new Comparator<Integer>() {
+                        @Override
+                        public int compare(Integer idx0, Integer idx1) {
+                            int lastModified = filelistEntity.getLocalFileByIdx(idx0).lastModified;
+                            int lastModified1 = filelistEntity.getLocalFileByIdx(idx1).lastModified;
+                            if(lastModified<lastModified1){
+                                return 1;
+                            }else if(lastModified>lastModified1){
+                                return -1;
+                            }
+                            return 0;
+                        }
+                    });
+
+                    picFiles.clear();
                     PicFile<FileInfo0> heads=new PicFile<>(true,"");
                     int time= TimeUtils.getZeroTime(localUnits.get(0).getLastModified());
                     int index=0;
                     picFiles.add(heads);
                     picFiles.add(new PicFile<FileInfo0>(localUnits.get(0)));
-                    for (int i = 1; i < localUnits.size(); i++) {
-                        FileInfo0 fileInfo = localUnits.get(i);
-                        if (!fileInfo.backuped) {
+                    /**
+                     *
+                     * 每次都 上次的 位置开始找
+                     *
+                     */
+                    int offset=10;
+                    for (int i = offset; i < unbaklist.size(); i++) {
+                        FileInfo0 fileInfo =filelistEntity.getLocalFileByIdx(unbaklist.get(i));
+                        //if (!fileInfo.backuped)
+                        {
                             if (Math.abs(fileInfo.lastModified-time) <= ( 3 * 24 * 3600 )) {
                                 picFiles.add(new PicFile<FileInfo0>(fileInfo));
-                                if(i==cloudUnits.size()-1){
+                               // if(i==cloudUnits.size()-1)
+                                {
                                     PicFile<FileInfo0> fileLocalPicFile = picFiles.get(index);
                                     String start = TimeUtils.getDay(time);
                                     String end = TimeUtils.getDay(fileInfo.getLastModified());

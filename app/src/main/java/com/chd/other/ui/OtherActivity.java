@@ -81,7 +81,7 @@ public class OtherActivity extends UILActivity implements OnClickListener {
                     if (isLocal) {
                         for (int idx : filelistEntity.getUnbak_idx_lst()) {
                             item = filelistEntity.getLocalFileByIdx(idx);
-                            if (item.getObjid().contains(filetype)) {
+                            if    (  filetype.equalsIgnoreCase(".") ||  item.getObjid().contains(filetype)) {
                                 list1.add(idx);
                             }
                         }
@@ -94,7 +94,7 @@ public class OtherActivity extends UILActivity implements OnClickListener {
                         int size = filelistEntity.getBklist().size();
                         for (int idx = 0; idx < size; idx++) {
                             item = filelistEntity.getBklist().get(idx);
-                            if (item.getObjid().contains(filetype)) {
+                            if (filetype.equalsIgnoreCase(".") ||item.getObjid().contains(filetype)) {
                                 list1.add(idx);
                             }
                         }

@@ -1,7 +1,6 @@
 package com.chd.base.Entity;
 
 import com.chad.library.adapter.base.entity.SectionEntity;
-import com.chd.proto.FileInfo;
 
 
 public class PicFile<T> extends SectionEntity<T>{

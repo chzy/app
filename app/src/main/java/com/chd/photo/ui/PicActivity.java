@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v7.widget.GridLayoutManager;
+import android.util.Log;
+import android.util.Size;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -20,6 +22,8 @@ import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.Entity.PicFile;
 import com.chd.base.UILActivity;
 import com.chd.base.backend.SyncTask;
+import com.chd.listener.DataCallBack;
+import com.chd.other.ui.OtherActivity;
 import com.chd.photo.adapter.PicInfoAdapter2;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
@@ -75,7 +79,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
             dismissWaitDialog();
             dismissDialog();
             int size = 0;
-            size = filelistEntity.getUnbakNumber();
+            size = filelistEntity.getUnbak_idx_lst().size();
             mTvNumber.setText(String.format("上传未备份照片（%d）", size));
             adapter.notifyDataSetChanged();
             rlBottom.setVisibility(View.GONE);
@@ -89,6 +93,8 @@ public class PicActivity extends UILActivity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        syncTask = new SyncTask(PicActivity.this, FTYPE.PICTURE);
+        filelistEntity = UILApplication.getFilelistEntity();
         setContentView(R.layout.activity_pic);
         bIsUbkList = false;
         UILApplication.ClearFileEntity();
@@ -96,11 +102,11 @@ public class PicActivity extends UILActivity implements OnClickListener {
         initTitle();
         initResourceId();
         initListener();
-        onNewThreadRequest(false);
+        onNewThreadRequest();
     }
 
 
-    private void onNewThreadRequest(final boolean bIsUbkList) {
+    private void onNewThreadRequest0(final boolean bIsUbkList) {
         showWaitDialog();
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -175,20 +181,78 @@ public class PicActivity extends UILActivity implements OnClickListener {
                 }
                 if (bIsUbkList) {
                     initLocal();
-                } else {
+                } /*else {
                     initData();
-                }
+                }*/
             }
         });
         thread.start();
     }
 
+    private void onNewThreadRequest() {
 
-    private void initData() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                 cloudUnits = syncTask.getCloudUnits(0, 10000);
+                filelistEntity.setBklist(cloudUnits);
+                initData(cloudUnits);
+            }
+        }).start();
+    }
+    /*private void initData() {
         //要有提示用户等待的画面
         handler.sendEmptyMessage(0);
+    }*/
+
+
+    private void initData(final List<FileInfo> cloudUnits) {
+
+        if (cloudUnits == null) {
+            System.out.print("query remote failed");
+        }
+
+        // 找到10个以后 先返回, 剩下的 在线程里面继续找
+        syncTask.dbManager.GetLocalFiles0(new String[]{"jpg", "png", "gif"}, true, filelistEntity, new DataCallBack() {
+            @Override
+            /*
+            * @count 当前list的最后下标
+            * */
+            public void success(List<FileInfo0> datas, int offset, int count) {
+                //接收到的数据
+                syncTask.dbManager.anlayLocalUnits(cloudUnits, filelistEntity, offset, count);
+                refreshData(filelistEntity.getUnbak_idx_lst().size());
+            }
+        });
+
+        //按时间重新排序
+        Collections.sort(cloudUnits, new Comparator<FileInfo>() {
+            @Override
+            public int compare(FileInfo fileLocal, FileInfo t1) {
+                int lastModified = fileLocal.getLastModified();
+                int lastModified1 = t1.getLastModified();
+                if(lastModified<lastModified1){
+                    return 1;
+                }else if(lastModified>lastModified1){
+                    return -1;
+                }
+                return 0;
+            }
+        });
+
+        Log.i("ddddddddd", "initData: ");
     }
 
+    private void refreshData(final int count) {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mTvNumber.setText("未备份文件" + count + "个");
+            }
+        });
+        handler.sendEmptyMessage(0);
+    }
 
     private void initResourceId() {
         mTvNumber = (TextView) findViewById(R.id.tv_pic_number);
@@ -263,19 +327,6 @@ public class PicActivity extends UILActivity implements OnClickListener {
                 onBackPressed();
                 break;
             case R.id.tv_right: // 编辑
-//                if (bIsUbkList) {
-//                    //未备份页面
-//                    tvUpload.setText("上传");
-//                    if ("编辑".equals(mTvRight.getText())) {
-//                        rlBottom.setVisibility(View.VISIBLE);
-//                        adapter.setShowSelect(true);
-//                        mTvRight.setText("取消");
-//                    } else {
-//                        rlBottom.setVisibility(View.GONE);
-//                        mTvRight.setText("编辑");
-//                        adapter.setShowSelect(false);
-//                    }
-//                } else {
                 tvUpload.setText("下载");
                 if ("编辑".equals(mTvRight.getText())) {
                     rlBottom.setVisibility(View.VISIBLE);
@@ -307,7 +358,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
         if (RESULT_OK == resultCode) {
             switch (requestCode) {
                 case 0x11:
-                    onNewThreadRequest(bIsUbkList);
+                    onNewThreadRequest();
                     break;
                 case FunctionConfig.CAMERA_RESULT:
                     if (data != null) {
@@ -330,7 +381,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
                         public void run() {
                             cloudUnits.clear();
                             cloudList.clear();
-                            onNewThreadRequest(false);
+                            onNewThreadRequest();
                         }
                     }, 500);
                     break;
@@ -421,7 +472,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
                             public void onSuccess(FileUploadInfo uploadData, Object data) {
                                 build.dismiss();
                                 ToastUtils.toast(PicActivity.this, "上传成功");
-                                onNewThreadRequest(bIsUbkList);
+                                onNewThreadRequest();
                             }
                         }, options);
                     } catch (Exception e) {
@@ -479,7 +530,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
                 public void onSuccess(FileUploadInfo uploadData, Object data) {
                     build.dismiss();
                     ToastUtils.toast(PicActivity.this, "上传成功");
-                    onNewThreadRequest(bIsUbkList);
+                    onNewThreadRequest();
                 }
             }, options);
         } catch (Exception e) {
