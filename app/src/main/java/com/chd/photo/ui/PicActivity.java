@@ -53,6 +53,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -212,21 +213,25 @@ public class PicActivity extends UILActivity implements OnClickListener {
             System.out.print("query remote failed");
         }
 
+
         // 找到10个以后 先返回, 剩下的 在线程里面继续找
-        syncTask.dbManager.GetLocalFiles0(new String[]{"jpg", "png", "gif"}, true, filelistEntity, new DataCallBack() {
+        syncTask.dbManager.GetLocalFiles0(new String[]{"jpg", "png", "gif"}, true, filelistEntity, new DataCallBack(10) {
             @Override
             /*
             * @count 当前list的最后下标
             * */
             public void success(List<FileInfo0> datas, int offset, int count) {
                 //接收到的数据
-                syncTask.dbManager.anlayLocalUnits(cloudUnits, filelistEntity, offset, count);
-                refreshData(filelistEntity.getUnbak_idx_lst().size());
+                //syncTask.dbManager.anlayLocalUnits(cloudUnits, filelistEntity, offset, count);
+                List<PicFile> list=new ArrayList<>();
+                int unbak=GetUnbakSubitem(offset,count,list);
+                refreshData(unbak);
             }
-        });
+        }
+        );
 
         //按时间重新排序
-        Collections.sort(cloudUnits, new Comparator<FileInfo>() {
+        /*Collections.sort(cloudUnits, new Comparator<FileInfo>() {
             @Override
             public int compare(FileInfo fileLocal, FileInfo t1) {
                 int lastModified = fileLocal.getLastModified();
@@ -238,17 +243,67 @@ public class PicActivity extends UILActivity implements OnClickListener {
                 }
                 return 0;
             }
-        });
+        });*/
 
         Log.i("ddddddddd", "initData: ");
     }
+
+
+    /**
+     *
+     * @param lastoffset 向list 添加元素的起始位置
+     * @param Exceptnumber 希望添加元素的个数
+     * @param list 容器对象,应该初始化为线程安全对象
+     * @return 实际添加元素的个数
+     */
+    public int  GetUnbakSubitem(int lastoffset, int Exceptnumber ,List<PicFile> list) {
+        int count = 0;
+        if (list == null)
+            return count;
+        FileInfo0 item;
+        //int min=0;
+        int idx = lastoffset;
+        List<FileInfo0> locallst=filelistEntity.getLocallist();
+        int len=locallst.size();
+        for (;idx<len;idx++)
+        {
+            item =locallst.get(idx);
+            if (syncTask.isBacked(item))
+            {
+                count++;
+                PicFile<FileInfo0> f = new PicFile<FileInfo0>(item);
+                list.add(f);
+            }
+        }
+
+        /*
+        * sort array by time if you would
+        * */
+        /*Collections.sort(list, (Comparator<? super PicFile>) new Comparator<PicFile<FileInfo0>>() {
+            @Override
+             public int compare(PicFile<FileInfo0> t0, PicFile<FileInfo0> t1) {
+
+                        int lastModified = t0.t.lastModified;
+                        int lastModified1 = t1.t.lastModified;
+                        if (lastModified < lastModified1) {
+                            return 1;
+                        } else if (lastModified > lastModified1) {
+                            return -1;
+                        }
+                        return 0;
+                    }
+                }
+        );*/
+        return  count;
+    }
+
 
     private void refreshData(final int count) {
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mTvNumber.setText("未备份文件" + count + "个");
+                mTvNumber.setText("未备份文件" + Integer.valueOf(mTvNumber.getText().toString())+count + "个");
             }
         });
         handler.sendEmptyMessage(0);

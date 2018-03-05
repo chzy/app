@@ -24,6 +24,8 @@ import com.chd.service.SyncLocalFileBackground;
 import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.share.ShareUtils;
 
+import org.apache.thrift.transport.THttpClient;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,6 +64,7 @@ public class SyncTask {
 		//filelistEntity.getUbklist().clear();
 		filelistEntity = null;
 	}
+
 
 	public synchronized List<FileInfo> getCloudUnits(int begin, int max) {
 		/*if (filelistEntity!=null && filelistEntity.getBklist()!=null)
@@ -154,6 +157,8 @@ public class SyncTask {
 
 	}*/
 
+
+
 	public FilelistEntity analyUnits(List<FileInfo> remotelist) {
 		filelistEntity = new FilelistEntity();
 		//dbManager.GetLocalFiles(MediaFileUtil.FileCategory.Music, new String[]{"mp3", "wav" }, true);
@@ -167,6 +172,39 @@ public class SyncTask {
 		List<FileInfo0> lst = dbManager.getUpLoadTask(max);
 		dbManager.close();
 		return lst;
+	}
+
+
+	public void MarkBackedItem(  List<FileInfo0> LocalUnits,int offset,int count) {
+
+		long t1, t0 = System.currentTimeMillis();
+		FileInfo0 local_item;
+		String lclobj;
+		FTYPE ftype;
+		if (count<LocalUnits.size()-offset-1)
+		{
+			Log.e(TAG, "anlayLocalUnits: error param count !!!" );
+			return;
+		}
+		for (int idx=offset;idx<count;idx++)
+		{
+			local_item=LocalUnits.get(idx);
+			lclobj=local_item.getObjid();
+			ftype=local_item.ftype;
+			if (TClient.isBackuped(lclobj,ftype))
+				local_item.setBackuped(true);
+		}
+
+		t1=System.currentTimeMillis();
+		Log.i(TAG, "anlayLocalUnits: compare cost :"+(t1-t0)+" ms");
+		return;
+	}
+
+	public boolean isBacked(  FileInfo0 fileInfo0) {
+		boolean ret=false;
+		ret=TClient.isBackuped(fileInfo0.getFilename(),fileInfo0.ftype);
+		fileInfo0.setBackuped(ret);
+		return ret;
 	}
 
 

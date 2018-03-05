@@ -289,6 +289,8 @@ public class MediaMgr {
         return;
     }
 
+
+
     public void GetLocalFiles0(String[] exts, boolean include, final FilelistEntity filelistEntity, final DataCallBack dataCallBack) {
         //setCustomCategory(new String[]{"doc", "pdf", "xls", "zip", "rar"}, true);
 
@@ -319,12 +321,12 @@ public class MediaMgr {
         if(cursor==null)
             return;
         //游标从最后开始往前递减，以此实现时间递减顺序（最近访问的文件，优先显示）
-        //int count=cursor.getCount();
-       // final CountDownLatch countDownLatch=new CountDownLatch( Math.min(10,count));//at least 10 items;
+/*
         new Thread(new Runnable() {
-
             @Override
             public void run() {
+*/
+
                 int idx=0,count=0,offset=0;
 
                 long t1,t0=System.currentTimeMillis();
@@ -356,7 +358,7 @@ public class MediaMgr {
                         fileLocal.setObjid(objname+fpath.substring(idx+objname.length()));
                         LocalUnits.add(fileLocal);
                         count++;
-                        if ( count>1 && dataCallBack!=null && count%10==0 ) {
+                        if ( count>1 && dataCallBack!=null && count%dataCallBack.callbackThreshold==0 ) {
                             t1=System.currentTimeMillis();
                             Log.i(TAG, "GetLocalFiles: cost time :"+ (t1 -t0 ) );
                             dataCallBack.success(LocalUnits, offset,count);
@@ -371,15 +373,9 @@ public class MediaMgr {
                 Log.i(TAG, "GetLocalFiles: cost time :"+ (t1 -t0 ) );
 
 
-            }
+   /*         }
         }).start();
-    /*    try {
-            countDownLatch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return;*/
-
+   */
     }
 
     public void GetLocalFiles(MediaFileUtil.FileCategory fc, String[] exts, boolean include, FilelistEntity filelistEntity) {
