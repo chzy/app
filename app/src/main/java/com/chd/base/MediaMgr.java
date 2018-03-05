@@ -347,7 +347,7 @@ public class MediaMgr {
                         if (idx<2)
                             continue;
                         fileLocal.setFilesize(cursor.getInt(2));
-                        fileLocal.setFtype(FTYPE.NORMAL);
+                       // fileLocal.setFtype(FTYPE.NORMAL);
                         fileLocal.setLastModified((int) cursor.getLong(3));
 //                int pathid = c.getInt(COLUMN_ID);
                         String path =fpath.substring(0,idx);

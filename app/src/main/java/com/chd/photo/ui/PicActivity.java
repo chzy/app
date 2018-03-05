@@ -268,7 +268,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
         for (;idx<len;idx++)
         {
             item =locallst.get(idx);
-            if (syncTask.isBacked(item))
+            if (!syncTask.isBacked(item))
             {
                 count++;
                 PicFile<FileInfo0> f = new PicFile<FileInfo0>(item);
@@ -298,12 +298,14 @@ public class PicActivity extends UILActivity implements OnClickListener {
     }
 
 
+    int unbks=0;
     private void refreshData(final int count) {
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mTvNumber.setText("未备份文件" + Integer.valueOf(mTvNumber.getText().toString())+count + "个");
+                unbks+=count;
+                mTvNumber.setText("未备份文件" +(unbks) + "个");
             }
         });
         handler.sendEmptyMessage(0);

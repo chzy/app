@@ -202,7 +202,7 @@ public class SyncTask {
 
 	public boolean isBacked(  FileInfo0 fileInfo0) {
 		boolean ret=false;
-		ret=TClient.isBackuped(fileInfo0.getFilename(),fileInfo0.ftype);
+		ret=TClient.isBackuped(fileInfo0.getFilename(),_ftype);
 		fileInfo0.setBackuped(ret);
 		return ret;
 	}
