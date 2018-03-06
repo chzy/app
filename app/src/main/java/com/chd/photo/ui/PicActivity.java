@@ -8,7 +8,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
-import android.util.Size;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -23,7 +22,6 @@ import com.chd.base.Entity.PicFile;
 import com.chd.base.UILActivity;
 import com.chd.base.backend.SyncTask;
 import com.chd.listener.DataCallBack;
-import com.chd.other.ui.OtherActivity;
 import com.chd.photo.adapter.PicInfoAdapter2;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
@@ -53,7 +51,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -77,6 +74,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
 
     private Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
+
             dismissWaitDialog();
             dismissDialog();
             int size = 0;
@@ -211,9 +209,12 @@ public class PicActivity extends UILActivity implements OnClickListener {
 
         if (cloudUnits == null) {
             System.out.print("query remote failed");
+        }else{
+            for (FileInfo f:
+                    cloudUnits) {
+                cloudList.add(new PicFile<FileInfo>(f));
+            }
         }
-
-
         // 找到10个以后 先返回, 剩下的 在线程里面继续找
         syncTask.dbManager.GetLocalFiles0(new String[]{"jpg", "png", "gif"}, true, filelistEntity, new DataCallBack(10) {
             @Override
@@ -223,7 +224,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
             public void success(List<FileInfo0> datas, int offset, int count) {
                 //接收到的数据
                 //syncTask.dbManager.anlayLocalUnits(cloudUnits, filelistEntity, offset, count);
-                List<PicFile> list=new ArrayList<>();
+                List<PicFile<FileInfo>> list=new ArrayList<>();
                 int unbak=GetUnbakSubitem(offset,count,list);
                 refreshData(unbak);
             }
@@ -256,7 +257,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
      * @param list 容器对象,应该初始化为线程安全对象
      * @return 实际添加元素的个数
      */
-    public int  GetUnbakSubitem(int lastoffset, int Exceptnumber ,List<PicFile> list) {
+    public int  GetUnbakSubitem(int lastoffset, int Exceptnumber ,List<PicFile<FileInfo>> list) {
         int count = 0;
         if (list == null)
             return count;
@@ -271,8 +272,8 @@ public class PicActivity extends UILActivity implements OnClickListener {
             if (!syncTask.isBacked(item))
             {
                 count++;
-                PicFile<FileInfo0> f = new PicFile<FileInfo0>(item);
-                list.add(f);
+//                PicFile<FileInfo0> f = new PicFile<FileInfo0>(item);
+//                list.add(f);
             }
         }
 
