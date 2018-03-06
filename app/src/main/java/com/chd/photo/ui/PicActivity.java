@@ -215,6 +215,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
                 cloudList.add(new PicFile<FileInfo>(f));
             }
         }
+        handler.sendEmptyMessage(0);
         // 找到10个以后 先返回, 剩下的 在线程里面继续找
         syncTask.dbManager.GetLocalFiles0(new String[]{"jpg", "png", "gif"}, true, filelistEntity, new DataCallBack(10) {
             @Override
@@ -301,7 +302,6 @@ public class PicActivity extends UILActivity implements OnClickListener {
 
     int unbks=0;
     private void refreshData(final int count) {
-
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -309,7 +309,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
                 mTvNumber.setText("未备份文件" +(unbks) + "个");
             }
         });
-        handler.sendEmptyMessage(0);
+
     }
 
     private void initResourceId() {
