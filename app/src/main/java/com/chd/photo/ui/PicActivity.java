@@ -222,7 +222,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
             * */
             public void success(List<FileInfo0> datas, int offset, int count) {
                 //接收到的数据
-                //syncTask.dbManager.anlayLocalUnits(cloudUnits, filelistEntity, offset, count);
+                //申请的这个list ,应该是从listview的 一个引用对象
                 List<PicFile> list=new ArrayList<>();
                 int unbak=GetUnbakSubitem(offset,count,list);
                 refreshData(unbak);

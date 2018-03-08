@@ -296,7 +296,7 @@ public class MediaMgr {
 
         Uri fileUri= MediaStore.Files.getContentUri("external");
         final List LocalUnits = filelistEntity.getLocallist();
-        filelistEntity.getUnbak_idx_lst().clear();
+        //filelistEntity.getUnbak_idx_lst().clear();
         if (LocalUnits != null && !LocalUnits.isEmpty())
             return;
 
