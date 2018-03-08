@@ -189,7 +189,6 @@ public class PicActivity extends UILActivity implements OnClickListener {
     }
 
     private void onNewThreadRequest() {
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -210,9 +209,55 @@ public class PicActivity extends UILActivity implements OnClickListener {
         if (cloudUnits == null) {
             System.out.print("query remote failed");
         }else{
-            for (FileInfo f:
-                    cloudUnits) {
-                cloudList.add(new PicFile<FileInfo>(f));
+            Collections.sort(cloudUnits, new Comparator<FileInfo>() {
+                @Override
+                public int compare(FileInfo fileLocal, FileInfo t1) {
+                    int lastModified = fileLocal.getLastModified();
+                    int lastModified1 = t1.getLastModified();
+                    if(lastModified<lastModified1){
+                        return 1;
+                    }else if(lastModified>lastModified1){
+                        return -1;
+                    }
+                    return 0;
+                }
+            });
+            PicFile<FileInfo> heads = new PicFile<>(true, "");
+            int time = TimeUtils.getZeroTime(cloudUnits.get(0).getLastModified());
+            int index = 0;
+            cloudList.add(heads);
+            cloudList.add(new PicFile<FileInfo>(cloudUnits.get(0)));
+            for (int i = 1; i < cloudUnits.size(); i++) {
+                FileInfo fileInfo = cloudUnits.get(i);
+                if (Math.abs(fileInfo.lastModified - time) <= (3 * 24 * 3600)) {
+                    cloudList.add(new PicFile<FileInfo>(fileInfo));
+                    if(i==cloudUnits.size()-1){
+                        PicFile<FileInfo> fileLocalPicFile = cloudList.get(index);
+                        String start = TimeUtils.getDay(time);
+                        String end = TimeUtils.getDay(fileInfo.getLastModified());
+                        if (start.equals(end)) {
+                            fileLocalPicFile.header = start;
+                        } else {
+                            fileLocalPicFile.header = end + "至" + start;
+                        }
+                        cloudList.set(index, fileLocalPicFile);
+                    }
+                } else {
+                    PicFile<FileInfo> fileLocalPicFile = cloudList.get(index);
+                    String start = TimeUtils.getDay(time);
+                    String end = TimeUtils.getDay(cloudUnits.get(i - 1).getLastModified());
+                    if (start.equals(end)) {
+                        fileLocalPicFile.header = start;
+                    } else {
+                        fileLocalPicFile.header = end + "至" + start;
+                    }
+                    cloudList.set(index, fileLocalPicFile);
+                    time = TimeUtils.getZeroTime(fileInfo.getLastModified());
+                    heads = new PicFile<>(true, "");
+                    index = cloudList.size();
+                    cloudList.add(heads);
+                    cloudList.add(new PicFile<FileInfo>(fileInfo));
+                }
             }
         }
         handler.sendEmptyMessage(0);
