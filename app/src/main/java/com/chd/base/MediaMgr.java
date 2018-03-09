@@ -364,7 +364,8 @@ public class MediaMgr {
                             dataCallBack.success(LocalUnits, offset,count);
                             offset=count;
                         }
-                            //countDownLatch.countDown();
+                       /* if (count>2000)
+                            break;*/
                     }while(cursor.moveToPrevious());
                 }
                 cursor.close();

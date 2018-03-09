@@ -192,9 +192,17 @@ public class PicActivity extends UILActivity implements OnClickListener {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                 cloudUnits = syncTask.getCloudUnits(0, 10000);
+                cloudUnits = syncTask.getCloudUnits(0, 10000);
                 filelistEntity.setBklist(cloudUnits);
                 initData(cloudUnits);
+                /*int ct=0;
+                FileInfo0 item;
+                for (FileInfo info:cloudUnits)
+                {
+                    item=new FileInfo0(info);
+                    if (syncTask.isBacked(item))
+                        System.out.print("  "+ item.objid);
+                }*/
             }
         }).start();
     }
@@ -269,9 +277,9 @@ public class PicActivity extends UILActivity implements OnClickListener {
             * */
             public void success(List<FileInfo0> datas, int offset, int count) {
                 //接收到的数据
-                 //申请的这个list ,应该是从listview的 一个引用对象
-                List<PicFile<FileInfo>> list=new ArrayList<>();
-                int unbak=GetUnbakSubitem(offset,count,list);
+                //申请的这个list ,应该是从listview的 一个引用对象
+                //List<PicFile<FileInfo0>> list=new ArrayList<>();
+                int unbak=GetUnbakSubitem(offset,count,/*list*/null);
                 refreshData(unbak);
             }
         }
@@ -292,7 +300,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
             }
         });*/
 
-        Log.i("ddddddddd", "initData: ");
+        Log.i("ddddddddd", "initData: "+filelistEntity.getLocallist().size());
     }
 
 
@@ -303,10 +311,12 @@ public class PicActivity extends UILActivity implements OnClickListener {
      * @param list 容器对象,应该初始化为线程安全对象
      * @return 实际添加元素的个数
      */
-    public int  GetUnbakSubitem(int lastoffset, int Exceptnumber ,List<PicFile<FileInfo>> list) {
+    public int  GetUnbakSubitem(int lastoffset, int Exceptnumber ,List<PicFile<FileInfo0>> list) {
         int count = 0;
-        if (list == null)
-            return count;
+        boolean addflag=false;
+        if (list != null)
+            addflag=true;
+            /*return count;*/
         FileInfo0 item;
         //int min=0;
         int idx = lastoffset;
@@ -318,8 +328,14 @@ public class PicActivity extends UILActivity implements OnClickListener {
             if (!syncTask.isBacked(item))
             {
                 count++;
-//                PicFile<FileInfo0> f = new PicFile<FileInfo0>(item);
-//                list.add(f);
+                if (addflag) {
+                    PicFile<FileInfo0> f = new PicFile<FileInfo0>(item);
+                    list.add(f);
+                }
+            }
+            else
+            {
+                Log.i("GetUnbakSubitem:",item.getObjid()+"  backuped");
             }
         }
 

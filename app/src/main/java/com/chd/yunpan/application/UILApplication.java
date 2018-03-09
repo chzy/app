@@ -144,10 +144,10 @@ public class UILApplication extends Application {
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
                 .threadPriority(Thread.NORM_PRIORITY - 2)
-                .threadPoolSize(5)
+                .threadPoolSize(3)
                 //.memoryCache(new WeakMemoryCache())
-                .memoryCache(new LruMemoryCache(2 * 1024 * 1024))
-                .memoryCacheSize(2 * 1024 * 1024)
+                .memoryCache(new LruMemoryCache(3 * 1024 * 1024))
+                .memoryCacheSize(3 * 1024 * 1024)
                 .denyCacheImageMultipleSizesInMemory()
                 .diskCacheFileNameGenerator(new HashCodeFileNameGenerator())
                 .diskCacheSize(500 * 1024 * 1024) // 500 Mb

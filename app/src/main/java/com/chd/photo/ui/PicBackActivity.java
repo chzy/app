@@ -126,8 +126,9 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
             public void run() {
                 picFiles.clear();
                 filelistEntity = UILApplication.getFilelistEntity();
-                /*if (syncTask == null)
+                if (syncTask == null)
                     syncTask = new SyncTask(PicBackActivity.this, FTYPE.PICTURE);
+                /*
                 //未备份文件 ==  backedlist . removeAll(localist);
                 List<FileInfo> cloudUnits = syncTask.getCloudUnits(0, 10000);
                 syncTask.analyPhotoUnits(cloudUnits, filelistEntity);*/
@@ -151,11 +152,11 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                         }
                     });
                     */
-                    List<Integer> unbaklist=filelistEntity.getUnbak_idx_lst();
+                    /*List<Integer> unbaklist=filelistEntity.getUnbak_idx_lst();
                     if (unbaklist.isEmpty())
                         return;
-
-                    Collections.sort(unbaklist, new Comparator<Integer>() {
+*/
+                    /*Collections.sort(unbaklist, new Comparator<Integer>() {
                         @Override
                         public int compare(Integer idx0, Integer idx1) {
                             int lastModified = filelistEntity.getLocalFileByIdx(idx0).lastModified;
@@ -167,7 +168,7 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                             }
                             return 0;
                         }
-                    });
+                    });*/
 
                     picFiles.clear();
                     PicFile<FileInfo0> heads=new PicFile<>(true,"");
@@ -181,9 +182,9 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                      *
                      */
                     int offset=10;
-                    for (int i = offset; i < unbaklist.size(); i++) {
-                        FileInfo0 fileInfo =filelistEntity.getLocalFileByIdx(unbaklist.get(i));
-                        //if (!fileInfo.backuped)
+                    for (int i = offset; i < localUnits.size(); i++) {
+                        FileInfo0 fileInfo =localUnits.get(i);
+                        if (!syncTask.isBacked(fileInfo))
                         {
                             if (Math.abs(fileInfo.lastModified-time) <= ( 3 * 24 * 3600 )) {
                                 picFiles.add(new PicFile<FileInfo0>(fileInfo));
