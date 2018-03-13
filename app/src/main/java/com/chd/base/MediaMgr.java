@@ -320,26 +320,14 @@ public class MediaMgr {
         final Cursor cursor=resolver.query(fileUri, projection, selection, null, sortOrder);
         if(cursor==null)
             return;
-        //游标从最后开始往前递减，以此实现时间递减顺序（最近访问的文件，优先显示）
-/*
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-*/
-
                 int idx=0,count=0,offset=0;
-
                 long t1,t0=System.currentTimeMillis();
                 if(cursor.moveToLast())
                 {
                     do{
                         //输出文件的完整路径
                         String fpath=cursor.getString(0);
-                        //String name=
-                        //Log.d("tag", data);
                         FileInfo0 fileLocal = new FileInfo0();
-                        //fileLocal.setSysid(c.getInt(COLUMN_ID));
-                        // File file = new File(fpath);
                         String objname = cursor.getString(1);
                         if (objname==null)
                             continue;
@@ -347,14 +335,10 @@ public class MediaMgr {
                         if (idx<2)
                             continue;
                         fileLocal.setFilesize(cursor.getInt(2));
-                       // fileLocal.setFtype(FTYPE.NORMAL);
                         fileLocal.setLastModified((int) cursor.getLong(3));
-//                int pathid = c.getInt(COLUMN_ID);
                         String path =fpath.substring(0,idx);
                         int pathid = filelistEntity.addFilePath(path);
                         fileLocal.pathid=pathid;
-                            //file = null;
-                            //String objname=MediaFileUtil.getFnameformPath(c.getString(COLUMN_PATH));
                         fileLocal.setObjid(objname+fpath.substring(idx+objname.length()));
                         LocalUnits.add(fileLocal);
                         count++;
@@ -364,8 +348,6 @@ public class MediaMgr {
                             dataCallBack.success(LocalUnits, offset,count);
                             offset=count;
                         }
-                       /* if (count>2000)
-                            break;*/
                     }while(cursor.moveToPrevious());
                 }
                 cursor.close();
