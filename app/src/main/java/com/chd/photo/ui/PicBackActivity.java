@@ -10,14 +10,12 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.Entity.PicFile;
 import com.chd.base.UILActivity;
 import com.chd.base.backend.SyncTask;
 import com.chd.photo.adapter.PicInfoAdapter2;
 import com.chd.proto.FTYPE;
-import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.service.RPCchannel.upload.FileUploadInfo;
 import com.chd.service.RPCchannel.upload.FileUploadManager;
@@ -31,8 +29,6 @@ import com.chd.yunpan.utils.ToastUtils;
 import com.chd.yunpan.view.SuperRefreshRecyclerView;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class PicBackActivity extends UILActivity implements View.OnClickListener {
@@ -188,7 +184,6 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                         {
                             if (Math.abs(fileInfo.lastModified-time) <= ( 3 * 24 * 3600 )) {
                                 picFiles.add(new PicFile<FileInfo0>(fileInfo));
-                               // if(i==cloudUnits.size()-1)
                                 {
                                     PicFile<FileInfo0> fileLocalPicFile = picFiles.get(index);
                                     String start = TimeUtils.getDay(time);

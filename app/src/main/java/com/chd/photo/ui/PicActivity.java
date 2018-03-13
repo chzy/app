@@ -270,7 +270,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
         }
         handler.sendEmptyMessage(0);
         // 找到10个以后 先返回, 剩下的 在线程里面继续找
-        syncTask.dbManager.GetLocalFiles0(new String[]{"jpg", "png", "gif"}, true, filelistEntity, new DataCallBack(10) {
+        syncTask.dbManager.GetLocalFiles0(FTYPE.PICTURE,new String[]{"jpg", "png", "gif"}, true, filelistEntity, new DataCallBack(10) {
             @Override
             /*
             * @count 当前list的最后下标

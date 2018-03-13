@@ -24,8 +24,6 @@ import com.chd.service.SyncLocalFileBackground;
 import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.share.ShareUtils;
 
-import org.apache.thrift.transport.THttpClient;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -146,7 +144,7 @@ public class SyncTask {
 
 	public void analyOtherUnits0(List<FileInfo> remotelist, FilelistEntity filelistEntity) {
 		//dbManager.GetLocalFiles(MediaFileUtil.FileCategory.File, new String[]{"pdf", "xls", "doc", "docx"}, true, filelistEntity);
-		dbManager.GetLocalFiles0( new String[]{"pdf", "xls", "doc", "docx"}, true, filelistEntity,null);
+		dbManager.GetLocalFiles0( FTYPE.NORMAL,new String[]{"pdf", "xls", "doc", "docx"}, true, filelistEntity,null);
 		dbManager.anlayLocalUnits(remotelist, filelistEntity);
 //		filelistEntity.setLocallist(dbManager.getLocalUnits());
 		//return filelistEntity;

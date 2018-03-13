@@ -78,8 +78,6 @@ public class LoginActivity extends Activity implements OnClickListener {
     private ShareUtils shareUtils;
     private Handler loginHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
-            System.out.println("发送之后：");
-
             switch (msg.what) {
                 case 0://sucess
                     Logs.log(msg.obj.toString());
@@ -314,11 +312,9 @@ public class LoginActivity extends Activity implements OnClickListener {
                     return;
                 }
                 btn_login.setProgress(50);
-                System.out.println("没进去");
                new Thread(new Runnable() {
                    @Override
                    public void run() {
-                       System.out.println("跑进来了");
                        Message msg = new Message();
                        LoginResult entity = null;
                        try {
@@ -353,7 +349,6 @@ public class LoginActivity extends Activity implements OnClickListener {
                                    msg.obj = "登录异常,请稍候再试";
                                }
                            }else{
-                               System.out.println("登录之前");
                                entity = th.loginAuth(username, pwd, imei);
                                if (entity.isSetToken()) {
                                    msg.what = 0;
@@ -373,7 +368,6 @@ public class LoginActivity extends Activity implements OnClickListener {
                            msg.what = -1;
                            msg.obj = "登录异常,请稍候再试";
                        }
-                       System.out.println("发送了么");
                        loginHandler.sendMessage(msg);
                    }
                }).start();
