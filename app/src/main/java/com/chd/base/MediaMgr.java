@@ -290,11 +290,16 @@ public class MediaMgr {
     }
 
 
-
-    public void GetLocalFiles0(String[] exts, boolean include, final FilelistEntity filelistEntity, final DataCallBack dataCallBack) {
+    public void GetLocalFiles0(FTYPE type, String[] exts, boolean include, final FilelistEntity filelistEntity, final DataCallBack dataCallBack) {
         //setCustomCategory(new String[]{"doc", "pdf", "xls", "zip", "rar"}, true);
-
-        Uri fileUri= MediaStore.Files.getContentUri("external");
+        Uri fileUri;
+        if (type == FTYPE.PICTURE) {
+            fileUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        } else if (type == FTYPE.VIDEO) {
+            fileUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+        } else {
+            fileUri = MediaStore.Files.getContentUri("external");
+        }
         final List LocalUnits = filelistEntity.getLocallist();
         //filelistEntity.getUnbak_idx_lst().clear();
         if (LocalUnits != null && !LocalUnits.isEmpty())
