@@ -313,7 +313,7 @@ public class MediaMgr {
             selection=selection+ MediaStore.Files.FileColumns.DATA+" LIKE '%"+"."+exts[i]+"'";
         }
         //按时间递增顺序对结果进行排序;待会从后往前移动游标就可实现时间递减
-        String sortOrder= MediaStore.Files.FileColumns.TITLE;
+        String sortOrder = MediaStore.Files.FileColumns.DATE_MODIFIED;
         //获取内容解析器对象
         ContentResolver resolver=context.getContentResolver();
         //获取游标

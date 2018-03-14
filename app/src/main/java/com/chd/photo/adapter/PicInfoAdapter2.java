@@ -90,7 +90,7 @@ public class PicInfoAdapter2<T extends FileInfo> extends BaseSectionQuickAdapter
                 fileLocal.setFilePath(path);
                 url = fileLocal.getUrl();
                 int i = DensityUtil.dip2px(mContext, 90);
-                GlideApp.with(mContext).asDrawable().load(url).thumbnail(0.3f).centerCrop().placeholder(R.drawable.pic_test1).dontAnimate().diskCacheStrategy(DiskCacheStrategy.NONE).override(i,i).into((ImageView) helper.getView(R.id.iv_pic_info_photo));
+                GlideApp.with(mContext).asDrawable().load(url).thumbnail(0.3f).placeholder(R.drawable.pic_test1).dontAnimate().diskCacheStrategy(DiskCacheStrategy.NONE).override(i,i).into((ImageView) helper.getView(R.id.iv_pic_info_photo));
             } else {
                 url = "ttrpc://" + objId;
                 imageLoader.displayImage(url, (ImageView) helper.getView(R.id.iv_pic_info_photo), options, new SimpleImageLoadingListener());
