@@ -156,22 +156,18 @@ public class OtherActivity extends UILActivity implements OnClickListener {
         if (cloudUnits == null) {
             System.out.print("query remote failed");
         }
-
-
         // 找到10个以后 先返回, 剩下的 在线程里面继续找
         syncTask.dbManager.GetLocalFiles0(FTYPE.NORMAL,new String[]{"pdf", "xls", "doc", "docx"}, true, filelistEntity, new DataCallBack() {
             @Override
             /*
             * @count 当前list的最后下标
-            * */
+            */
             public void success(List<FileInfo0> datas, int offset, int count) {
                 //接收到的数据
                 syncTask.dbManager.anlayLocalUnits(cloudUnits, filelistEntity, offset, count);
                 refreshData(filelistEntity.getUnbak_idx_lst().size());
             }
         });
-        // Unbak_idx_lst.clear();
-        // syncTask.analyOtherUnits0(cloudUnits, filelistEntity, pos);
     }
 
 

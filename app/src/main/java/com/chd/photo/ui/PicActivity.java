@@ -338,25 +338,6 @@ public class PicActivity extends UILActivity implements OnClickListener {
                 Log.i("GetUnbakSubitem:",item.getObjid()+"  backuped");
             }
         }
-
-        /*
-        * sort array by time if you would
-        * */
-        /*Collections.sort(list, (Comparator<? super PicFile>) new Comparator<PicFile<FileInfo0>>() {
-            @Override
-             public int compare(PicFile<FileInfo0> t0, PicFile<FileInfo0> t1) {
-
-                        int lastModified = t0.t.lastModified;
-                        int lastModified1 = t1.t.lastModified;
-                        if (lastModified < lastModified1) {
-                            return 1;
-                        } else if (lastModified > lastModified1) {
-                            return -1;
-                        }
-                        return 0;
-                    }
-                }
-        );*/
         return  count;
     }
 

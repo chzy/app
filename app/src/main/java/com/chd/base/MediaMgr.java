@@ -292,14 +292,14 @@ public class MediaMgr {
 
     public void GetLocalFiles0(FTYPE type, String[] exts, boolean include, final FilelistEntity filelistEntity, final DataCallBack dataCallBack) {
         //setCustomCategory(new String[]{"doc", "pdf", "xls", "zip", "rar"}, true);
-        Uri fileUri;
-        if (type == FTYPE.PICTURE) {
+        Uri fileUri = getContentUriByCategory(type);
+        /*if (type == FTYPE.PICTURE) {
             fileUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         } else if (type == FTYPE.VIDEO) {
             fileUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         } else {
             fileUri = MediaStore.Files.getContentUri("external");
-        }
+        }*/
         final List LocalUnits = filelistEntity.getLocallist();
         //filelistEntity.getUnbak_idx_lst().clear();
         if (LocalUnits != null && !LocalUnits.isEmpty())
@@ -524,16 +524,28 @@ public class MediaMgr {
         return null;
     }
 
-    //public abstract ArrayList<Integer> anlayLocalUnits(List<FileInfo0> couldlist);
-
-
-   /* public void setUploadinfFile0(FileInfo0 entity) {
-        ContentValues values = new ContentValues();
-        values.put("objid", entity.getObjid());
-        //values.put("offset",entity.getOffset());
-        db.update("upload_inter", values, "sysid=?", new String[]{entity.getSysid() + ""});
-    }*/
-
+    private Uri getContentUriByCategory(FTYPE ftype) {
+        Uri uri;
+        switch (ftype) {
+/*
+            case NORMAL:
+                uri = MediaStore.Files.getContentUri(volumeName);
+                break;
+*/
+            case MUSIC:
+                uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                break;
+            case VIDEO:
+                uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                break;
+            case PICTURE:
+                uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                break;
+            default:
+                uri = MediaStore.Files.getContentUri("external");
+        }
+        return uri;
+    }
 
     private Uri getContentUriByCategory(MediaFileUtil.FileCategory cat) {
         Uri uri;

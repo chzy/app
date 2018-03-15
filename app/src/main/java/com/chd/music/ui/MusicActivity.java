@@ -3,6 +3,7 @@ package com.chd.music.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -13,9 +14,11 @@ import android.widget.TextView;
 
 import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
+import com.chd.base.Entity.PicFile;
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.backend.SyncTask;
 import com.chd.contacts.vcard.StringUtils;
+import com.chd.listener.DataCallBack;
 import com.chd.music.adapter.MusicAdapter;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
@@ -39,13 +42,14 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
     private MusicAdapter adapter;
     private List<FileInfo> cloudUnits = new ArrayList<>();
     private List<FileInfo0> cloudList = new ArrayList<>();
+    FilelistEntity filelistEntity;
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             dismissDialog();
             adapter = new MusicAdapter(MusicActivity.this,
                     cloudList);
             mGvMusic.setAdapter(adapter);
-            mTvNumber.setText("未备份音乐" + filelistEntity.getUnbakNumber() + "首");
+            mTvNumber.setText("未备份音乐" + /*filelistEntity.getUnbakNumber()*/0 + "首");
         }
     };
     private String musicPath;
@@ -60,6 +64,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
         UILApplication.ClearFileEntity();
         musicPath = new ShareUtils(this).getMusicFile().getPath();
         syncTask = new SyncTask(MusicActivity.this, FTYPE.MUSIC);
+        filelistEntity=UILApplication.getFilelistEntity();
         onNewThreadRequest();
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -73,15 +78,71 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
             @Override
             public void run() {
                 cloudUnits = syncTask.getCloudUnits(0, 10000);
-                initData();
+                initData(cloudUnits);
             }
         });
         thread.start();
     }
 
-    FilelistEntity filelistEntity;
 
-    private void initData() {
+
+    private void initData(final List<FileInfo> cloudUnits) {
+
+        if (cloudUnits == null) {
+            System.out.print("query remote failed");
+        }
+        // 找到10个以后 先返回, 剩下的 在线程里面继续找
+        syncTask.dbManager.GetLocalFiles0(FTYPE.MUSIC,new String[]{"mp3", "mid", "wav", "flv"}, true, filelistEntity, new DataCallBack(10) {
+            @Override
+            /*
+            * @count 当前list的最后下标
+            */
+            public void success(List<FileInfo0> datas, int offset, int count) {
+                //接收到的数据
+                int unbak=GetUnbakSubitem(offset,count,/*list*/null);
+                refreshData(filelistEntity.getUnbak_idx_lst().size());
+            }
+        });
+    }
+
+    /**
+     *
+     * @param lastoffset 向list 添加元素的起始位置
+     * @param Exceptnumber 希望添加元素的个数
+     * @param list 容器对象,应该初始化为线程安全对象
+     * @return 实际添加元素的个数
+     */
+    public int  GetUnbakSubitem(int lastoffset, int Exceptnumber ,List<PicFile<FileInfo0>> list) {
+        int count = 0;
+        boolean addflag=false;
+        if (list != null)
+            addflag=true;
+            /*return count;*/
+        FileInfo0 item;
+        //int min=0;
+        int idx = lastoffset;
+        List<FileInfo0> locallst=filelistEntity.getLocallist();
+        int len=locallst.size();
+        for (;idx<len;idx++)
+        {
+            item =locallst.get(idx);
+            if (!syncTask.isBacked(item))
+            {
+                count++;
+                if (addflag) {
+                    PicFile<FileInfo0> f = new PicFile<FileInfo0>(item);
+                    list.add(f);
+                }
+            }
+            else
+            {
+                Log.i("GetUnbakSubitem:",item.getObjid()+"  backuped");
+            }
+        }
+        return  count;
+    }
+
+    /*private void initData() {
 
         filelistEntity = UILApplication.getFilelistEntity();
         if (cloudUnits == null) {
@@ -94,12 +155,13 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
             String path = item.getFilePath();
             String name = item.getFilename();
             if (StringUtils.isNullOrEmpty(path)) {
-                /*int sysid = filelistEntity.queryLocalSysid(item.getObjid());
+                *//*
+                int sysid = filelistEntity.queryLocalSysid(item.getObjid());
                 if (sysid > 0) {
                     item.setFilePath(filelistEntity.getFilePath(sysid));
                 } else {
                     item.setFilePath(musicPath + "/" + item.getObjid());
-                }*/
+                }*//*
             }
             if (name == null) {
                 item.setFilename(item.getObjid());
@@ -110,6 +172,18 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
 
         handler.sendEmptyMessage(0);
 
+    }
+*/
+    int unbks=0;
+    private void refreshData(final int count) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                unbks+=count;
+                mTvNumber.setText("未备份文件" + unbks + "个");
+            }
+        });
+        handler.sendEmptyMessage(0);
     }
 
     private void initResourceId() {

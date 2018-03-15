@@ -150,10 +150,6 @@ public class SyncTask {
 		//return filelistEntity;
 	}
 
-	/*public void analyOtherUnits0(List<FileInfo> remotelist, FilelistEntity filelistEntity, int offset,int count) {
-		dbManager.anlayLocalUnits(remotelist, filelistEntity,pos);
-
-	}*/
 
 
 
