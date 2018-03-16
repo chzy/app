@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.chd.base.Entity.FileLocal;
+import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.UILActivity;
 import com.chd.base.Ui.DownListActivity;
 import com.chd.base.backend.SyncTask;
@@ -26,6 +26,7 @@ import com.chd.music.adapter.MusicBackupAdapter;
 import com.chd.music.backend.MediaUtil;
 import com.chd.music.entity.MusicBackupBean;
 import com.chd.proto.FTYPE;
+import com.chd.proto.FileInfo0;
 import com.chd.service.RPCchannel.upload.FileUploadInfo;
 import com.chd.service.RPCchannel.upload.FileUploadManager;
 import com.chd.service.RPCchannel.upload.UploadOptions;
@@ -74,6 +75,7 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
         }
     };
     private int count;
+    private FilelistEntity filelistEntity;
 
     private void processMsg(Message msg) {
         //删除
@@ -120,9 +122,10 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
         initTitle();
         initResourceId();
         initListener();
+        filelistEntity=UILApplication.getFilelistEntity();
 
-
-        ArrayList<FileLocal> fileLocals = (ArrayList<FileLocal>) getIntent().getSerializableExtra("locallist");
+        ArrayList<FileInfo0> fileLocals = new ArrayList<>();
+        fileLocals.addAll(filelistEntity.getLocallist());
         initData(fileLocals);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -138,20 +141,20 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
 
     }
 
-    private void initData(final ArrayList<FileLocal> fileLocals) {
+    private void initData(final ArrayList<FileInfo0> fileLocals) {
         showWaitDialog();
         new Thread() {
             @Override
             public void run() {
-                for (FileLocal fileLocal : fileLocals) {
-                    if (fileLocal.bakuped)
-                        continue;
+                for (FileInfo0 fileLocal : fileLocals) {
+//                    if (fileLocal.bakuped)
+//                        continue;
                     String name = fileLocal.getObjid();
 //                     FileInfo0 fileInfo0 = syncTask.queryLocalInfo(fileLocal.getPathid());
 //                     if (fileInfo0 == null) {
 //                         continue;
 //                      }
-                    String path = UILApplication.getFilelistEntity().getFilePath(fileLocal.getPathid());
+                    String path = fileLocal.getFilePath();
                     MusicBackupBean musicBackupBean = new MusicBackupBean(name, path, false);
                     musicBackupBean.setFileInfo0(fileLocal);
                     String albumArt = MediaUtil.getAlbumArt(MusicBackupActivity.this, musicBackupBean.getPic());
@@ -228,12 +231,12 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
             Toast.makeText(MusicBackupActivity.this, "请选择需要上传的文件", Toast.LENGTH_SHORT).show();
             return;
         }
-        final List<FileLocal> info0s = new ArrayList<>();
+        final List<FileInfo0> info0s = new ArrayList<>();
         uploadList.clear();
         for (final MusicBackupBean musicBackupBean : mMusicBackupList) {
             if (musicBackupBean.isSelect()) {
                 uploadList.add(musicBackupBean);
-                FileLocal fileInfo0=musicBackupBean.getFileInfo0();
+                FileInfo0 fileInfo0=musicBackupBean.getFileInfo0();
                 info0s.add(fileInfo0);
             }
         }
@@ -247,7 +250,7 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
         final MaterialDialog build = builder.build();
         build.show();
         count = 0;
-        for (FileLocal local :
+        for (FileInfo0 local :
                 info0s) {
             local.setFtype(FTYPE.MUSIC);
             manager.uploadFile(new ProgressBarAware(build), null, local, new OnUploadListener() {

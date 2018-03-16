@@ -12,7 +12,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.Entity.PicFile;
 import com.chd.base.Ui.ActiveProcess;
@@ -91,6 +90,30 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
         if (cloudUnits == null) {
             System.out.print("query remote failed");
         }
+        for (FileInfo finfo : cloudUnits) {
+            FileInfo0 item = new FileInfo0(finfo);
+            //已备份文件
+            String path = item.getFilePath();
+            String name = item.getFilename();
+            if (StringUtils.isNullOrEmpty(path)) {
+                /*int sysid = filelistEntity.queryLocalSysid(item.getObjid());
+                if (sysid > 0) {
+                    item.setFilePath(filelistEntity.getFilePath(sysid));
+                } else {
+                    item.setFilePath(musicPath + "/" + item.getObjid());
+                }*/
+            }
+            if (name == null) {
+                item.setFilename(item.getObjid());
+            }
+            cloudList.add(item);
+        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                handler.sendEmptyMessage(0);
+            }
+        });
         // 找到10个以后 先返回, 剩下的 在线程里面继续找
         syncTask.dbManager.GetLocalFiles0(FTYPE.MUSIC,new String[]{"mp3", "mid", "wav", "flv"}, true, filelistEntity, new DataCallBack(10) {
             @Override
@@ -100,7 +123,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
             public void success(List<FileInfo0> datas, int offset, int count) {
                 //接收到的数据
                 int unbak=GetUnbakSubitem(offset,count,/*list*/null);
-                refreshData(filelistEntity.getUnbak_idx_lst().size());
+                refreshData(unbak);
             }
         });
     }
@@ -183,7 +206,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
                 mTvNumber.setText("未备份文件" + unbks + "个");
             }
         });
-        handler.sendEmptyMessage(0);
+
     }
 
     private void initResourceId() {
@@ -221,8 +244,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
                 break;
             case R.id.iv_music_num_layout:
                 Intent intent = new Intent(this, MusicBackupActivity.class);
-                ArrayList<FileInfo0> fileLocals = new ArrayList<>(filelistEntity.getLocallist());
-                intent.putExtra("locallist", fileLocals);
+
                 startActivityForResult(intent, 0x02);
                 break;
         }
