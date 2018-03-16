@@ -91,11 +91,11 @@ public class DBManager   {
 	{
 		ContentValues values = new ContentValues();
 		values.put("objid",entity.getObjid());
-		/*values.put("path", entity.getFilePath());
+		/*values.put("path", entity.getDirPath());
 		values.put("size",entity.getSize());
 		values.put("name",entity.get_fname());
 	*/
-		//int hash=entity.getFilePath().hashCode();
+		//int hash=entity.getDirPath().hashCode();
 		values.put("offset",entity.getOffset());
 		//values.put("time", TimeUtils.getCurrentTimeInLong());
 		//	FileDataDBEntity userLocalFile2 = getUpLoadingFile(entity.getFid());
@@ -106,7 +106,7 @@ public class DBManager   {
 
 	public void addUpLoadingFile(FileInfo01 entity){
 		ContentValues values = new ContentValues();
-		values.put(/*"hash"*/"sysid",/*entity.getFilePath().hashCode()*/entity.getSysid());
+		values.put(/*"hash"*/"sysid",/*entity.getDirPath().hashCode()*/entity.getSysid());
 		values.put("objid",entity.getObjid());
 		values.put("path", entity.getFilePath());
 		//values.put("size",entity.getSize());

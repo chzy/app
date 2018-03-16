@@ -6,7 +6,6 @@ import android.widget.ImageView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.chad.library.adapter.base.BaseSectionQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.Entity.PicFile;
 import com.chd.proto.FileInfo;
@@ -21,9 +20,7 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class PicInfoAdapter2<T extends FileInfo> extends BaseSectionQuickAdapter<PicFile<T>, BaseViewHolder> {
@@ -86,7 +83,7 @@ public class PicInfoAdapter2<T extends FileInfo> extends BaseSectionQuickAdapter
         if (!isVideo) {
 
             if (fileLocal!=null) {
-                String path=filelistEntity.getFilePath(fileLocal.pathid);
+                String path=filelistEntity.getDirPath(fileLocal.pathid);
                 fileLocal.setFilePath(path);
                 url = fileLocal.getUrl();
                 int i = DensityUtil.dip2px(mContext, 90);

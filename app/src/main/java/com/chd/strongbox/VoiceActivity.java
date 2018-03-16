@@ -98,7 +98,7 @@ public class VoiceActivity extends UILActivity implements View.OnClickListener {
                 title = map.get("title");
                 //int sysid = filelistEntity.queryLocalSysid(voiceEntity.getObjid());
                 /*if (sysid > 0) {
-                    filePath = filelistEntity.getFilePath(sysid);
+                    filePath = filelistEntity.getDirPath(sysid);
                 } else {
                    filePath="null"+voiceEntity.getObjid();
                 }*/

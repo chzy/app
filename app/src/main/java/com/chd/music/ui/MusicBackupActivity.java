@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.chd.base.Entity.FileLocal;
+import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.UILActivity;
 import com.chd.base.Ui.DownListActivity;
 import com.chd.base.backend.SyncTask;
@@ -26,6 +27,7 @@ import com.chd.music.adapter.MusicBackupAdapter;
 import com.chd.music.backend.MediaUtil;
 import com.chd.music.entity.MusicBackupBean;
 import com.chd.proto.FTYPE;
+import com.chd.proto.FileInfo0;
 import com.chd.service.RPCchannel.upload.FileUploadInfo;
 import com.chd.service.RPCchannel.upload.FileUploadManager;
 import com.chd.service.RPCchannel.upload.UploadOptions;
@@ -46,6 +48,7 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
     private TextView mTvNumber;
     private Button mBtnBackup;
     private ListView mGvMusic;
+    private FilelistEntity filelistEntity;
 
     private List<MusicBackupBean> mMusicBackupList = new ArrayList<MusicBackupBean>();
 
@@ -115,15 +118,15 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_music_backup);
-
+        filelistEntity=UILApplication.getFilelistEntity();
         syncTask = new SyncTask(this, FTYPE.MUSIC);
         initTitle();
         initResourceId();
         initListener();
 
 
-        ArrayList<FileLocal> fileLocals = (ArrayList<FileLocal>) getIntent().getSerializableExtra("locallist");
-        initData(fileLocals);
+       // ArrayList<FileLocal> fileLocals = (ArrayList<FileLocal>) getIntent().getSerializableExtra("locallist");
+        initData();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -138,24 +141,20 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
 
     }
 
-    private void initData(final ArrayList<FileLocal> fileLocals) {
+    private void initData() {
         showWaitDialog();
         new Thread() {
+            FileInfo0 item;
             @Override
             public void run() {
-                for (FileLocal fileLocal : fileLocals) {
-                    if (fileLocal.bakuped)
-                        continue;
-                    String name = fileLocal.getObjid();
-//                     FileInfo0 fileInfo0 = syncTask.queryLocalInfo(fileLocal.getPathid());
-//                     if (fileInfo0 == null) {
-//                         continue;
-//                      }
-                    String path = UILApplication.getFilelistEntity().getFilePath(fileLocal.getPathid());
-                    MusicBackupBean musicBackupBean = new MusicBackupBean(name, path, false);
-                    musicBackupBean.setFileInfo0(fileLocal);
-                    String albumArt = MediaUtil.getAlbumArt(MusicBackupActivity.this, musicBackupBean.getPic());
-                    musicBackupBean.setAlbumArt(albumArt);
+                for (Integer idx : filelistEntity.getUnbak_idx_lst()) {
+                    item=filelistEntity.getLocalFileByIdx(idx);
+                   // String name = fileLocal.getObjid();
+                    //String path = UILApplication.getFilelistEntity().getDirPath(fileLocal.getPathid());
+                    MusicBackupBean musicBackupBean = new MusicBackupBean(item, false);
+                    musicBackupBean.getFilePath();
+                    String albumArt = MediaUtil.getAlbumArt(MusicBackupActivity.this, musicBackupBean.getFileInfo0().getAbsFilePath());
+                    musicBackupBean.albumArt=albumArt;
                     mMusicBackupList.add(musicBackupBean);
 
                 }
@@ -228,12 +227,12 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
             Toast.makeText(MusicBackupActivity.this, "请选择需要上传的文件", Toast.LENGTH_SHORT).show();
             return;
         }
-        final List<FileLocal> info0s = new ArrayList<>();
+        final List<FileInfo0> info0s = new ArrayList<>();
         uploadList.clear();
         for (final MusicBackupBean musicBackupBean : mMusicBackupList) {
             if (musicBackupBean.isSelect()) {
                 uploadList.add(musicBackupBean);
-                FileLocal fileInfo0=musicBackupBean.getFileInfo0();
+                FileInfo0 fileInfo0=musicBackupBean.getFileInfo0();
                 info0s.add(fileInfo0);
             }
         }
@@ -247,8 +246,7 @@ public class MusicBackupActivity extends UILActivity implements OnClickListener,
         final MaterialDialog build = builder.build();
         build.show();
         count = 0;
-        for (FileLocal local :
-                info0s) {
+        for (FileInfo0 local : info0s) {
             local.setFtype(FTYPE.MUSIC);
             manager.uploadFile(new ProgressBarAware(build), null, local, new OnUploadListener() {
                 @Override

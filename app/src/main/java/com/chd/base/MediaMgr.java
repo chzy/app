@@ -301,6 +301,7 @@ public class MediaMgr {
             fileUri = MediaStore.Files.getContentUri("external");
         }*/
         final List LocalUnits = filelistEntity.getLocallist();
+        LocalUnits.clear();
         //filelistEntity.getUnbak_idx_lst().clear();
         if (LocalUnits != null && !LocalUnits.isEmpty())
             return;
@@ -695,7 +696,7 @@ public class MediaMgr {
 
 
 		/*try {
-			MediaStore.Images.Media.insertImage(localContentResolver,info0.getFilePath(),"","");
+			MediaStore.Images.Media.insertImage(localContentResolver,info0.getDirPath(),"","");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}*/
@@ -709,7 +710,7 @@ public class MediaMgr {
 
         //int d=localContentResolver.delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, MediaStore.Images.Media._ID +"= ?",new String[]{String.valueOf(mid)});
 
-		/*localContentValues.put(MediaStore.Images.Media.DATA, info0.getFilePath());
+		/*localContentValues.put(MediaStore.Images.Media.DATA, info0.getDirPath());
 		localContentValues.put(MediaStore.Images.Media.SIZE, info0.getFilesize());
 		localContentValues.put(MediaStore.Images.Media.DATE_MODIFIED,info0.getLastModified());
 		localContentValues.put("mime_type", "image/jpeg");
@@ -844,7 +845,7 @@ public class MediaMgr {
 
     public void addUpLoadingFile(FileInfo0 entity) {
         ContentValues values = new ContentValues();
-        //values.put(/*"hash"*/"sysid",/*entity.getFilePath().hashCode()*/entity.getSysid());
+        //values.put(/*"hash"*/"sysid",/*entity.getDirPath().hashCode()*/entity.getSysid());
         values.put("objid", entity.getObjid());
 
         values.put("path", entity.getFilePath());

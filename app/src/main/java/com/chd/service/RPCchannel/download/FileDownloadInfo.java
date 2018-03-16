@@ -85,7 +85,7 @@ public class FileDownloadInfo  {
     }*/
 
     public File getOutFile() {
-        //,outFile=  new File(_item.getFilePath()+File.separator+_item.getObjid());
+        //,outFile=  new File(_item.getDirPath()+File.separator+_item.getObjid());
         return outFile;
     }
 

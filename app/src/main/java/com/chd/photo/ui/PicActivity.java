@@ -655,7 +655,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
                 if (bIsUbkList) {
                     FileLocal local = (FileLocal) s.t;
                     FileInfo0 f = new FileInfo0(local);
-                    String s1 = "file://" + UILApplication.getFilelistEntity().getFilePath(local.getPathid()) + "/" + f.getObjid();
+                    String s1 = "file://" + UILApplication.getFilelistEntity().getDirPath(local.getPathid()) + "/" + f.getObjid();
                     f.setFilePath(s1);
                     f.setFtype(FTYPE.PICTURE);
                     info0s.add(f);

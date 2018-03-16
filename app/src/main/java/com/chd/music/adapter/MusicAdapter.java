@@ -90,7 +90,7 @@ public class MusicAdapter extends BaseAdapter {
 		}
 //		if (mMusiclist.get(position).getFileInfo0() != null)
 //		{
-//			pic = mMusiclist.get(position).getFileInfo0().getFilePath();
+//			pic = mMusiclist.get(position).getFileInfo0().getDirPath();
 //		}
 //
 //		imageLoader.displayImage(pic, holder.iv_photo,

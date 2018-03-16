@@ -3,9 +3,7 @@ package com.chd.service.RPCchannel.upload;
 
 
 
-import com.chd.base.Entity.FileLocal;
 import com.chd.base.Entity.FilelistEntity;
-import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.service.RPCchannel.upload.listener.OnUploadListener;
 import com.chd.service.RPCchannel.upload.listener.OnUploadProgressListener;
@@ -43,7 +41,7 @@ public class FileUploadInfo {
             filelistEntity=UILApplication.getFilelistEntity();
         this.descAttribMap = descmap;
         _item=new FileInfo0(info0);
-        _item.setFilePath(filelistEntity.getFilePath(info0.pathid));
+        _item.setFilePath(filelistEntity.getDirPath(info0.pathid));
         this.apiCallback = apiCallback;
         this.progressListener = progressListener;
         this.uploadOptions = uploadOptions;
