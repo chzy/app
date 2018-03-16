@@ -139,7 +139,7 @@ public class SyncLocalFileBackground implements Runnable {
     }
 
    /* private boolean upLoadFile(FileInfo0 file) {
-        Log.v(TAG, file.getObjid() + "------------------" + file.getFilePath());
+        Log.v(TAG, file.getObjid() + "------------------" + file.getDirPath());
         boolean b = new BigFileOrBreakPointUploadUtil()
                 .uploadBigFile(file, null, context);
         System.out.println(b);
@@ -158,7 +158,7 @@ public class SyncLocalFileBackground implements Runnable {
             Log.e(TAG,"invalid remote obj size 0");
 			return false;
 		}*/
-        if (filelistEntity.getFilePath(fileInfo0)&& fileInfo0.getFilePath()==null)
+        if (filelistEntity.getDirPath(fileInfo0)&& fileInfo0.getFilePath()==null)
         {
             return false;
         }
@@ -296,7 +296,7 @@ public class SyncLocalFileBackground implements Runnable {
             Log.w(TAG, e.getLocalizedMessage());
             return false;
         }
-        if (!filelistEntity.getFilePath(entity))
+        if (!filelistEntity.getDirPath(entity))
         {
             Log.d(TAG, entity.getObjid()+" FilePath not exsits");
             return false;

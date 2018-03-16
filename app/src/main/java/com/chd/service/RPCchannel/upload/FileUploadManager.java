@@ -6,7 +6,6 @@ import android.view.View;
 
 
 import com.chd.base.Entity.FileLocal;
-import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.service.RPCchannel.upload.listener.OnUploadListener;
 import com.chd.service.RPCchannel.upload.listener.OnUploadProgressListener;
@@ -14,7 +13,6 @@ import com.chd.service.RPCchannel.upload.progressaware.ProgressAware;
 import com.chd.yunpan.application.UILApplication;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by hjy on 7/8/15.<br>
@@ -101,7 +99,7 @@ public class FileUploadManager {
             mFileUploadEngine.prepareUpdateProgressTaskFor(progressAware, fileInfo0.getId());
         }
         //是否上传任务已经存在，如果已经存在，则返回
-        if(checkUploadTaskExistsAndResetProgressAware(/*id, filePath*/fileInfo0.getId(), UILApplication.getFilelistEntity().getFilePath(fileInfo0.pathid), progressAware)) {
+        if(checkUploadTaskExistsAndResetProgressAware(/*id, filePath*/fileInfo0.getId(), UILApplication.getFilelistEntity().getDirPath(fileInfo0.pathid), progressAware)) {
             return;
         }
         FileUploadInfo fileUploadInfo = createFileUploadInfo(attrib,fileInfo0, apiCallback, uploadProgressListener, options);

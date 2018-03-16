@@ -90,30 +90,8 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
         if (cloudUnits == null) {
             System.out.print("query remote failed");
         }
-        for (FileInfo finfo : cloudUnits) {
-            FileInfo0 item = new FileInfo0(finfo);
-            //已备份文件
-            String path = item.getFilePath();
-            String name = item.getFilename();
-            if (StringUtils.isNullOrEmpty(path)) {
-                /*int sysid = filelistEntity.queryLocalSysid(item.getObjid());
-                if (sysid > 0) {
-                    item.setFilePath(filelistEntity.getFilePath(sysid));
-                } else {
-                    item.setFilePath(musicPath + "/" + item.getObjid());
-                }*/
-            }
-            if (name == null) {
-                item.setFilename(item.getObjid());
-            }
-            cloudList.add(item);
-        }
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                handler.sendEmptyMessage(0);
-            }
-        });
+         final List<Integer> lst=filelistEntity.getUnbak_idx_lst();
+        lst.clear();
         // 找到10个以后 先返回, 剩下的 在线程里面继续找
         syncTask.dbManager.GetLocalFiles0(FTYPE.MUSIC,new String[]{"mp3", "mid", "wav", "flv"}, true, filelistEntity, new DataCallBack(10) {
             @Override
@@ -122,7 +100,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
             */
             public void success(List<FileInfo0> datas, int offset, int count) {
                 //接收到的数据
-                int unbak=GetUnbakSubitem(offset,count,/*list*/null);
+                int unbak=GetUnbakSubitem(offset,count,/*list*/lst);
                 refreshData(unbak);
             }
         });
@@ -135,7 +113,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
      * @param list 容器对象,应该初始化为线程安全对象
      * @return 实际添加元素的个数
      */
-    public int  GetUnbakSubitem(int lastoffset, int Exceptnumber ,List<PicFile<FileInfo0>> list) {
+    public int  GetUnbakSubitem(int lastoffset, int Exceptnumber ,List<Integer> list) {
         int count = 0;
         boolean addflag=false;
         if (list != null)
@@ -153,8 +131,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
             {
                 count++;
                 if (addflag) {
-                    PicFile<FileInfo0> f = new PicFile<FileInfo0>(item);
-                    list.add(f);
+                    list.add(idx);
                 }
             }
             else
@@ -175,13 +152,13 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
         for (FileInfo finfo : cloudUnits) {
             FileInfo0 item = new FileInfo0(finfo);
             //已备份文件
-            String path = item.getFilePath();
+            String path = item.getDirPath();
             String name = item.getFilename();
             if (StringUtils.isNullOrEmpty(path)) {
                 *//*
                 int sysid = filelistEntity.queryLocalSysid(item.getObjid());
                 if (sysid > 0) {
-                    item.setFilePath(filelistEntity.getFilePath(sysid));
+                    item.setFilePath(filelistEntity.getDirPath(sysid));
                 } else {
                     item.setFilePath(musicPath + "/" + item.getObjid());
                 }*//*
@@ -206,7 +183,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
                 mTvNumber.setText("未备份文件" + unbks + "个");
             }
         });
-
+        handler.sendEmptyMessage(0);
     }
 
     private void initResourceId() {
@@ -244,7 +221,6 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
                 break;
             case R.id.iv_music_num_layout:
                 Intent intent = new Intent(this, MusicBackupActivity.class);
-
                 startActivityForResult(intent, 0x02);
                 break;
         }

@@ -55,9 +55,9 @@ public class MusicBackupAdapter extends BaseAdapter {
 			holder = (ViewHolder) converView.getTag();
 		}
 		MusicBackupBean bean = mMusiclist.get(position);
-		holder.gv_title.setText(StringUtils.isNullStr(bean.getTitle()));
+		holder.gv_title.setText(StringUtils.isNullStr(bean.title));
 		holder.gv_check.setImageResource(bean.isSelect() ? R.drawable.pic_edit_photo_checked : R.drawable.pic_edit_photo_group_check);
-		String albumArt=bean.getAlbumArt();
+		String albumArt=bean.albumArt;
 
 		if (StringUtils.isNullOrEmpty(albumArt)) {
 			holder.gv_pic.setImageResource(R.drawable.pic_test1);

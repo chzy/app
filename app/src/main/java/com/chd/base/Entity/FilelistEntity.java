@@ -99,7 +99,7 @@ public class FilelistEntity {
     }*/
 
 
-   public String getFilePath(int pathid) {
+   public String getDirPath(int pathid) {
         if (pathmap.containsKey(pathid)) {
             return pathmap.get(pathid);
         }else {
@@ -107,7 +107,17 @@ public class FilelistEntity {
         }
     }
 
-    public boolean getFilePath(FileInfo0 it) {
+    /*public String getFilePath(FileInfo0 it) {
+        if (pathmap.containsKey(it.pathid)) {
+            it.setFilePath(pathmap.get(it.pathid));
+            return ;
+        }else {
+            return false;
+        }
+    }*/
+
+
+    public boolean getDirPath(FileInfo0 it) {
         if (pathmap.containsKey(it.pathid)) {
             it.setFilePath(pathmap.get(it.pathid));
             return true;

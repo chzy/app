@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.chd.base.Entity.FileLocal;
 import com.chd.base.UILActivity;
 import com.chd.base.backend.SyncTask;
 import com.chd.contacts.vcard.StringUtils;
@@ -107,7 +106,7 @@ public class PicDetailActivity extends UILActivity implements OnClickListener {
         Serializable bean = getIntent().getSerializableExtra("bean");
         if (bean instanceof FileInfo0 && ((FileInfo0) bean).islocal) {
             FileInfo0 item=(FileInfo0) bean;
-            url = "file://" + UILApplication.getFilelistEntity().getFilePath(item.pathid) + "/" + item.getObjid();
+            url = "file://" + UILApplication.getFilelistEntity().getDirPath(item.pathid) + "/" + item.getObjid();
 //            fileInfo0.setFilename(url);
            // fileInfo0.setSysid(((FileLocal) bean).getPathid());
         } else {
