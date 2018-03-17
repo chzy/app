@@ -25,6 +25,8 @@ import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.share.ShareUtils;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
