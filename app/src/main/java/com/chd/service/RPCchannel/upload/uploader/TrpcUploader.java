@@ -52,7 +52,7 @@ public class TrpcUploader extends BaseUploader {
     }
 
     private String generateTag(FileUploadInfo fileUploadInfo) {
-        return fileUploadInfo.getId() + fileUploadInfo.getUploadFilePath().hashCode();
+        return fileUploadInfo.getId() + fileUploadInfo.getFullfilePath().hashCode();
     }
 
 
@@ -112,7 +112,7 @@ public class TrpcUploader extends BaseUploader {
         byte[] buffer = new byte[bufflen];
         RandomAccessFile rf = null;
         try {
-            rf = new RandomAccessFile(fileUploadInfo.getOriginalFilePath(), "r");
+            rf = new RandomAccessFile(fileUploadInfo.getFullfilePath(), "r");
             rf.seek(start);
         } catch (FileNotFoundException e) {
             Log.i(TAG, e.getMessage());

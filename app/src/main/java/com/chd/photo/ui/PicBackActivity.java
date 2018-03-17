@@ -3,6 +3,7 @@ package com.chd.photo.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -133,53 +134,23 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                  */
                 List<FileInfo0> localUnits = filelistEntity.getLocallist();
                 if (localUnits != null && !localUnits.isEmpty()) {
-                    /*
-                    Collections.sort(localUnits, new Comparator<FileInfo0>() {
-                        @Override
-                        public int compare(FileInfo0 fileLocal, FileInfo0 t1) {
-                            int lastModified = fileLocal.lastModified;
-                            int lastModified1 = t1.getLastModified();
-                            if(lastModified<lastModified1){
-                                return 1;
-                            }else if(lastModified>lastModified1){
-                                return -1;
-                            }
-                            return 0;
-                        }
-                    });
-                    */
-                    /*List<Integer> unbaklist=filelistEntity.getUnbak_idx_lst();
-                    if (unbaklist.isEmpty())
-                        return;
-*/
-                    /*Collections.sort(unbaklist, new Comparator<Integer>() {
-                        @Override
-                        public int compare(Integer idx0, Integer idx1) {
-                            int lastModified = filelistEntity.getLocalFileByIdx(idx0).lastModified;
-                            int lastModified1 = filelistEntity.getLocalFileByIdx(idx1).lastModified;
-                            if(lastModified<lastModified1){
-                                return 1;
-                            }else if(lastModified>lastModified1){
-                                return -1;
-                            }
-                            return 0;
-                        }
-                    });*/
-
                     picFiles.clear();
                     PicFile<FileInfo0> heads=new PicFile<>(true,"");
                     int time= TimeUtils.getZeroTime(localUnits.get(0).getLastModified());
                     int index=0;
                     picFiles.add(heads);
-                    picFiles.add(new PicFile<FileInfo0>(localUnits.get(0)));
+                   // picFiles.add(new PicFile<FileInfo0>(localUnits.get(0)));
                     /**
                      *
                      * 每次都 上次的 位置开始找
                      *
                      */
-                    int offset=10;
+                    int offset=0;
                     for (int i = offset; i < localUnits.size(); i++) {
                         FileInfo0 fileInfo =localUnits.get(i);
+                        if (fileInfo.getObjid().equalsIgnoreCase("magazine-unlock-05-2.3.921-_768aa36f7f554c2891784c6ed7a84cd4.jpg"))
+                            Log.i("+++++++++", "GetUnbakSubitem: ");
+
                         if (!syncTask.isBacked(fileInfo))
                         {
                             if (Math.abs(fileInfo.lastModified-time) <= ( 3 * 24 * 3600 )) {

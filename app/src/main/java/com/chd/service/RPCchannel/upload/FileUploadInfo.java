@@ -33,7 +33,7 @@ public class FileUploadInfo {
 
 
 
-    private String preProcessedFile;     //上传前对文件预处理后，生成的临时文件
+    //private String preProcessedFile;     //上传前对文件预处理后，生成的临时文件
 
     public FileUploadInfo(HashMap<String, String> descmap, /*String id, String filePath, String mimeType, String url*/FileInfo0 info0,
                           OnUploadListener apiCallback, OnUploadProgressListener progressListener,UploadOptions uploadOptions ) {
@@ -63,16 +63,16 @@ public class FileUploadInfo {
                 '}';
     }*/
 
-    public String getOriginalFilePath() {
-        return _item.getFilePath() ;
+    public String getFullfilePath() {
+        return _item.getAbsFilePath() ;
     }
 
-    public String getUploadFilePath() {
+    /*public String getUploadFilePath() {
         if(preProcessedFile != null && !preProcessedFile.trim().equals("")) {
             return preProcessedFile;
         }
         return _item.getFilePath()+ File.separator+_item.getObjid();
-    }
+    }*/
 
     public OnUploadListener getApiCallback() {
         return apiCallback;

@@ -71,6 +71,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
     private PicInfoAdapter2<FileInfo> adapter;
     private ArrayList<PicFile<FileInfo>> cloudList = new ArrayList<>();
     private List<FileInfo> cloudUnits /*= new ArrayList<>()*/;
+    private int unbks=0;
 
     private Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
@@ -105,6 +106,12 @@ public class PicActivity extends UILActivity implements OnClickListener {
     }
 
 
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        unbks=0;
+    }
     private void onNewThreadRequest0(final boolean bIsUbkList) {
         showWaitDialog();
         Thread thread = new Thread(new Runnable() {
@@ -325,6 +332,8 @@ public class PicActivity extends UILActivity implements OnClickListener {
         for (;idx<len;idx++)
         {
             item =locallst.get(idx);
+            if (item.getObjid().equalsIgnoreCase("magazine-unlock-05-2.3.921-_768aa36f7f554c2891784c6ed7a84cd4.jpg"))
+                Log.i("+++++++++", "GetUnbakSubitem: ");
             if (!syncTask.isBacked(item))
             {
                 count++;
@@ -342,7 +351,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
     }
 
 
-    int unbks=0;
+
     private void refreshData(final int count) {
         runOnUiThread(new Runnable() {
             @Override

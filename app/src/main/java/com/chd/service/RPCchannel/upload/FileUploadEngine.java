@@ -64,7 +64,7 @@ public class FileUploadEngine {
         synchronized (mLock) {
             for(FileUploadTask task : mCacheTasks) {
                 FileUploadInfo info = task.getFileUploadInfo();
-                if(info.getId().equals(id) && info.getOriginalFilePath().equals(filePath)) {
+                if(info.getId().equals(id) && info.getFullfilePath().equals(filePath)) {
                     task.resetProgressAware(progressAware);
                     return true;
                 }
