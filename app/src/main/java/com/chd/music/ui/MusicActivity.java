@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chd.base.Entity.FilelistEntity;
-import com.chd.base.Entity.PicFile;
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.backend.SyncTask;
 import com.chd.contacts.vcard.StringUtils;
@@ -25,6 +24,8 @@ import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.share.ShareUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,6 +91,31 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
         if (cloudUnits == null) {
             System.out.print("query remote failed");
         }
+        for (FileInfo finfo : cloudUnits) {
+            FileInfo0 item = new FileInfo0(finfo);
+            //已备份文件
+            String path = item.getFilePath();
+            String name = item.getFilename();
+            if (StringUtils.isNullOrEmpty(path)) {
+                /*int sysid = filelistEntity.queryLocalSysid(item.getObjid());
+                if (sysid > 0) {
+                    item.setFilePath(filelistEntity.getFilePath(sysid));
+                } else {
+                    item.setFilePath(musicPath + "/" + item.getObjid());
+                }*/
+            }
+            if (name == null) {
+                item.setFilename(item.getObjid());
+            }
+            cloudList.add(item);
+        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                handler.sendEmptyMessage(0);
+            }
+        });
+
          final List<Integer> lst=filelistEntity.getUnbak_idx_lst();
         lst.clear();
         // 找到10个以后 先返回, 剩下的 在线程里面继续找
@@ -183,7 +209,6 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
                 mTvNumber.setText("未备份文件" + unbks + "个");
             }
         });
-        handler.sendEmptyMessage(0);
     }
 
     private void initResourceId() {

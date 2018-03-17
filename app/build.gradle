@@ -61,8 +61,8 @@ dependencies {
     implementation('com.yanzhenjie:permission:1.1.2') {
         exclude module: 'appcompat-v7'
     }
-//    api name: 'chdclnetapi-release', ext: 'aar'
-    api name: 'chdclnetapi-debug', ext: 'aar'
+    api name: 'chdclnetapi-release', ext: 'aar'
+//    api name: 'chdclnetapi-debug', ext: 'aar'
     implementation name: 'thriftlib-debug', ext: 'aar'
     implementation name: 'SMSSDK-3.0.0', ext: 'aar'
     implementation 'com.google.code.gson:gson:2.8.2'

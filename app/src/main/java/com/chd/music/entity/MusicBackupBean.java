@@ -1,12 +1,11 @@
 package com.chd.music.entity;
 
 import android.util.Log;
+
 import com.chd.base.Entity.FilelistEntity;
-import com.chd.contacts.vcard.StringUtils;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.application.UILApplication;
 
-import java.io.File;
 import java.io.Serializable;
 
 public class MusicBackupBean /*extends FileInfo*/ implements Serializable {
@@ -21,10 +20,9 @@ public class MusicBackupBean /*extends FileInfo*/ implements Serializable {
 
 	public MusicBackupBean(FileInfo0 info0, boolean select) {
 		filelistEntity= UILApplication.getFilelistEntity();
-		this.title = title;
+		this.title = info0.getObjid();
 		//this.pic = pic;
 		this.fileInfo0 = info0;
-		info0.getAbsFilePath();
 		this.fileInfo0.setSelected(select);
 	}
 
