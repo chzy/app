@@ -40,14 +40,14 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
     private GridView mGvMusic;
     private View mViewNumber;
     private MusicAdapter adapter;
-    private List<FileInfo> cloudUnits = new ArrayList<>();
-    private List<FileInfo0> cloudList = new ArrayList<>();
+    private List<FileInfo> cloudUnits ;
+    //private List<FileInfo0> cloudList = new ArrayList<>();
     FilelistEntity filelistEntity;
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             dismissDialog();
             adapter = new MusicAdapter(MusicActivity.this,
-                    cloudList);
+                    cloudUnits);
             mGvMusic.setAdapter(adapter);
             mTvNumber.setText("未备份音乐" + /*filelistEntity.getUnbakNumber()*/0 + "首");
         }
@@ -78,6 +78,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
             @Override
             public void run() {
                 cloudUnits = syncTask.getCloudUnits(0, 10000);
+                filelistEntity.setBklist(cloudUnits);
                 initData(cloudUnits);
             }
         });
@@ -91,24 +92,24 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
         if (cloudUnits == null) {
             System.out.print("query remote failed");
         }
-        for (FileInfo finfo : cloudUnits) {
+        /*for (FileInfo finfo : cloudUnits) {
             FileInfo0 item = new FileInfo0(finfo);
             //已备份文件
             String path = item.getFilePath();
             String name = item.getFilename();
             if (StringUtils.isNullOrEmpty(path)) {
-                /*int sysid = filelistEntity.queryLocalSysid(item.getObjid());
+                *//*int sysid = filelistEntity.queryLocalSysid(item.getObjid());
                 if (sysid > 0) {
                     item.setFilePath(filelistEntity.getFilePath(sysid));
                 } else {
                     item.setFilePath(musicPath + "/" + item.getObjid());
-                }*/
+                }*//*
             }
             if (name == null) {
                 item.setFilename(item.getObjid());
             }
             cloudList.add(item);
-        }
+        }*/
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -168,38 +169,6 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
         return  count;
     }
 
-    /*private void initData() {
-
-        filelistEntity = UILApplication.getFilelistEntity();
-        if (cloudUnits == null) {
-            System.out.print("query remote failed");
-        }
-        syncTask.analyMusicUnits(cloudUnits, filelistEntity);
-        for (FileInfo finfo : cloudUnits) {
-            FileInfo0 item = new FileInfo0(finfo);
-            //已备份文件
-            String path = item.getDirPath();
-            String name = item.getFilename();
-            if (StringUtils.isNullOrEmpty(path)) {
-                *//*
-                int sysid = filelistEntity.queryLocalSysid(item.getObjid());
-                if (sysid > 0) {
-                    item.setFilePath(filelistEntity.getDirPath(sysid));
-                } else {
-                    item.setFilePath(musicPath + "/" + item.getObjid());
-                }*//*
-            }
-            if (name == null) {
-                item.setFilename(item.getObjid());
-            }
-            cloudList.add(item);
-        }
-
-
-        handler.sendEmptyMessage(0);
-
-    }
-*/
     int unbks=0;
     private void refreshData(final int count) {
         runOnUiThread(new Runnable() {
@@ -232,7 +201,6 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
         mTvRight = (TextView) findViewById(R.id.tv_right);
 
         mTvCenter.setText("音乐");
-//        mTvRight.setText("编辑");
     }
 
     @Override
@@ -254,25 +222,22 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
         Intent intent = new Intent(this, MusicDetailActivity.class);
-        intent.putExtra("file", cloudList.get(arg2));
+        intent.putExtra("idx", arg2);
         startActivityForResult(intent, 0x99);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
+            cloudUnits.clear();
             switch (requestCode) {
                 case 0x99:
                     //删除成功了
-                    cloudList.clear();
-                    cloudUnits.clear();
                     mTvNumber.setText("未备份音乐0首");
                     onNewThreadRequest();
                     break;
                 case 0x02:
                     //有备份问题
-                    cloudList.clear();
-                    cloudUnits.clear();
                     mTvNumber.setText("未备份音乐0首");
                     onNewThreadRequest();
                     break;

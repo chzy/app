@@ -13,12 +13,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chd.TClient;
+import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.backend.SyncTask;
 import com.chd.music.backend.MediaUtil;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
+import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.share.ShareUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
@@ -50,6 +52,7 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
     private TimerTask mTimerTask;
     private boolean mRun;
     private boolean isPrepared;
+    private FilelistEntity filelistEntity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,7 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
         initResourceId();
         initListener();
         syncTask = new SyncTask(this, FTYPE.MUSIC);
+        filelistEntity= UILApplication.getFilelistEntity();
         options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.pic_test1)
                 .cacheInMemory(true)
@@ -78,7 +82,8 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
 
     private void initData() {
         //模拟数据
-        fileInfo0 = (FileInfo0) getIntent().getSerializableExtra("file");
+        int idx= (int) getIntent().getSerializableExtra("idx");
+        fileInfo0 =new FileInfo0(filelistEntity.getBklist().get(idx));
         mTvMusicName.setText(fileInfo0.getFilename());
         String url = fileInfo0.getFilePath();
         mMediaPlayer = new MediaPlayer();
@@ -123,7 +128,7 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
             @Override
             public void run() {
                 try {
-                    remote = TClient.getinstance().CreateShare(FTYPE.MUSIC, fileInfo0.getObjid());
+                    remote = TClient.getinstance().CreateUrl(FTYPE.MUSIC, fileInfo0.getObjid());
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

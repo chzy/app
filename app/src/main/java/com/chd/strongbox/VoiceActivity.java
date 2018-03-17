@@ -220,7 +220,7 @@ public class VoiceActivity extends UILActivity implements View.OnClickListener {
                             @Override
                             public void run() {
                                 try {
-                                    String s = TClient.getinstance().CreateShare(FTYPE.RECORD, aNull);
+                                    String s = TClient.getinstance().CreateUrl(FTYPE.RECORD, aNull);
                                     if(StringUtils.isNullOrEmpty(s)){
                                         runOnUiThread(new Runnable() {
                                             @Override

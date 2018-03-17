@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.chd.contacts.vcard.StringUtils;
 import com.chd.music.backend.MediaUtil;
+import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.share.ShareUtils;
@@ -24,12 +25,12 @@ import java.util.List;
 public class MusicAdapter extends BaseAdapter {
 
 	private Context context;
-	private List<FileInfo0> mMusiclist;
+	private List<FileInfo> mMusiclist;
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
 	DisplayImageOptions options;
 	private String musicPath="";
 
-	public MusicAdapter(Context context, List<FileInfo0> list) {
+	public MusicAdapter(Context context, List<FileInfo> list) {
 		this.context = context;
 		this.mMusiclist = list;
 		this.musicPath = new ShareUtils(context).getMusicFile().getPath();
@@ -74,10 +75,13 @@ public class MusicAdapter extends BaseAdapter {
 
 		holder.tv_title.setText(mMusiclist.get(position).getObjid());
 		
-		String pic =musicPath+"/"+mMusiclist.get(position).getObjid();
-		String albumArt=null;
-		if(!StringUtils.isNullOrEmpty(pic)){
-			albumArt= MediaUtil.getAlbumArt(context,pic);
+
+		String albumArt=null,pic=null;
+
+		FileInfo item=mMusiclist.get(position);
+		if ( item instanceof FileInfo0 ) {
+			pic = musicPath + "/" + mMusiclist.get(position).getObjid();
+				albumArt = MediaUtil.getAlbumArt(context, pic);
 		}
 		if (albumArt == null) {
 			Bitmap bm = BitmapFactory.decodeResource(context.getResources(),R.drawable.pic_test1);
@@ -88,38 +92,7 @@ public class MusicAdapter extends BaseAdapter {
 			BitmapDrawable bmpDraw = new BitmapDrawable(bm);
 			holder.iv_photo.setImageDrawable(bmpDraw);
 		}
-//		if (mMusiclist.get(position).getFileInfo0() != null)
-//		{
-//			pic = mMusiclist.get(position).getFileInfo0().getDirPath();
-//		}
-//
-//		imageLoader.displayImage(pic, holder.iv_photo,
-//				options, new SimpleImageLoadingListener() {
-//					@Override
-//					public void onLoadingStarted(String imageUri, View view) {
-//						/*vh.progressBar.setProgress(0);
-//						vh.progressBar.setVisibility(View.VISIBLE);*/
-//					}
-//
-//					@Override
-//					public void onLoadingFailed(String imageUri, View view,
-//							FailReason failReason) {
-//						/*vh.progressBar.setVisibility(View.GONE);*/
-//					}
-//
-//					@Override
-//					public void onLoadingComplete(String imageUri, View view,
-//							Bitmap loadedImage) {
-//						/*vh.progressBar.setVisibility(View.GONE);*/
-//					}
-//				}, new ImageLoadingProgressListener() {
-//					@Override
-//					public void onProgressUpdate(String imageUri, View view,
-//							int current, int total) {
-//						/*vh.progressBar.setProgress(Math.round(100.0f * current
-//								/ total));*/
-//					}
-//				});
+
 		return converView;
 	}
 

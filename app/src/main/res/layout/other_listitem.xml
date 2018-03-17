@@ -1,60 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="84dp"
     android:layout_marginLeft="12dp"
-    android:orientation="vertical">
+    android:orientation="horizontal">
+
+    <CheckBox
+        android:id="@+id/cb_edit_check"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@null"
+       android:layout_centerVertical="true"
+        android:button="@drawable/select_cb"
+        android:visibility="gone" />
 
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="84dp">
-        <CheckBox
-            android:id="@+id/cb_edit_check"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@null"
-            android:layout_centerVertical="true"
-            android:button="@drawable/select_cb"
-            android:visibility="gone" />
+    <ImageView
+        android:id="@+id/other_list_item_img"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/cb_edit_check" />
 
 
-        <ImageView
-            android:id="@+id/other_list_item_img"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="10dp"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/cb_edit_check" />
+    <TextView
+        android:id="@+id/other_list_item_appname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/other_list_item_img"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="-5dp"
+        android:layout_toRightOf="@id/other_list_item_img"
+        android:text=""
+        android:textColor="#333333"
+        android:textSize="16sp" />
 
 
-        <TextView
-            android:id="@+id/other_list_item_appname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/other_list_item_img"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="-5dp"
-            android:layout_toRightOf="@id/other_list_item_img"
-            android:text=""
-            android:textColor="#333333"
-            android:textSize="16sp" />
-
-
-        <TextView
-            android:id="@+id/other_list_item_appintro"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/other_list_item_appname"
-            android:layout_below="@id/other_list_item_appname"
-            android:layout_marginTop="10dp"
-            android:text=""
-            android:textColor="#999999"
-            android:textSize="14sp" />
-
-    </RelativeLayout>
-
+    <TextView
+        android:id="@+id/other_list_item_appintro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/other_list_item_appname"
+        android:layout_below="@id/other_list_item_appname"
+        android:layout_marginTop="10dp"
+        android:text=""
+        android:textColor="#999999"
+        android:textSize="14sp" />
 
     <View
         android:layout_width="match_parent"
@@ -64,4 +57,4 @@
         />
 
 
-</LinearLayout>
+</RelativeLayout>

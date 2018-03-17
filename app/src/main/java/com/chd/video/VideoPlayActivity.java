@@ -23,7 +23,6 @@ import com.chd.service.RPCchannel.download.listener.OnDownloadProgressListener;
 import com.chd.service.RPCchannel.download.listener.OnDownloadingListener;
 import com.chd.service.RPCchannel.upload.progressaware.ProgressBarAware;
 import com.chd.yunpan.R;
-import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.share.ShareUtils;
 import com.chd.yunpan.view.ActionSheetDialog;
 import com.universalvideoview.UniversalMediaController;
@@ -78,7 +77,7 @@ public class VideoPlayActivity extends UILActivity implements UniversalVideoView
                 @Override
                 public void run() {
                     try {
-                        final String s = TClient.getinstance().CreateShare(FTYPE.VIDEO, fileInfo.getObjid());
+                        final String s = TClient.getinstance().CreateUrl(FTYPE.VIDEO, fileInfo.getObjid());
                         Log.d("liumj","地址："+s);
                         videoPath=s;
                         runOnUiThread(new Runnable() {
