@@ -58,9 +58,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
     implementation 'com.tencent.bugly:crashreport:2.2.0'
     //运行时权限 https://github.com/yanzhenjie/AndPermission
-    implementation('com.yanzhenjie:permission:1.1.2') {
-        exclude module: 'appcompat-v7'
-    }
+    implementation('com.yanzhenjie:permission:1.1.2')
     api name: 'chdclnetapi-release', ext: 'aar'
 //    api name: 'chdclnetapi-debug', ext: 'aar'
     implementation name: 'thriftlib-debug', ext: 'aar'
