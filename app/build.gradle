@@ -54,6 +54,8 @@ configurations.all {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':record')
+     api name: 'chdclnetapi-debug', ext: 'aar'
+    implementation name: 'thriftlib-debug', ext: 'aar'
     implementation 'com.github.bumptech.glide:glide:4.5.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
     implementation 'com.tencent.bugly:crashreport:2.2.0'
@@ -83,6 +85,4 @@ dependencies {
     }
     implementation 'com.android.support:appcompat-v7:27.0.2'
     implementation 'com.android.support:recyclerview-v7:27.0.2'
-    implementation project(':chdclnetapi')
-    implementation project(':thriftlib')
-}
+    }
