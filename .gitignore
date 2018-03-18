@@ -40,7 +40,6 @@ gen
 
 #app/*.gradle
 #build.gradle
-*.gradle
 #/app/build.gradle
 #/settings.gradle
 #!app/src
@@ -53,3 +52,5 @@ thriftlib/
 app/libs/chdclnetapi-*.aar
 app/libs/thriftlib-*.aar
 /app/build.gradle
+/app/test
+/.gitignore
