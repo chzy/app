@@ -38,6 +38,18 @@ out
 gen
 # Created by .ignore support plugin (hsz.mobi)
 
-*
-!app/src
+#app/*.gradle
+#build.gradle
 *.gradle
+#/app/build.gradle
+#/settings.gradle
+#!app/src
+chdclnetapi/
+thriftlib/
+/gradle.properties
+/gradlew
+/gradlew.bat
+/xmimagepicker/
+app/libs/chdclnetapi-*.aar
+app/libs/thriftlib-*.aar
+/app/build.gradle
