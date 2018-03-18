@@ -39,8 +39,5 @@ gen
 # Created by .ignore support plugin (hsz.mobi)
 
 *
-
 !app/src
-app/build.gradle
-build.gradle
 *.gradle
