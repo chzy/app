@@ -16,12 +16,14 @@ import com.chd.TClient;
 import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.backend.SyncTask;
+import com.chd.contacts.vcard.StringUtils;
 import com.chd.music.backend.MediaUtil;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.share.ShareUtils;
+import com.chd.yunpan.utils.ToastUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
@@ -129,17 +131,26 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
             public void run() {
                 try {
                     remote = TClient.getinstance().CreateUrl(FTYPE.MUSIC, fileInfo0.getObjid());
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                mMediaPlayer.setDataSource(remote);
-                                mMediaPlayer.prepareAsync();
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                    if(StringUtils.isNullOrEmpty(remote)){
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtils.toast(mAct,"远程路径错误，请重试");
                             }
-                        }
-                    });
+                        });
+                    }else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    mMediaPlayer.setDataSource(remote);
+                                    mMediaPlayer.prepareAsync();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

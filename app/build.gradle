@@ -59,8 +59,8 @@ dependencies {
     implementation 'com.tencent.bugly:crashreport:2.2.0'
     //运行时权限 https://github.com/yanzhenjie/AndPermission
     implementation('com.yanzhenjie:permission:1.1.2')
-    api name: 'chdclnetapi-release', ext: 'aar'
-//    api name: 'chdclnetapi-debug', ext: 'aar'
+//    api name: 'chdclnetapi-release', ext: 'aar'
+    api name: 'chdclnetapi-debug', ext: 'aar'
     implementation name: 'thriftlib-debug', ext: 'aar'
     implementation name: 'SMSSDK-3.0.0', ext: 'aar'
     implementation 'com.google.code.gson:gson:2.8.2'
@@ -78,9 +78,7 @@ dependencies {
     }
     implementation 'com.linsea:universalvideoview:1.1.0@aar'
     implementation 'com.liulishuo.filedownloader:library:1.6.4'
-    implementation('com.github.iammert:MusicPlayerView:e3b937c729') {
-        exclude module: 'picasso'
-    }
+    implementation('com.github.iammert:MusicPlayerView:e3b937c729')
     implementation('com.github.LuckSiege.PictureSelector:picture_library:v1.5.7') {
         exclude module: 'appcompat-v7'
         exclude module: 'recyclerview-v7'

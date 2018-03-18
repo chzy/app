@@ -119,6 +119,7 @@ public class MusicActivity extends ActiveProcess implements OnClickListener, OnI
 
          final List<Integer> lst=filelistEntity.getUnbak_idx_lst();
         lst.clear();
+        unbks=0;
         // 找到10个以后 先返回, 剩下的 在线程里面继续找
         syncTask.dbManager.GetLocalFiles0(FTYPE.MUSIC,new String[]{"mp3", "mid", "wav", "flv"}, true, filelistEntity, new DataCallBack(10) {
             @Override

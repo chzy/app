@@ -195,6 +195,13 @@ public class PicActivity extends UILActivity implements OnClickListener {
         thread.start();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+
+    }
+
     private void onNewThreadRequest() {
         new Thread(new Runnable() {
             @Override
