@@ -49,7 +49,7 @@ thriftlib/
 /gradlew
 /gradlew.bat
 /xmimagepicker/
-app/libs/chdclnetapi-*.aar
+#app/libs/chdclnetapi-*.aar
 app/libs/thriftlib-*.aar
 /app/build.gradle
 /app/test
