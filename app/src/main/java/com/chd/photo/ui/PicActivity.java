@@ -48,6 +48,7 @@ import com.yanzhenjie.permission.Rationale;
 import com.yanzhenjie.permission.RationaleListener;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -399,7 +400,7 @@ public class PicActivity extends UILActivity implements OnClickListener {
                 //非视频，即图片进去
                 PicFile<FileInfo> file = cloudList.get(position);
                 Intent intent = new Intent(mAct, PicDetailActivity.class);
-                intent.putExtra("bean", file.t);
+                intent.putExtra("bean", (Serializable) file.t);
                 intent.putExtra("pos", position);
                 intent.putExtra("ubklist", false);
                 startActivityForResult(intent, 0x12);

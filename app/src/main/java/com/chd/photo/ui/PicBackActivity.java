@@ -29,6 +29,7 @@ import com.chd.yunpan.utils.TimeUtils;
 import com.chd.yunpan.utils.ToastUtils;
 import com.chd.yunpan.view.SuperRefreshRecyclerView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +79,7 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                     //非视频，即图片进去
                 PicFile<FileInfo0> file = picFiles.get(position);
                 Intent intent = new Intent(mAct, PicDetailActivity.class);
-                    intent.putExtra("bean", file.t);
+                    intent.putExtra("bean", (Serializable) file.t);
                     intent.putExtra("pos", position);
                     intent.putExtra("ubklist", true);
                     startActivityForResult(intent, 0x12);

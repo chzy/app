@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
-import com.chd.proto.FileInfo01;
+import com.chd.proto.FileInfo0;
 import com.chd.yunpan.db.DBManager;
 
 import java.util.List;
@@ -16,13 +16,13 @@ public class DownloadRun implements Runnable {
 	private Handler handler;
 	private Message msg;
 	private DownloadRun thread;
-	private List<FileInfo01> fileInfoList;
+	private List<FileInfo0> fileInfoList;
 	private DBManager dbManager;
 
 	private Handler threadHandler = null;
 
 	private DownloadRun(int t, int id, Context context, Handler handler,
-	                    List<FileInfo01> file) {
+	                    List<FileInfo0> file) {
 
 		this.id = id;
 		this.fileInfoList = file;
@@ -53,7 +53,7 @@ public class DownloadRun implements Runnable {
 	}
 
 
-	public void addToDB(  Context context, Handler handler, List<FileInfo01> file)
+	public void addToDB(  Context context, Handler handler, List<FileInfo0> file)
 	{
 		//this.id = id;
 		this.fileInfoList = file;
@@ -79,7 +79,7 @@ public class DownloadRun implements Runnable {
 */
 		//for (int i = 0; i < fileInfoList.size(); i++)
 
-		for (FileInfo01 f: fileInfoList)
+		for (FileInfo0 f: fileInfoList)
 		{
 			/*FileDataDBEntity dataDBEntity = fileInfoList.get(i).getFileDataDBEntity();
 			dataDBEntity.setFilePath(path);*/

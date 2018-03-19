@@ -8,11 +8,9 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.chd.Entity.CloudListEntity;
-import com.chd.Entity.LocalFileEntity;
 import com.chd.proto.FTYPE;
-import com.chd.proto.FileInfo01;
+import com.chd.proto.FileInfo0;
 import com.chd.yunpan.share.ShareUtils;
-import com.chd.yunpan.utils.TimeUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -87,14 +85,17 @@ public class DBManager   {
 	}
 
 
-	public  void  setUploadinfFile0(FileInfo01 entity)
+/*
+	public  void  setUploadinfFile0(FileInfo0 entity)
 	{
 		ContentValues values = new ContentValues();
 		values.put("objid",entity.getObjid());
-		/*values.put("path", entity.getDirPath());
+		*/
+/*values.put("path", entity.getDirPath());
 		values.put("size",entity.getSize());
 		values.put("name",entity.get_fname());
-	*/
+	*//*
+
 		//int hash=entity.getDirPath().hashCode();
 		values.put("offset",entity.getOffset());
 		//values.put("time", TimeUtils.getCurrentTimeInLong());
@@ -103,22 +104,32 @@ public class DBManager   {
 		db.update("upload_inter", values, "sysid=?", new String[]{entity.getSysid() + ""});
 //
 	}
+*/
 
+/*
 	public void addUpLoadingFile(FileInfo01 entity){
 		ContentValues values = new ContentValues();
-		values.put(/*"hash"*/"sysid",/*entity.getDirPath().hashCode()*/entity.getSysid());
+		values.put(*/
+/*"hash"*//*
+"sysid",*/
+/*entity.getDirPath().hashCode()*//*
+entity.getSysid());
 		values.put("objid",entity.getObjid());
 		values.put("path", entity.getFilePath());
 		//values.put("size",entity.getSize());
 		//values.put("name",entity.getFilename());
 		values.put("offset",0);
-		values.put("time", /*TimeUtils.getCurrentTimeInLong()*/entity.getLastModified());
+		values.put("time", */
+/*TimeUtils.getCurrentTimeInLong()*//*
+entity.getLastModified());
 		//	FileDataDBEntity userLocalFile2 = getUpLoadingFile(entity.getFid());
 		//if (userLocalFile2  == null) {
 		db.insertWithOnConflict("upload_inter", null, values, SQLiteDatabase.CONFLICT_IGNORE);
 //
 	}
+*/
 
+/*
 	public  void setUploadStatus(FileInfo01 entity)
 	{
 		ContentValues values = new ContentValues();
@@ -130,8 +141,9 @@ public class DBManager   {
 		db.update("upload_inter", values, "sysid=?", new String[]{entity.getSysid() + ""});
 //
 	}
+*/
 
-	public void addDownloadingFile(FileInfo01 entity){
+	public void addDownloadingFile(FileInfo0 entity){
 		ContentValues values = new ContentValues();
 		values.put("objid", entity.getObjid());
 		values.put("size",entity.getFilesize());
@@ -143,7 +155,7 @@ public class DBManager   {
 
 
 
-
+/*
 	public void addUpLoadingFile(LocalFileEntity entity) {
 		ContentValues values = new ContentValues();
 		values.put("hash",entity.getPath().hashCode());
@@ -155,7 +167,7 @@ public class DBManager   {
 		//	FileDataDBEntity userLocalFile2 = getUpLoadingFile(entity.getFid());
 		//if (userLocalFile2  == null) {
 		db.insertWithOnConflict("upload_inter", null, values, SQLiteDatabase.CONFLICT_IGNORE);
-	}
+	}*/
 
 
 	/*public void addUpLoadingFile(FileInfo0 entity){
@@ -175,6 +187,7 @@ public class DBManager   {
 */
 
 
+/*
 
 	public void updateDownloadingFile(FileInfo01 entity) throws IOException{
 		if(getDownloadingFile(entity.getObjid())==null){
@@ -187,9 +200,10 @@ public class DBManager   {
 		db.update("download_inter", values, "objid=?", new String[]{entity.getObjid()+""});
 		Log.d("@@@","call db update updateDownloadingFile");
 	}
+*/
 
 
-	public void updateDownloadingFile(String Objid,long offset) throws Exception{
+	/*public void updateDownloadingFile(String Objid,long offset) throws Exception{
 		if(getDownloadingFile(Objid)==null){
 			throw new Exception();
 		}
@@ -200,10 +214,10 @@ public class DBManager   {
 		db.update("download_inter", values, "objid=?", new String[]{Objid + ""});
 		Log.d("@@@", "call db update updateDownloadingFile");
 	}
-
+*/
 
 	//void updateDownloadingFile(String Objid,long offset)  throws Exception
-	public void updateUploadingFile(String Objid, long offset) throws Exception {
+	/*public void updateUploadingFile(String Objid, long offset) throws Exception {
 		if(getUpLoadedFile(Objid)==null){
 			throw new Exception();
 		}
@@ -213,10 +227,10 @@ public class DBManager   {
 
 		db.update("upload_inter", values, "objid=?", new String[]{Objid + ""});
 	}
+*/
 
 
-
-
+/*
 	public void addDownloadedFile(FileInfo01 entity){
 		ContentValues values = new ContentValues();
 		values.put("objid", entity.getObjid());
@@ -224,33 +238,11 @@ public class DBManager   {
 		values.put("size", entity.getFilesize());
 		values.put("time", entity.getLastModified());
 
-		/*
-		values.put("pid", entity.getPid());
-		values.put("fid", entity.getFid());
-		values.put("m", entity.getM());
-		values.put("n", entity.getN());
-		values.put("pc", entity.getPc());
-		values.put("t", entity.getT());
-		values.put("u", entity.getU());
-		values.put("s", entity.getS());
-		values.put("sha1", entity.getShal());
-		values.put("path", entity.getfPath());
-		values.put("spare", entity.getSpare());
-		values.put("flag", entity.getFlag());
-		values.put("spare2", entity.getSpare2());
-		*/
-
-		/*FileDataDBEntity userLocalFile2 = getDownloadedFile(entity.getFid());
-		if (userLocalFile2  == null) {
-			db.insert("download_finish", null, values);
-		} else {
-			updateDownloadedFile(entity);
-		}*/
 		deleteUpLoadingFile(entity.getObjid());
 		db.insertWithOnConflict("upload_finish", null, values, SQLiteDatabase.CONFLICT_IGNORE);
 
-	}
-	public void addUpLoadedFile(FileInfo01 entity){
+	}*/
+	/*public void addUpLoadedFile(FileInfo01 entity){
 		ContentValues values = new ContentValues();
 		values.put("objid", entity.getObjid());
 		values.put("size",entity.getFilesize());
@@ -260,9 +252,10 @@ public class DBManager   {
 
 		db.insertWithOnConflict("upload_finish", null, values, SQLiteDatabase.CONFLICT_IGNORE);
 	}
-
+*/
+	/*
 	public void updateUpLoadedFile(FileInfo01 entity){
-		/*ContentValues values = new ContentValues();
+		*//*ContentValues values = new ContentValues();
 		values.put("aid", entity.getAid());
 		values.put("pid", entity.getPid());
 		values.put("fid", entity.getFid());
@@ -278,37 +271,26 @@ public class DBManager   {
 		values.put("flag", entity.getFlag());
 		values.put("spare1", entity.getSpare());
 		values.put("spare2", entity.getSpare2());
-		db.update("upload_finish", values, "fid=?", new String[]{entity.getFid()+""});*/
+		db.update("upload_finish", values, "fid=?", new String[]{entity.getFid()+""});*//*
 		Log.d("@@@", "call db update updateUpLoadedFile");
 
-	}
+	}*/
 
 
 
-
+/*
 	public void updateUpLoadingFile(FileInfo01 entity){
 		ContentValues values = new ContentValues();
 		values.put("objid", entity.getObjid());
 		values.put("offset",entity.getOffset());
-		/*values.put("pid", entity.getPid());
-		values.put("fid", entity.getFid());
-		values.put("m", entity.getM());
-		values.put("n", entity.getN());
-		values.put("pc", entity.getPc());
-		values.put("t", entity.getT());
-		values.put("u", entity.getU());
-		values.put("s", entity.getS());
-		values.put("sha1", entity.getShal());
-		values.put("path", entity.getfPath());
-		values.put("spare", entity.getSpare());
-		values.put("flag", entity.getFlag());
-		values.put("spare1", entity.getSpare());
-		values.put("spare2", entity.getSpare2());*/
-		db.update("upload_inter", values, "objid=?", new String[]{entity.getObjid() + ""});
-	}
 
+		db.update("upload_inter", values, "objid=?", new String[]{entity.getObjid() + ""});
+	}*/
+
+/*
 	public void updateDownloadedFile(FileInfo01 entity){
-		/*ContentValues values = new ContentValues();
+		*/
+/*ContentValues values = new ContentValues();
 		values.put("aid", entity.getAid());
 		values.put("pid", entity.getPid());
 		values.put("fid", entity.getFid());
@@ -324,20 +306,24 @@ public class DBManager   {
 		values.put("flag", entity.getFlag());
 		values.put("spare1", entity.getSpare());
 		values.put("spare2", entity.getSpare2());
-		db.update("download_finish", values, "fid=?", new String[]{entity.getFid()+""});*/
+		db.update("download_finish", values, "fid=?", new String[]{entity.getFid()+""});*//*
+
 	}
+*/
 
 
+/*
 	public List<FileInfo01> getDownloadingFiles(){
 
 		return getFileDataDBEntities("download_inter",false);
 	}
+*/
 
-	private List<FileInfo01> getFileDataDBEntities(String db1, boolean finished){
+	private List<FileInfo0> getFileDataDBEntities(String db1, boolean finished){
 		Cursor cursor = db.rawQuery("select * from "+db1, null);
-		List<FileInfo01> lists = new ArrayList<FileInfo01>();
+		List<FileInfo0> lists = new ArrayList<FileInfo0>();
 		while (cursor.moveToNext()) {
-			FileInfo01 file=new FileInfo01();
+			FileInfo0 file=new FileInfo0();
 			file.setObjid(cursor.getString(cursor.getColumnIndex("objid")));
 			file.setFilename(cursor.getString(cursor.getColumnIndex("name")));
 			if (!finished)
@@ -369,21 +355,21 @@ public class DBManager   {
 		return lists;
 	}*/
 
-	public CloudListEntity<FileInfo01> getUploadeFiles(FTYPE ftype){
+	public CloudListEntity<FileInfo0> getUploadeFiles(FTYPE ftype){
 		//Cursor cursor = db.rawQuery("select * from upload_finish where ftype = "+ftype, null);
 		CloudListEntity cloudListEntity =null;
-		List<FileInfo01> list=getUpfinishedDBEntity(ftype);
+		List<FileInfo0> list=getUpfinishedDBEntity(ftype);
 		cloudListEntity = new CloudListEntity(0, list);
 		return cloudListEntity;
 
 	}
 
 
-	private List<FileInfo01> getUpfinishedDBEntity(FTYPE ftype){
+	private List<FileInfo0> getUpfinishedDBEntity(FTYPE ftype){
 		Cursor cursor = db.rawQuery("select * from upload_finish where ftype = "+ftype+" order by time desc" , null);
-		List<FileInfo01> lists = new ArrayList<FileInfo01>();
+		List<FileInfo0> lists = new ArrayList<FileInfo0>();
 		while (cursor.moveToNext()) {
-			FileInfo01 file=new FileInfo01();
+			FileInfo0 file=new FileInfo0();
 			file.setObjid(cursor.getString(cursor.getColumnIndex("objid")));
 			file.setFilename(cursor.getString(cursor.getColumnIndex("name")));
 			file.setFilePath(cursor.getString(cursor.getColumnIndex("path")));
@@ -394,11 +380,11 @@ public class DBManager   {
 		return lists;
 	}
 
-	private List<FileInfo01> getFileDataDBEntitiesU(String db1, boolean finished){
+	private List<FileInfo0> getFileDataDBEntitiesU(String db1, boolean finished){
 		Cursor cursor = db.rawQuery("select * from "+db1, null);
-		List<FileInfo01> lists = new ArrayList<FileInfo01>();
+		List<FileInfo0> lists = new ArrayList<FileInfo0>();
 		while (cursor.moveToNext()) {
-			FileInfo01 file=new FileInfo01();
+			FileInfo0 file=new FileInfo0();
 			file.setObjid(cursor.getString(cursor.getColumnIndex("objid")));
 			file.setFilename(cursor.getString(cursor.getColumnIndex("name")));
 			if (!finished)
@@ -410,20 +396,22 @@ public class DBManager   {
 	}
 
 
-
-	public List<FileInfo01> getUpLoadingFiles(){
+/*
+	public List<FileInfo0> getUpLoadingFiles(){
 		return getFileDataDBEntitiesU("upload_inter", false);
-	}
+	}*/
 
-	public List<FileInfo01> getDownloadedFiles(){
+	/*public List<FileInfo0> getDownloadedFiles(){
 		return getFileDataDBEntities("download_finish", true);
-	}
+	}*/
+/*
 	public List<FileInfo01> getUpLoadedFiles(){
 		return getFileDataDBEntitiesU("upload_finish", true);
 	}
+*/
 
-	private FileInfo01 getFileDataDBEntity(String db1, String objid, boolean finished){
-		FileInfo01 file=null;
+	private FileInfo0 getFileDataDBEntity(String db1, String objid, boolean finished){
+		FileInfo0 file=null;
 		Cursor cursor = db.rawQuery("select * from "+db1 +" where objid="+objid, null);
 		if (cursor.moveToNext()) {
 			file.setOffset(cursor.getInt(cursor.getColumnIndex("offset")));
@@ -438,8 +426,8 @@ public class DBManager   {
 		return null;
 	}
 
-	private FileInfo01 getFileDataDBEntityU(String db1, String objid, boolean finished){
-		FileInfo01 file=null;
+	private FileInfo0 getFileDataDBEntityU(String db1, String objid, boolean finished){
+		FileInfo0 file=null;
 		Cursor cursor = db.rawQuery("select * from "+db1 +" where objid="+objid, null);
 		if (cursor.moveToNext()) {
 
@@ -456,7 +444,7 @@ public class DBManager   {
 	}
 
 
-	public FileInfo01 getDownloadingFile(/*int fid*/String objid){
+	/*public FileInfo01 getDownloadingFile(*//*int fid*//*String objid){
 		return getFileDataDBEntity("download_inter", objid, false);
 	}
 	public FileInfo01 getUpLoadingFile(String objid){
@@ -489,7 +477,7 @@ public class DBManager   {
 	public void deleteFileDataDBEntity(String db1,String objid){
 		db.delete(db1, "objid=?", new String[]{objid + ""});
 	}
-
+*/
 
 
 }
