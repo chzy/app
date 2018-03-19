@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
@@ -59,6 +60,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -127,7 +129,7 @@ public class VideoListActivity extends UILActivity implements View.OnClickListen
                 PicFile<FileInfo> file = picFiles.get(position);
                 //视频进去
                 Intent intent = new Intent(mAct, VideoPlayActivity.class);
-                intent.putExtra("bean", file.t);
+                intent.putExtra("bean", (Serializable) file.t);
                 startActivityForResult(intent, 0x13);
             }
         });

@@ -19,6 +19,7 @@ import com.chd.base.backend.SyncTask;
 import com.chd.contacts.vcard.StringUtils;
 import com.chd.music.backend.MediaUtil;
 import com.chd.proto.FTYPE;
+import com.chd.proto.FileInfo;
 import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
@@ -36,7 +37,7 @@ import co.mobiwise.library.MusicPlayerView;
 public class MusicDetailActivity extends ActiveProcess implements OnClickListener {
 
     DisplayImageOptions options;
-    FileInfo0 fileInfo0;
+    FileInfo fileInfo;
     private ImageView mIvLeft;
     private TextView mTvCenter;
     private TextView mTvRight;
@@ -85,9 +86,10 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
     private void initData() {
         //模拟数据
         int idx= (int) getIntent().getSerializableExtra("idx");
-        fileInfo0 =new FileInfo0(filelistEntity.getBklist().get(idx));
-        mTvMusicName.setText(fileInfo0.getFilename());
-        String url = fileInfo0.getFilePath();
+       // fileInfo =new FileInfo0(filelistEntity.getBklist().get(idx));
+        fileInfo=filelistEntity.getBklist().get(idx);
+        mTvMusicName.setText(fileInfo.getObjid());
+        //String url = fileInfo.getFilePath();
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
@@ -118,19 +120,19 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
             }
         });
 
-        String albumArt = MediaUtil.getAlbumArt(this, url);
+        /*String albumArt = MediaUtil.getAlbumArt(this, url);
         if (albumArt == null) {
-//			albumImage.setBackgroundResource(R.drawable.audio_default_bg);
+			//albumImage.setBackgroundResource(R.drawable.audio_default_bg);
         } else {
             Bitmap bm = BitmapFactory.decodeFile(albumArt);
             BitmapDrawable bmpDraw = new BitmapDrawable(bm);
             mpv.setCoverDrawable(bmpDraw);
-        }
+        }*/
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    remote = TClient.getinstance().CreateUrl(FTYPE.MUSIC, fileInfo0.getObjid());
+                    remote = TClient.getinstance().CreateUrl(FTYPE.MUSIC, fileInfo.getObjid());
                     if(StringUtils.isNullOrEmpty(remote)){
                         runOnUiThread(new Runnable() {
                             @Override
@@ -232,12 +234,15 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
                 finish();
                 break;
             case R.id.music_detail_download:
+                /**
+                 * TODO 改成downloadmgr 下载
+                 */
 
-                if (syncTask != null && fileInfo0 != null) {
+                if (syncTask != null && fileInfo != null) {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            syncTask.download(fileInfo0, MusicDetailActivity.this, false, null);
+                            syncTask.download(fileInfo, MusicDetailActivity.this, false, null);
                         }
                     }).start();
 
@@ -261,11 +266,11 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
                 }
                 break;
             case R.id.music_detail_delete:
-                if (syncTask != null && fileInfo0 != null) {
+                if (syncTask != null && fileInfo != null) {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            boolean delS = syncTask.DelRemoteObj(fileInfo0);
+                            boolean delS = syncTask.DelRemoteObj(fileInfo);
                             if (delS) {
 
                                 mHandler.post(new Runnable() {
