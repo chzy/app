@@ -1,8 +1,5 @@
 package com.chd.music.ui;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,10 +14,8 @@ import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.Ui.ActiveProcess;
 import com.chd.base.backend.SyncTask;
 import com.chd.contacts.vcard.StringUtils;
-import com.chd.music.backend.MediaUtil;
 import com.chd.proto.FTYPE;
 import com.chd.proto.FileInfo;
-import com.chd.proto.FileInfo0;
 import com.chd.yunpan.R;
 import com.chd.yunpan.application.UILApplication;
 import com.chd.yunpan.share.ShareUtils;
@@ -95,8 +90,12 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
                 isPrepared = true;
-                mpv.setMax(mMediaPlayer.getDuration() / 1000);
-                mpv.setProgress(mMediaPlayer.getCurrentPosition() / 1000);
+                int maxProgress = mMediaPlayer.getDuration() / 1000;
+                if(mMediaPlayer.getDuration()%1000>0){
+                    maxProgress+=1;
+                }
+                mpv.setMax(maxProgress);
+                mpv.setProgress(0);
                 mpv.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
