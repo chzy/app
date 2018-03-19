@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="chdclnetapi-debug:@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/chdclnetapi-debug.aar/e17ff09122d04487fa7d008f76c42155/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/chdclnetapi-debug.aar/e17ff09122d04487fa7d008f76c42155/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

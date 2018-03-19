@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="com.github.gturedi:stateful-layout-1.2.0">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/stateful-layout-1.2.0.aar/63a44a25dbfd2d33490e2bf2a667b3ea/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/stateful-layout-1.2.0.aar/63a44a25dbfd2d33490e2bf2a667b3ea/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.gturedi/stateful-layout/1.2.0/40b05eb3996639f901fcc99f9d85ff2f38d15de2/stateful-layout-1.2.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

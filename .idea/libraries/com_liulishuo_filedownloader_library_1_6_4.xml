@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="com.liulishuo.filedownloader:library-1.6.4">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/library-1.6.4.aar/121ebe20c64338fc00d85d7b2a806215/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/library-1.6.4.aar/121ebe20c64338fc00d85d7b2a806215/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.liulishuo.filedownloader/library/1.6.4/86fa15aafd7381bd75570d1fa5023bd12085ff36/library-1.6.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
