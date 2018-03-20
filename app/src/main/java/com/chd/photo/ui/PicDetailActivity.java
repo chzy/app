@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.chd.base.Entity.FilelistEntity;
 import com.chd.base.UILActivity;
 import com.chd.base.backend.SyncTask;
 import com.chd.contacts.vcard.StringUtils;
@@ -34,7 +35,6 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListe
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,10 +48,11 @@ public class PicDetailActivity extends UILActivity implements OnClickListener {
     private Button mBtnDelete;
     protected ImageLoader imageLoader = ImageLoader.getInstance();
     DisplayImageOptions options;
-    private boolean bIsUbkList;
+    private boolean IsLocal;
     private int pos;
     private SyncTask syncTask;
-    private FileInfo0 fileInfo0 = new FileInfo0();
+    private FileInfo0 item ;
+    private FilelistEntity filelistEntity;
     private final String TAG = this.getClass().getName();
     private Handler handler = new Handler() {
         @Override
@@ -72,9 +73,10 @@ public class PicDetailActivity extends UILActivity implements OnClickListener {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_pic_detail);
+        filelistEntity=UILApplication.getFilelistEntity();
 
-        bIsUbkList = getIntent().getBooleanExtra("ubklist", false);
-        if (bIsUbkList) {
+        IsLocal = getIntent().getBooleanExtra("islocal", false);
+        if (IsLocal) {
             findViewById(R.id.pic_detail_btm_layout).setVisibility(View.GONE);
         }
 
@@ -93,27 +95,55 @@ public class PicDetailActivity extends UILActivity implements OnClickListener {
         initData();
     }
 
-    String url;
+
 
     private void initData() {
-        /*int nPicId = getIntent().getIntExtra("picid", -1);
-        if (nPicId < 0)
-		{
-			return;
-		}*/
-        if (syncTask == null)
+
+       if (syncTask == null)
             syncTask = new SyncTask(this, FTYPE.PICTURE);
-        Serializable bean = getIntent().getSerializableExtra("bean");
-        if (bean instanceof FileInfo0 && ((FileInfo0) bean).islocal) {
-            FileInfo0 item=(FileInfo0) bean;
-            url = "file://" + UILApplication.getFilelistEntity().getDirPath(item.pathid) + "/" + item.getObjid();
-//            fileInfo0.setFilename(url);
-           // fileInfo0.setSysid(((FileLocal) bean).getPathid());
-        } else {
-            FileInfo f= (FileInfo) bean;
-            url = "trpc://" + f.getObjid();
-            fileInfo0=new FileInfo0(f);
+        /*Serializable bean = getIntent().getSerializableExtra("bean");
+
+        */
+       FileInfo fileInfo;
+        if (IsLocal)
+            fileInfo=filelistEntity.getBklist().get(pos);
+        else {
+            fileInfo = (FileInfo) getIntent().getSerializableExtra("bean");
+
         }
+        if (fileInfo instanceof FileInfo0 && ((FileInfo0) fileInfo).islocal) {
+            item=(FileInfo0) fileInfo;
+            item.setFilePath(filelistEntity.getDirPath(item.pathid));
+            //url = "file://" + UILApplication.getFilelistEntity().getDirPath(item.pathid) + "/" + item.getObjid();
+        } else {
+            List<FileInfo0> list=syncTask.QueryLocalFile(fileInfo.ftype,fileInfo.objid);
+            boolean matched=false;
+            if (list!=null && !list.isEmpty()) {
+                for (FileInfo0 it:list)
+                {
+                    //if (it.getFilesize()==null)
+                    if (it.getFilesize()==fileInfo.getFilesize())
+                    {
+                        item=it;
+                        matched=true;
+                        IsLocal=true;
+                        break;
+                    }
+                }
+
+            }
+            if (!matched)
+            {
+                item=new FileInfo0(fileInfo);
+            }
+/*
+            url = "trpc://" + f.getObjid();
+            item=new FileInfo0(f);
+*/
+            //item.getUrl()
+        }
+
+        String url=item.getUrl();
 
         if (StringUtils.isNullOrEmpty(url)) {
             return;
@@ -195,20 +225,20 @@ public class PicDetailActivity extends UILActivity implements OnClickListener {
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        if (fileInfo0 != null) {
-                            final boolean bSucc = syncTask.DelRemoteObj(fileInfo0);
+                        if (item != null) {
+                            final boolean bSucc = syncTask.DelRemoteObj(item);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     String strData = bSucc ? "删除成功" : "删除失败";
                                     ToastUtils.toast(PicDetailActivity.this, strData);
-                                    if (bSucc) {
-                                        if (!StringUtils.isNullOrEmpty(fileInfo0.getFilePath())) {
+                                    if (bSucc && IsLocal) {
+                                        if (!StringUtils.isNullOrEmpty(item.getFilePath())) {
                                             new MaterialDialog.Builder(PicDetailActivity.this).title("温馨提示").content("是否将本地资源同步删除").positiveText("删除").negativeText("取消").onPositive(new MaterialDialog.SingleButtonCallback() {
                                                 @Override
                                                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                                     try {
-                                                        File f = new File(fileInfo0.getFilePath());
+                                                        File f = new File(item.getFilePath());
                                                         f.delete();
                                                     } catch (Exception ignored) {
 
@@ -247,16 +277,20 @@ public class PicDetailActivity extends UILActivity implements OnClickListener {
             }
             break;
             case R.id.pic_detail_savelocal: {
-                if (fileInfo0 != null) {
+                if (item != null) {
                     List<FileInfo> info0s = new ArrayList<>();
-                    if (StringUtils.isNullOrEmpty(fileInfo0.getFilePath())) {
-                        String objid = fileInfo0.getObjid();
+                    if (StringUtils.isNullOrEmpty(item.getFilePath())) {
+                        String objid = item.getObjid();
                         if (objid.contains("//")) {
                             objid = objid.split("//")[1];
                         }
-                        fileInfo0.setFilePath(new ShareUtils(this).getPhotoFile().getPath() + "/" + objid);
+                        item.setFilePath(new ShareUtils(this).getPhotoFile().getPath() + "/" + objid);
                     }
-                    info0s.add(fileInfo0);
+                    info0s.add(item);
+                    /**
+                     * TODO 要改成 downloadmgr 下载
+                     */
+
                     if (syncTask != null) {
                         syncTask.downloadList(info0s, PicDetailActivity.this, handler);
                     }

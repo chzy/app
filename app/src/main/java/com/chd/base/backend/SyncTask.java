@@ -110,6 +110,11 @@ public class SyncTask {
 		//return filelistEntity;
 	}
 
+	public List<FileInfo0> QueryLocalFile(FTYPE ftype,String fname)
+	{
+		return  dbManager.QueryLocalFile(ftype,fname);
+	}
+
 
 	public void analyVideoUnits(List<FileInfo> remotelist, FilelistEntity filelistEntity) {
 		//filelistEntity = new FilelistEntity();

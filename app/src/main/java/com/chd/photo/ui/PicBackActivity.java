@@ -81,7 +81,7 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
                 Intent intent = new Intent(mAct, PicDetailActivity.class);
                     intent.putExtra("bean", (Serializable) file.t);
                     intent.putExtra("pos", position);
-                    intent.putExtra("ubklist", true);
+                    intent.putExtra("islocal", true);
                     startActivityForResult(intent, 0x12);
             }
         });

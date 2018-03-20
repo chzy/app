@@ -307,7 +307,7 @@ public class MediaMgr {
             return;
 
         String[] projection=new String[]{
-                MediaStore.Files.FileColumns.DATA, MediaStore.Files.FileColumns.TITLE,MediaStore.Files.FileColumns.SIZE,MediaStore.Files.FileColumns.DATE_MODIFIED,MediaStore.Files.FileColumns._ID
+                MediaStore.Files.FileColumns.DATA, MediaStore.Files.FileColumns.DISPLAY_NAME,MediaStore.Files.FileColumns.SIZE,MediaStore.Files.FileColumns.DATE_MODIFIED,MediaStore.Files.FileColumns._ID
         };
         String selection="";
         for(int i=0;i<exts.length;i++)
@@ -334,17 +334,18 @@ public class MediaMgr {
                         //输出文件的完整路径
                         String fpath=cursor.getString(0);
                         FileInfo0 fileLocal = new FileInfo0();
-//                        String objname = cursor.getString(1);
-                        String objname = fpath.substring(fpath.lastIndexOf("/")+1);
-//                        if (objname==null)
-//                            continue;
+                       String objname = cursor.getString(1);
+                       if (objname==null)
+                             objname = fpath.substring(fpath.lastIndexOf("/")+1);
+                       if (objname==null)
+                            continue;
 //                        idx=fpath.lastIndexOf(objname);
-//                        if (idx<2)
-//                            continue;
-                        idx=fpath.lastIndexOf(objname);
-                        fileLocal.setFilesize(cursor.getInt(2));
+                        idx=fpath.lastIndexOf("/")+1;
+                          if (idx<2)
+                            continue;
+                        fileLocal.setFilesize(cursor.getLong(2));
                         fileLocal.setLastModified((int) cursor.getLong(3));
-                        String path =fpath.substring(0,idx);
+                        String path =fpath.substring(0,idx).toLowerCase();
                         int pathid = filelistEntity.addFilePath(path);
                         fileLocal.pathid=pathid;
                         fileLocal.setObjid(objname+fpath.substring(idx+objname.length()));
@@ -368,6 +369,65 @@ public class MediaMgr {
         }).start();
    */
     }
+
+    public List<FileInfo0> QueryLocalFile(FTYPE type, String fname) {
+        Uri fileUri = getContentUriByCategory(type);
+        List<FileInfo0> list=new ArrayList();
+        String[] projection=new String[]{
+                MediaStore.Files.FileColumns.DATA, MediaStore.Files.FileColumns.DISPLAY_NAME,MediaStore.Files.FileColumns.SIZE,MediaStore.Files.FileColumns.DATE_MODIFIED,MediaStore.Files.FileColumns._ID
+        };
+        String selection="";
+        /*for(int i=0;i<fnames.length;i++)
+        {
+            if(i!=0)
+            {
+                selection=selection+" OR ";
+            }
+            selection=selection+ MediaStore.Files.FileColumns.DISPLAY_NAME+"='"+fnames[i].toLowerCase()+"'";
+        }
+        */
+        selection=selection+ MediaStore.Files.FileColumns.DISPLAY_NAME+"='"+fname.toLowerCase()+"'" +" OR "+MediaStore.Files.FileColumns.DATA+" LIKE '%"+"."+fname+"'";
+        //按时间递增顺序对结果进行排序;待会从后往前移动游标就可实现时间递减
+        String sortOrder =null; /*MediaStore.Files.FileColumns.DATE_MODIFIED;*/
+        //获取内容解析器对象
+        ContentResolver resolver=context.getContentResolver();
+        //获取游标
+        final Cursor cursor=resolver.query(fileUri, projection, selection, null, sortOrder);
+        if(cursor==null)
+            return null;
+        int idx=0;//,count=0,offset=0;
+        long t1,t0=System.currentTimeMillis();
+        if(cursor.moveToLast())
+        {
+            do{
+                //输出文件的完整路径
+                String fpath=cursor.getString(0);
+                FileInfo0 fileLocal = new FileInfo0();
+                String objname=cursor.getString(1);
+                //String objname = fpath.substring(fpath.lastIndexOf("/")+1);
+                idx=fpath.lastIndexOf(objname);
+                fileLocal.setFilesize(cursor.getLong(2));
+                fileLocal.setLastModified((int) cursor.getLong(3));
+                String path =fpath.substring(0,idx);
+                fileLocal.setObjid(objname+fpath.substring(idx+objname.length()));
+                fileLocal.setFilePath(path);
+                list.add(fileLocal);
+                /*count++;
+                if ( count>1 && dataCallBack!=null && count%dataCallBack.callbackThreshold==0 ) {
+                    t1=System.currentTimeMillis();
+                    Log.i(TAG, "GetLocalFiles: cost time :"+ (t1 -t0 ) );
+                    dataCallBack.success(list, offset,count);
+                    offset=count;
+                }*/
+            }while(cursor.moveToPrevious());
+        }
+        cursor.close();
+        //dataCallBack.success(list, offset,list.size());
+        t1=System.currentTimeMillis();
+        Log.i(TAG, "QueryLocalFile: cost time :"+ (t1 -t0 ) );
+        return  list;
+    }
+
 
     public void GetLocalFiles(MediaFileUtil.FileCategory fc, String[] exts, boolean include, FilelistEntity filelistEntity) {
         //setCustomCategory(new String[]{"doc", "pdf", "xls", "zip", "rar"}, true);
