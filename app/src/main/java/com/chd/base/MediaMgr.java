@@ -334,12 +334,14 @@ public class MediaMgr {
                         //输出文件的完整路径
                         String fpath=cursor.getString(0);
                         FileInfo0 fileLocal = new FileInfo0();
-                        String objname = cursor.getString(1);
-                        if (objname==null)
-                            continue;
+//                        String objname = cursor.getString(1);
+                        String objname = fpath.substring(fpath.lastIndexOf("/")+1);
+//                        if (objname==null)
+//                            continue;
+//                        idx=fpath.lastIndexOf(objname);
+//                        if (idx<2)
+//                            continue;
                         idx=fpath.lastIndexOf(objname);
-                        if (idx<2)
-                            continue;
                         fileLocal.setFilesize(cursor.getInt(2));
                         fileLocal.setLastModified((int) cursor.getLong(3));
                         String path =fpath.substring(0,idx);
