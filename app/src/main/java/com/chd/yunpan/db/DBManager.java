@@ -147,7 +147,7 @@ entity.getLastModified());
 		ContentValues values = new ContentValues();
 		values.put("objid", entity.getObjid());
 		values.put("size",entity.getFilesize());
-		values.put("name",entity.getFilename());
+		values.put("name",entity.getObjid());
 		values.put("offset",0);
 		values.put("time", entity.getLastModified());
 		db.insertWithOnConflict("download_inter", null, values, SQLiteDatabase.CONFLICT_IGNORE);

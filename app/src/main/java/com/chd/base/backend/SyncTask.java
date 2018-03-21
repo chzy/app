@@ -110,9 +110,9 @@ public class SyncTask {
 		//return filelistEntity;
 	}
 
-	public List<FileInfo0> QueryLocalFile(FTYPE ftype,String fname)
+	public List<FileInfo0> QueryLocalFile(String fname)
 	{
-		return  dbManager.QueryLocalFile(ftype,fname);
+		return  dbManager.QueryLocalFile(_ftype,fname);
 	}
 
 
@@ -174,7 +174,7 @@ public class SyncTask {
 	}
 
 
-	public void MarkBackedItem(  List<FileInfo0> LocalUnits,int offset,int count) {
+	/*public void MarkBackedItem(  List<FileInfo0> LocalUnits,int offset,int count) {
 
 		long t1, t0 = System.currentTimeMillis();
 		FileInfo0 local_item;
@@ -197,11 +197,11 @@ public class SyncTask {
 		t1=System.currentTimeMillis();
 		Log.i(TAG, "anlayLocalUnits: compare cost :"+(t1-t0)+" ms");
 		return;
-	}
+	}*/
 
 	public boolean isBacked(  FileInfo0 fileInfo0) {
 		boolean ret=false;
-		ret=TClient.isBackuped(fileInfo0.getFilename(),_ftype);
+		ret=TClient.isBackuped(fileInfo0.getObjid(),_ftype);
 		fileInfo0.setBackuped(ret);
 		return ret;
 	}

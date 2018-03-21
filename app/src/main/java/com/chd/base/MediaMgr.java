@@ -348,6 +348,7 @@ public class MediaMgr {
                         String path =fpath.substring(0,idx).toLowerCase();
                         int pathid = filelistEntity.addFilePath(path);
                         fileLocal.pathid=pathid;
+                        fileLocal.setFtype(type);
                         fileLocal.setObjid(objname+fpath.substring(idx+objname.length()));
                         LocalUnits.add(fileLocal);
                         count++;

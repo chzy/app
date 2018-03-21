@@ -101,47 +101,55 @@ public class PicDetailActivity extends UILActivity implements OnClickListener {
 
        if (syncTask == null)
             syncTask = new SyncTask(this, FTYPE.PICTURE);
-        /*Serializable bean = getIntent().getSerializableExtra("bean");
 
-        */
-       FileInfo fileInfo;
-        if (IsLocal)
-            fileInfo=filelistEntity.getBklist().get(pos);
-        else {
-            fileInfo = (FileInfo) getIntent().getSerializableExtra("bean");
+        FileInfo fileInfo = (FileInfo) getIntent().getSerializableExtra("bean");
 
+        /*if (IsLocal) {
+            *//*
+            ipc 传递 可能回影响速度
+             *//*
+            FileInfo fileInfo = (FileInfo) getIntent().getSerializableExtra("bean");
+            *//*
+            只能传成功基类. 不知道原因
+             *//*
+
+            item=(FileInfo0) fileInfo;
+            item.setFilePath(filelistEntity.getDirPath(item.pathid));
         }
-        if (fileInfo instanceof FileInfo0 && ((FileInfo0) fileInfo).islocal) {
+        else {
+            FileInfo fileInfo = (FileInfo) getIntent().getSerializableExtra("bean");
+            */
+
+
+            {
+                List<FileInfo0> list=syncTask.QueryLocalFile(fileInfo.objid);
+                boolean matched=false;
+                if (list!=null && !list.isEmpty()) {
+                    for (FileInfo0 it:list)
+                    {
+                        if (it.getFilesize()==fileInfo.getFilesize())
+                        {
+                            item=it;
+                            matched=true;
+                            IsLocal=true;
+                            mBtnSaveLocal.setVisibility(View.INVISIBLE);
+                            break;
+                        }
+                    }
+
+                }
+                if (!matched)
+                {
+                    item=new FileInfo0(fileInfo);
+                }
+            }
+      //  }
+        /*if (fileInfo instanceof FileInfo0 && ((FileInfo0) fileInfo).islocal) {
             item=(FileInfo0) fileInfo;
             item.setFilePath(filelistEntity.getDirPath(item.pathid));
             //url = "file://" + UILApplication.getFilelistEntity().getDirPath(item.pathid) + "/" + item.getObjid();
-        } else {
-            List<FileInfo0> list=syncTask.QueryLocalFile(fileInfo.ftype,fileInfo.objid);
-            boolean matched=false;
-            if (list!=null && !list.isEmpty()) {
-                for (FileInfo0 it:list)
-                {
-                    //if (it.getFilesize()==null)
-                    if (it.getFilesize()==fileInfo.getFilesize())
-                    {
-                        item=it;
-                        matched=true;
-                        IsLocal=true;
-                        break;
-                    }
-                }
+        } else */
 
-            }
-            if (!matched)
-            {
-                item=new FileInfo0(fileInfo);
-            }
-/*
-            url = "trpc://" + f.getObjid();
-            item=new FileInfo0(f);
-*/
-            //item.getUrl()
-        }
 
         String url=item.getUrl();
 

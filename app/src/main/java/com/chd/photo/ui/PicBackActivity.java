@@ -2,6 +2,7 @@ package com.chd.photo.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
 import android.view.View;
@@ -78,9 +79,10 @@ public class PicBackActivity extends UILActivity implements View.OnClickListener
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                     //非视频，即图片进去
                 PicFile<FileInfo0> file = picFiles.get(position);
+                FileInfo0 info0=file.t;
                 Intent intent = new Intent(mAct, PicDetailActivity.class);
-                    intent.putExtra("bean", (Serializable) file.t);
-                    intent.putExtra("pos", position);
+                    intent.putExtra("bean", (Parcelable) info0);
+                    //intent.putExtra("pos", position);
                     intent.putExtra("islocal", true);
                     startActivityForResult(intent, 0x12);
             }
