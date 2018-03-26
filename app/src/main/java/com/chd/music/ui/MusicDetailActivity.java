@@ -86,9 +86,11 @@ public class MusicDetailActivity extends ActiveProcess implements OnClickListene
         mTvMusicName.setText(fileInfo.getObjid());
         //String url = fileInfo.getFilePath();
         mMediaPlayer = new MediaPlayer();
+        showDialog("正在加载中");
         mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
+                dismissDialog();
                 isPrepared = true;
                 int maxProgress = mMediaPlayer.getDuration() / 1000;
                 if(mMediaPlayer.getDuration()%1000>0){
